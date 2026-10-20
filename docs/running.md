@@ -96,6 +96,7 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy             |
 | `make check-data`   | data file headers and `upgradegame` (docs/data-files.md)|
+| `make check-security` | that players can't crash, hang or corrupt the server (issues labelled `security`) |
 
 See [deploy.md](deploy.md) for the production server.
 
@@ -105,4 +106,12 @@ useful with a sanitizer build:
 ```sh
 make clean
 make CFLAGS='-g -O1 -fsanitize=address,undefined' check-net
+```
+
+`check-security` needs such a build; add `-ftrivial-auto-var-init=pattern`
+so that an uninitialized pointer crashes instead of happening to be NULL:
+
+```sh
+make clean
+make CFLAGS='-g -O1 -fsanitize=address,undefined -ftrivial-auto-var-init=pattern' check-security
 ```

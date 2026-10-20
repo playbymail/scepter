@@ -632,7 +632,7 @@ void Off(void)
 
 void Dead(void)
 {
-	ObjectPoint	Obj, Body, Money;
+	ObjectPoint	Obj, Body, Money = NULL;
 	RmCodeType	Rm;
 
 	Rm = User->RmCode;

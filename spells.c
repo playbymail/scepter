@@ -174,13 +174,27 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 		{
 			MonsterType	TmpMon;
 			char		TmpName[21];
+			int			Index, Count = 0, Pick;
 
-			do
+			/* templates 30-102 that are defined; a small world may have none */
+			for (Index = 30; Index <= 102; Index++)
+				if (ReadMList(Index, &TmpMon) && *TmpMon.Name
+				&&	strcmp(TmpMon.Name, ProtoMonster.Name))
+					Count++;
+			if (!Count)
 			{
-				ReadMList(Rnd(73) + 29, &TmpMon);
-			} while (!*TmpMon.Name || !strcmp(TmpMon.Name, ProtoMonster.Name));
+				QOut(Term, NothingText);
+				break;
+			}
+			Pick = Rnd(Count);
+			for (Index = 30; Pick; Index++)
+				if (ReadMList(Index, &TmpMon) && *TmpMon.Name
+				&&	strcmp(TmpMon.Name, ProtoMonster.Name))
+					Pick--;
 			TmpMon.Lvl = Min(25, Max(1, TmpMon.Lvl + 2 - Rnd(3)));
-			TmpMon.Hits = Min(TmpMon.MaxHits,
+			/* a MaxHits of 0 means Hits is 0 too: no wound to carry over */
+			if (Monster->MaxHits > 0)
+				TmpMon.Hits = Min(TmpMon.MaxHits,
 						Max(1, TmpMon.Hits * Monster->Hits / Monster->MaxHits));
 			TmpMon.Next = Monster->Next;
 			TmpMon.DefPlayer = Monster->DefPlayer;
@@ -582,8 +596,11 @@ void Spell(int SpellCode)
 			if (Player)
 				QOut(Player->Trm, "0It missed!");
 		}
-		else if (Player && SpellCode != SPELL_PSI_BLAST)
-			HitPlayer(Damage);
+		else if (Player)
+		{
+			if (SpellCode != SPELL_PSI_BLAST)
+				HitPlayer(Damage);
+		}
 #ifdef USEJAIL
 		else if (Mon->Assistance)
 			ProtectNPC(User, Mon);
