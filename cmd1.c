@@ -588,20 +588,9 @@ int Look(char *Word, int Num)
 
 void Train(void)
 {
-	int		TRoom;
 	long	ReqExp;
 
-	switch ((int)User->Class)
-	{
-		case Paladin:	TRoom = 21;	break;
-		case Cleric:	TRoom = 22;	break;
-		case Thief:		TRoom = 23;	break;
-		case MagicUser:	TRoom = 24;	break;
-		case Ranger:	TRoom = 25;	break;
-		default:		TRoom = 20;	break;	/* fighter, barbarian, DM... */
-	}
-
-	if (W(User->RmCode) != TRoom)
+	if (!TrainsClass(W(User->RmCode), User->Class))
 	{
 		QOut(Term, "0This is not the proper place for training!");
 		return;

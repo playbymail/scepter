@@ -27,7 +27,7 @@ void Appeal(void)
 			QOut(Term, "0Sigh, very well...");
 			StopFollow(User);
 			DeletePlayer(User, User->RmCode);
-			PlacePlayer(User, 1);
+			PlacePlayer(User, StartRoom);
 			QOut(Term, "0*** Poof *** You are elsewhere..");
 		}
 		else
@@ -146,7 +146,7 @@ void Pawn(char *Word, int Num)
 {
 	ObjectPoint	Object;
 
-	if (W(User->RmCode) != 8)
+	if (RoomRole(W(User->RmCode)) != RolePawnshop)
 	{
 		QOut(Term, "0Go to the pawn shop first.");
 		return;
@@ -195,12 +195,12 @@ void Pawn(char *Word, int Num)
 
 void Buy(int Num, int Rm)
 {
-	switch (W(Rm))
+	switch (RoomRole(W(Rm)))
 	{
-		case 3:		/* bar */
+		case RoleBar:
 			if (User->Money)
 			{
-				int		SecsDk;
+				int		SecsDk, Rm2;
 
 				--User->Money;
 				if (User->Drunk < RealTime)
@@ -218,9 +218,9 @@ void Buy(int Num, int Rm)
 				else
 				{
 					StopFollow(User);
+					Rm2 = StaggerRoom(W(Rm));
 					DeletePlayer(User, Rm);
-					Rm = Rnd(10);
-					PlacePlayer(User, Rm);
+					PlacePlayer(User, Rm2);
 					QOut(Term,
 						"0You seem to have staggered off somewhere... You find");
 					RoomDisplay(User->RmCode, FALSE);
@@ -230,7 +230,7 @@ void Buy(int Num, int Rm)
 				QOut(Term, "0Bartender says, \"Your credit's no good here!\"");
 			break;
 
-		case 4:		/* newsstand */
+		case RoleNewsstand:
 			if (User->Money)
 			{
 				int		ILoop;
@@ -282,15 +282,15 @@ void Buy(int Num, int Rm)
 				QOut(Term, "0\"Sorry buddy, you got no money.\"");
 			break;
 
-		case 10:	/* weapon shop */
-			if (Num < 1 || Num > Min(RanObjLen, 20))
+		case RoleStore:
+			if (!StockItem(W(Rm), Num))
 				QOut(Term, "0Item number out of bounds.");
 			else
 			{
 				ObjectPoint	Object;
 
 				Object = (ObjectPoint)malloc(sizeof(ObjectType));
-				ReadOList(Num, Object);
+				ReadOList(StockItem(W(Rm), Num), Object);
 				if (Object->Price > User->Money)
 				{
 					QOut(Term, "0You don't have enough cash to buy that.");
@@ -318,9 +318,9 @@ void Buy(int Num, int Rm)
 
 void Catalog(void)
 {
-	int			ILoop;
+	int			ILoop, WRm = W(User->RmCode);
 
-	if (W(User->RmCode) != 10)
+	if (RoomRole(WRm) != RoleStore)
 	{
 		QOut(Term, "0I don't understand");
 		return;
@@ -330,12 +330,12 @@ void Catalog(void)
 	QOut(Term, "0 To purchase, enter: BUY <Item Number>");
 	QOut(Term, "0");
 	QOut(Term, "0 # Type    Cost Weight Name");
-	for (ILoop = 1; ILoop <= Min(20, RanObjLen); ILoop++)
+	for (ILoop = 1; ILoop <= StockCount(WRm); ILoop++)
 	{
 		ObjectType	ObjTemp;
 		char		*p;
 
-		ReadOList(ILoop, &ObjTemp);
+		ReadOList(StockItem(WRm, ILoop), &ObjTemp);
 
 		switch ((int)ObjTemp.ObClass)
 		{

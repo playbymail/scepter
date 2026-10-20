@@ -204,6 +204,15 @@ void	TextLimits(int *MesStart, int *MesEnd);
 void	Talk(char *Word);
 void	DoCmd(void);
 
+/* special.c */
+void	LoadSpecial(void);
+RoleType	RoomRole(int WRm);
+char	*RoomGreeting(int WRm);
+int		StockItem(int WRm, int Item);
+int		StockCount(int WRm);
+int		StaggerRoom(int WRm);
+int		TrainsClass(int WRm, ChType Class);
+
 /* rand.c */
 int	Rand(void);
 void	Srand(int x1, int x2, int x3);

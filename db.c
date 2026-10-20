@@ -4,6 +4,13 @@ static int	ReadObj(ObjRec *Rec, int Room, int Type);
 static void	WriteObj(ObjRec *Rec, int Room, int Type);
 static int	HashObj(int Room, int Type);
 static int	ReadMon(MonRec *Rec, int Room, int Type);
+static void	DeleteObjType(RmCodeType Rm, int Type);
+static void	ReadMonInv(RmCodeType Rm, MonsterPoint Monster);
+static void	WriteMonInv(RmCodeType Rm, MonsterPoint Monster);
+
+/* dbobj record types: 0 is a room's objects, 1..8 the contents of its
+ * chests, and MonInvType + N the inventory of its Nth monster (from 0). */
+#define	MonInvType	9
 
 void ReadUObj(RmCodeType Rm, ObjectPoint *Object, int Type)
 {
@@ -91,35 +98,98 @@ void DeleteUObj(RmCodeType Rm)
 	int		Type;
 
 	for (Type = 0; Type <= 8; Type++)
+		DeleteObjType(Rm, Type);
+}
+
+static void DeleteObjType(RmCodeType Rm, int Type)
+{
+	ObjRec	Tmp;
+	int		RecNum, First;
+
+	First = RecNum = HashObj(Rm, Type);
+	fseek(EDBObj, (long)RecNum * sizeof(ObjRec), 0);
+	while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
 	{
-		ObjRec	Tmp;
-		int		RecNum, First;
-
-		First = RecNum = HashObj(Rm, Type);
-		fseek(EDBObj, (long)RecNum * sizeof(ObjRec), 0);
-		while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
+		if (Tmp.Room == Rm && Tmp.DataType == Type)
 		{
-			if (Tmp.Room == Rm && Tmp.DataType == Type)
-			{
-				Tmp.Room = 0;
-				fseek(EDBObj, (long) -sizeof(ObjRec), 1);
-				fwrite((char *)&Tmp, sizeof(ObjRec), 1, EDBObj);
-				fflush(EDBObj);
-				break;
-			}
-			
-			if (!Tmp.Room)
-				break;
-
-			if (++RecNum >= 1009)
-			{
-				fseek(EDBObj, 0L, 0);
-				RecNum = 0;
-			}
-
-			if (RecNum == First)
-				Abort(" Object DB full on delete!");
+			Tmp.Room = 0;
+			fseek(EDBObj, (long) -sizeof(ObjRec), 1);
+			fwrite((char *)&Tmp, sizeof(ObjRec), 1, EDBObj);
+			fflush(EDBObj);
+			break;
 		}
+
+		if (!Tmp.Room)
+			break;
+
+		if (++RecNum >= 1009)
+		{
+			fseek(EDBObj, 0L, 0);
+			RecNum = 0;
+		}
+
+		if (RecNum == First)
+			Abort(" Object DB full on delete!");
+	}
+}
+
+/* Load the inventory of each monster in the list read for room *Rm*. */
+static void ReadMonInv(RmCodeType Rm, MonsterPoint Monster)
+{
+	int		N;
+
+	for (N = 0; Monster && N < SavedItems; Monster = Monster->Next, N++)
+	{
+		ObjRec		Rec;
+		ObjectPoint	Pt, *Tail = &Monster->ObjectTail;
+		int			I;
+
+		if (!ReadObj(&Rec, Rm, MonInvType + N))
+			continue;
+		for (I = 0; I < Rec.Num && I < SavedItems; I++)
+		{
+			if (!(Pt = malloc(sizeof(ObjectType))))
+				Abort(" Out of memory loading monster inventory.");
+			*Pt = Rec.Obj[I];
+			Pt->Next = NULL;
+			if (Pt->ObClass == Chest)
+			{
+				Pt->Object.Chest.ObjectTail = NULL;	/* contents aren't saved */
+				Pt->Object.Chest.NumInside = 0;
+			}
+			*Tail = Pt;
+			Tail = &Pt->Next;
+		}
+	}
+}
+
+/* Save the inventory of each monster in room *Rm* (first SavedItems). */
+static void WriteMonInv(RmCodeType Rm, MonsterPoint Monster)
+{
+	int		N;
+
+	for (N = 0; N < SavedItems; N++)
+	{
+		if (Monster && Monster->ObjectTail)
+		{
+			ObjRec		Rec;
+			ObjectPoint	Pt;
+			int			I;
+
+			memset(&Rec, 0, sizeof(Rec));
+			for (Pt = Monster->ObjectTail, I = 0; Pt && I < SavedItems;
+				 Pt = Pt->Next, I++)
+				Rec.Obj[I] = *Pt;
+			Rec.Room = Rm;
+			Rec.DataType = MonInvType + N;
+			Rec.Num = I;
+			WriteObj(&Rec, Rm, MonInvType + N);
+		}
+		else
+			DeleteObjType(Rm, MonInvType + N);
+
+		if (Monster)
+			Monster = Monster->Next;
 	}
 }
 
@@ -216,6 +286,7 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 			Pt->CharmPlayer = NULL;
 			Pt->ObjectTail = NULL;
 		}
+		ReadMonInv(Rm, *Monster);
 	}
 	else
 		*Monster = NULL;
@@ -253,6 +324,7 @@ void WriteUMon(RmCodeType Rm, MonsterPoint Monster)
 	MonRec			MRec, Tmp;
 	int				N, RecNum, First;
 
+	WriteMonInv(Rm, Monster);
 	for (Pt = Monster, N = 0; Pt && N < SavedItems; Pt = Pt->Next, N++)
 		MRec.Mon[N] = *Pt;
 
@@ -288,6 +360,7 @@ void DeleteMon(RmCodeType Rm)
 	MonRec	MRec;
 	int		RecNum, First;
 
+	WriteMonInv(Rm, NULL);		/* deletes every monster's inventory */
 	First = RecNum = HashObj(Rm, 0);
 	fseek(EDBMon, (long)RecNum * sizeof(MonRec), 0);
 	while (fread((char *)&MRec, sizeof(MonRec), 1, EDBMon))

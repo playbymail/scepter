@@ -10,7 +10,7 @@ DEFS    ?=
 
 OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	edit1.o edit2.o io.o ipc.o log.o main.o matt.o \
-	mon.o obj.o room.o spells.o user.o rand.o
+	mon.o obj.o room.o special.o spells.o user.o rand.o
 
 all: scepterd mkgame
 
@@ -26,7 +26,13 @@ mkgame: mkgame.o
 
 $(OBJS) mkgame.o: common.h scepter.h proto.h
 
+# Each world file must match its JSON copy (tools/worldjson.py).
+check-worlds:
+	@for w in var/*/*.world; do \
+		python3 tools/worldjson.py check $$w $$(dirname $$w)/world.json || exit 1; \
+	done
+
 clean:
 	rm -f scepterd mkgame $(OBJS) mkgame.o
 
-.PHONY: all clean
+.PHONY: all clean check-worlds

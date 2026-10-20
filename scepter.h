@@ -108,6 +108,10 @@ typedef enum
 	 XSure, XParley, XSkill, XDesc, XRes1, XRes2, XRes3} EntryType;
 
 typedef enum
+	{RoleNone, RoleBar, RoleNewsstand, RolePawnshop, RoleStore, RoleSmith}
+	RoleType;
+
+typedef enum
 {
 	E_NULL = 0,
 	E_MODIFY, E_DELETE, E_DISPLAY, E_CREATE, E_COPY, E_MOVE,
@@ -514,6 +518,10 @@ extern char	HDMLIST[];
 extern char	HDOLIST[];
 extern char	ERRLOG[];
 extern char	PASSWD[];
+extern char	SPECIAL[];
+
+/* special.c */
+extern int	StartRoom, ReviveRoom, JailRoom;
 
 #define	EncIndex(r, c)	GetETIndex(0, r, c)
 #define	ObjIndex(r, c)	GetETIndex(1, r, c)

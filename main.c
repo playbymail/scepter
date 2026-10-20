@@ -53,6 +53,7 @@ int main(int argc, char **argv)
 
 	QCre();
 	Init_Scepter();
+	LoadSpecial();
 	InitCmds();
 
 	if ((EDesc = fopen(DSCRPT, FOPEN)) == NULL)

@@ -1,10 +1,19 @@
-# Scepter world "alpha", converted from var/alpha/world.json.
-# Format: docs/world-format.md
+# Scepter world "alpha".
+# Format: docs/world-format.md.  Keep var/*/world.json in sync with
+# tools/worldjson.py (make check-worlds).
 
 [world]
 name = alpha
-monster-speed = 8
+start-room = 1
 revive-room = 5
+jail-room = 25
+monster-speed = 8
+notice = Welcome to alpha, the Scepter reference world.
+news-1 = The old tower is said to hold a goblin king.
+news-2 = Travellers report a toll on the forest bridge.
+news-3 = The watch patrols Guild Street day and night.
+news-4 = A white stone circle hums in the glade.
+news-5 = Mind your manners: the village lockup has room.
 
 # ---- descriptions: RECORD:LINE is referenced by desc = ----
 
@@ -48,6 +57,8 @@ revive-room = 5
 3 = 1/You are in the pawnshop.# Shelves sag under other people's things.#/
 4 = 1/You are in the smithy.# The forge glows and a hammer rings on the anvil.#/
 5 = 1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/
+6 = 1/You are in the village lockup.# Damp straw and iron bars. Steps lead up.#/
+7 = 1/You are on the forest bridge.# Black water slides by below.#/
 
 [description 5]
 1 = 1/A peddler with a tray of trinkets slung from a strap about his neck./
@@ -61,7 +72,19 @@ revive-room = 5
 9 = 1/I'd sell you another, but my tray is bare./
 10 = 1/Come back when I've restocked, friend./
 
-# ---- object templates (OList; the store sells 1-20) ----
+[description 6]
+1 = 1/A spider as big as a cartwheel, its fangs glistening./
+2 = 1/A wight, its eyes cold pinpricks in a withered face./
+3 = 1/A watchman in a dented helmet, leaning on his halberd./
+4 = 1/A pale, flickering shape that might once have been a man./
+5 = 1/A goblin with a tin crown and a very large club./
+6 = 1/A wand of ash wood, scorched at the tip./
+7 = 1/A ring of white standing stones, humming softly./
+8 = 1/A tarot card showing a tower struck by lightning./
+9 = 1/A red gem, cut square, warm to the touch./
+10 = 1/A slim silver dagger, engraved with runes./
+
+# ---- object templates (OList) ----
 
 [object 1]
 name = dagger,*
@@ -127,6 +150,74 @@ carry = yes
 plus = 2
 hits = 50
 
+[object 7]
+name = wand,ash *
+article = an
+kind = device
+weight = 1
+price = 200
+desc = 6:6
+carry = yes
+magic = yes
+spell = fireball
+charges = 5
+level = 2
+
+[object 8]
+name = key,skeleton *
+article = a
+kind = keys
+weight = 1
+price = 30
+carry = yes
+unlocks = 31
+uses = 3
+
+[object 9]
+name = ring,iron *
+article = an
+kind = ring
+weight = 1
+price = 50
+carry = yes
+magic = yes
+cursed = yes
+spell = curse
+level = 1
+
+[object 10]
+name = dagger,silver *
+article = a
+kind = weapon
+weight = 2
+price = 60
+desc = 6:10
+carry = yes
+magic = yes
+min-damage = 2
+max-damage = 5
+strikes = 150
+skill = thrust
+plus = 1
+
+[object 11]
+name = card,tarot *
+article = a
+kind = card
+weight = 1
+price = 5
+desc = 6:8
+carry = yes
+
+[object 12]
+name = gem,red *
+article = a
+kind = treasure
+weight = 1
+price = 75
+desc = 6:9
+carry = yes
+
 # ---- monster templates (MList) ----
 
 [monster 1]
@@ -139,8 +230,8 @@ max-hits = 11
 ac = 7
 attack-speed = 4
 defend = yes
-follow = yes
 attack-last = yes
+follow = yes
 
 [monster 2]
 name = goblin,*
@@ -195,6 +286,84 @@ defend = yes
 attack-last = yes
 casts-spells = yes
 
+[monster 6]
+name = spider,giant *
+article = a
+desc = 6:1
+level = 2
+hits = 9
+max-hits = 9
+ac = 6
+attack-speed = 5
+defend = yes
+attack-last = yes
+fast-react = yes
+poison = yes
+
+[monster 7]
+name = wight,*
+article = a
+desc = 6:2
+level = 3
+hits = 16
+max-hits = 16
+ac = 4
+attack-speed = 3
+treasure-table = 2
+defend = yes
+attack-last = yes
+drain = yes
+anti-magic = yes
+undead = yes
+summon-help = yes
+
+[monster 8]
+name = watchman,*
+article = a
+desc = 6:3
+level = 4
+hits = 20
+max-hits = 20
+ac = 4
+attack-speed = 4
+defend = yes
+moral-react = yes
+nice = yes
+assistance = yes
+watch = yes
+
+[monster 9]
+name = ghost,*
+article = a
+desc = 6:4
+level = 2
+hits = 8
+max-hits = 8
+ac = 3
+attack-speed = 2
+defend = yes
+slow-react = yes
+immoral-react = yes
+invisible = yes
+regenerate = yes
+undead = yes
+
+[monster 10]
+name = king,goblin *
+article = a
+desc = 6:5
+level = 4
+hits = 25
+max-hits = 25
+ac = 3
+attack-speed = 4
+treasure-table = 4
+defend = yes
+attack-last = yes
+magic = yes
+casts-spells = yes
+unique = yes
+
 # ---- random encounter and treasure tables ----
 
 [encounter 1]
@@ -203,23 +372,29 @@ monsters = 1 1 3 2 5
 [encounter 2]
 monsters = 3 4
 
+[encounter 3]
+monsters = 6 9 7
+
 [treasure 1]
 objects = 4 1 5
 
 [treasure 2]
-objects = 4 3
+objects = 4 3 8
 
 [treasure 3]
 objects = 1 5 6 3 1 5 6 3
 
+[treasure 4]
+objects = 12 7 9 11
+
 # ---- rooms ----
 
 [room 1]
-desc = 1:1
 north = 2
 south = 4
 east = 3
 west = 5
+desc = 1:1
 safe = yes
 
 [room 1 / object 1]
@@ -243,9 +418,9 @@ strikes = 100
 skill = sharp
 
 [room 2]
-desc = 1:3
 north = 6
 south = 1
+desc = 1:3
 
 [room 2 / monster 1]
 name = peddler,*
@@ -262,29 +437,29 @@ defend = yes
 permanent = yes
 
 [room 3]
-desc = 1:4
 north = 24
 west = 1
 up = 7
+desc = 1:4
 greeting = Bartender says, "Buy a drink, mac?"
 role = bar
 staggers = 1 2 3 4 5
 
 [room 4]
-desc = 1:5
 north = 1
 south = 13
 east = 23
 west = 22
+desc = 1:5
 greeting = Merchant asks, "What would you like to buy?"
 role = store
-stock = 1 2 3 6
+stock = 1 2 3 6 10 7
 
 [room 5]
-desc = 1:6
 north = 21
 east = 1
 west = 20
+desc = 1:6
 safe = yes
 
 [room 5 / object 1]
@@ -294,17 +469,28 @@ kind = keys
 weight = 1
 price = 5
 carry = yes
+permanent = yes
 unlocks = 21
 
 [room 6]
-desc = 1:7
 north = 8
 south = 2
 east = 9
+desc = 1:7
+
+[room 6 / object 1]
+name = gate,toll *
+article = a
+kind = door
+price = 2
+permanent = yes
+to = 26
+spring = yes
+toll = yes
 
 [room 7]
-desc = 1:8
 down = 3
+desc = 1:8
 
 [room 7 / object 1]
 name = chest,iron-bound *
@@ -336,16 +522,25 @@ carry = yes
 magic = yes
 spell = heal
 
+[room 7 / object 1 / object 3]
+name = card,tarot *
+article = a
+kind = card
+weight = 1
+price = 5
+desc = 6:8
+carry = yes
+
 [room 8]
-desc = 1:9
 south = 6
+desc = 1:9
 encounter-table = 1
 encounter-rate = 20
 
 [room 9]
-desc = 1:10
 west = 6
 up = 10
+desc = 1:10
 
 [room 9 / object 1]
 name = door,iron *
@@ -357,8 +552,8 @@ closed = yes
 lock = 31
 
 [room 10]
-desc = 2:1
 down = 9
+desc = 2:1
 
 [room 10 / object 1]
 name = portal,shimmering *
@@ -379,8 +574,8 @@ ac = 5
 attack-speed = 4
 treasure-table = 1
 defend = yes
-guard = yes
 attack-last = yes
+guard = yes
 permanent = yes
 
 [room 10 / monster 1 / object 1]
@@ -390,7 +585,25 @@ kind = keys
 weight = 1
 price = 5
 carry = yes
+permanent = yes
 unlocks = 31
+
+[room 10 / monster 2]
+name = king,goblin *
+article = a
+desc = 6:5
+level = 4
+hits = 25
+max-hits = 25
+ac = 3
+attack-speed = 4
+treasure-table = 4
+defend = yes
+attack-last = yes
+magic = yes
+casts-spells = yes
+unique = yes
+permanent = yes
 
 [room 11]
 desc = 2:2
@@ -418,15 +631,16 @@ ac = 7
 attack-speed = 4
 treasure-table = 2
 defend = yes
-block = yes
 attack-last = yes
-permanent = yes
+block = yes
 undead = yes
+permanent = yes
 
 [room 12]
-desc = 2:3
 out = 6
+desc = 2:3
 anti-magic = yes
+notify-dm = yes
 
 [room 12 / object 1]
 name = ring,silver *
@@ -436,72 +650,116 @@ weight = 1
 price = 100
 carry = yes
 magic = yes
+permanent = yes
 spell = protection
 level = 1
 
+[room 12 / object 2]
+name = stones,white *
+article = some
+kind = teleport
+desc = 6:7
+permanent = yes
+to = 1
+active-room = 12
+
 [room 13]
-desc = 2:4
 north = 4
 south = 15
 east = 14
 west = 16
+desc = 2:4
+
+[room 13 / monster 1]
+name = watchman,*
+article = a
+desc = 6:3
+level = 4
+hits = 20
+max-hits = 20
+ac = 4
+attack-speed = 4
+defend = yes
+moral-react = yes
+nice = yes
+assistance = yes
+watch = yes
+permanent = yes
 
 [room 14]
-desc = 2:5
 south = 18
 east = 17
 west = 13
 down = 19
+desc = 2:5
 
 [room 15]
-desc = 2:6
 north = 13
+desc = 2:6
 trains = fighter dm
 
 [room 16]
-desc = 2:7
 east = 13
+desc = 2:7
 trains = barbarian
 
 [room 17]
-desc = 2:8
 west = 14
+desc = 2:8
 trains = ranger
 
 [room 18]
-desc = 2:9
 north = 14
+desc = 2:9
 trains = magic-user
 
 [room 19]
-desc = 2:10
 up = 14
+desc = 2:10
 trains = thief
 
 [room 20]
-desc = 4:1
 east = 5
+desc = 4:1
 trains = cleric
 
 [room 21]
-desc = 4:2
 south = 5
+desc = 4:2
 trains = paladin
 
 [room 22]
-desc = 4:3
 east = 4
+desc = 4:3
 greeting = Appraisor asks, "What would you like to sell?"
 role = pawnshop
 
 [room 23]
-desc = 4:4
 west = 4
+desc = 4:4
 greeting = "Hee hee.  So matey, your gear don't look too good.  Need fixin?"
 role = smith
 
 [room 24]
-desc = 4:5
 south = 3
+desc = 4:5
 greeting = Paperboy says, "Extra! Extra! Read all about it!"
 role = newsstand
+
+[room 25]
+out = 13
+desc = 4:6
+
+[room 26]
+desc = 4:7
+encounter-table = 3
+encounter-rate = 25
+
+[room 26 / object 1]
+name = gate,toll *
+article = a
+kind = door
+permanent = yes
+to = 6
+trap = 5
+spring = yes
