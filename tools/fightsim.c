@@ -11,6 +11,9 @@
  *	-w OBJ		weapon object template, 0 for none (default 2, short sword)
  *	-a OBJ		armor object template, 0 for none (default 3, leather armor)
  *	-r SEED		random seed (default: time and pid, as scepterd)
+ *	-m			the monster attacks first: it targets the character as soon
+ *				as it appears, and the character does not act until the
+ *				monster has made its first attack (hit or miss)
  *	-v			print the game text
  *
  * A 1st-level character is created through the normal login prompts,
@@ -65,7 +68,7 @@ static void NameWord(const char *Name, char *Word)
 static void Usage(void)
 {
 	fprintf(stderr, "usage: fightsim [-n fights] [-c class] [-s stats] "
-			"[-k skill] [-w obj] [-a obj] [-r seed] [-v] GAMEDIR MONSTER ROOM\n");
+			"[-k skill] [-w obj] [-a obj] [-r seed] [-m] [-v] GAMEDIR MONSTER ROOM\n");
 	exit(2);
 }
 
@@ -73,6 +76,7 @@ int main(int argc, char **argv)
 {
 	const char	*Class = "fighter", *Stats = "15, 7, 9, 10, 9", *Skill = "sharp";
 	int			Fights = 200, WeapT = 2, ArmT = 3, Seed = -1, Verbose = FALSE;
+	int			MonFirst = FALSE;
 	int			MonTmpl, Rm, Fight, Wins = 0, Unfinished = 0, Opt;
 	int			MinR = 1 << 30, MaxR = 0;
 	long		TotRounds = 0, TotSecs = 0, WinRounds = 0;
@@ -83,7 +87,7 @@ int main(int argc, char **argv)
 	MonsterType	Tmpl;
 	char		Cmd[64], Word[sizeof(Alfa)];
 
-	while ((Opt = getopt(argc, argv, "n:c:s:k:w:a:r:v")) != -1)
+	while ((Opt = getopt(argc, argv, "n:c:s:k:w:a:r:mv")) != -1)
 		switch (Opt)
 		{
 			case 'n':	Fights = atoi(optarg);	break;
@@ -93,6 +97,7 @@ int main(int argc, char **argv)
 			case 'w':	WeapT = atoi(optarg);	break;
 			case 'a':	ArmT = atoi(optarg);	break;
 			case 'r':	Seed = atoi(optarg);	break;
+			case 'm':	MonFirst = TRUE;		break;
 			case 'v':	Verbose = TRUE;			break;
 			default:	Usage();
 		}
@@ -195,8 +200,9 @@ int main(int argc, char **argv)
 			Me->Int, Me->Dex, Me->Pty, Me->Con, Me->MaxHits, Me->MaxFatigue,
 			Me->AC, Me->SSharp, Me->SThrust, Me->SBlunt, Me->SLong);
 	fprintf(stderr, "monster %d: %s, level %d, hits %d, AC %d, attack speed %d;"
-			" monster speed %d; room %d\n", MonTmpl, Tmpl.Name, Tmpl.Lvl,
-			Tmpl.Hits, Tmpl.AC, Tmpl.AtkSpeed, MSpeed, Rm);
+			" monster speed %d; room %d%s\n", MonTmpl, Tmpl.Name, Tmpl.Lvl,
+			Tmpl.Hits, Tmpl.AC, Tmpl.AtkSpeed, MSpeed, Rm,
+			MonFirst ? "; monster attacks first" : "");
 
 	for (Fight = 0; Fight < Fights; Fight++)
 	{
@@ -234,6 +240,9 @@ int main(int argc, char **argv)
 
 		*Mon = Tmpl;
 		InsertMonster(Mon, Me->RmCode);
+		Me->HitAtTime = RealTime;		/* MonAttack() sets it on each attack */
+		if (MonFirst)
+			Mon->DefPlayer = Me;
 
 		while (Secs < 3600)
 		{
@@ -246,6 +255,8 @@ int main(int argc, char **argv)
 
 			User = Me;
 			Term = Me->Trm;
+			if (MonFirst && Me->HitAtTime < RealTime - Secs + 1)
+				continue;				/* still waiting for the monster */
 			if (RealTime + 1 >= Me->LastAtk)
 			{
 				if (Weap && !Me->USWeap && Weap->Object.Weap.Strikes > 0)
