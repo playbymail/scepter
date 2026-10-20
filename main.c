@@ -31,10 +31,22 @@ void Boom(int sig)
 	}
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
 	unsigned	minute;
 	int Aborted = FALSE;
+
+	/* The data paths are relative to the game directory (see mkgame). */
+	if (argc > 2)
+	{
+		fprintf(stderr, "usage: %s [GAMEDIR]\n", argv[0]);
+		exit(2);
+	}
+	if (argc == 2 && chdir(argv[1]))
+	{
+		perror(argv[1]);
+		exit(1);
+	}
 
 	/* The QNX server forked into the background here.  It now runs in the
 	 * foreground with the console harness in ipc.c as its only player. */

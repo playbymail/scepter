@@ -1,0 +1,507 @@
+# Scepter world "alpha", converted from var/alpha/world.json.
+# Format: docs/world-format.md
+
+[world]
+name = alpha
+monster-speed = 8
+revive-room = 5
+
+# ---- descriptions: RECORD:LINE is referenced by desc = ----
+
+[description 1]
+1 = 1/You are in the village square.# A dry fountain stands in the middle.#+/
+2 = 1/#Roads lead north and south; an inn lies east, a temple west.#/
+3 = 2/You are on the north road./You are on a rutted road north of the village./
+4 = 1/You are in the Gilded Goose.# Stairs climb to a loft; a newsstand is north.#/
+5 = 1/You are in the market.# A smithy smokes to the east; a pawnshop lies west.#/
+6 = 1/You are in the temple.# Candles burn before a plain stone altar.#/
+7 = 1/You are at the edge of a dark forest.# A ruined tower rises to the east.#/
+8 = 1/You are in the inn's loft.# It smells of hay and old wine.#/
+9 = 2/You are deep in the forest./You are among tall pines.# Something howls.#/
+10 = 1/You are at the foot of a ruined tower.# Steps climb into the dark.#/
+
+[description 2]
+1 = 1/You are atop the ruined tower.# The forest stretches out below.#/
+2 = 1/You are in a damp cellar.# Bones crunch underfoot.#/
+3 = 1/You are in a quiet glade.# A circle of white stones hums softly.#/
+4 = 1/You are on Guild Street.# Halls stand south and west; the market is north.#/
+5 = 1/You are at the east end of Guild Street.# Steps lead down to a cellar.#/
+6 = 1/You are in the fighters' hall.# Racks of blunted swords line the walls.#/
+7 = 1/You are in the barbarians' longhouse.# A fire roars in a long stone pit.#/
+8 = 1/You are in the rangers' lodge.# Antlers and bowstaves hang from the beams.#/
+9 = 1/You are in the mages' college.# Chalked circles cover the floor.#/
+10 = 1/You are in the thieves' den.# Nobody here looks at you directly.#/
+
+[description 3]
+1 = 2/A lean grey wolf, all ribs and teeth./A wolf with a torn ear./
+2 = 1/A goblin in a stolen helmet several sizes too big./
+3 = 1/A rat the size of a small dog./
+4 = 1/A skeleton held together by malice and old wire./
+5 = 1/A plain iron dagger, well oiled./
+6 = 1/An iron-bound chest with a brass lock./
+7 = 1/It reads: "Tsogira reference world. Not for production."/
+8 = 1/A goblin in a cloak of crow feathers, muttering over a bundle of bones./
+
+[description 4]
+1 = 1/You are in the cloister.# Acolytes pace beneath the arches.#/
+2 = 1/You are in the paladins' chapter house.# Shields bear the temple's sign.#/
+3 = 1/You are in the pawnshop.# Shelves sag under other people's things.#/
+4 = 1/You are in the smithy.# The forge glows and a hammer rings on the anvil.#/
+5 = 1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/
+
+[description 5]
+1 = 1/A peddler with a tray of trinkets slung from a strap about his neck./
+2 = 2/Help!  Thieves!/Guards!  Guards!/
+3 = 1/Take what you like, only spare me!/
+4 = 1/I'll not forget your face, friend./
+5 = 1/Is this how the village treats an honest trader?/
+6 = 2/Fine goods, cheap!/Everything must go!/
+7 = 1/The road north is no place to walk alone after dark./
+8 = 1/They say the old tower is full of goblins./
+9 = 1/I'd sell you another, but my tray is bare./
+10 = 1/Come back when I've restocked, friend./
+
+# ---- object templates (OList; the store sells 1-20) ----
+
+[object 1]
+name = dagger,*
+article = a
+kind = weapon
+weight = 2
+price = 10
+desc = 3:5
+carry = yes
+min-damage = 1
+max-damage = 4
+strikes = 100
+skill = thrust
+
+[object 2]
+name = sword,short *
+article = a
+kind = weapon
+weight = 5
+price = 25
+carry = yes
+min-damage = 2
+max-damage = 7
+strikes = 100
+skill = sharp
+
+[object 3]
+name = armor,leather *
+article = some
+kind = armor
+weight = 15
+price = 30
+carry = yes
+plus = 1
+hits = 50
+
+[object 4]
+name = gold,* coins
+article = some
+kind = coins
+weight = 1
+price = 10
+carry = yes
+multiplier = 1
+
+[object 5]
+name = scroll,*
+article = a
+kind = scroll
+weight = 1
+price = 40
+carry = yes
+magic = yes
+spell = heal
+
+[object 6]
+name = shield,wooden *
+article = a
+kind = shield
+weight = 6
+price = 10
+carry = yes
+plus = 2
+hits = 50
+
+# ---- monster templates (MList) ----
+
+[monster 1]
+name = wolf,*
+article = a
+desc = 3:1
+level = 2
+hits = 11
+max-hits = 11
+ac = 7
+attack-speed = 4
+defend = yes
+follow = yes
+attack-last = yes
+
+[monster 2]
+name = goblin,*
+article = a
+desc = 3:2
+level = 1
+hits = 7
+max-hits = 7
+ac = 5
+attack-speed = 4
+treasure-table = 1
+defend = yes
+attack-last = yes
+
+[monster 3]
+name = rat,giant *
+article = a
+desc = 3:3
+level = 1
+hits = 7
+max-hits = 7
+ac = 8
+attack-speed = 4
+defend = yes
+flee = yes
+
+[monster 4]
+name = skeleton,*
+article = a
+desc = 3:4
+level = 1
+hits = 13
+max-hits = 13
+ac = 7
+attack-speed = 4
+treasure-table = 2
+defend = yes
+attack-last = yes
+undead = yes
+
+[monster 5]
+name = shaman,goblin *
+article = a
+desc = 3:8
+level = 1
+hits = 7
+max-hits = 7
+ac = 5
+attack-speed = 4
+treasure-table = 1
+defend = yes
+attack-last = yes
+casts-spells = yes
+
+# ---- random encounter and treasure tables ----
+
+[encounter 1]
+monsters = 1 1 3 2 5
+
+[encounter 2]
+monsters = 3 4
+
+[treasure 1]
+objects = 4 1 5
+
+[treasure 2]
+objects = 4 3
+
+[treasure 3]
+objects = 1 5 6 3 1 5 6 3
+
+# ---- rooms ----
+
+[room 1]
+desc = 1:1
+north = 2
+south = 4
+east = 3
+west = 5
+safe = yes
+
+[room 1 / object 1]
+name = sign,wooden *
+article = a
+kind = misc
+weight = 50
+desc = 3:7
+permanent = yes
+
+[room 1 / object 2]
+name = sword,short *
+article = a
+kind = weapon
+weight = 5
+price = 25
+carry = yes
+min-damage = 2
+max-damage = 7
+strikes = 100
+skill = sharp
+
+[room 2]
+desc = 1:3
+north = 6
+south = 1
+
+[room 2 / monster 1]
+name = peddler,*
+article = a
+desc = 5:1
+level = 2
+hits = 10
+max-hits = 10
+ac = 8
+attack-speed = 4
+parley = 1
+treasure-table = 3
+defend = yes
+permanent = yes
+
+[room 3]
+desc = 1:4
+north = 24
+west = 1
+up = 7
+greeting = Bartender says, "Buy a drink, mac?"
+role = bar
+staggers = 1 2 3 4 5
+
+[room 4]
+desc = 1:5
+north = 1
+south = 13
+east = 23
+west = 22
+greeting = Merchant asks, "What would you like to buy?"
+role = store
+stock = 1 2 3 6
+
+[room 5]
+desc = 1:6
+north = 21
+east = 1
+west = 20
+safe = yes
+
+[room 5 / object 1]
+name = key,brass *
+article = a
+kind = keys
+weight = 1
+price = 5
+carry = yes
+unlocks = 21
+
+[room 6]
+desc = 1:7
+north = 8
+south = 2
+east = 9
+
+[room 7]
+desc = 1:8
+down = 3
+
+[room 7 / object 1]
+name = chest,iron-bound *
+article = an
+kind = chest
+weight = 100
+desc = 3:6
+permanent = yes
+closed = yes
+trap = 9
+lock = 21
+
+[room 7 / object 1 / object 1]
+name = gold,* coins
+article = some
+kind = coins
+weight = 1
+price = 50
+carry = yes
+multiplier = 1
+
+[room 7 / object 1 / object 2]
+name = scroll,*
+article = a
+kind = scroll
+weight = 1
+price = 40
+carry = yes
+magic = yes
+spell = heal
+
+[room 8]
+desc = 1:9
+south = 6
+encounter-table = 1
+encounter-rate = 20
+
+[room 9]
+desc = 1:10
+west = 6
+up = 10
+
+[room 9 / object 1]
+name = door,iron *
+article = an
+kind = door
+permanent = yes
+to = 11
+closed = yes
+lock = 31
+
+[room 10]
+desc = 2:1
+down = 9
+
+[room 10 / object 1]
+name = portal,shimmering *
+article = a
+kind = portal
+permanent = yes
+invisible = yes
+to = 12
+
+[room 10 / monster 1]
+name = goblin,*
+article = a
+desc = 3:2
+level = 1
+hits = 7
+max-hits = 7
+ac = 5
+attack-speed = 4
+treasure-table = 1
+defend = yes
+guard = yes
+attack-last = yes
+permanent = yes
+
+[room 10 / monster 1 / object 1]
+name = key,iron *
+article = an
+kind = keys
+weight = 1
+price = 5
+carry = yes
+unlocks = 31
+
+[room 11]
+desc = 2:2
+encounter-table = 2
+encounter-rate = 30
+dark = yes
+
+[room 11 / object 1]
+name = door,iron *
+article = an
+kind = door
+permanent = yes
+to = 9
+closed = yes
+lock = 31
+
+[room 11 / monster 1]
+name = skeleton,*
+article = a
+desc = 3:4
+level = 1
+hits = 13
+max-hits = 13
+ac = 7
+attack-speed = 4
+treasure-table = 2
+defend = yes
+block = yes
+attack-last = yes
+permanent = yes
+undead = yes
+
+[room 12]
+desc = 2:3
+out = 6
+anti-magic = yes
+
+[room 12 / object 1]
+name = ring,silver *
+article = a
+kind = ring
+weight = 1
+price = 100
+carry = yes
+magic = yes
+spell = protection
+level = 1
+
+[room 13]
+desc = 2:4
+north = 4
+south = 15
+east = 14
+west = 16
+
+[room 14]
+desc = 2:5
+south = 18
+east = 17
+west = 13
+down = 19
+
+[room 15]
+desc = 2:6
+north = 13
+trains = fighter dm
+
+[room 16]
+desc = 2:7
+east = 13
+trains = barbarian
+
+[room 17]
+desc = 2:8
+west = 14
+trains = ranger
+
+[room 18]
+desc = 2:9
+north = 14
+trains = magic-user
+
+[room 19]
+desc = 2:10
+up = 14
+trains = thief
+
+[room 20]
+desc = 4:1
+east = 5
+trains = cleric
+
+[room 21]
+desc = 4:2
+south = 5
+trains = paladin
+
+[room 22]
+desc = 4:3
+east = 4
+greeting = Appraisor asks, "What would you like to sell?"
+role = pawnshop
+
+[room 23]
+desc = 4:4
+west = 4
+greeting = "Hee hee.  So matey, your gear don't look too good.  Need fixin?"
+role = smith
+
+[room 24]
+desc = 4:5
+south = 3
+greeting = Paperboy says, "Extra! Extra! Read all about it!"
+role = newsstand

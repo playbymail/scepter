@@ -1,6 +1,3 @@
-/* main.c */
-int	main(void);
-
 /* mon.c */
 void	PM(MonsterPoint Mon, int C, char *Str);
 void	PrintMon(MonsterPoint Mon, int S, int C, char *Str);

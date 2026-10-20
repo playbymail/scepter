@@ -1,0 +1,538 @@
+{
+  "name": "alpha",
+  "reviveRoom": 5,
+  "monsterSpeed": 8,
+  "descriptions": [
+    {
+      "record": 1,
+      "lines": [
+        "1/You are in the village square.# A dry fountain stands in the middle.#+/",
+        "1/#Roads lead north and south; an inn lies east, a temple west.#/",
+        "2/You are on the north road./You are on a rutted road north of the village./",
+        "1/You are in the Gilded Goose.# Stairs climb to a loft; a newsstand is north.#/",
+        "1/You are in the market.# A smithy smokes to the east; a pawnshop lies west.#/",
+        "1/You are in the temple.# Candles burn before a plain stone altar.#/",
+        "1/You are at the edge of a dark forest.# A ruined tower rises to the east.#/",
+        "1/You are in the inn's loft.# It smells of hay and old wine.#/",
+        "2/You are deep in the forest./You are among tall pines.# Something howls.#/",
+        "1/You are at the foot of a ruined tower.# Steps climb into the dark.#/"
+      ]
+    },
+    {
+      "record": 2,
+      "lines": [
+        "1/You are atop the ruined tower.# The forest stretches out below.#/",
+        "1/You are in a damp cellar.# Bones crunch underfoot.#/",
+        "1/You are in a quiet glade.# A circle of white stones hums softly.#/",
+        "1/You are on Guild Street.# Halls stand south and west; the market is north.#/",
+        "1/You are at the east end of Guild Street.# Steps lead down to a cellar.#/",
+        "1/You are in the fighters' hall.# Racks of blunted swords line the walls.#/",
+        "1/You are in the barbarians' longhouse.# A fire roars in a long stone pit.#/",
+        "1/You are in the rangers' lodge.# Antlers and bowstaves hang from the beams.#/",
+        "1/You are in the mages' college.# Chalked circles cover the floor.#/",
+        "1/You are in the thieves' den.# Nobody here looks at you directly.#/"
+      ]
+    },
+    {
+      "record": 3,
+      "lines": [
+        "2/A lean grey wolf, all ribs and teeth./A wolf with a torn ear./",
+        "1/A goblin in a stolen helmet several sizes too big./",
+        "1/A rat the size of a small dog./",
+        "1/A skeleton held together by malice and old wire./",
+        "1/A plain iron dagger, well oiled./",
+        "1/An iron-bound chest with a brass lock./",
+        "1/It reads: \"Tsogira reference world. Not for production.\"/",
+        "1/A goblin in a cloak of crow feathers, muttering over a bundle of bones./"
+      ]
+    },
+    {
+      "record": 4,
+      "lines": [
+        "1/You are in the cloister.# Acolytes pace beneath the arches.#/",
+        "1/You are in the paladins' chapter house.# Shields bear the temple's sign.#/",
+        "1/You are in the pawnshop.# Shelves sag under other people's things.#/",
+        "1/You are in the smithy.# The forge glows and a hammer rings on the anvil.#/",
+        "1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/"
+      ]
+    },
+    {
+      "record": 5,
+      "lines": [
+        "1/A peddler with a tray of trinkets slung from a strap about his neck./",
+        "2/Help!  Thieves!/Guards!  Guards!/",
+        "1/Take what you like, only spare me!/",
+        "1/I'll not forget your face, friend./",
+        "1/Is this how the village treats an honest trader?/",
+        "2/Fine goods, cheap!/Everything must go!/",
+        "1/The road north is no place to walk alone after dark./",
+        "1/They say the old tower is full of goblins./",
+        "1/I'd sell you another, but my tray is bare./",
+        "1/Come back when I've restocked, friend./"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1,
+      "exits": [2, 4, 3, 5, 0, 0],
+      "desc": {"record": 1, "line": 1},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,wooden *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 50,
+          "desc": {"record": 3, "line": 7},
+          "permanent": true
+        },
+        {
+          "name": "sword,short *",
+          "article": "a",
+          "kind": "weapon",
+          "weight": 5,
+          "price": 25,
+          "carry": true,
+          "weapon": {"minDamage": 2, "maxDamage": 7, "strikes": 100, "skill": "sharp"}
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "exits": [6, 1, 0, 0, 0, 0],
+      "desc": {"record": 1, "line": 3},
+      "monsters": [
+        {
+          "name": "peddler,*",
+          "article": "a",
+          "desc": {"record": 5, "line": 1},
+          "level": 2,
+          "hits": 10,
+          "maxHits": 10,
+          "ac": 8,
+          "attackSpeed": 4,
+          "parley": 1,
+          "treasureTable": 3,
+          "defend": true,
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "exits": [24, 0, 0, 1, 7, 0],
+      "desc": {"record": 1, "line": 4},
+      "greeting": "Bartender says, \"Buy a drink, mac?\"",
+      "bar": true,
+      "staggers": [1, 2, 3, 4, 5]
+    },
+    {
+      "id": 4,
+      "exits": [1, 13, 23, 22, 0, 0],
+      "desc": {"record": 1, "line": 5},
+      "greeting": "Merchant asks, \"What would you like to buy?\"",
+      "stock": [1, 2, 3, 6]
+    },
+    {
+      "id": 5,
+      "exits": [21, 0, 1, 20, 0, 0],
+      "desc": {"record": 1, "line": 6},
+      "safe": true,
+      "objects": [
+        {
+          "name": "key,brass *",
+          "article": "a",
+          "kind": "keys",
+          "weight": 1,
+          "price": 5,
+          "carry": true,
+          "keys": {"unlocks": 21}
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "exits": [8, 2, 9, 0, 0, 0],
+      "desc": {"record": 1, "line": 7}
+    },
+    {
+      "id": 7,
+      "exits": [0, 0, 0, 0, 0, 3],
+      "desc": {"record": 1, "line": 8},
+      "objects": [
+        {
+          "name": "chest,iron-bound *",
+          "article": "an",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 3, "line": 6},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 9,
+            "lock": 21,
+            "contents": [
+              {
+                "name": "gold,* coins",
+                "article": "some",
+                "kind": "coins",
+                "weight": 1,
+                "price": 50,
+                "carry": true,
+                "coins": {"multiplier": 1}
+              },
+              {
+                "name": "scroll,*",
+                "article": "a",
+                "kind": "scroll",
+                "weight": 1,
+                "price": 40,
+                "carry": true,
+                "magic": true,
+                "scroll": {"spell": "heal"}
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "exits": [0, 6, 0, 0, 0, 0],
+      "desc": {"record": 1, "line": 9},
+      "encounterTable": 1,
+      "encounterRate": 20
+    },
+    {
+      "id": 9,
+      "exits": [0, 0, 0, 6, 10, 0],
+      "desc": {"record": 1, "line": 10},
+      "objects": [
+        {
+          "name": "door,iron *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 11, "closed": true, "lock": 31}
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "exits": [0, 0, 0, 0, 0, 9],
+      "desc": {"record": 2, "line": 1},
+      "objects": [
+        {
+          "name": "portal,shimmering *",
+          "article": "a",
+          "kind": "portal",
+          "permanent": true,
+          "invisible": true,
+          "portal": {"to": 12}
+        }
+      ],
+      "monsters": [
+        {
+          "name": "goblin,*",
+          "article": "a",
+          "desc": {"record": 3, "line": 2},
+          "level": 1,
+          "hits": 7,
+          "maxHits": 7,
+          "ac": 5,
+          "attackSpeed": 4,
+          "treasureTable": 1,
+          "defend": true,
+          "attackLast": true,
+          "guard": true,
+          "permanent": true,
+          "inventory": [
+            {
+              "name": "key,iron *",
+              "article": "an",
+              "kind": "keys",
+              "weight": 1,
+              "price": 5,
+              "carry": true,
+              "keys": {"unlocks": 31}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 2, "line": 2},
+      "encounterTable": 2,
+      "encounterRate": 30,
+      "dark": true,
+      "objects": [
+        {
+          "name": "door,iron *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 9, "closed": true, "lock": 31}
+        }
+      ],
+      "monsters": [
+        {
+          "name": "skeleton,*",
+          "article": "a",
+          "desc": {"record": 3, "line": 4},
+          "level": 1,
+          "hits": 13,
+          "maxHits": 13,
+          "ac": 7,
+          "attackSpeed": 4,
+          "treasureTable": 2,
+          "defend": true,
+          "attackLast": true,
+          "block": true,
+          "undead": true,
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "out": 6,
+      "desc": {"record": 2, "line": 3},
+      "antiMagic": true,
+      "objects": [
+        {
+          "name": "ring,silver *",
+          "article": "a",
+          "kind": "ring",
+          "weight": 1,
+          "price": 100,
+          "carry": true,
+          "magic": true,
+          "ring": {"spell": "protection", "level": 1}
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "exits": [4, 15, 14, 16, 0, 0],
+      "desc": {"record": 2, "line": 4}
+    },
+    {
+      "id": 14,
+      "exits": [0, 18, 17, 13, 0, 19],
+      "desc": {"record": 2, "line": 5}
+    },
+    {
+      "id": 15,
+      "exits": [13, 0, 0, 0, 0, 0],
+      "desc": {"record": 2, "line": 6},
+      "trains": ["fighter", "dm"]
+    },
+    {
+      "id": 16,
+      "exits": [0, 0, 13, 0, 0, 0],
+      "desc": {"record": 2, "line": 7},
+      "trains": ["barbarian"]
+    },
+    {
+      "id": 17,
+      "exits": [0, 0, 0, 14, 0, 0],
+      "desc": {"record": 2, "line": 8},
+      "trains": ["ranger"]
+    },
+    {
+      "id": 18,
+      "exits": [14, 0, 0, 0, 0, 0],
+      "desc": {"record": 2, "line": 9},
+      "trains": ["magic-user"]
+    },
+    {
+      "id": 19,
+      "exits": [0, 0, 0, 0, 14, 0],
+      "desc": {"record": 2, "line": 10},
+      "trains": ["thief"]
+    },
+    {
+      "id": 20,
+      "exits": [0, 0, 5, 0, 0, 0],
+      "desc": {"record": 4, "line": 1},
+      "trains": ["cleric"]
+    },
+    {
+      "id": 21,
+      "exits": [0, 5, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 2},
+      "trains": ["paladin"]
+    },
+    {
+      "id": 22,
+      "exits": [0, 0, 4, 0, 0, 0],
+      "desc": {"record": 4, "line": 3},
+      "greeting": "Appraisor asks, \"What would you like to sell?\"",
+      "pawnshop": true
+    },
+    {
+      "id": 23,
+      "exits": [0, 0, 0, 4, 0, 0],
+      "desc": {"record": 4, "line": 4},
+      "greeting": "\"Hee hee.  So matey, your gear don't look too good.  Need fixin?\"",
+      "smith": true
+    },
+    {
+      "id": 24,
+      "exits": [0, 3, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 5},
+      "greeting": "Paperboy says, \"Extra! Extra! Read all about it!\"",
+      "newsstand": true
+    }
+  ],
+  "monsters": [
+    {
+      "id": 1,
+      "name": "wolf,*",
+      "article": "a",
+      "desc": {"record": 3, "line": 1},
+      "level": 2,
+      "hits": 11,
+      "maxHits": 11,
+      "ac": 7,
+      "attackSpeed": 4,
+      "defend": true,
+      "attackLast": true,
+      "follow": true
+    },
+    {
+      "id": 2,
+      "name": "goblin,*",
+      "article": "a",
+      "desc": {"record": 3, "line": 2},
+      "level": 1,
+      "hits": 7,
+      "maxHits": 7,
+      "ac": 5,
+      "attackSpeed": 4,
+      "treasureTable": 1,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 3,
+      "name": "rat,giant *",
+      "article": "a",
+      "desc": {"record": 3, "line": 3},
+      "level": 1,
+      "hits": 7,
+      "maxHits": 7,
+      "ac": 8,
+      "attackSpeed": 4,
+      "defend": true,
+      "flee": true
+    },
+    {
+      "id": 4,
+      "name": "skeleton,*",
+      "article": "a",
+      "desc": {"record": 3, "line": 4},
+      "level": 1,
+      "hits": 13,
+      "maxHits": 13,
+      "ac": 7,
+      "attackSpeed": 4,
+      "treasureTable": 2,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 5,
+      "name": "shaman,goblin *",
+      "article": "a",
+      "desc": {"record": 3, "line": 8},
+      "level": 1,
+      "hits": 7,
+      "maxHits": 7,
+      "ac": 5,
+      "attackSpeed": 4,
+      "treasureTable": 1,
+      "defend": true,
+      "attackLast": true,
+      "castsSpells": true
+    }
+  ],
+  "objects": [
+    {
+      "id": 1,
+      "name": "dagger,*",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 2,
+      "price": 10,
+      "desc": {"record": 3, "line": 5},
+      "carry": true,
+      "weapon": {"minDamage": 1, "maxDamage": 4, "strikes": 100, "skill": "thrust"}
+    },
+    {
+      "id": 2,
+      "name": "sword,short *",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 5,
+      "price": 25,
+      "carry": true,
+      "weapon": {"minDamage": 2, "maxDamage": 7, "strikes": 100, "skill": "sharp"}
+    },
+    {
+      "id": 3,
+      "name": "armor,leather *",
+      "article": "some",
+      "kind": "armor",
+      "weight": 15,
+      "price": 30,
+      "carry": true,
+      "armor": {"plus": 1, "hits": 50}
+    },
+    {
+      "id": 4,
+      "name": "gold,* coins",
+      "article": "some",
+      "kind": "coins",
+      "weight": 1,
+      "price": 10,
+      "carry": true,
+      "coins": {"multiplier": 1}
+    },
+    {
+      "id": 5,
+      "name": "scroll,*",
+      "article": "a",
+      "kind": "scroll",
+      "weight": 1,
+      "price": 40,
+      "carry": true,
+      "magic": true,
+      "scroll": {"spell": "heal"}
+    },
+    {
+      "id": 6,
+      "name": "shield,wooden *",
+      "article": "a",
+      "kind": "shield",
+      "weight": 6,
+      "price": 10,
+      "carry": true,
+      "shield": {"plus": 2, "hits": 50}
+    }
+  ],
+  "encounters": [
+    {"id": 1, "entries": [1, 1, 3, 2, 5]},
+    {"id": 2, "entries": [3, 4]}
+  ],
+  "treasures": [
+    {"id": 1, "entries": [4, 1, 5]},
+    {"id": 2, "entries": [4, 3]},
+    {"id": 3, "entries": [1, 5, 6, 3, 1, 5, 6, 3]}
+  ]
+}

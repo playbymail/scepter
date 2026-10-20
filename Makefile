@@ -12,17 +12,21 @@ OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	edit1.o edit2.o io.o ipc.o log.o main.o matt.o \
 	mon.o obj.o room.o spells.o user.o rand.o
 
-all: scepterd
+all: scepterd mkgame
 
 scepterd: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
+# World compiler; must be built from the same headers as scepterd.
+mkgame: mkgame.o
+	$(CC) $(CFLAGS) -o $@ mkgame.o
+
 %.o: %.c
 	$(CC) $(CSTD) $(WARN) $(CFLAGS) $(DEFS) -c $<
 
-$(OBJS): common.h scepter.h proto.h
+$(OBJS) mkgame.o: common.h scepter.h proto.h
 
 clean:
-	rm -f scepterd $(OBJS)
+	rm -f scepterd mkgame $(OBJS) mkgame.o
 
 .PHONY: all clean
