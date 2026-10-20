@@ -65,7 +65,8 @@
         "1/You are in the smithy.# The forge glows and a hammer rings on the anvil.#/",
         "1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/",
         "1/You are in the village lockup.# Damp straw and iron bars. Steps lead up.#/",
-        "1/You are on the forest bridge.# Black water slides by below.#/"
+        "1/You are on the forest bridge.# Black water slides by below.#/",
+        "1/You are in the wizards' workshop.# Scorch marks blacken the benches.#/"
       ]
     },
     {
@@ -438,7 +439,7 @@
     },
     {
       "id": 18,
-      "exits": [14, 0, 0, 0, 0, 0],
+      "exits": [14, 0, 27, 0, 0, 0],
       "desc": {"record": 2, "line": 9},
       "trains": ["magic-user"]
     },
@@ -500,6 +501,49 @@
           "kind": "door",
           "permanent": true,
           "door": {"to": 6, "trap": 5, "spring": true}
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "exits": [0, 0, 0, 18, 0, 0],
+      "desc": {"record": 4, "line": 8},
+      "objects": [
+        {
+          "name": "orb,amber *",
+          "article": "an",
+          "kind": "device",
+          "magic": true,
+          "permanent": true,
+          "device": {"spell": "polymorph", "charges": 5, "level": 10}
+        },
+        {
+          "name": "prism,violet *",
+          "article": "a",
+          "kind": "device",
+          "magic": true,
+          "permanent": true,
+          "device": {"spell": "psi-blast", "charges": 5, "level": 5}
+        },
+        {
+          "name": "chest,black *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "permanent": true,
+          "chest": {"closed": true, "trap": 50}
+        }
+      ],
+      "monsters": [
+        {
+          "name": "wisp,marsh *",
+          "article": "a",
+          "level": 1,
+          "hits": 0,
+          "maxHits": 0,
+          "ac": 9,
+          "attackSpeed": 0,
+          "permanent": true
         }
       ]
     }
@@ -658,6 +702,17 @@
       "magic": true,
       "castsSpells": true,
       "unique": true
+    },
+    {
+      "id": 30,
+      "name": "newt,*",
+      "article": "a",
+      "level": 1,
+      "hits": 2,
+      "maxHits": 2,
+      "ac": 9,
+      "attackSpeed": 2,
+      "flee": true
     }
   ],
   "objects": [

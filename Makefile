@@ -62,7 +62,14 @@ check-tintin: scepterd mkgame
 check-data: scepterd mkgame upgradegame fightsim
 	python3 -I tools/datatest.py . var/alpha/alpha.world
 
+# Player-reachable security bugs (tools/securitytest.py).  Run it on a build
+# that makes memory errors visible:
+#   make CFLAGS='-g -O1 -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
+# The pattern fill turns an uninitialized pointer (#11) into a sure crash.
+check-security: scepterd mkgame
+	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
+
 clean:
 	rm -f scepterd mkgame fightsim upgradegame $(OBJS) mkgame.o tools/fightsim.o tools/upgradegame.o
 
-.PHONY: all clean check-worlds check-net check-tintin check-data
+.PHONY: all clean check-worlds check-net check-tintin check-data check-security
