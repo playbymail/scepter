@@ -38,6 +38,8 @@ container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/o
 ```sh
 scp out/scepterd out/mkgame out/upgradegame tsogira:/tmp/
 ssh tsogira
+cp -p /usr/local/bin/scepterd /usr/local/bin/mkgame /usr/local/bin/upgradegame \
+	/usr/local/share/scepter/prev/    # for rolling back
 systemctl stop scepter
 install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /usr/local/bin/
 rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame
@@ -55,9 +57,16 @@ the old files are still in place.  Reinstall the previous binaries, or fix
 the reported file, before starting the server again.  The new `scepterd`
 won't start on a game it can't read; check `journalctl -u scepter`.
 
-To roll back after an upgrade: stop the server, reinstall the previous
-binaries, and replace `/var/lib/scepter/alpha` with the backup.  Anything
-saved since the upgrade is lost.
+To roll back after an upgrade: stop the server, copy the previous binaries
+back from `/usr/local/share/scepter/prev/`, and replace
+`/var/lib/scepter/alpha` with the backup.  Anything saved since the upgrade
+is lost.
+
+Upgrade history:
+
+| Date | Commit | Format | Backup |
+|---|---|---|---|
+| 2026-10-20 | `860c2a4` | 0 → 1 (headers, #83) | `/var/lib/scepter/alpha.backup-20261020-212823` |
 
 ## First install
 
