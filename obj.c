@@ -1,6 +1,7 @@
 #include "scepter.h"
 
 static void	AddSpell(int N, char *Nm, int Hash, int Len, int MP, int Lvl, int Int, int Ty);
+static char	*SpellName(int N);
 
 static void AddSpell(int N, char *Nm, int Hash, int Len, int MP, int Lvl, int Int, int Ty)
 {
@@ -13,6 +14,12 @@ static void AddSpell(int N, char *Nm, int Hash, int Len, int MP, int Lvl, int In
 	SpellClass[N].SplType	= Ty;
 
 	Spellen = Max(N, Spellen);
+}
+
+/* Spell numbers come from object data; don't trust them. */
+static char *SpellName(int N)
+{
+	return N >= 0 && N <= Spellen ? SpellList[N] : "UNKNOWN";
 }
 
 void InitSpells(void)
@@ -256,6 +263,7 @@ void ObjDisplay(ObjectPoint Object)
 				case Thrust:	p = "Thrust";	break;
 				case Blunt:		p = "Blunt";	break;
 				case Long:		p = "Long";		break;
+				default:		p = "Unknown";	break;
 			}
 			sprintf(B1, "0%s class weapon, + %d to hit.", p, Wp->WeaPlus);
 			QOut(Term, B1);
@@ -281,7 +289,7 @@ void ObjDisplay(ObjectPoint Object)
 
 		case Scroll:
 			sprintf(B1, "0Scroll, spell = %s.",
-					SpellList[Object->Object.Scroll.Spell]);
+					SpellName(Object->Object.Scroll.Spell));
 			QOut(Term, B1);
 			break;
 
@@ -329,7 +337,7 @@ void ObjDisplay(ObjectPoint Object)
 		case MagDevice:
 			PNth(Object->Object.MagDevice.MLevel, B2);
 			sprintf(B1, "0%s level magical device, spell = %s.  Number of charges = %d.",
-					B2, SpellList[Object->Object.MagDevice.MSpell],
+					B2, SpellName(Object->Object.MagDevice.MSpell),
 					Object->Object.MagDevice.NumCharges);
 			QOut(Term, B1);
 			break;
@@ -363,7 +371,7 @@ void ObjDisplay(ObjectPoint Object)
 		case Ring:
 			PNth(Object->Object.Ring.RLevel, B2);
 			sprintf(B1, "0%s level ring, spell = %s.",
-					B2, SpellList[Object->Object.Ring.RSpell]);
+					B2, SpellName(Object->Object.Ring.RSpell));
 			QOut(Term, B1);
 			break;
 

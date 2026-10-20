@@ -2,7 +2,7 @@
 
 void PM(MonsterPoint Mon, int C, char *Str)
 {
-	char	Str1[40];
+	char	Str1[256];
 
 	ExpandName(Mon->Name, Str1);
 	if (!Mon->Top || Mon->Num > 1)

@@ -3,12 +3,13 @@
 
     python3 -I tools/securitytest.py [SCEPTERD [MKGAME [WORLD [TEST...]]]]
 
-Each test builds a fresh game from WORLD (default var/alpha/alpha.world),
-runs SCEPTERD on a free port of 127.0.0.1, and plays the scenario from an
-issue over raw sockets.  A test fails if the server crashes, stops answering,
-or prints a sanitizer report (apart from the known room.c Adjoin[6] read,
-#25).  Name tests (e.g. 55 8) to run only those.  `make check-security` runs
-this with a sanitizer build.
+Each test builds a fresh game from WORLD (default var/alpha/alpha.world).
+Player tests run SCEPTERD on a free port of 127.0.0.1 and play the scenario
+from an issue over raw sockets.  DM and bad-data tests run tools/dmtest.c,
+the dmtest binary beside SCEPTERD, which drives the engine directly.  A test
+fails if the server crashes, stops answering, or prints a sanitizer report
+(apart from the known room.c Adjoin[6] read, #25).  Name tests (e.g. 55 8)
+to run only those.  `make check-security` runs this; use a sanitizer build.
 
 Most scenarios use the wizards' workshop, room 27 of the alpha world.
 """
@@ -299,12 +300,44 @@ TESTS = {
 }
 
 
+# DM-only and bad-data tests, run by tools/dmtest.c
+DMTESTS = ["20", "23", "22", "24", "26"]
+
+
 def free_port():
     s = socket.socket()
     s.bind(("127.0.0.1", 0))
     port = s.getsockname()[1]
     s.close()
     return port
+
+
+def sanitizer_ok(report):
+    bad = [l for l in report.splitlines()
+           if re.search(r"runtime error|AddressSanitizer|LeakSanitizer", l)
+           and not re.search(r"room\.c:\d+:\d+: runtime error: index 6 out of bounds", l)]
+    if not check(not bad, "no new sanitizer reports"):
+        print(report)
+
+
+def run_dm(name, dmtest, mkgame, world):
+    print("# #%s: dmtest %s" % (name, name))
+    with tempfile.TemporaryDirectory() as tmp:
+        game = os.path.join(tmp, "game")
+        subprocess.run([mkgame, world, game], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            p = subprocess.run([dmtest, game, name], stdin=subprocess.DEVNULL,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+                               timeout=30)
+            report, rc = p.stderr.decode(errors="replace"), p.returncode
+        except subprocess.TimeoutExpired as e:
+            report, rc = (e.stderr or b"").decode(errors="replace"), "timeout"
+    for l in report.splitlines():
+        if l.startswith(("ok   ", "FAIL ")):
+            check(l.startswith("ok"), l[5:])
+    check(rc == 0, "dmtest %s exits cleanly (%s)" % (name, rc))
+    sanitizer_ok(report)
 
 
 def run(name, scepterd, mkgame, world):
@@ -343,12 +376,7 @@ def run(name, scepterd, mkgame, world):
             server.wait()
             errlog.seek(0)
             report = errlog.read()
-
-    bad = [l for l in report.splitlines()
-           if re.search(r"runtime error|AddressSanitizer|LeakSanitizer", l)
-           and not re.search(r"room\.c:\d+:\d+: runtime error: index 6 out of bounds", l)]
-    if not check(not bad, "no new sanitizer reports"):
-        print(report)
+    sanitizer_ok(report)
 
 
 def main():
@@ -356,8 +384,14 @@ def main():
     mkgame = os.path.abspath(sys.argv[2] if len(sys.argv) > 2 else "./mkgame")
     world = os.path.abspath(sys.argv[3] if len(sys.argv) > 3 else
                             "var/alpha/alpha.world")
-    for name in sys.argv[4:] or TESTS:
-        run(name, scepterd, mkgame, world)
+    dmtest = os.path.join(os.path.dirname(scepterd), "dmtest")
+    for name in sys.argv[4:] or list(TESTS) + DMTESTS:
+        if name in TESTS:
+            run(name, scepterd, mkgame, world)
+        elif name in DMTESTS:
+            run_dm(name, dmtest, mkgame, world)
+        else:
+            check(False, "there is a test %s" % name)
     print("%d failure(s)" % failures)
     return 1 if failures else 0
 

@@ -394,8 +394,8 @@ void Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V)
 		CurrentRec = Found ? Rec : 0;
 	}
 
-	if (Found)
-		strcpy(S, DescBuf[Line - 1]);
+	if (Found)		/* a row may fill all 80 bytes, with no NUL */
+		sprintf(S, "%.80s", DescBuf[Line - 1]);
 	if (!Found || strlen(S) < 3)
 		strcpy(S, "1//");
 
@@ -403,9 +403,14 @@ void Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V)
 	NumPhrases = Min(9, Max(0, S[0] - '0'));
 	if (!PhraseNum)
 		PhraseNum = Rnd(NumPhrases);
-	for (ILoop = 1; ILoop < PhraseNum; ILoop++)
-		while (S[++LinePos] != '/')
+	for (ILoop = 1; ILoop < PhraseNum && S[LinePos]; ILoop++)
+		while (S[++LinePos] && S[LinePos] != '/')
 			;
+	if (!S[LinePos])	/* the line has fewer phrases */
+	{
+		*V = '\0';
+		return;
+	}
 	S[LinePos] = ' ';
 
 	VSub = 0;
