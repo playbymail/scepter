@@ -970,13 +970,13 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 	{
 		FILE	*hdMList;
 
-		fseek(MList, (long)Rm * sizeof(MonsterType), 0);
+		SeekRec(MList, (long)Rm * sizeof(MonsterType));
 		fwrite((char *)Monster, sizeof(MonsterType), 1, MList);
 		fflush(MList);
 
-		if (hdMList = fopen(HDMLIST, FOPEN))
+		if (hdMList = OpenData(HDMLIST, DMList))
 		{
-			fseek(hdMList, (long)Rm * sizeof(MonsterType), 0);
+			SeekRec(hdMList, (long)Rm * sizeof(MonsterType));
 			fwrite((char *)Monster, sizeof(MonsterType), 1, hdMList);
 			fclose(hdMList);
 			QOut(Term, "0File modified.");

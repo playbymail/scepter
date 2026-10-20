@@ -62,6 +62,13 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	/* Refuse a game whose data files this build can't read (datafile.c). */
+	if (CheckGame(WORKDIR))
+	{
+		fprintf(stderr, "%s: cannot use this game directory\n", argv[0]);
+		exit(1);
+	}
+
 	/* The QNX server forked into the background here.  It now runs in the
 	 * foreground, serving telnet connections (telnet.c), or with -c the
 	 * console harness in ipc.c as its only player. */
@@ -73,15 +80,15 @@ int main(int argc, char **argv)
 	LoadSpecial();
 	InitCmds();
 
-	if ((EDesc = fopen(DSCRPT, FOPEN)) == NULL)
+	if ((EDesc = OpenData(DSCRPT, DDesc)) == NULL)
 		Abort(" File open error on DSCRPT.");
 
 	CurrentRec = 0;
 
-	if ((OList = fopen(OLIST, FOPEN)) == NULL)
+	if ((OList = OpenData(OLIST, DOList)) == NULL)
 		Abort(" File open error on DLIST.");
 
-	if ((MList = fopen(MLIST, FOPEN)) == NULL)
+	if ((MList = OpenData(MLIST, DMList)) == NULL)
 		Abort(" File open error on MLIST.");
 
 	InitSpells();
@@ -89,10 +96,10 @@ int main(int argc, char **argv)
 
 	Init();
 
-	if ((EDBMon = fopen(DBMON, FOPEN)) == NULL)
+	if ((EDBMon = OpenData(DBMON, DMonDB)) == NULL)
 		Abort(" File open error on DBMON.");
 
-	if ((EDBObj = fopen(DBOBJ, FOPEN)) == NULL)
+	if ((EDBObj = OpenData(DBOBJ, DObjDB)) == NULL)
 		Abort(" File open error on DBOBJ.");
 
 	OpenCave();

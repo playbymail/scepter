@@ -12,6 +12,9 @@ make
 
 `mkgame` compiles a world file (see [world-format.md](world-format.md)) into a
 game directory.  The server reads and writes the files in that directory.
+A newer `scepterd` may need the game converted first with
+`./upgradegame games/alpha`; it says so when it refuses to start (see
+[data-files.md](data-files.md)).
 
 ## Start the server
 
@@ -92,6 +95,7 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 | `make check-net`    | the telnet front end, byte by byte, over raw sockets   |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy             |
+| `make check-data`   | data file headers and `upgradegame` (docs/data-files.md)|
 
 See [deploy.md](deploy.md) for the production server.
 

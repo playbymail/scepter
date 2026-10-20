@@ -107,7 +107,7 @@ static void DeleteObjType(RmCodeType Rm, int Type)
 	int		RecNum, First;
 
 	First = RecNum = HashObj(Rm, Type);
-	fseek(EDBObj, (long)RecNum * sizeof(ObjRec), 0);
+	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
 	while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
 	{
 		if (Tmp.Room == Rm && Tmp.DataType == Type)
@@ -124,7 +124,7 @@ static void DeleteObjType(RmCodeType Rm, int Type)
 
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBObj, 0L, 0);
+			SeekRec(EDBObj, 0L);
 			RecNum = 0;
 		}
 
@@ -198,7 +198,7 @@ static int ReadObj(ObjRec *Rec, int Room, int Type)
 	int		RecNum, First;
 
 	First = RecNum = HashObj(Room, Type);
-	fseek(EDBObj, (long)RecNum * sizeof(ObjRec), 0);
+	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
 	while (fread((char *)Rec, sizeof(ObjRec), 1, EDBObj))
 	{
 		if (!Rec->Room)
@@ -208,7 +208,7 @@ static int ReadObj(ObjRec *Rec, int Room, int Type)
 
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBObj, 0L, 0);
+			SeekRec(EDBObj, 0L);
 			RecNum = 0;
 		}
 
@@ -225,7 +225,7 @@ static void WriteObj(ObjRec *Rec, int Room, int Type)
 	int		RecNum, First;
 
 	First = RecNum = HashObj(Room, Type);
-	fseek(EDBObj, (long)RecNum * sizeof(ObjRec), 0);
+	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
 	while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
 	{
 		if (Tmp.Room == Room && Tmp.DataType == Type || !Tmp.Room)
@@ -238,7 +238,7 @@ static void WriteObj(ObjRec *Rec, int Room, int Type)
 		
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBObj, 0L, 0);
+			SeekRec(EDBObj, 0L);
 			RecNum = 0;
 		}
 
@@ -297,7 +297,7 @@ static int ReadMon(MonRec *Rec, int Room, int Type)
 	int		RecNum, First;
 
 	First = RecNum = HashObj(Room, Type);
-	fseek(EDBMon, (long)RecNum * sizeof(MonRec), 0);
+	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
 	while (fread((char *)Rec, sizeof(MonRec), 1, EDBMon))
 	{
 		if (!Rec->Room)
@@ -307,7 +307,7 @@ static int ReadMon(MonRec *Rec, int Room, int Type)
 
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBMon, 0L, 0);
+			SeekRec(EDBMon, 0L);
 			RecNum = 0;
 		}
 
@@ -333,7 +333,7 @@ void WriteUMon(RmCodeType Rm, MonsterPoint Monster)
 	MRec.Num = N;
 
 	First = RecNum = HashObj(Rm, 0);
-	fseek(EDBMon, (long)RecNum * sizeof(MonRec), 0);
+	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
 	while (fread((char *)&Tmp, sizeof(MonRec), 1, EDBMon))
 	{
 		if (Tmp.Room == 0 || Tmp.Room == Rm && Tmp.DataType == 0)
@@ -346,7 +346,7 @@ void WriteUMon(RmCodeType Rm, MonsterPoint Monster)
 		
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBMon, 0L, 0);
+			SeekRec(EDBMon, 0L);
 			RecNum = 0;
 		}
 
@@ -362,7 +362,7 @@ void DeleteMon(RmCodeType Rm)
 
 	WriteMonInv(Rm, NULL);		/* deletes every monster's inventory */
 	First = RecNum = HashObj(Rm, 0);
-	fseek(EDBMon, (long)RecNum * sizeof(MonRec), 0);
+	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
 	while (fread((char *)&MRec, sizeof(MonRec), 1, EDBMon))
 	{
 		if (MRec.Room == Rm && MRec.DataType == 0)
@@ -379,7 +379,7 @@ void DeleteMon(RmCodeType Rm)
 
 		if (++RecNum >= 1009)
 		{
-			fseek(EDBMon, 0L, 0);
+			SeekRec(EDBMon, 0L);
 			RecNum = 0;
 		}
 
@@ -394,7 +394,7 @@ int ReadMList(int Index, MonsterPoint Mon)
 {
 	int		Found;
 
-	fseek(MList, (long)Index * sizeof(MonsterType), 0);
+	SeekRec(MList, (long)Index * sizeof(MonsterType));
 	Found = fread((char *)Mon, sizeof(MonsterType), 1, MList) == 1;
 	if (!Found)
 		memset(Mon, 0, sizeof(*Mon));
@@ -411,7 +411,7 @@ int ReadOList(int Index, ObjectPoint Obj)
 {
 	int		Found;
 
-	fseek(OList, (long)Index * sizeof(ObjectType), 0);
+	SeekRec(OList, (long)Index * sizeof(ObjectType));
 	Found = fread((char *)Obj, sizeof(ObjectType), 1, OList) == 1;
 	if (!Found)
 		memset(Obj, 0, sizeof(*Obj));

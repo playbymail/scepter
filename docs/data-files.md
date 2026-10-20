@@ -1,0 +1,82 @@
+# Game data files
+
+`mkgame` writes a game directory; `scepterd` reads and updates it.  The
+binary files start with a header, so a server never reads a file it wasn't
+built for.
+
+## Files
+
+| File | Holds | Magic |
+|---|---|---|
+| `ram/edungeon.new` | rooms (`RoomType`), 10 per segment | `SCEPDUNG` |
+| `ram/dbobj.new` | room and chest contents (`ObjRec`), a 1009-slot hash table | `SCEPDBOB` |
+| `ram/dbmon.new` | room monsters (`MonRec`), a 1009-slot hash table | `SCEPDBMN` |
+| `ram/eperson.new` | saved characters (`UserFRec`) | `SCEPPERS` |
+| `ram/mlist.new`, `dat/mlist.new` | monster templates (`MonsterType`) | `SCEPMLST` |
+| `ram/olist.new`, `dat/olist.new` | object templates (`ObjectType`) | `SCEPOLST` |
+| `ram/dscrpt`, `dat/dscrpt` | description records (10 lines of 80 characters) | `SCEPDESC` |
+
+The DM editor updates both the `ram/` and `dat/` copies.  `dat/efile`
+(game settings and news), `dat/special` (special rooms) and `dat/errlog`
+are text files without headers.
+
+## Header
+
+Each binary file starts with 32 bytes, written byte by byte so they read the
+same on every machine:
+
+| Offset | Size | Field |
+|---|---|---|
+| 0 | 8 | magic: names the kind of file (table above) |
+| 8 | 4 | format version, unsigned little-endian; currently 1 |
+| 12 | 4 | record size in bytes, unsigned little-endian |
+| 16 | 16 | reserved, zero |
+
+The records follow the header.  They are still raw C structs (#5), so their
+layout depends on the compiler and ABI.  The record size in the header
+catches a build whose structs differ.
+
+## Versions
+
+`DataVersion` in `scepter.h` is the format version.  Bump it whenever any
+record layout changes, and add a conversion step to `tools/upgradegame.c`.
+
+`scepterd` and `fightsim` check every file before starting.  They refuse the
+whole game if any file:
+
+- is missing or unreadable;
+- has no header or the wrong magic;
+- has a different version, older or newer;
+- has a record size that doesn't match the build.
+
+Each problem is reported with the file's name.  The server never converts
+files itself, so you can always go back to the previous binary with the
+backup that `upgradegame` made.
+
+| Version | Change |
+|---|---|
+| 0 | No header.  Every game made before headers existed. |
+| 1 | Adds the header; the records are unchanged. |
+
+## Upgrading a game
+
+Stop the server, then run `upgradegame` as the user that owns the game:
+
+```sh
+upgradegame -n GAMEDIR    # report what would change
+upgradegame GAMEDIR
+```
+
+`upgradegame` checks every file first and changes nothing if any of them
+can't be upgraded (for example, a newer version or a foreign file).  It then:
+
+1. copies the game directory to `GAMEDIR.backup-YYYYMMDD-HHMMSS`;
+2. rewrites each old file to a temporary file, flushes it to disk, and
+   renames it over the original, keeping the owner and mode;
+3. checks the result as `scepterd` would.
+
+If it stops part way, run it again: files that are already current are left
+alone.  To undo an upgrade, stop the server and put the backup back in place
+of the game directory.
+
+`make check-data` tests all of this.

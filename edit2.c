@@ -703,13 +703,13 @@ void EditOList(EdFunc EditCmd, int OIndex)
 				FILE	*hdOList;
 
 				ModObject(&Obj);
-				fseek(OList, (long)OIndex * sizeof(ObjectType), 0);
+				SeekRec(OList, (long)OIndex * sizeof(ObjectType));
 				fwrite((char *)&Obj, sizeof(ObjectType), 1, OList);
 				fflush(OList);
 
-				if (hdOList = fopen(HDOLIST, FOPEN))
+				if (hdOList = OpenData(HDOLIST, DOList))
 				{
-					fseek(hdOList, (long)OIndex * sizeof(ObjectType), 0);
+					SeekRec(hdOList, (long)OIndex * sizeof(ObjectType));
 					fwrite((char *)&Obj, sizeof(ObjectType), 1, hdOList);
 					fclose(hdOList);
 					QOut(Term, "0File modified.");
@@ -738,7 +738,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 
 	GetWord(Dummy, &Line);
 
-	fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+	SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 	Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
 	CurrentRec = Found ? Rec : 0;
 
@@ -796,12 +796,12 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 
 			if (Rec > 1)
 			{
-				fseek(EDesc, (long)(Rec - 1) * sizeof(DescBuf), 0);
+				SeekRec(EDesc, (long)(Rec - 1) * sizeof(DescBuf));
 				if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
 					QOut(Term, "0Record beyond end of file.");
 				else
 				{
-					fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+					SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 					if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
 					{
 						FILE	*hdEDesc;
@@ -809,13 +809,13 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 						memset((char *)DescBuf, ' ', sizeof(DescBuf));
 						for (ILoop = 0; ILoop < StrPerSeg; ILoop++)
 							*DescBuf[ILoop] = '\0';
-						fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+						SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 						fwrite((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
 						fflush(EDesc);
 
-						if (hdEDesc = fopen(HDDSCRPT, FOPEN))
+						if (hdEDesc = OpenData(HDDSCRPT, DDesc))
 						{
-							fseek(hdEDesc, (long)Rec * sizeof(DescBuf), 0);
+							SeekRec(hdEDesc, (long)Rec * sizeof(DescBuf));
 							fwrite((char *)DescBuf, sizeof(DescBuf), 1, hdEDesc);
 							fclose(hdEDesc);
 							QOut(Term, "0File modified.");
@@ -861,18 +861,18 @@ void EnterDesc(void)
 
 		if (Rec != CurrentRec)
 		{
-			fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+			SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 			fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
 		}
 
 		strcpy(DescBuf[Line - 1], B1);
-		fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+		SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 		fwrite((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
 		fflush(EDesc);
 
-		if (hdEDesc = fopen(HDDSCRPT, FOPEN))
+		if (hdEDesc = OpenData(HDDSCRPT, DDesc))
 		{
-			fseek(hdEDesc, (long)Rec * sizeof(DescBuf), 0);
+			SeekRec(hdEDesc, (long)Rec * sizeof(DescBuf));
 			fwrite((char *)DescBuf, sizeof(DescBuf), 1, hdEDesc);
 			fclose(hdEDesc);
 			QOut(Term, "0File modified.");

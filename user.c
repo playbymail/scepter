@@ -10,7 +10,7 @@ static int	SearchPlFile(char *Name);
 
 static void OpenPer(void)
 {
-	if (!(EPerson = fopen(EPERSON, FOPEN)))
+	if (!(EPerson = OpenData(EPERSON, DPerson)))
 		Abort(" Sce203 - Error opening person file.");
 }
 
@@ -168,7 +168,7 @@ void WritePlayer(UserPoint Player)
 		fseek(EPerson, -(long)sizeof(UserFRec), 1);
 	else
 	{
-		fseek(EPerson, 0L, 0);
+		SeekRec(EPerson, 0L);
 		while (fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
 			if (!*UserFRec.User.Name)
 			{
