@@ -93,6 +93,8 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy             |
 
+See [deploy.md](deploy.md) for the production server.
+
 `check-net` reports sanitizer errors in the server's output, so it is also
 useful with a sanitizer build:
 
