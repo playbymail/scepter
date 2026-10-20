@@ -1,8 +1,9 @@
 # Deploying to the droplet
 
-The game runs on the DigitalOcean droplet `tsogira.pbbgaming.com` (`ssh
-tsogira`) as `scepter.service`.  Players connect with a MUD client or telnet
-to `tsogira.pbbgaming.com` port 4000.
+The game runs on the DigitalOcean droplet (`ssh tsogira`) as
+`scepter.service`.  Players connect with a MUD client or telnet to
+`sceptish.pbbgaming.com` port 4000.  That name and `tsogira.pbbgaming.com`
+both point at the droplet; the second is the Tsogira web app's site.
 
 The droplet also runs two Go web applications, `dolpher` (127.0.0.1:8080)
 and `tsogira` (127.0.0.1:8081), behind Caddy on ports 80 and 443.  The
