@@ -2,5 +2,6 @@
 *-prompt.md
 __pycache__/
 /fightsim
+/games/
 /mkgame
 /scepterd
