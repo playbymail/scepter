@@ -26,6 +26,15 @@ mkgame: mkgame.o
 
 $(OBJS) mkgame.o: common.h scepter.h proto.h
 
+# Combat simulator (tools/fightsim.c); links the engine without main.o.
+SIMOBJS = $(filter-out main.o,$(OBJS)) tools/fightsim.o
+
+fightsim: $(SIMOBJS)
+	$(CC) $(CFLAGS) -o $@ $(SIMOBJS)
+
+tools/fightsim.o: tools/fightsim.c main.c common.h scepter.h proto.h
+	$(CC) $(CSTD) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/fightsim.c -o $@
+
 # Each world file must match its JSON copy (tools/worldjson.py).
 check-worlds:
 	@for w in var/*/*.world; do \
@@ -33,6 +42,6 @@ check-worlds:
 	done
 
 clean:
-	rm -f scepterd mkgame $(OBJS) mkgame.o
+	rm -f scepterd mkgame fightsim $(OBJS) mkgame.o tools/fightsim.o
 
 .PHONY: all clean check-worlds
