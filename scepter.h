@@ -1,4 +1,3 @@
-#include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -6,7 +5,6 @@
 
 /*#if defined(__HIGHC__) || defined(M_XENIX) || defined(mc68k)*/
 # include <string.h>
-# include <malloc.h>
 /*# include <memory.h>*/
 # define FOPEN	"r+"
 /*#else*/	/* QNX? */
@@ -241,7 +239,7 @@ typedef struct tMonsterType
 	ObjectPoint	ObjectTail;
 	ArticleType	Article;
 	uchar		DescRec, DescCode;
-	char		AtkSpeed;
+	schar		AtkSpeed;
 	schar		AC;
 	short		Hits, MaxHits;
 	char		Lvl;

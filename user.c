@@ -297,9 +297,9 @@ int Hash(char *Word)
 {
 	int		Total, ILoop;
 
-	CapAlfa(Word);
+	/* Capitalise while summing; Word may be a string literal. */
 	for (Total = ILoop = 0; Word[ILoop]; ILoop++)
-		Total += Word[ILoop] * (ILoop + 1);
+		Total += (char)Cap(Word[ILoop]) * (ILoop + 1);
 	return Total;
 }
 

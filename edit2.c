@@ -690,8 +690,7 @@ void EditOList(EdFunc EditCmd, int OIndex)
 	{
 		ObjectType	Obj;
 
-		fseek(OList, (long)OIndex * sizeof(ObjectType), 0);
-		fread((char *)&Obj, sizeof(ObjectType), 1, OList);
+		ReadOList(OIndex, &Obj);
 
 		switch (EditCmd)
 		{

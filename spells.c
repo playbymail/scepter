@@ -177,8 +177,7 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 
 			do
 			{
-				fseek(MList, (long)(Rnd(73) + 29) * sizeof(MonsterType), 0);
-				fread((char *)&TmpMon, sizeof(MonsterType), 1, MList);
+				ReadMList(Rnd(73) + 29, &TmpMon);
 			} while (!*TmpMon.Name || !strcmp(TmpMon.Name, ProtoMonster.Name));
 			TmpMon.Lvl = Min(25, Max(1, TmpMon.Lvl + 2 - Rnd(3)));
 			TmpMon.Hits = Min(TmpMon.MaxHits,
@@ -215,8 +214,7 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 						break;
 				MonNum = EncIndex(Room[Rm].WhichEncounter, Rnd(ILoop) - 1);
 				Mon = (MonsterPoint)malloc(sizeof(MonsterType));
-				fseek(MList, (long)MonNum * sizeof(MonsterType), 0);
-				fread((char *)Mon, sizeof(MonsterType), 1, MList);
+				ReadMList(MonNum, Mon);
 				if (Mon->Unique)
 				{
 					MonsterPoint	M;

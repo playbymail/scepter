@@ -727,8 +727,7 @@ void Parley(char *Word, int Num)
 			{
 				ObjectType	ObjTemp;
 
-				fseek(OList, (long)N1 * sizeof(ObjectType), 0);
-				fread((char *)&ObjTemp, sizeof(ObjectType), 1, OList);
+				ReadOList(N1, &ObjTemp);
 				User->Data = ObjTemp.Price / 2 + Rnd(ObjTemp.Price);
 				User->LastAtk = N1;
 				PM(Mon, TRUE, B2);
@@ -781,8 +780,7 @@ void Parley(char *Word, int Num)
 				if (N1)
 				{
 					Obj = (ObjectPoint)malloc(sizeof(ObjectType));
-					fseek(OList, (long)N1 * sizeof(ObjectType), 0);
-					fread((char *)Obj, sizeof(ObjectType), 1, OList);
+					ReadOList(N1, Obj);
 					Obj->Next = Room[User->RmCode].RmObjectTail;
 					Room[User->RmCode].RmObjectTail = Obj;
 					N1 = 1;
@@ -921,8 +919,7 @@ void YesNo(void)
 		{
 			User->Money -= User->Data;
 			Obj = (ObjectPoint)malloc(sizeof(ObjectType));
-			fseek(OList, (long)User->LastAtk * sizeof(ObjectType), 0);
-			fread((char *)Obj, sizeof(ObjectType), 1, OList);
+			ReadOList((int)User->LastAtk, Obj);
 			Obj->Next = Room[User->RmCode].RmObjectTail;
 			Room[User->RmCode].RmObjectTail = Obj;
 			p = "0Here you are, my friend.  You are indeed a shrewd buyer, Effendi!";

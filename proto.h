@@ -1,5 +1,5 @@
 /* main.c */
-void	main(void);
+int	main(void);
 
 /* mon.c */
 void	PM(MonsterPoint Mon, int C, char *Str);
@@ -16,6 +16,8 @@ void	DeleteUObj(RmCodeType Rm);
 void	ReadUMon(RmCodeType Rm, MonsterPoint *Monster);
 void	WriteUMon(RmCodeType Rm, MonsterPoint Monster);
 void	DeleteMon(RmCodeType Rm);
+int		ReadMList(int Index, MonsterPoint Mon);
+int		ReadOList(int Index, ObjectPoint Obj);
 
 /* log.c */
 UserPoint	Login(void);

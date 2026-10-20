@@ -912,8 +912,7 @@ static void MakeTreasure(MonsterPoint Monster, int Rm)
 				&&	(Obj = (ObjectPoint)malloc(sizeof(ObjectType))))
 			{
 				Nothing = FALSE;
-				fseek(OList, (long)ObNum * sizeof(ObjectType), 0);
-				fread((char *)Obj, sizeof(ObjectType), 1, OList);
+				ReadOList(ObNum, Obj);
 				Obj->Price = (int)(Obj->Price * (80.0 + Rnd(40)) / 100.0);
 				Obj->Next = Room[Rm].RmObjectTail;
 				Room[Rm].RmObjectTail = Obj;

@@ -26,6 +26,7 @@ void ReadUObj(RmCodeType Rm, ObjectPoint *Object, int Type)
 		{
 			ObjectPoint	Pt3;
 
+			Pt->Object.Chest.ObjectTail = NULL;	/* stale pointer from disk */
 			Pt3	= Pt->Object.Chest.ObjectTail;
 			ReadUObj(Rm, &Pt3, ContCount);
 			Pt->Object.Chest.ObjectTail = Pt3;
@@ -44,6 +45,8 @@ void ReadUObj(RmCodeType Rm, ObjectPoint *Object, int Type)
 
 			*Pt = Rec.Obj[N - 1];
 			Pt->Next = NULL;
+			if (Pt->ObClass == Chest)
+				Pt->Object.Chest.ObjectTail = NULL;	/* stale pointer from disk */
 			if (Pt->ObClass == Chest && ContCount <= 7)
 			{
 				ObjectPoint	Pt3;
@@ -196,8 +199,9 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 		*Pt = MRec.Mon[0];
 		Pt->Next = NULL;
 		Pt->DefPlayer = NULL;
-		if (Pt->ObjectTail)
-			Pt->ObjectTail = NULL;
+		Pt->DefMon = NULL;
+		Pt->CharmPlayer = NULL;
+		Pt->ObjectTail = NULL;
 
 		for (N = 1; N < MRec.Num; N++)
 		{
@@ -208,8 +212,9 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 			*Pt = MRec.Mon[N];
 			Pt->Next = NULL;
 			Pt->DefPlayer = NULL;
-			if (Pt->ObjectTail)
-				Pt->ObjectTail = NULL;
+			Pt->DefMon = NULL;
+			Pt->CharmPlayer = NULL;
+			Pt->ObjectTail = NULL;
 		}
 	}
 	else
@@ -308,4 +313,37 @@ void DeleteMon(RmCodeType Rm)
 		if (RecNum == First)
 		 	Abort(" Monster DB full on delete!");
 	}
+}
+
+/* Read template *Index* from the MList file.  Pointer fields hold
+ * whatever the writer had in memory, so they are cleared here. */
+int ReadMList(int Index, MonsterPoint Mon)
+{
+	int		Found;
+
+	fseek(MList, (long)Index * sizeof(MonsterType), 0);
+	Found = fread((char *)Mon, sizeof(MonsterType), 1, MList) == 1;
+	if (!Found)
+		memset(Mon, 0, sizeof(*Mon));
+	Mon->Next = NULL;
+	Mon->DefMon = NULL;
+	Mon->DefPlayer = NULL;
+	Mon->CharmPlayer = NULL;
+	Mon->ObjectTail = NULL;
+	return Found;
+}
+
+/* Read template *Index* from the OList file, clearing pointer fields. */
+int ReadOList(int Index, ObjectPoint Obj)
+{
+	int		Found;
+
+	fseek(OList, (long)Index * sizeof(ObjectType), 0);
+	Found = fread((char *)Obj, sizeof(ObjectType), 1, OList) == 1;
+	if (!Found)
+		memset(Obj, 0, sizeof(*Obj));
+	Obj->Next = NULL;
+	if (Obj->ObClass == Chest)
+		Obj->Object.Chest.ObjectTail = NULL;
+	return Found;
 }

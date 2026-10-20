@@ -759,8 +759,7 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 	if (Rm >= 1 && Rm <= RanMonLen)
 	{
 		Monster = (MonsterPoint)malloc(sizeof(MonsterType));
-		fseek(MList, (long)Rm * sizeof(MonsterType), 0);
-		fread((char *)Monster, sizeof(MonsterType), 1, MList);
+		ReadMList(Rm, Monster);
 	}
 	else
 	{

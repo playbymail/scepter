@@ -290,8 +290,7 @@ void Buy(int Num, int Rm)
 				ObjectPoint	Object;
 
 				Object = (ObjectPoint)malloc(sizeof(ObjectType));
-				fseek(OList, (long)Num * sizeof(ObjectType), 0);
-				fread((char *)Object, sizeof(ObjectType), 1, OList);
+				ReadOList(Num, Object);
 				if (Object->Price > User->Money)
 				{
 					QOut(Term, "0You don't have enough cash to buy that.");
@@ -336,8 +335,7 @@ void Catalog(void)
 		ObjectType	ObjTemp;
 		char		*p;
 
-		fseek(OList, (long)ILoop * sizeof(ObjectType), 0);
-		fread((char *)&ObjTemp, sizeof(ObjectType), 1, OList);
+		ReadOList(ILoop, &ObjTemp);
 
 		switch ((int)ObjTemp.ObClass)
 		{

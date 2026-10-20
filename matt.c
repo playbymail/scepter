@@ -89,8 +89,7 @@ void MonStrike(RmCodeType Rm)
 		{
 			if (Monster = (MonsterPoint)malloc(sizeof(MonsterType)))
 			{
-				fseek(MList, (long)MonNum * sizeof(MonsterType), 0);
-				fread(Monster, sizeof(MonsterType), 1, MList);
+				ReadMList(MonNum, Monster);
 
 				if (Monster->Unique)
 				{

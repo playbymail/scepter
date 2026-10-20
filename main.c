@@ -1,7 +1,5 @@
-#include <fcntl.h>
 #include <signal.h>
 #include <time.h>
-#include <unix.h>
 
 #include "common.h"
 #include "scepter.h"
@@ -33,30 +31,13 @@ void Boom(int sig)
 	}
 }
 
-void main(void)
+int main(void)
 {
 	unsigned	minute;
 	int Aborted = FALSE;
 
-	switch (fork())
-	{
-		case -1:
-			Abort(" Unable to fork.");
-
-		case 0:
-			close(1);
-			close(2);
-			open(TMPDIR "/scepterd.out", O_APPEND | O_CREAT, 0666);
-			open(TMPDIR "/scepterd.out", O_APPEND | O_CREAT, 0666);
-			close(0);
-
-			setsid();
-			setlogin("System");
-			break;
-
-		default:
-			exit(0);
-	}
+	/* The QNX server forked into the background here.  It now runs in the
+	 * foreground with the console harness in ipc.c as its only player. */
 
 	QCre();
 	Init_Scepter();
@@ -127,6 +108,11 @@ void main(void)
 					DoInput();
 					DoEntry();
 				}
+				break;
+
+			case '9':	/* console harness: end of input */
+				User = NULL;
+				Aborted = TRUE;
 				break;
 
 			default:

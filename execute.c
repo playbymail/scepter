@@ -6,37 +6,65 @@
 #define	fNUM	3	/* func(Word, Num); */
 #define	fROOM	4	/* func(Word, Num, User->RmCode); */
 
-typedef	void	(*PFV)(void);
-
 static struct
 {
 	int		cmd, type;
-	void	(*func)();
+	union
+	{
+		void	(*v)(void);
+		void	(*u)(UserPoint);
+		void	(*w)(char *);
+		void	(*n)(char *, int);
+		void	(*r)(char *, int, RmCodeType);
+	} func;
 } cmdtable[] =
 {
-	 8, fROOM,	(PFV)DropObject,	11, fROOM,	(PFV)Attack,
-	20, fVOID,	(PFV)NumUsers,		22, fUSER,	(PFV)PlayerDisplay,
-	28, fVOID,	(PFV)Help,			29, fNUM,	(PFV)ReturnObj,
-	33, fWORD,	(PFV)GetStatus,		35, fWORD,	(PFV)Users,
-	40, fVOID,	(PFV)SaveChar,		41, fVOID,	(PFV)Inventory,
-	42, fROOM,	(PFV)Attack,		43, fROOM,	(PFV)Attack,
-	44, fNUM,	(PFV)EnterSpell,	45, fVOID,	(PFV)Appeal,
-	48, fVOID,	(PFV)Catalog,		49, fNUM,	(PFV)Pawn,
-	55, fWORD,	(PFV)FollowPlayer,	56, fWORD,	(PFV)Lose,
-	57, fNUM,	(PFV)Repair,		58, fNUM,	(PFV)ChangeName,
-	59, fNUM,	(PFV)ChangePW,		60, fNUM,	(PFV)Offer,
-	61, fVOID,	(PFV)Accept,		62, fNUM,	(PFV)Turn,
-	63, fROOM,	(PFV)GetObject,		65, fNUM,	(PFV)OpenClose,
-	66, fNUM,	(PFV)OpenClose,		67, fNUM,	(PFV)OpenClose,
-	68, fNUM,	(PFV)OpenClose,		69, fNUM,	(PFV)OpenClose,
-	70, fNUM,	(PFV)OpenClose,		71, fVOID,	(PFV)Track,
-	72, fROOM,	(PFV)Attack,		73, fNUM,	(PFV)Hide,
-	74, fVOID,	(PFV)Search,		75, fVOID,	(PFV)Train,
-	77, fWORD,	(PFV)TagPlayer,		78, fVOID,	(PFV)Run,
-	79, fUSER,	(PFV)PrintExp,		81, fNUM,	(PFV)Parley,
-	84, fNUM,	(PFV)StealObj,		85, fROOM,	(PFV)Attack,
-	86, fROOM,	(PFV)Attack,		87, fVOID,	(PFV)Who,
-	88, fUSER,	(PFV)Condition,		0
+	{  8, fROOM,	{ .r = DropObject } },
+	{ 11, fROOM,	{ .r = Attack } },
+	{ 20, fVOID,	{ .v = NumUsers } },
+	{ 22, fUSER,	{ .u = PlayerDisplay } },
+	{ 28, fVOID,	{ .v = Help } },
+	{ 29, fNUM,	{ .n = ReturnObj } },
+	{ 33, fWORD,	{ .w = GetStatus } },
+	{ 35, fWORD,	{ .w = Users } },
+	{ 40, fVOID,	{ .v = SaveChar } },
+	{ 41, fVOID,	{ .v = Inventory } },
+	{ 42, fROOM,	{ .r = Attack } },
+	{ 43, fROOM,	{ .r = Attack } },
+	{ 44, fNUM,	{ .n = EnterSpell } },
+	{ 45, fVOID,	{ .v = Appeal } },
+	{ 48, fVOID,	{ .v = Catalog } },
+	{ 49, fNUM,	{ .n = Pawn } },
+	{ 55, fWORD,	{ .w = FollowPlayer } },
+	{ 56, fWORD,	{ .w = Lose } },
+	{ 57, fNUM,	{ .n = Repair } },
+	{ 58, fNUM,	{ .n = ChangeName } },
+	{ 59, fNUM,	{ .n = ChangePW } },
+	{ 60, fNUM,	{ .n = Offer } },
+	{ 61, fVOID,	{ .v = Accept } },
+	{ 62, fNUM,	{ .n = Turn } },
+	{ 63, fROOM,	{ .r = GetObject } },
+	{ 65, fNUM,	{ .n = OpenClose } },
+	{ 66, fNUM,	{ .n = OpenClose } },
+	{ 67, fNUM,	{ .n = OpenClose } },
+	{ 68, fNUM,	{ .n = OpenClose } },
+	{ 69, fNUM,	{ .n = OpenClose } },
+	{ 70, fNUM,	{ .n = OpenClose } },
+	{ 71, fVOID,	{ .v = Track } },
+	{ 72, fROOM,	{ .r = Attack } },
+	{ 73, fNUM,	{ .n = Hide } },
+	{ 74, fVOID,	{ .v = Search } },
+	{ 75, fVOID,	{ .v = Train } },
+	{ 77, fWORD,	{ .w = TagPlayer } },
+	{ 78, fVOID,	{ .v = Run } },
+	{ 79, fUSER,	{ .u = PrintExp } },
+	{ 81, fNUM,	{ .n = Parley } },
+	{ 84, fNUM,	{ .n = StealObj } },
+	{ 85, fROOM,	{ .r = Attack } },
+	{ 86, fROOM,	{ .r = Attack } },
+	{ 87, fVOID,	{ .v = Who } },
+	{ 88, fUSER,	{ .u = Condition } },
+	{  0 }
 };
 
 void ExecuteCommand(void)
@@ -80,19 +108,19 @@ void ExecuteCommand(void)
 			switch (cmdtable[ILoop].type)
 			{
 				case fVOID:
-					(*cmdtable[ILoop].func)();
+					(*cmdtable[ILoop].func.v)();
 					break;
 				case fUSER:
-					(*cmdtable[ILoop].func)(User);
+					(*cmdtable[ILoop].func.u)(User);
 					break;
 				case fWORD:
-					(*cmdtable[ILoop].func)(Word);
+					(*cmdtable[ILoop].func.w)(Word);
 					break;
 				case fNUM:
-					(*cmdtable[ILoop].func)(Word, Num);
+					(*cmdtable[ILoop].func.n)(Word, Num);
 					break;
 				case fROOM:
-					(*cmdtable[ILoop].func)(Word, Num, User->RmCode);
+					(*cmdtable[ILoop].func.r)(Word, Num, User->RmCode);
 					break;
 			}
 			return;
@@ -179,19 +207,9 @@ void ExecuteCommand(void)
 
 		case 27:
 		{
-			unsigned	*p = 0;
-			int			i, j;
-
-			for (i = 0; i < 5; i++)
-			{
-				strcpy(B1, "0");
-				for (j = 0; j < 10; j++)
-				{
-					sprintf(B2, "%04x  ", *p++);
-					strcat(B1, B2);
-				}
-				QOut(Term, B1);
-			}
+			/* The QNX version also dumped 50 words starting at address 0
+			 * (the real-mode interrupt vectors); that faults on a
+			 * protected-memory OS, so only the slot table is shown. */
 			QOut(Term, "0Active  SlotTbl");
 			for (ILoop = 0; ILoop <= MaxUsers; ILoop++)
 			{
