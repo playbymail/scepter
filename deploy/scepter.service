@@ -1,0 +1,51 @@
+# Install as /etc/systemd/system/scepter.service. See docs/deploy.md.
+
+[Unit]
+Description=Scepter of Goth, the QNX server ported to Linux, for telnet and MUD clients
+Documentation=https://github.com/playbymail/scepter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=scepter
+Group=scepter
+# Telnet on every address, port 4000. The game directory is made once
+# with mkgame (docs/deploy.md); the server only reads and writes it.
+ExecStart=/usr/local/bin/scepterd -l :4000 /var/lib/scepter/alpha
+Restart=on-failure
+RestartSec=5s
+# SIGTERM saves every player, tells them "End - aborted", and exits.
+KillSignal=SIGTERM
+TimeoutStopSec=30s
+
+StateDirectory=scepter
+StateDirectoryMode=0750
+UMask=0027
+
+# Hardening. The server only needs its state directory and the network.
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+
+[Install]
+WantedBy=multi-user.target
