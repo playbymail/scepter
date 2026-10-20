@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 			case XNewClass:	Answer = Class;			break;
 			case XStats:	Answer = Stats;			break;
 			case XSkill:	Answer = Skill;			break;
-			case XNewPW:	Answer = "secret";		break;
+			case XNewPW:	Answer = "secretpw";		break;
 			case XSex:		Answer = "male";		break;
 			default:
 				fprintf(stderr, "fightsim: unexpected prompt %d\n", Was);

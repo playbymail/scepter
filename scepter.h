@@ -33,6 +33,10 @@
 #define	RmLimit			130	/* MaxPlusOne * 10 */
 #define	MaxSegs			199
 #define	MaxObjs			10	/* max number of objects saved in user record */
+#define	MinPWLen		8	/* shortest new password */
+#define	MaxPWLen		72	/* longest password: bcrypt ignores the rest */
+#define	PWHashLen		64	/* bcrypt hash (60 characters) and NUL */
+#define	PWCost			4	/* bcrypt cost: the minimum, for a small server */
 
 #define	UpdatePeriod	3600	/* one hour */
 #define	QuitWait		20
@@ -105,7 +109,7 @@ typedef enum
 typedef enum
 	{XInit, XName, XCmd, XEdit, XPassword, XNewPW, XChangePW, XNewClass,
 	 XSex, XStats, XNotice, XDead, XNews, XSell, XRepair, XWish, XSpell,
-	 XSure, XParley, XSkill, XDesc, XRes1, XRes2, XRes3} EntryType;
+	 XSure, XParley, XSkill, XDesc, XOldPW, XAgainPW, XRes3} EntryType;
 
 typedef enum
 	{RoleNone, RoleBar, RoleNewsstand, RolePawnshop, RoleStore, RoleSmith}
@@ -319,6 +323,7 @@ struct tUserType
 	unsigned	MesBlock	: 1;
 	unsigned	Dead		: 1;
 	unsigned	Plague		: 1;
+	char		PWHash[PWHashLen];	/* bcrypt; empty: only the old PW (#82) */
 
 	/* The rest is data which is only applicable during play. */
 	/* All these fields should be initialised at load time. */
@@ -344,6 +349,7 @@ struct tUserType
 	Alfa		WData;
 	long		Data;
 	int			ParleyObj;		/* OList index offered by PARLEY (XParley) */
+	char		NewPWHash[PWHashLen];	/* CHANGEPW: the new password, to confirm */
 };
 
 /* NOTE:  tUserSave must be EXACTLY the same as the first part of tUserType */
@@ -385,6 +391,7 @@ typedef struct tUserSave
 	unsigned	MesBlock	: 1;
 	unsigned	Dead		: 1;
 	unsigned	Plague		: 1;
+	char		PWHash[PWHashLen];	/* bcrypt; empty: only the old PW (#82) */
 } UserSave;
 
 extern struct tUserFRec
@@ -428,7 +435,7 @@ typedef struct
 } MonRec;
 
 /* game data files and their headers (datafile.c, docs/data-files.md) */
-#define	DataVersion		1		/* bump when any record layout changes */
+#define	DataVersion		2		/* bump when any record layout changes */
 #define	DataHeadSize	32
 
 enum { DDungeon, DObjDB, DMonDB, DPerson, DMList, DOList, DDesc, NDataKinds };

@@ -288,6 +288,18 @@ static void DoEntry(void)
 			NewPW();
 			break;
 
+		case XOldPW:
+			EnterOldPW();
+			break;
+
+		case XChangePW:
+			EnterNewPW();
+			break;
+
+		case XAgainPW:
+			EnterAgainPW();
+			break;
+
 		case XNewClass:
 			ChooseClass();
 			break;

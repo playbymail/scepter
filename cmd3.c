@@ -479,22 +479,58 @@ void ChangeName(char *Word, int Num)
 	}
 }
 
+/* Passwords may hold spaces now (#82), so CHANGEPW asks for each one. */
 void ChangePW(char *Word, int Num)
 {
-	Alfa	Word3;
+	UNUSED(Word);
+	UNUSED(Num);
+	User->Entry = XOldPW;
+	Loc = LenBuf + 1;
+}
 
-	GetWord(Word3, &Num);
-	if (!*Word3 || Num)
-		QOut(Term, "0Missing or bad characters in new password.");
-	else
-	if (Hash(Word) != User->PW)
+void EnterOldPW(void)
+{
+	char	PassWord[MaxPWLen + 1];
+
+	GetPW(PassWord);
+	User->Entry = XCmd;
+	if (!CheckPW(User->PWHash, PassWord))
 		QOut(Term, "0Wrong password, sorry.");
 	else
+		User->Entry = XChangePW;
+}
+
+void EnterNewPW(void)
+{
+	char	PassWord[MaxPWLen + 1];
+
+	User->Entry = XCmd;
+	if (GetPW(PassWord) < MinPWLen)
 	{
-		User->PW = Hash(Word3);
+		sprintf(B1, "0Passwords must be %d to %d characters long.  Password not changed.",
+				MinPWLen, MaxPWLen);
+		QOut(Term, B1);
+	}
+	else if (SetPW(User->NewPWHash, PassWord))
+		User->Entry = XAgainPW;
+}
+
+void EnterAgainPW(void)
+{
+	char	PassWord[MaxPWLen + 1];
+
+	GetPW(PassWord);
+	User->Entry = XCmd;
+	if (!CheckPW(User->NewPWHash, PassWord))
+		QOut(Term, "0The passwords don't match.  Password not changed.");
+	else
+	{
+		strcpy(User->PWHash, User->NewPWHash);
+		User->PW = 0;
 		QOut(Term, "0PW change complete.");
 		QOut(Term, "0Be sure to \"SAVE\" your character to record the change.");
 	}
+	*User->NewPWHash = '\0';
 }
 
 void Offer(char *Word, int Num)

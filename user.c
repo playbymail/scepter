@@ -1,3 +1,5 @@
+#include <crypt.h>
+
 #include "common.h"
 #include "scepter.h"
 
@@ -303,6 +305,39 @@ int Hash(char *Word)
 	return Total;
 }
 
+/* Hashing passwords, with libxcrypt's bcrypt (#82) */
+static struct crypt_data	PWData;
+
+/* Store a bcrypt hash of PassWord in PWHash; FALSE if it could not be made. */
+int SetPW(char *PWHash, char *PassWord)
+{
+	char	Setting[CRYPT_GENSALT_OUTPUT_SIZE];
+
+	*PWHash = '\0';
+	if (!crypt_gensalt_rn("$2b$", PWCost, NULL, 0, Setting, sizeof(Setting))
+	||	!crypt_rn(PassWord, Setting, &PWData, sizeof(PWData))
+	||	strlen(PWData.output) >= PWHashLen)
+		return FALSE;
+	strcpy(PWHash, PWData.output);
+	return TRUE;
+}
+
+/* Is PassWord the one hashed in PWHash? */
+int CheckPW(char *PWHash, char *PassWord)
+{
+	char	Setting[PWHashLen];
+	int		ILoop, Diff;
+
+	if (!*PWHash)
+		return FALSE;
+	snprintf(Setting, sizeof(Setting), "%.*s", PWHashLen - 1, PWHash);
+	if (!crypt_rn(PassWord, Setting, &PWData, sizeof(PWData)))
+		return FALSE;
+	for (Diff = ILoop = 0; Setting[ILoop]; ILoop++)
+		Diff |= Setting[ILoop] ^ PWData.output[ILoop];
+	return !Diff && !PWData.output[ILoop];
+}
+
 long Expr(int Lvl)
 {
 	if (Lvl <= 1)
@@ -408,7 +443,9 @@ void PromptUser(void)
 		case XEdit:		p = User->Brief ? "Ed" : "Edit command";	break;
 		case XPassword:	p = "Enter your password";					break;
 		case XNewPW:	p = "Enter access password";				break;
+		case XOldPW:	p = "Enter your password";					break;
 		case XChangePW:	p = "Enter new password";					break;
+		case XAgainPW:	p = "Enter the new password again";		break;
 		case XNewClass:	p = "Class";								break;
 		case XStats:	p = "Stats";								break;
 		case XNotice:	p = "Enter notice";							break;

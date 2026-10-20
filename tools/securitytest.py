@@ -85,7 +85,7 @@ def login(port, name):
                  (prompt("Class? "), "fighter"),
                  (prompt("Stats? "), "15, 7, 9, 10, 9"),
                  (prompt("Skill? "), "sharp"),
-                 (prompt("Enter access password? "), "secret"),
+                 (prompt("Enter access password? "), "secretpw"),
                  (prompt("Finally, is your character a male or female? "), "male")]:
         if not c.expect(p):
             return None
@@ -93,6 +93,25 @@ def login(port, name):
     if not c.expect(rb"Please welcome " + name.encode() + rb".*?You are "):
         return None
     return c
+
+
+def enter(port, name, password):
+    """Log in as saved character name; return the client and what it got."""
+    c = Client(port)
+    if not c.expect(prompt("Enter your name? ")):
+        return c, None
+    c.line(name)
+    if not c.expect(prompt("Enter your password? ")):
+        return c, None
+    c.line(password)
+    return c, c.expect(rb"You are |Wrong password, sorry\.|Too many wrong passwords.*?\r\n")
+
+
+def quit_game(c):
+    c.line("quit")
+    c.expect(prompt("Are you sure? "), 5)
+    c.line("yes")
+    return c.expect(rb"End Scepter", 5) is not None
 
 
 def walk(c, *dirs):
@@ -265,6 +284,101 @@ def test_12(port):
     alive(a, "Alpha", "a spring door into an unloaded segment")
 
 
+def test_82_new(port):
+    """A new character's password is 8 to 72 characters (#82)."""
+    c = Client(port)
+    for p, a in [(prompt("Enter your name? "), "Alpha"),
+                 (prompt("Class? "), "fighter"),
+                 (prompt("Stats? "), "15, 7, 9, 10, 9"),
+                 (prompt("Skill? "), "sharp")]:
+        if not check(c.expect(p) is not None, "Alpha is asked " + p.decode(errors="replace")[:20]):
+            return
+        c.line(a)
+    check(c.expect(rb"Choose a password of 8 to 72 characters.*" + prompt("Enter access password? "))
+          is not None, "Alpha is told the password rules")
+    c.line("short")
+    check(c.expect(rb"Passwords must be 8 to 72 characters long\.\r\n.*"
+                   + prompt("Enter access password? ")) is not None,
+          "a 5-character password is refused")
+    c.line("x" * 73)
+    check(c.expect(rb"Passwords must be 8 to 72 characters long\.\r\n.*"
+                   + prompt("Enter access password? ")) is not None,
+          "a 73-character password is refused")
+    c.line("  open sesame  ")
+    check(c.expect(prompt("Finally, is your character a male or female? ")) is not None,
+          "a password with spaces is taken")
+
+
+def test_82_legacy(port):
+    """An old password works once, then only exactly as typed (#82)."""
+    # Oldtimer's old password is "ac"; the old hash took "CB" too
+    c, got = enter(port, "Oldtimer", "AC")
+    check(got and got.endswith(b"You are "), "Oldtimer logs in with the old password")
+    check(c.expect(rb"Passwords now tell capital letters from small ones", 5) is not None,
+          "Oldtimer is told the password now has case")
+    check(c.expect(rb"use CHANGEPW to choose one of at least 8", 5) is not None,
+          "and is asked for a longer one")
+    check(quit_game(c), "Oldtimer quits, saving the new hash")
+    c, got = enter(port, "Oldtimer", "CB")
+    check(got and b"Wrong password" in got, "a colliding password no longer works")
+    c, got = enter(port, "Oldtimer", "ac")
+    check(got and b"Wrong password" in got, "nor the old one in another case")
+    c, got = enter(port, "Oldtimer", "   AC   ")
+    check(got and got.endswith(b"You are "), "the password as typed works, spaces trimmed")
+    alive(c, "Oldtimer", "logging in")
+
+
+def test_82_change(port):
+    """CHANGEPW asks for the old password and the new one twice (#82)."""
+    c, got = enter(port, "Oldtimer", "ac")
+    if not check(got and got.endswith(b"You are "), "Oldtimer logs in"):
+        return
+    steps = [
+        (["wrong guess"], rb"Wrong password, sorry\.", "a wrong old password is refused"),
+        (["ac", "short"], rb"Passwords must be 8 to 72 characters long\.  Password not changed\.",
+         "a short new password is refused"),
+        (["ac", "open sesame", "open sesamE"], rb"The passwords don't match\.",
+         "a mistyped repeat is refused"),
+        (["ac", "open sesame", "open sesame"], rb"PW change complete\.",
+         "the password is changed"),
+    ]
+    prompts = [prompt("Enter your password? "), prompt("Enter new password? "),
+               prompt("Enter the new password again? ")]
+    for answers, want, what in steps:
+        c.line("changepw")
+        ok = True
+        for p, a in zip(prompts, answers):
+            ok = ok and c.expect(p, 5) is not None
+            c.line(a)
+        check(ok and c.expect(want, 5) is not None, what)
+    check(quit_game(c), "Oldtimer quits")
+    c, got = enter(port, "Oldtimer", "open sesame")
+    check(got and got.endswith(b"You are "), "the new password works")
+    check(quit_game(c), "Oldtimer quits again")
+    c, got = enter(port, "Oldtimer", "ac")
+    check(got and b"Wrong password" in got, "the old one does not")
+
+
+def test_82_limit(port):
+    """Five wrong passwords from an address refuse it for 10 minutes (#82)."""
+    for i in range(5):
+        c, got = enter(port, "Oldtimer", "guess %d" % i)
+        check(got and b"Wrong password" in got, "wrong password %d is refused" % (i + 1))
+    c, got = enter(port, "Oldtimer", "ac")
+    check(got and b"Too many wrong passwords.  Try again in 10 minutes." in got,
+          "then even the right one is refused for 10 minutes")
+    with open(os.path.join(GAME, "dat", "errlog")) as f:
+        log = f.read()
+    check(log.count("Wrong password for Oldtimer from 127.0.0.1") == 5
+          and "address refused for 10 minutes" in log, "errlog records the failures")
+
+
+def legacy(dmtest, game):
+    """Save Oldtimer, a 2nd-level character with the old password hash of "ac"."""
+    subprocess.run([dmtest, game, "legacy", "Oldtimer", "ac"], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def many_segments(world):
     """World with rooms 30-150, one per segment, and a spring door to 150."""
     world = world.replace("[room 1]\n", "[room 1]\ndown = 30\n", 1)
@@ -287,21 +401,26 @@ def drop_section(world, header):
     return "".join(out)
 
 
-# test name -> (function, world transform)
+# test name -> (function, world transform, game setup)
 TESTS = {
-    "55": (test_55, lambda w: drop_section(w, "monster 30")),
-    "39": (test_39, None),
-    "8": (test_8, None),
-    "11": (test_11, None),
-    "13": (test_13, None),
-    "14": (test_14, None),
-    "15": (test_15, None),
-    "12": (test_12, many_segments),
+    "55": (test_55, lambda w: drop_section(w, "monster 30"), None),
+    "39": (test_39, None, None),
+    "8": (test_8, None, None),
+    "11": (test_11, None, None),
+    "13": (test_13, None, None),
+    "14": (test_14, None, None),
+    "15": (test_15, None, None),
+    "12": (test_12, many_segments, None),
+    "82-new": (test_82_new, None, None),
+    "82-legacy": (test_82_legacy, None, legacy),
+    "82-change": (test_82_change, None, legacy),
+    "82-limit": (test_82_limit, None, legacy),
 }
+GAME = None
 
 
 # DM-only and bad-data tests, run by tools/dmtest.c
-DMTESTS = ["20", "23", "22", "24", "26"]
+DMTESTS = ["20", "23", "22", "24", "26", "82"]
 
 
 def free_port():
@@ -340,8 +459,9 @@ def run_dm(name, dmtest, mkgame, world):
     sanitizer_ok(report)
 
 
-def run(name, scepterd, mkgame, world):
-    fn, transform = TESTS[name]
+def run(name, scepterd, mkgame, world, dmtest):
+    global GAME
+    fn, transform, setup = TESTS[name]
     print("# #%s: %s" % (name, fn.__doc__))
     with tempfile.TemporaryDirectory() as tmp:
         if transform:
@@ -353,6 +473,9 @@ def run(name, scepterd, mkgame, world):
         game = os.path.join(tmp, "game")
         subprocess.run([mkgame, world, game], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if setup:
+            setup(dmtest, game)
+        GAME = game
         port = free_port()
         errlog = open(os.path.join(tmp, "stderr"), "w+")
         server = subprocess.Popen([scepterd, "-l", "127.0.0.1:%d" % port, game],
@@ -387,7 +510,7 @@ def main():
     dmtest = os.path.join(os.path.dirname(scepterd), "dmtest")
     for name in sys.argv[4:] or list(TESTS) + DMTESTS:
         if name in TESTS:
-            run(name, scepterd, mkgame, world)
+            run(name, scepterd, mkgame, world, dmtest)
         elif name in DMTESTS:
             run_dm(name, dmtest, mkgame, world)
         else:

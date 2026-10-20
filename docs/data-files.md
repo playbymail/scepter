@@ -28,7 +28,7 @@ same on every machine:
 | Offset | Size | Field |
 |---|---|---|
 | 0 | 8 | magic: names the kind of file (table above) |
-| 8 | 4 | format version, unsigned little-endian; currently 1 |
+| 8 | 4 | format version, unsigned little-endian; currently 2 |
 | 12 | 4 | record size in bytes, unsigned little-endian |
 | 16 | 16 | reserved, zero |
 
@@ -57,6 +57,7 @@ backup that `upgradegame` made.
 |---|---|
 | 0 | No header.  Every game made before headers existed. |
 | 1 | Adds the header; the records are unchanged. |
+| 2 | Player records (`UserSave`) gain `PWHash`, a bcrypt hash (#82). |
 
 ## Upgrading a game
 
@@ -74,6 +75,12 @@ can't be upgraded (for example, a newer version or a foreign file).  It then:
 2. rewrites each old file to a temporary file, flushes it to disk, and
    renames it over the original, keeping the owner and mode;
 3. checks the result as `scepterd` would.
+
+Each file is converted straight to the current version.  From version 1
+to 2 only the player file's records change: each gets an empty `PWHash`,
+so the character logs in once more with its old password, and the server
+then hashes that password with bcrypt.  The other files just get the new
+header.
 
 If it stops part way, run it again: files that are already current are left
 alone.  To undo an upgrade, stop the server and put the backup back in place

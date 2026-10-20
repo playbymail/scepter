@@ -78,15 +78,21 @@ long MaxL(long a, long b)
 	return a > b ? a : b;
 }
 
-void Abort(char *Error)
+/* Add Msg to dat/errlog */
+void ErrLog(char *Msg)
 {
 	FILE	*fp;
 
 	if (fp = fopen(ERRLOG, "a"))
 	{
-		fprintf(fp, "%s%s\n", ctime(&RealTime), Error);
+		fprintf(fp, "%s%s\n", ctime(&RealTime), Msg);
 		fclose(fp);
 	}
+}
+
+void Abort(char *Error)
+{
+	ErrLog(Error);
 	exit(1);
 }
 
@@ -188,6 +194,28 @@ void CapAlfa(char *a)
 		*a = Cap(*a);
 		a++;
 	}
+}
+
+/*
+ * The rest of the input line as a password, without leading and trailing
+ * spaces.  PassWord holds MaxPWLen + 1 characters.  Returns its length, or
+ * -1 (and an empty PassWord) if it is longer than MaxPWLen.
+ */
+int GetPW(char *PassWord)
+{
+	int		Start = Loc, End = LenBuf;
+
+	while (Start < End && Buf[Start] == ' ')
+		Start++;
+	while (End > Start && Buf[End - 1] == ' ')
+		End--;
+	Loc = LenBuf + 1;
+	*PassWord = '\0';
+	if (End - Start > MaxPWLen)
+		return -1;
+	memcpy(PassWord, Buf + Start, End - Start);
+	PassWord[End - Start] = '\0';
+	return End - Start;
 }
 
 void GetWord(char *Word, int *Num)

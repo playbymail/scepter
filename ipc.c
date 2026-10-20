@@ -262,6 +262,12 @@ void CheckHup(void)
 		NetCheckHup();
 }
 
+/* The address a player connected from, for limiting login attempts */
+const char *QHost(int Chn)
+{
+	return Net ? NetHost(Chn) : "console";
+}
+
 int IsGuest(int term)
 {
 	UNUSED(term);
