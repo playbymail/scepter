@@ -120,6 +120,7 @@ void	RoomMsg(RoomType *Rm, int *Count);
 /* ipc.c */
 void	QAss(char *Mbx, int *Chn);
 void	QCre(void);
+void	QListen(char *Addr);
 void	QDea(int Chn);
 void	QRea(char *Str, int *Chn);
 void	QOut(int Chn, char *Str);
@@ -129,6 +130,14 @@ int   IsGuest(int term);
 void	PutETIndex(int table, int row, int col, int val);
 void	Who(void);
 void	CheckHup(void);
+
+/* telnet.c */
+void	NetListen(char *Addr);
+void	NetRea(char *Str, int *Chn);
+void	NetOut(int Chn, char *Str);
+void	NetFlush(void);
+void	NetWho(void);
+void	NetCheckHup(void);
 
 /* edit1.c */
 void	Edit(void);
