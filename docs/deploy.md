@@ -28,10 +28,14 @@ release (26.04, x86-64), so the binaries link against the same glibc:
 mkdir -p out
 container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/out \
 	docker.io/library/ubuntu:26.04 sh -c '
-	apt-get update -qq && apt-get install -y -qq build-essential python3 >/dev/null &&
+	apt-get update -qq && apt-get install -y -qq build-essential libcrypt-dev python3 >/dev/null &&
 	cp -r /src /w && cd /w && make clean && make && make check-net &&
 	cp scepterd mkgame upgradegame /out/'
 ```
+
+`scepterd` links the system's libcrypt (libxcrypt) for password hashing.
+Ubuntu always installs its runtime, `libcrypt1`, so the droplet needs no
+extra package; the build container needs `libcrypt-dev`.
 
 ## Upgrade
 

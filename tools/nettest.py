@@ -105,7 +105,7 @@ def login(name, all_at_once=False):
                (prompt("Class? "), "fighter"),
                (prompt("Stats? "), "15, 7, 9, 10, 9"),
                (prompt("Skill? "), "sharp"),
-               (prompt("Enter access password? "), "secret"),
+               (prompt("Enter access password? "), "secretpw"),
                (prompt("Finally, is your character a male or female? "), "male")]
     if all_at_once:
         c.send("".join(a + "\r\n" for _, a in answers))

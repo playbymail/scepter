@@ -11,6 +11,9 @@
  *
  *	0 -> 1	files from before headers existed get a header; the records
  *			are unchanged
+ *	1 -> 2	player records gain PWHash (#82), empty, so each character
+ *			logs in once more with its old password, which is then
+ *			hashed with bcrypt; the other records are unchanged
  *
  * Stop the server first.  Nothing is changed unless every file can be
  * upgraded.  The whole game directory is first copied to
@@ -23,6 +26,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stddef.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -32,6 +36,26 @@
 
 static const char	*Game;
 static int			DryRun;
+
+/* A version 0 or 1 player record: UserFRec without UserSave's PWHash */
+typedef struct
+{
+	_Alignas(UserSave) char	Saved[offsetof(UserSave, PWHash)];
+} UserSave1;
+
+typedef struct
+{
+	UserSave1	User;
+	short		NObj;
+	short		NWeap, NArm, NShield, NRingL, NRingR;
+	ObjectType	Objs[MaxObjs];
+} UserFRec1;
+
+/* The record size of Kind in format Version */
+static size_t OldRecSize(int Kind, unsigned long Version)
+{
+	return Kind == DPerson && Version < 2 ? sizeof(UserFRec1) : DataKind[Kind].RecSize;
+}
 
 static void Fail(const char *Fmt, const char *Arg)
 {
@@ -103,8 +127,21 @@ static void Backup(char *Dest, size_t Len)
 	}
 }
 
-/* Version 0 -> 1: put a header in front of the unchanged records. */
-static void Upgrade0(const char *Path, int Kind)
+/* Version 1 -> 2: give a player record an empty PWHash. */
+static void Upgrade1Person(const UserFRec1 *Old, struct tUserFRec *New)
+{
+	memset(New, 0, sizeof(*New));
+	memcpy(&New->User, &Old->User, sizeof(Old->User.Saved));
+	/* the rest is laid out alike: copy it whole, padding and all */
+	memcpy(&New->NObj, &Old->NObj, sizeof(*Old) - offsetof(UserFRec1, NObj));
+}
+
+_Static_assert(sizeof(UserFRec1) - offsetof(UserFRec1, NObj)
+			   == sizeof(struct tUserFRec) - offsetof(struct tUserFRec, NObj),
+			   "player records end alike in versions 1 and 2");
+
+/* Rewrite a file of format Version with this build's header and records. */
+static void Upgrade(const char *Path, int Kind, unsigned long Version)
 {
 	char		Tmp[1200], Buf[65536];
 	struct stat	st;
@@ -124,9 +161,24 @@ static void Upgrade0(const char *Path, int Kind)
 		Fail("%s: cannot create", Tmp);
 	if (!WriteDataHead(out, Kind))
 		Fail("%s: write failed", Tmp);
-	while ((n = fread(Buf, 1, sizeof Buf, in)) > 0)
-		if (fwrite(Buf, 1, n, out) != n)
-			Fail("%s: write failed", Tmp);
+	if (Version > 0 && fseek(in, DataHeadSize, SEEK_SET))
+		Fail("%s: cannot read", Path);
+	if (Kind == DPerson && Version < 2)
+	{
+		UserFRec1			Old;
+		struct tUserFRec	New;
+
+		while (fread(&Old, sizeof Old, 1, in) == 1)
+		{
+			Upgrade1Person(&Old, &New);
+			if (fwrite(&New, sizeof New, 1, out) != 1)
+				Fail("%s: write failed", Tmp);
+		}
+	}
+	else
+		while ((n = fread(Buf, 1, sizeof Buf, in)) > 0)
+			if (fwrite(Buf, 1, n, out) != n)
+				Fail("%s: write failed", Tmp);
 	if (ferror(in) || fflush(out) || fsync(fd) || fclose(out))
 		Fail("%s: write failed", Tmp);
 	fclose(in);
@@ -140,6 +192,7 @@ int main(int argc, char **argv)
 {
 	int				Result[NDataFiles];
 	unsigned long	Version[NDataFiles], RecSize;
+	long			Size;
 	int				i, Opt, Bad = 0, Todo = 0;
 	char			Path[1100], Msg[256], Dest[1100];
 
@@ -167,23 +220,34 @@ int main(int argc, char **argv)
 			continue;
 		}
 		Result[i] = ReadDataHead(fp, Kind, &Version[i], &RecSize);
+		if (fseek(fp, 0L, SEEK_END) || (Size = ftell(fp)) < 0)
+			Result[i] = DataUnreadable;
 		fclose(fp);
+
+		/* ReadDataHead() judges a headerless file by this build's records */
+		if (Result[i] == DataNoHead || Result[i] == DataForeign)
+			Result[i] = Size % OldRecSize(Kind, 0) ? DataForeign : DataNoHead;
+		else if (Result[i] == DataWrongVersion && Version[i] < DataVersion)
+		{
+			if (RecSize != OldRecSize(Kind, Version[i]))
+				Result[i] = DataWrongSize;
+			else if ((Size - DataHeadSize) % RecSize)
+				Result[i] = DataForeign;
+		}
 
 		if (Result[i] == DataOK)
 			printf("%s: version %d, up to date\n", DataFile[i].Name, DataVersion);
-		else if (Result[i] == DataNoHead)
+		else if (Result[i] == DataNoHead || Result[i] == DataWrongVersion
+				 && Version[i] < DataVersion)
 		{
-			printf("%s: version 0, %s to version %d\n", DataFile[i].Name,
-				   DryRun ? "would upgrade" : "upgrading", DataVersion);
+			printf("%s: version %lu, %s to version %d\n", DataFile[i].Name,
+				   Version[i], DryRun ? "would upgrade" : "upgrading", DataVersion);
 			Todo++;
 		}
 		else
 		{
 			/* a newer version, a foreign file, or a different ABI */
 			DataProblem(Result[i], Kind, Version[i], RecSize, Msg, sizeof Msg);
-			if (Result[i] == DataWrongVersion && Version[i] < DataVersion)
-				snprintf(Msg, sizeof Msg, "version %lu, which this upgradegame"
-						 " cannot convert", Version[i]);
 			fprintf(stderr, "%s: %s\n", Path, Msg);
 			Bad++;
 		}
@@ -202,10 +266,10 @@ int main(int argc, char **argv)
 	Backup(Dest, sizeof Dest);
 	printf("backed up %s to %s\n", Game, Dest);
 	for (i = 0; i < NDataFiles; i++)
-		if (Result[i] == DataNoHead)
+		if (Result[i] != DataOK)
 		{
 			snprintf(Path, sizeof Path, "%s/%s", Game, DataFile[i].Name);
-			Upgrade0(Path, DataFile[i].Kind);
+			Upgrade(Path, DataFile[i].Kind, Version[i]);
 		}
 	if (CheckGame(Game))
 		Fail("%s: upgraded files fail the check; restore the backup", Game);

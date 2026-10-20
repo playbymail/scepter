@@ -35,7 +35,7 @@ cd "$TMP" && "$TT" -G -H -e "
 #action {Class?} {fighter};
 #action {Stats?} {15, 7, 9, 10, 9};
 #action {Skill?} {sharp};
-#action {Enter access password?} {secret};
+#action {Enter access password?} {secretpw};
 #action {male or female?} {male};
 #action {Please welcome Tintin} {say \"hello\";who;n;s;quit};
 #action {Are you sure?} {yes};

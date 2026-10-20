@@ -2,6 +2,124 @@
 
 static void	AnnounceLogin(void);
 static void	SetStats(ChType Cl, int Vit, int Fat, int Mag, int Mony);
+static int	FindHost(const char *Host);
+static int	FindName(char *Name);
+
+/*
+ * Limits on guessing passwords (#82), kept in memory only.  An address with
+ * HostFails wrong passwords within HostWindow seconds is refused for
+ * HostBlock seconds, doubling each time up to HostBlockMax; the doubling is
+ * forgotten after a day without a refusal.  A character with NameFails wrong
+ * passwords from anywhere, the last within NameWindow seconds, may be tried
+ * only once every NameDelay seconds: slow enough to stop guessing, without
+ * letting anyone lock the owner out.
+ */
+#define	HostFails		5
+#define	HostWindow		600
+#define	HostBlock		600
+#define	HostBlockMax	7200
+#define	NameFails		10
+#define	NameWindow		3600
+#define	NameDelay		30
+#define	FailSlots		64
+
+static struct
+{
+	char	Host[64];
+	int		Fails;			/* since Start */
+	int		Blocks;			/* refusals, for the doubling */
+	long	Start, Until;
+} FailHost[FailSlots];
+
+static struct
+{
+	Alfa	Name;
+	int		Fails;
+	long	Last;
+} FailName[FailSlots];
+
+/* The slot for Host: its own, else the one least recently used */
+static int FindHost(const char *Host)
+{
+	int		ILoop, Old = 0;
+
+	for (ILoop = 0; ILoop < FailSlots; ILoop++)
+	{
+		if (!strcmp(FailHost[ILoop].Host, Host))
+			return ILoop;
+		if (MaxL(FailHost[ILoop].Start, FailHost[ILoop].Until)
+			< MaxL(FailHost[Old].Start, FailHost[Old].Until))
+			Old = ILoop;
+	}
+	memset(&FailHost[Old], 0, sizeof(FailHost[Old]));
+	snprintf(FailHost[Old].Host, sizeof(FailHost[Old].Host), "%s", Host);
+	return Old;
+}
+
+/* The slot for Name: its own, else the one least recently used */
+static int FindName(char *Name)
+{
+	int		ILoop, Old = 0;
+
+	for (ILoop = 0; ILoop < FailSlots; ILoop++)
+	{
+		if (!strcmp(FailName[ILoop].Name, Name))
+			return ILoop;
+		if (FailName[ILoop].Last < FailName[Old].Last)
+			Old = ILoop;
+	}
+	memset(&FailName[Old], 0, sizeof(FailName[Old]));
+	strcpy(FailName[Old].Name, Name);
+	return Old;
+}
+
+/* Seconds before Name may try a password from Host; 0 if it may now */
+int LoginWait(const char *Host, char *Name)
+{
+	int		H = FindHost(Host), N = FindName(Name);
+
+	if (FailHost[H].Until > RealTime)
+		return FailHost[H].Until - RealTime;
+	if (FailName[N].Fails >= NameFails && RealTime - FailName[N].Last < NameDelay)
+		return FailName[N].Last + NameDelay - RealTime;
+	return 0;
+}
+
+void LoginFailed(const char *Host, char *Name)
+{
+	int		H = FindHost(Host), N = FindName(Name);
+
+	if (RealTime - FailHost[H].Start >= HostWindow)
+	{
+		FailHost[H].Fails = 0;
+		FailHost[H].Start = RealTime;
+	}
+	if (RealTime - FailHost[H].Until >= 86400)
+		FailHost[H].Blocks = 0;
+	if (RealTime - FailName[N].Last >= NameWindow)
+		FailName[N].Fails = 0;
+	FailName[N].Fails++;
+	FailName[N].Last = RealTime;
+
+	snprintf(B1, sizeof(B1), " Wrong password for %s from %s.", Name, Host);
+	if (++FailHost[H].Fails >= HostFails)
+	{
+		long	Block = MinL(HostBlockMax, (long)HostBlock << Min(FailHost[H].Blocks, 4));
+
+		FailHost[H].Until = RealTime + Block;
+		FailHost[H].Blocks++;
+		FailHost[H].Fails = 0;
+		snprintf(B1, sizeof(B1), " Wrong password for %s from %s;"
+				 " address refused for %ld minutes.", Name, Host, Block / 60);
+	}
+	ErrLog(B1);
+}
+
+void LoginOK(const char *Host, char *Name)
+{
+	FailHost[FindHost(Host)].Fails = 0;
+	FailName[FindName(Name)].Fails = 0;
+}
 
 static void AnnounceLogin(void)
 {
@@ -102,14 +220,20 @@ void EnterSex(void)
 
 void NewPW(void)
 {
-	int		Dummy;
-	Alfa	PassWord;
+	char	PassWord[MaxPWLen + 1];
+	int		Len;
 
-	GetWord(PassWord, &Dummy);
-	CapAlfa(PassWord);
-	if (*PassWord)
+	if (!(Len = GetPW(PassWord)))
+		return;
+	if (Len < MinPWLen)
 	{
-		User->PW = Hash(PassWord);
+		sprintf(B1, "0Passwords must be %d to %d characters long.", MinPWLen,
+				MaxPWLen);
+		QOut(Term, B1);
+	}
+	else if (SetPW(User->PWHash, PassWord))
+	{
+		User->PW = 0;
 		User->Entry = XSex;
 	}
 }
@@ -172,7 +296,15 @@ void EnterSkill(void)
 			User->Entry = XSkill;
 			Loc = LenBuf + 1;
 			QOut(Term, "0No such skill.  Try again.");
-			break;
+			return;
+	}
+
+	if (Loc >= LenBuf)
+	{
+		sprintf(B1, "0Choose a password of %d to %d characters.  Spaces are allowed,",
+				MinPWLen, MaxPWLen);
+		QOut(Term, B1);
+		QOut(Term, "0and capital letters are different from small ones.");
 	}
 }
 
@@ -230,13 +362,39 @@ void ChooseClass(void)
 
 void MatchPW(void)
 {
-	int		Dummy;
-	Alfa	PassWord;
+	const char	*Host = QHost(Term);
+	char		PassWord[MaxPWLen + 1];
+	int			Dummy, Len, Start = Loc, Wait, OK;
+	Alfa		Word;
 
-	GetWord(PassWord, &Dummy);
-	CapAlfa(PassWord);
-	if (Hash(PassWord) != User->PW)
+	if ((Wait = LoginWait(Host, User->Name)))
 	{
+		if (Wait < 120)
+			sprintf(B1, "0Too many wrong passwords.  Try again in %d seconds.", Wait);
+		else
+			sprintf(B1, "0Too many wrong passwords.  Try again in %d minutes.",
+					(Wait + 59) / 60);
+		Logoff(User);
+		QOut(Term, B1);
+		QOut(Term, "2");
+		QDea(Term);
+		User = NULL;
+		return;
+	}
+
+	/* a character not on since version 2 has only the old hash of one word */
+	GetWord(Word, &Dummy);
+	CapAlfa(Word);
+	Loc = Start;
+	Len = GetPW(PassWord);
+	if (*User->PWHash)
+		OK = CheckPW(User->PWHash, PassWord);
+	else
+		OK = Len > 0 && *Word && User->PW && Hash(Word) == User->PW;
+
+	if (!OK)
+	{
+		LoginFailed(Host, User->Name);
 		Logoff(User);
 		QOut(Term, "0Wrong password, sorry.");
 		QOut(Term, "2");
@@ -245,8 +403,21 @@ void MatchPW(void)
 	}
 	else
 	{
+		LoginOK(Host, User->Name);
 		PlacePlayer(User, User->RmCode);
 		AnnounceLogin();
+		if (!*User->PWHash && SetPW(User->PWHash, PassWord))
+		{
+			User->PW = 0;
+			QOut(Term, "0Passwords now tell capital letters from small ones.  Yours is");
+			QOut(Term, "0now exactly what you typed just now.");
+			if (Len < MinPWLen)
+			{
+				sprintf(B1, "0Please use CHANGEPW to choose one of at least %d characters.",
+						MinPWLen);
+				QOut(Term, B1);
+			}
+		}
 		User->Entry = XCmd;
 		Loc = LenBuf + 1;
 	}

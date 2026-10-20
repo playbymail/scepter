@@ -5,6 +5,9 @@
 
 ## Build and make a game
 
+The build needs libxcrypt, for password hashing: `libcrypt-dev` on Ubuntu
+or Debian, `brew install libxcrypt` on macOS (see the README).
+
 ```sh
 make
 ./mkgame var/alpha/alpha.world games/alpha
@@ -63,6 +66,19 @@ telnet 127.0.0.1 4000
 The game asks for your name.  A new name creates a character: you choose a
 class, attributes, weapon skill, password and sex.  Characters are saved when
 they reach second level.  Type `stop` at the name prompt to leave.
+
+A password is the whole line you type, without leading and trailing spaces:
+8 to 72 characters, spaces allowed, and capital letters differ from small
+ones.  `CHANGEPW` asks for the old password, then the new one twice.  A
+wrong password disconnects you, and the server keeps count in memory:
+
+- five wrong passwords from one address within 10 minutes refuse that
+  address for 10 minutes, then 20, 40, 80 and at most 120 for each further
+  five; a day without a refusal starts again at 10;
+- ten wrong passwords for one character, from anywhere, allow only one try
+  every 30 seconds until the right one is given (or an hour passes).
+
+Every wrong password is logged to the game's `dat/errlog`, with the address.
 
 ## What players see
 

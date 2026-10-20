@@ -9,6 +9,15 @@ CFLAGS  ?= -g -O2
 # Data paths default to the current directory; override with e.g.
 #   make DEFS='-DWORKDIR=\"/var/lib/scepter\"'
 DEFS    ?=
+# Passwords are hashed with libxcrypt's bcrypt (#82): libcrypt-dev on Linux,
+# `brew install libxcrypt` on macOS (keg-only, so point at it).
+ifeq ($(shell uname -s),Darwin)
+XCRYPT  ?= $(shell brew --prefix libxcrypt 2>/dev/null)
+CRYPTINC = -I$(XCRYPT)/include
+CRYPTLIB = -L$(XCRYPT)/lib -lcrypt
+else
+CRYPTLIB = -lcrypt
+endif
 
 OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o datafile.o db.o execute.o \
 	edit1.o edit2.o io.o ipc.o log.o main.o matt.o \
@@ -17,7 +26,7 @@ OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o datafile.o db.o execute.o \
 all: scepterd mkgame upgradegame
 
 scepterd: $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(CRYPTLIB)
 
 # World compiler; must be built from the same headers as scepterd.
 mkgame: mkgame.o datafile.o
@@ -33,13 +42,16 @@ tools/upgradegame.o: tools/upgradegame.c common.h scepter.h proto.h
 %.o: %.c
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -c $<
 
+user.o: user.c
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) $(CRYPTINC) -c $<
+
 $(OBJS) mkgame.o: common.h scepter.h proto.h
 
 # Combat simulator (tools/fightsim.c); links the engine without main.o.
 SIMOBJS = $(filter-out main.o,$(OBJS)) tools/fightsim.o
 
 fightsim: $(SIMOBJS)
-	$(CC) $(CFLAGS) -o $@ $(SIMOBJS)
+	$(CC) $(CFLAGS) -o $@ $(SIMOBJS) $(CRYPTLIB)
 
 tools/fightsim.o: tools/fightsim.c main.c common.h scepter.h proto.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/fightsim.c -o $@
@@ -49,7 +61,7 @@ tools/fightsim.o: tools/fightsim.c main.c common.h scepter.h proto.h
 DMOBJS = $(filter-out main.o,$(OBJS)) tools/dmtest.o
 
 dmtest: $(DMOBJS)
-	$(CC) $(CFLAGS) -o $@ $(DMOBJS)
+	$(CC) $(CFLAGS) -o $@ $(DMOBJS) $(CRYPTLIB)
 
 tools/dmtest.o: tools/dmtest.c main.c common.h scepter.h proto.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmtest.c -o $@
@@ -69,7 +81,7 @@ check-tintin: scepterd mkgame
 	sh tools/tintintest.sh ./scepterd ./mkgame var/alpha/alpha.world
 
 # Data file headers and tools/upgradegame (tools/datatest.py).
-check-data: scepterd mkgame upgradegame fightsim
+check-data: scepterd mkgame upgradegame fightsim dmtest
 	python3 -I tools/datatest.py . var/alpha/alpha.world
 
 # Player-reachable security bugs (tools/securitytest.py).  Run it on a build

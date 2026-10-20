@@ -3,8 +3,10 @@
  * can reach, run against the real engine code.
  *
  *	dmtest GAMEDIR TEST
+ *	dmtest GAMEDIR legacy NAME PASSWORD
+ *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24 or 26.  The game directory (made
+ * TEST is an issue number: 20, 23, 22, 24, 26 or 82.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
  * each test sets up the state the DM editor or a corrupt record would leave
@@ -13,8 +15,15 @@
  * Run it under a sanitizer, as tools/securitytest.py does, to catch the
  * memory errors themselves.
  *
+ * Two helpers serve the other tests.  "legacy" saves a 2nd-level character
+ * NAME whose password is in the old form, as upgradegame leaves a version 1
+ * character.  "layout" prints where the password fields are in a player
+ * record, so tools/datatest.py can make version 1 files.
+ *
  * main.c is included so the server's own start-up code can be reused.
  */
+#include <stddef.h>
+
 #define main scepterd_main
 #include "main.c"
 #undef main
@@ -46,6 +55,22 @@ static const char *Captured(void)
 	n = fread(Out, 1, sizeof(Out) - 1, stdout);
 	Out[n] = '\0';
 	return Out;
+}
+
+/* The contents of a small file, or "" */
+static const char *ReadFile(const char *Path)
+{
+	static char	Text[8192];
+	FILE		*fp;
+	size_t		n = 0;
+
+	if ((fp = fopen(Path, "r")))
+	{
+		n = fread(Text, 1, sizeof(Text) - 1, fp);
+		fclose(fp);
+	}
+	Text[n] = '\0';
+	return Text;
 }
 
 static void Say(const char *Text)
@@ -182,18 +207,128 @@ static void Test26(void)
 		  "a bad ring spell shows as UNKNOWN");
 }
 
+/* #82: password hashes, password lines, login limits, the DM's PW field */
+static void Test82(void)
+{
+	char	H1[PWHashLen], H2[PWHashLen], PW[MaxPWLen + 1];
+	int		I;
+
+	Check(SetPW(H1, "open sesame") && !strncmp(H1, "$2b$04$", 7) && strlen(H1) == 60,
+		  "SetPW makes a cost 4 bcrypt hash");
+	Check(SetPW(H2, "open sesame") && strcmp(H1, H2), "each hash has its own salt");
+	Check(CheckPW(H1, "open sesame") && CheckPW(H2, "open sesame"),
+		  "CheckPW takes the password");
+	Check(!CheckPW(H1, "Open sesame") && !CheckPW(H1, "open sesam")
+		  && !CheckPW(H1, ""), "CheckPW refuses others, case and all");
+	Check(!CheckPW("", "") && !CheckPW("", "open sesame"), "no hash, no password");
+
+	snprintf(Buf, sizeof(Buf), "  open sesame  ");
+	LenBuf = strlen(Buf);
+	Loc = 0;
+	Check(GetPW(PW) == 11 && !strcmp(PW, "open sesame"),
+		  "a password line loses its outer spaces only");
+	memset(Buf, 'x', MaxPWLen + 1);
+	LenBuf = MaxPWLen + 1;
+	Loc = 0;
+	Check(GetPW(PW) == -1 && !*PW, "a password over 72 characters is refused");
+	LenBuf = MaxPWLen;
+	Loc = 0;
+	Check(GetPW(PW) == MaxPWLen, "a 72-character password is taken");
+
+	/* five wrong passwords from an address refuse it, doubling to 2 hours */
+	for (I = 1; I < 5; I++)
+		LoginFailed("10.0.0.1", "Dungeon");
+	Check(!LoginWait("10.0.0.1", "Dungeon"), "four wrong passwords: no wait");
+	LoginFailed("10.0.0.1", "Dungeon");
+	Check(LoginWait("10.0.0.1", "Dungeon") == 600, "the fifth: refused 10 minutes");
+	Check(!LoginWait("10.0.0.2", "Dungeon"), "other addresses are not refused");
+	{
+		static const int	Want[] = { 1200, 2400, 4800, 7200, 7200 };
+
+		for (I = 0; I < 5; I++)
+		{
+			int		J;
+
+			RealTime += LoginWait("10.0.0.1", "Dungeon");
+			for (J = 0; J < 5; J++)
+				LoginFailed("10.0.0.1", "Dungeon");
+			if (LoginWait("10.0.0.1", "Dungeon") != Want[I])
+				break;
+		}
+		Check(I == 5, "each refusal doubles, up to 2 hours");
+	}
+	Check(strstr(ReadFile("dat/errlog"), "Wrong password for Dungeon from 10.0.0.1;"
+				 " address refused for 10 minutes.") != NULL,
+		  "wrong passwords and refusals are logged");
+	RealTime += 7200;
+	LoginOK("10.0.0.1", "Dungeon");
+
+	/* ten wrong passwords for a name, from anywhere: one try per 30 seconds */
+	for (I = 0; I < 9; I++)
+	{
+		char	Host[32];
+
+		snprintf(Host, sizeof(Host), "10.0.1.%d", I);
+		LoginFailed(Host, "Target");
+	}
+	Check(!LoginWait("10.0.2.1", "Target"), "nine wrong passwords: no wait");
+	LoginFailed("10.0.1.9", "Target");
+	Check(LoginWait("10.0.2.1", "Target") == 30, "the tenth: 30 seconds, from anywhere");
+	Check(!LoginWait("10.0.2.1", "Dungeon"), "other names do not wait");
+	RealTime += 30;
+	Check(!LoginWait("10.0.2.1", "Target"), "then one more try");
+	LoginFailed("10.0.2.1", "Target");
+	Check(LoginWait("10.0.2.2", "Target") == 30, "a wrong one waits again");
+	LoginOK("10.0.2.2", "Target");
+	Check(!LoginWait("10.0.2.2", "Target"), "the right one clears the wait");
+
+	/* MODIFY PLAYER ... PW sets a hash, for master DMs only */
+	User->SSJ = TRUE;
+	User->Entry = XEdit;
+	strcpy(H1, User->PWHash);
+	Say("modify player Dungeon pw=Swordfish");
+	Check(!strcmp(H1, User->PWHash), "an associate DM cannot set a password");
+	User->Master = TRUE;
+	Say("modify player Dungeon pw=Swordfish");
+	Check(CheckPW(User->PWHash, "Swordfish") && !CheckPW(User->PWHash, "SWORDFISH")
+		  && !User->PW, "a master DM sets a password, case and all");
+}
+
+/* Save a 2nd-level character Name with only the old hash of PassWord */
+static void Legacy(char *Name, char *PassWord)
+{
+	strcpy(User->Name, Name);
+	User->Lvl = 2;
+	User->PW = Hash(PassWord);
+#ifdef PWHashLen
+	memset(User->PWHash, 0, sizeof(User->PWHash));
+#endif
+	WritePlayer(User);
+	Check(PlayerOnFile(Name), "an old-style character is saved");
+}
+
 int main(int argc, char **argv)
 {
 	static const struct { const char *Name; void (*Fn)(void); } Tests[] =
 	{
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
-		{"26", Test26},
+		{"26", Test26}, {"82", Test82},
 	};
 	int		I;
 
-	if (argc != 3 || chdir(argv[1]))
+#ifdef PWHashLen
+	if (argc == 3 && !strcmp(argv[2], "layout"))
 	{
-		fprintf(stderr, "usage: dmtest GAMEDIR TEST\n");
+		printf("pw %zu pwhash %zu %d usersave %zu record %zu\n",
+			   offsetof(UserSave, PW), offsetof(UserSave, PWHash), PWHashLen,
+			   sizeof(UserSave), sizeof(UserFRec));
+		return 0;
+	}
+#endif
+	if (!(argc == 3 || argc == 5 && !strcmp(argv[2], "legacy")) || chdir(argv[1]))
+	{
+		fprintf(stderr, "usage: dmtest GAMEDIR TEST | GAMEDIR legacy NAME PASSWORD"
+				" | - layout\n");
 		return 2;
 	}
 
@@ -230,7 +365,7 @@ int main(int argc, char **argv)
 	Say("fighter");
 	Say("15, 7, 9, 10, 9");
 	Say("sharp");
-	Say("secret");
+	Say("secretpw");
 	Say("male");
 	if (!User || User->Entry != XCmd)
 	{
@@ -238,6 +373,11 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	if (!strcmp(argv[2], "legacy"))
+	{
+		Legacy(argv[3], argv[4]);
+		return Failures ? 1 : 0;
+	}
 	for (I = 0; I < (int)(sizeof(Tests) / sizeof(Tests[0])); I++)
 		if (!strcmp(argv[2], Tests[I].Name))
 		{

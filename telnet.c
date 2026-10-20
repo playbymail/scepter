@@ -588,6 +588,11 @@ void NetWho(void)
 	}
 }
 
+const char *NetHost(int Chn)
+{
+	return Chn >= 1 && Chn <= MaxUsers ? Conn[Chn].Host : "?";
+}
+
 void NetCheckHup(void)
 {
 	UserPoint	Plyr = UserTail;

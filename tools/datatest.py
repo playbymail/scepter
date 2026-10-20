@@ -3,7 +3,7 @@
 
     python3 -I tools/datatest.py [BINDIR [WORLD]]
 
-BINDIR holds scepterd, mkgame, upgradegame and fightsim (default: .).
+BINDIR holds scepterd, mkgame, upgradegame, fightsim and dmtest (default: .).
 Each case builds a game from WORLD (default var/alpha/alpha.world) in a
 temporary directory, damages or downgrades it, and checks what scepterd and
 upgradegame make of it.  `make check-data` runs this.
@@ -19,7 +19,7 @@ import sys
 import tempfile
 
 HEAD = 32
-VERSION = 1
+VERSION = 2
 FILES = {
     "ram/edungeon.new": b"SCEPDUNG", "ram/dbobj.new": b"SCEPDBOB",
     "ram/dbmon.new": b"SCEPDBMN", "ram/eperson.new": b"SCEPPERS",
@@ -74,6 +74,46 @@ def strip(path, names=FILES):
             data = fp.read()
         with open(p, "wb") as fp:
             fp.write(data[HEAD:])
+
+
+def layout():
+    """Where the password fields are in a player record, from dmtest."""
+    rc, out, err = run("dmtest", "-", "layout")
+    assert rc == 0, err
+    w = out.split()
+    return {"pwhash": int(w[3]), "pwhashlen": int(w[4]), "usersave": int(w[6]),
+            "record": int(w[8])}
+
+
+def clear_padding(path):
+    """Zero the padding after PWHash in each player record.  WritePlayer()
+    saves whatever UserType holds there; upgradegame writes zeros."""
+    lay = layout()
+    p = os.path.join(path, "ram/eperson.new")
+    with open(p, "rb") as fp:
+        data = bytearray(fp.read())
+    pad = lay["pwhash"] + lay["pwhashlen"]
+    for i in range(HEAD, len(data), lay["record"]):
+        data[i + pad:i + lay["usersave"]] = bytes(lay["usersave"] - pad)
+    with open(p, "wb") as fp:
+        fp.write(data)
+
+
+def downgrade(path, names=FILES):
+    """Turn version 2 files into version 1: player records lose PWHash."""
+    lay = layout()
+    for f in names:
+        p = os.path.join(path, f)
+        with open(p, "rb") as fp:
+            head, data = bytearray(fp.read(HEAD)), fp.read()
+        head[8:12] = struct.pack("<I", 1)
+        if f == "ram/eperson.new":
+            size, at, cut = lay["record"], lay["pwhash"], lay["pwhashlen"]
+            head[12:16] = struct.pack("<I", size - cut)
+            data = b"".join(data[i:i + at] + data[i + at + cut:i + size]
+                            for i in range(0, len(data), size))
+        with open(p, "wb") as fp:
+            fp.write(head + data)
 
 
 def patch(path, f, offset, data):
@@ -186,6 +226,48 @@ def test_upgrade(fresh):
     check(rc == 0 and "already" in out, "a second upgradegame changes nothing")
 
 
+def test_upgrade1():
+    # a version 1 game with a saved character
+    g = game("v1")
+    rc, _, err = run("dmtest", g, "legacy", "Oldtimer", "ac")
+    check(rc == 0, "dmtest saves an old-style character")
+    want = snapshot(g)
+    clear_padding(want)
+    downgrade(g)
+    ok, err = server_refuses(g, "format version 1", "upgradegame")
+    check(ok and all(f in err for f in FILES),
+          "scepterd refuses a version 1 game, naming every file")
+    rc, out, _ = run("upgradegame", "-n", g)
+    check(rc == 0 and out.count("version 1, would upgrade") == len(FILES),
+          "upgradegame -n reports every version 1 file")
+    rc, out, err = run("upgradegame", g)
+    check(rc == 0 and "now at format version %d" % VERSION in out,
+          "upgradegame upgrades a version 1 game")
+    check(same_tree(g, want), "the character is kept, with an empty password hash")
+    ok, _ = server_ok(g)
+    check(ok, "scepterd starts on the upgraded game")
+
+    # the same character in a version 0 game
+    g = game("v0person")
+    run("dmtest", g, "legacy", "Oldtimer", "ac")
+    want = snapshot(g)
+    clear_padding(want)
+    downgrade(g)
+    strip(g)
+    rc, out, err = run("upgradegame", g)
+    check(rc == 0 and out.count("version 0, upgrading") == len(FILES)
+          and same_tree(g, want), "upgradegame upgrades a version 0 player file")
+
+    # a version 1 player file whose records are the wrong size
+    g = game("v1bad")
+    downgrade(g)
+    patch(g, "ram/eperson.new", 12, struct.pack("<I", 12345))
+    snap = snapshot(g)
+    rc, _, err = run("upgradegame", g)
+    check(rc == 1 and "12345 bytes" in err and same_tree(g, snap),
+          "upgradegame refuses a version 1 file with the wrong record size")
+
+
 def test_partial(fresh):
     # an upgrade that stopped part way: some files done, some not
     g = game("partial")
@@ -216,6 +298,7 @@ def main():
         fresh = test_fresh()
         test_damaged()
         test_upgrade(fresh)
+        test_upgrade1()
         test_partial(fresh)
         test_fightsim(fresh)
     finally:
