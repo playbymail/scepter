@@ -809,6 +809,28 @@ permanent = yes
 closed = yes
 trap = 50
 
+[room 27 / object 4]
+name = ring,copper *
+article = a
+kind = ring
+weight = 1
+price = 40
+carry = yes
+permanent = yes
+
+[room 27 / object 5]
+name = wand,bone *
+article = a
+kind = device
+weight = 1
+price = 100
+carry = yes
+magic = yes
+permanent = yes
+spell = befuddle
+charges = 5
+level = 5
+
 [room 27 / monster 1]
 name = wisp,marsh *
 article = a

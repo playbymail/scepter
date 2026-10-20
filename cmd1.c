@@ -192,6 +192,16 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 				sprintf(B1, "0%s picked up %s.", User->Name, B2);
 			LocalMsg(B1);
 
+			if (Where == Container)
+			{
+				Box->Weight = Max(0, Box->Weight - Object->Weight);
+				Box->Object.Chest.NumInside =
+					Max(0, Box->Object.Chest.NumInside - 1);
+				Box->Object.Chest.ObjectTail = ObTail;
+			}
+			else
+				Room[Rm].RmObjectTail = ObTail;
+
 			if (Object->ObClass == Coins)
 			{
 				User->Money += Object->Price;
@@ -220,16 +230,6 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 					Object->Next = NULL;
 				}
 			}
-
-			if (Where == Container)
-			{
-				Box->Weight = Max(0, Box->Weight - Object->Weight);
-				Box->Object.Chest.NumInside =
-					Max(0, Box->Object.Chest.NumInside - 1);
-				Box->Object.Chest.ObjectTail = ObTail;
-			}
-			else
-				Room[Rm].RmObjectTail = ObTail;
 
 			if (Watched)
 			{

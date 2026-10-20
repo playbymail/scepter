@@ -343,6 +343,7 @@ struct tUserType
 	Alfa		LastCmd;
 	Alfa		WData;
 	long		Data;
+	int			ParleyObj;		/* OList index offered by PARLEY (XParley) */
 };
 
 /* NOTE:  tUserSave must be EXACTLY the same as the first part of tUserType */

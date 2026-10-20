@@ -729,7 +729,7 @@ void Parley(char *Word, int Num)
 
 				ReadOList(N1, &ObjTemp);
 				User->Data = ObjTemp.Price / 2 + Rnd(ObjTemp.Price);
-				User->LastAtk = N1;
+				User->ParleyObj = N1;
 				PM(Mon, TRUE, B2);
 				PrintObj(&ObjTemp, FALSE, FALSE, B3);
 				sprintf(B1,
@@ -919,7 +919,7 @@ void YesNo(void)
 		{
 			User->Money -= User->Data;
 			Obj = (ObjectPoint)malloc(sizeof(ObjectType));
-			ReadOList((int)User->LastAtk, Obj);
+			ReadOList(User->ParleyObj, Obj);
 			Obj->Next = Room[User->RmCode].RmObjectTail;
 			Room[User->RmCode].RmObjectTail = Obj;
 			p = "0Here you are, my friend.  You are indeed a shrewd buyer, Effendi!";

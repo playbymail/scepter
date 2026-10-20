@@ -176,6 +176,105 @@ def test_11(port):
     alive(b, "Bravo", "a player dies with no money")
 
 
+def test_13(port):
+    """GET coins from a chest must not read the freed coins (#13)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, "w"), "Alpha reaches the temple"):
+        return
+    a.line("get key")
+    check(a.expect(rb"Ok\.", 5) is not None, "Alpha takes the brass key")
+    if not check(walk(a, "e", "e", "u"), "Alpha reaches the inn's loft"):
+        return
+    a.line("unlock chest key")
+    check(a.expect(rb"Ok\.", 5) is not None, "Alpha unlocks the chest")
+    a.line("get gold chest")
+    check(a.expect(rb"You now have 250 shillings", 5) is not None,
+          "Alpha takes the coins from the chest")
+    alive(a, "Alpha", "taking coins from a chest")
+
+
+def test_14(port):
+    """One ring worn on both hands must not dangle once pawned (#14)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, *TO_WORKSHOP), "Alpha reaches the workshop"):
+        return
+    a.line("get ring")
+    a.line("wear ring left")
+    a.line("wear ring right")
+    check(a.expect(rb"You put on the ring\..*You put on the ring\.", 5)
+          is not None, "Alpha wears the ring left, then right")
+    if not check(walk(a, "w", "n", "w", "n", "w"), "Alpha reaches the pawnshop"):
+        return
+    a.line("pawn ring")
+    a.expect(rb"Is this to your satisfaction", 5)
+    a.line("yes")
+    check(a.expect(rb"Thank you!  Come again!", 5) is not None,
+          "Alpha pawns the ring")
+    a.line("look alpha")
+    alive(a, "Alpha", "pawning a ring worn on both hands")
+    a.line("inv")
+    check(a.expect(rb"You are carrying nothing at all", 5) is not None,
+          "the pawned ring is gone")
+
+
+def test_15(port):
+    """A spell must not change what a pending PARLEY sells (#15)."""
+    a = login(port, "Alpha")
+    b = login(port, "Bravo")
+    if not check(b and walk(b, *TO_WORKSHOP), "Bravo reaches the workshop"):
+        return
+    b.line("get wand")
+    check(b.expect(rb"Ok\.", 5) is not None, "Bravo takes the bone wand")
+    if not check(a and walk(a, "n") and walk(b, "w", "n", "w", "n", "n", "n"),
+                 "Alpha and Bravo meet on the north road"):
+        return
+    a.line("parley peddler")
+    got = a.expect(rb"I will sell you (an? |some )?(.*?) for a mere", 5)
+    if not check(got is not None, "the peddler offers Alpha something"):
+        return
+    item = re.search(rb"I will sell you (?:an? |some )?(.*?) for a mere", got).group(1)
+    b.line("use wand alpha")
+    check(b.expect(rb"Ok\.", 5) is not None, "Bravo uses the wand on Alpha")
+    a.line("y")		# Alpha hears of the spell once the prompt is answered
+    check(a.expect(rb"Bravo casts a befuddle spell on you.*Here you are, my friend",
+                   5) is not None, "Alpha, befuddled, buys it")
+    a.line("look")				# room 2 has two descriptions
+    got = a.expect(rb"Obvious exits are north and south\.\r\nYou see.*?\r\n\r\n", 5)
+    check(got is not None and item in re.sub(rb"\s+", b" ", got),
+          "the room holds the %s Alpha was offered" % item.decode())
+    alive(a, "Alpha", "a spell during PARLEY")
+
+
+def test_12(port):
+    """A spring door into an unloaded segment, with every slot in use (#12)."""
+    a = login(port, "Alpha")
+    # Rooms 30, 40 ... 140 load segments 3-14, so with segment 0 every slot
+    # is in use and going to room 150 must unload one.  GoDirection loads
+    # the new segment while Alpha still holds the old one, so the old room
+    # and its door stay valid; this guards that order.
+    if not check(a and walk(a, *["d"] * 13), "Alpha tours segments 3-14"):
+        return
+    a.line("go door")
+    check(a.expect(rb"oak door slams shut!", 5) is not None,
+          "Alpha goes through the spring door")
+    walk(a, "u")
+    a.line("look")
+    got = a.expect(rb"You are in the village square.*?\r\n\r\n", 5)
+    check(got is not None and b"oak door" in got, "the oak door is still there")
+    alive(a, "Alpha", "a spring door into an unloaded segment")
+
+
+def many_segments(world):
+    """World with rooms 30-150, one per segment, and a spring door to 150."""
+    world = world.replace("[room 1]\n", "[room 1]\ndown = 30\n", 1)
+    rooms = ["[room %d]\ndown = %d\ndesc = 1:3\n" % (r, r + 10 if r < 140 else 1)
+             for r in range(30, 150, 10)]
+    rooms.append("[room 150]\nup = 1\ndesc = 1:3\n")
+    rooms.append("[room 1 / object 3]\nname = door,oak *\narticle = an\n"
+                 "kind = door\npermanent = yes\nto = 150\nspring = yes\n")
+    return world + "\n" + "\n".join(rooms)
+
+
 def drop_section(world, header):
     """World text without the [header] section."""
     out, skip = [], False
@@ -193,6 +292,10 @@ TESTS = {
     "39": (test_39, None),
     "8": (test_8, None),
     "11": (test_11, None),
+    "13": (test_13, None),
+    "14": (test_14, None),
+    "15": (test_15, None),
+    "12": (test_12, many_segments),
 }
 
 

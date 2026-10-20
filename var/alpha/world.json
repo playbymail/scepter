@@ -532,6 +532,26 @@
           "weight": 100,
           "permanent": true,
           "chest": {"closed": true, "trap": 50}
+        },
+        {
+          "name": "ring,copper *",
+          "article": "a",
+          "kind": "ring",
+          "weight": 1,
+          "price": 40,
+          "carry": true,
+          "permanent": true
+        },
+        {
+          "name": "wand,bone *",
+          "article": "a",
+          "kind": "device",
+          "weight": 1,
+          "price": 100,
+          "carry": true,
+          "magic": true,
+          "permanent": true,
+          "device": {"spell": "befuddle", "charges": 5, "level": 5}
         }
       ],
       "monsters": [

@@ -539,11 +539,15 @@ int UseObject(char *Word, int Num)
 			if (!strcmp(Word, "LEFT"))
 			{
 				StopUsing(User, User->USRingL);
+				if (User->USRingR == Object)	/* move it, don't wear it twice */
+					User->USRingR = NULL;
 				User->USRingL = Object;
 			}
 			else if (!strcmp(Word, "RIGHT"))
 			{
 				StopUsing(User, User->USRingR);
+				if (User->USRingL == Object)
+					User->USRingL = NULL;
 				User->USRingR = Object;
 			}
 			else
