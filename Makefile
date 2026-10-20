@@ -2,6 +2,8 @@
 
 CC      ?= cc
 CSTD    ?= -std=c11
+# glibc hides POSIX functions (strdup, getopt, ...) under strict -std=c11
+FEATURES = -D_DEFAULT_SOURCE
 WARN     = -Wall -Wno-parentheses -Wno-dangling-else -Wno-missing-braces -Wno-switch
 CFLAGS  ?= -g -O2
 # Data paths default to the current directory; override with e.g.
@@ -22,7 +24,7 @@ mkgame: mkgame.o
 	$(CC) $(CFLAGS) -o $@ mkgame.o
 
 %.o: %.c
-	$(CC) $(CSTD) $(WARN) $(CFLAGS) $(DEFS) -c $<
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -c $<
 
 $(OBJS) mkgame.o: common.h scepter.h proto.h
 
@@ -33,7 +35,7 @@ fightsim: $(SIMOBJS)
 	$(CC) $(CFLAGS) -o $@ $(SIMOBJS)
 
 tools/fightsim.o: tools/fightsim.c main.c common.h scepter.h proto.h
-	$(CC) $(CSTD) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/fightsim.c -o $@
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/fightsim.c -o $@
 
 # Each world file must match its JSON copy (tools/worldjson.py).
 check-worlds:
