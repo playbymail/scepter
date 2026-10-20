@@ -1,6 +1,7 @@
 *.o
 *-prompt.md
 __pycache__/
+/dmtest
 /fightsim
 /games/
 /mkgame

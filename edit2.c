@@ -772,7 +772,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 				{
 					if (Line <= StrPerSeg)
 					{
-						sprintf(B1, "0%2d:  %s", Line, DescBuf[Line - 1]);
+						sprintf(B1, "0%2d:  %.80s", Line, DescBuf[Line - 1]);
 						QOut(Term, B1);
 					}
 					else
@@ -781,7 +781,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 				else
 					for (Line = 0; Line < StrPerSeg; Line++)
 					{
-						sprintf(B1, "0%2d:  %s", Line + 1, DescBuf[Line]);
+						sprintf(B1, "0%2d:  %.80s", Line + 1, DescBuf[Line]);
 						QOut(Term, B1);
 					}
 			}
@@ -840,7 +840,7 @@ void EnterDesc(void)
 
 	memset(B1, ' ', 80);
 	Slash = -1;
-	for (ILoop = 0; ILoop < Min(80, LenBuf); ILoop++)
+	for (ILoop = 0; ILoop < Min(79, LenBuf); ILoop++)	/* and the NUL: 80 */
 	{
 		B1[ILoop] = Buf[ILoop];
 		if (Buf[ILoop] == '/')

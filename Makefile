@@ -44,6 +44,16 @@ fightsim: $(SIMOBJS)
 tools/fightsim.o: tools/fightsim.c main.c common.h scepter.h proto.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/fightsim.c -o $@
 
+# DM-only and bad-data security tests (tools/dmtest.c); links the engine
+# without main.o, like fightsim.
+DMOBJS = $(filter-out main.o,$(OBJS)) tools/dmtest.o
+
+dmtest: $(DMOBJS)
+	$(CC) $(CFLAGS) -o $@ $(DMOBJS)
+
+tools/dmtest.o: tools/dmtest.c main.c common.h scepter.h proto.h
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmtest.c -o $@
+
 # Each world file must match its JSON copy (tools/worldjson.py).
 check-worlds:
 	@for w in var/*/*.world; do \
@@ -66,10 +76,11 @@ check-data: scepterd mkgame upgradegame fightsim
 # that makes memory errors visible:
 #   make CFLAGS='-g -O1 -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
 # The pattern fill turns an uninitialized pointer (#11) into a sure crash.
-check-security: scepterd mkgame
+check-security: scepterd mkgame dmtest
 	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
 
 clean:
-	rm -f scepterd mkgame fightsim upgradegame $(OBJS) mkgame.o tools/fightsim.o tools/upgradegame.o
+	rm -f scepterd mkgame fightsim dmtest upgradegame $(OBJS) mkgame.o tools/fightsim.o \
+		tools/dmtest.o tools/upgradegame.o
 
 .PHONY: all clean check-worlds check-net check-tintin check-data check-security
