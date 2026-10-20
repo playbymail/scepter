@@ -12,7 +12,7 @@ DEFS    ?=
 
 OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	edit1.o edit2.o io.o ipc.o log.o main.o matt.o \
-	mon.o obj.o room.o special.o spells.o user.o rand.o
+	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o
 
 all: scepterd mkgame
 
@@ -43,7 +43,15 @@ check-worlds:
 		python3 tools/worldjson.py check $$w $$(dirname $$w)/world.json || exit 1; \
 	done
 
+# Telnet front end tests over raw sockets (tools/nettest.py).
+check-net: scepterd mkgame
+	python3 -I tools/nettest.py ./scepterd ./mkgame var/alpha/alpha.world
+
+# The same server played by TinTin++ (skipped if tt++ is not installed).
+check-tintin: scepterd mkgame
+	sh tools/tintintest.sh ./scepterd ./mkgame var/alpha/alpha.world
+
 clean:
 	rm -f scepterd mkgame fightsim $(OBJS) mkgame.o tools/fightsim.o
 
-.PHONY: all clean check-worlds
+.PHONY: all clean check-worlds check-net check-tintin

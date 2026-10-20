@@ -1,5 +1,6 @@
 #include <signal.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "common.h"
 #include "scepter.h"
@@ -35,21 +36,37 @@ int main(int argc, char **argv)
 {
 	unsigned	minute;
 	int Aborted = FALSE;
+	int Console = FALSE;
+	char *Addr = "127.0.0.1:4000";
+	int Opt;
+
+	while ((Opt = getopt(argc, argv, "cl:")) != -1)
+		switch (Opt)
+		{
+			case 'c':	Console = TRUE;	break;
+			case 'l':	Addr = optarg;	break;
+			default:
+				fprintf(stderr, "usage: %s [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
+				exit(2);
+		}
 
 	/* The data paths are relative to the game directory (see mkgame). */
-	if (argc > 2)
+	if (argc - optind > 1)
 	{
-		fprintf(stderr, "usage: %s [GAMEDIR]\n", argv[0]);
+		fprintf(stderr, "usage: %s [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
 		exit(2);
 	}
-	if (argc == 2 && chdir(argv[1]))
+	if (argc - optind == 1 && chdir(argv[optind]))
 	{
-		perror(argv[1]);
+		perror(argv[optind]);
 		exit(1);
 	}
 
 	/* The QNX server forked into the background here.  It now runs in the
-	 * foreground with the console harness in ipc.c as its only player. */
+	 * foreground, serving telnet connections (telnet.c), or with -c the
+	 * console harness in ipc.c as its only player. */
+	if (!Console)
+		QListen(Addr);
 
 	QCre();
 	Init_Scepter();
@@ -123,7 +140,7 @@ int main(int argc, char **argv)
 				}
 				break;
 
-			case '9':	/* console harness: end of input */
+			case '9':	/* end of console input, or SIGINT/SIGTERM */
 				User = NULL;
 				Aborted = TRUE;
 				break;

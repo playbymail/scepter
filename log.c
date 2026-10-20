@@ -198,6 +198,7 @@ void ChooseClass(void)
 		Logoff(User);
 		QOut(Term, "2");
 		QDea(Term);
+		User = NULL;
 		return;
 	}
 
@@ -240,6 +241,7 @@ void MatchPW(void)
 		QOut(Term, "0Wrong password, sorry.");
 		QOut(Term, "2");
 		QDea(Term);
+		User = NULL;
 	}
 	else
 	{
@@ -266,6 +268,7 @@ void GetName(void)
 		Logoff(User);
 		QOut(Term, "2");
 		QDea(Term);
+		User = NULL;
 		return;
 	}
 
@@ -288,6 +291,7 @@ void GetName(void)
 			QOut(Term, "0Name already in use!");
 			QOut(Term, "2");
 			QDea(Term);
+			User = NULL;
 			return;
 		}
 	}
@@ -312,6 +316,7 @@ void GetName(void)
 		Logoff(User);
 		QOut(Term, "2");
 		QDea(Term);
+		User = NULL;
 	}
 	else if (!*User->Name)
 	{
@@ -330,6 +335,7 @@ void GetName(void)
 		Logoff(User);
 		QOut(Term, "2");
 		QDea(Term);
+		User = NULL;
 	}
 	else
 		User->Entry = XPassword;

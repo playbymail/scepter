@@ -1,9 +1,10 @@
 /*
- * Console harness for the player I/O layer.
+ * Player I/O layer, and the console harness.
  *
  * The QNX version received messages from the scepter/mud client tasks with
- * Send/Receive/Reply and queued replies in a shared ring buffer.  Until the
- * real multi-player front end is designed, this file plays the part of a
+ * Send/Receive/Reply and queued replies in a shared ring buffer.  scepterd
+ * now serves telnet connections itself (telnet.c) once QListen() is called;
+ * otherwise (scepterd -c, and tools/fightsim) this file plays the part of a
  * single client on stdin/stdout so the game can be run and tested locally.
  *
  * Protocol (unchanged from QNX), first character of each message:
@@ -12,7 +13,8 @@
  *                     (empty prompt: poll, reply with empty input if idle),
  *                     2<text> print and disconnect, 3 aborted
  *
- * QRea() returns "9" when stdin reaches end of file; main() then shuts down.
+ * QRea() returns "9" when stdin reaches end of file (telnet: on SIGINT or
+ * SIGTERM); main() then shuts down.
  */
 #include <string.h>
 #include <sys/select.h>
@@ -30,9 +32,18 @@ static char	Prompt[256];		/* last '1' message for the console */
 static int	HavePrompt;
 static int	Connected;			/* FALSE until the console has logged in */
 
+static int	Net;				/* TRUE: players connect by telnet */
+
 static char	InBuf[512];			/* raw bytes read from stdin */
 static int	InLen;
 static int	InEOF;
+
+/* Serve telnet connections on Addr ([HOST:]PORT) instead of the console. */
+void QListen(char *Addr)
+{
+	Net = TRUE;
+	NetListen(Addr);
+}
 
 void QAss(char *Mbx, int *Chn)
 {
@@ -126,6 +137,12 @@ static int Fill(long TimeoutUsec)
 
 void QRea(char *Str, int *Chn)
 {
+	if (Net)
+	{
+		NetRea(Str, Chn);
+		return;
+	}
+
 	*Chn = ConsolePid;
 
 	if (!Connected)
@@ -180,6 +197,11 @@ void QOut(int Chn, char *Str)
 		printf("Error in QOut(): %s\n", Str);
 		return;
 	}
+	if (Net)
+	{
+		NetOut(Chn, Str);
+		return;
+	}
 	if (Chn != ConsolePid)
 		return;		/* nobody else is connected */
 
@@ -208,13 +230,20 @@ void QOut(int Chn, char *Str)
 
 void GetNextMsg(void)
 {
-	/* QOut() delivers immediately; nothing is queued. */
+	/* The console prints at once; telnet writes what the sockets accept. */
+	if (Net)
+		NetFlush();
 }
 
 void Who(void)
 {
 	UserPoint	Player;
 
+	if (Net)
+	{
+		NetWho();
+		return;
+	}
 	QOut(Term, "0");
 	if (!User->Brief)
 		QOut(Term, "0Name");
@@ -228,7 +257,9 @@ void Who(void)
 
 void CheckHup(void)
 {
-	/* the console never hangs up */
+	/* the console never hangs up; telnet logs off lost connections */
+	if (Net)
+		NetCheckHup();
 }
 
 int IsGuest(int term)
