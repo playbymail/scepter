@@ -15,6 +15,7 @@ games. Each game keeps its own state in its directory:
 | File | Contents |
 |---|---|
 | `dat/efile` | notice, news, obituaries, run counter, monster speed, encounter and treasure tables |
+| `dat/special` | start, revive and jail rooms; shop roles, greetings, stock, bar staggers, training rooms |
 | `ram/edungeon.new` | rooms |
 | `ram/dbobj.new`, `ram/dbmon.new` | objects and monsters currently in rooms |
 | `ram/mlist.new`, `ram/olist.new` | monster and object templates (`dat/` holds a second copy) |
@@ -24,6 +25,16 @@ games. Each game keeps its own state in its directory:
 
 `mkgame` refuses to write into a directory that already holds a game,
 unless you pass `-f`.
+
+Every world file has a JSON copy beside it, `var/NAME/world.json`. The
+world file is the source; `tools/worldjson.py` converts in both directions,
+and `make check-worlds` fails if the two copies differ. The tool writes the
+world file in a canonical form, so it doesn't keep comments you add by
+hand.
+
+```sh
+python3 tools/worldjson.py to-json var/alpha/alpha.world var/alpha/world.json
+```
 
 ## Syntax
 
@@ -52,7 +63,9 @@ key = value
 | `monster-speed` | seconds between random monster checks |
 | `notice` | the notice shown at login |
 | `news-1` … `news-5` | lines in the newspaper |
-| `revive-room` | not supported yet: the engine always revives dead characters in room 17 |
+| `start-room` | where new characters start (default 1) |
+| `revive-room` | where dead characters revive (default: the start room) |
+| `jail-room` | where guards take a player who attacks a monster with `assistance` (default: the start room). This is disabled in the original source (`USEJAIL` in `cmd2.c`/`cmd3.c`), so it currently has no effect. |
 
 ## `[description R]`, R = 1…255
 
@@ -80,23 +93,15 @@ N/phrase one/phrase two/
 | `dark` | the room is dark |
 | `notify-dm` | DMs are told when a player enters |
 
-The keys `greeting`, `role` (`bar`, `store`, `pawnshop`, `smith` or
-`newsstand`), `stock`, `staggers` and `trains` are accepted, but `mkgame`
-warns that the engine ignores them. The engine fixes these rooms by
-number:
+These keys make a room special:
 
-| Room | Role |
+| Key | Meaning |
 |---|---|
-| 1 | start |
-| 3 | bar (staggering drunks land in rooms 1–10) |
-| 4 | newsstand |
-| 5 | jail |
-| 8 | pawnshop |
-| 10 | store (sells objects 1–20) |
-| 17 | revive |
-| 18 | smith |
-| 20 | trains fighters, barbarians and DMs |
-| 21–25 | train paladins, clerics, thieves, magic-users and rangers |
+| `role` | `bar`, `newsstand`, `pawnshop`, `store` or `smith`; a world can have several rooms with the same role |
+| `greeting` | a line shown to anyone who enters, at most 250 characters |
+| `stock` | for a store, up to 20 object template numbers. CATALOG lists them in this order and `BUY n` buys the nth. |
+| `staggers` | for a bar, up to 20 rooms where a drunk may stagger to (default: the start room) |
+| `trains` | classes trained here: `fighter`, `thief`, `magic-user`, `dm`, `cleric`, `paladin`, `ranger`, `barbarian` |
 
 Rooms contain up to 8 objects, `[room N / object K]`, and up to 8
 monsters, `[room N / monster K]`, with K = 1…8. A chest's contents are
@@ -126,9 +131,9 @@ Flags (`yes`/`no`): `defend`, `block`, `follow`, `guard`, `attack-last`,
 `regenerate`, `drain`, `poison`, `anti-magic`, `undead`, `summon-help`,
 `unique`, `watch`.
 
-A room monster may have inventory blocks, `[room N / monster K / object J]`.
-They are parsed, but the engine does not keep monster inventory yet, so
-they are ignored with a warning.
+A room monster may carry up to 8 objects, `[room N / monster K / object J]`.
+They drop when the monster dies. The inventory is saved with the room;
+the contents of a chest a monster carries are not.
 
 ## `[object N]`, N = 1…200, and room objects
 

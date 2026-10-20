@@ -254,23 +254,14 @@ void GoDirection(char *Word, int Num)
 			QOut(TermList[ILoop], B1);
 	}
 
-	switch (NewRm)
 	{
-		case 3:
-			QOut(Term, "0Bartender says, \"Buy a drink, mac?\"");
-			break;
-		case 4:
-			QOut(Term, "0Paperboy says, \"Extra! Extra! Read all about it!\"");
-			break;
-		case 8:
-			QOut(Term, "0Appraisor asks, \"What would you like to sell?\"");
-			break;
-		case 10:
-			QOut(Term, "0Merchant asks, \"What would you like to buy?\"");
-			break;
-		case 18:
-			QOut(Term, "0\"Hee hee.  So matey, your gear don't look too good.  Need fixin?\"");
-			break;
+		char	*Greeting = RoomGreeting(NewRm);
+
+		if (Greeting)
+		{
+			sprintf(B1, "0%.250s", Greeting);
+			QOut(Term, B1);
+		}
 	}
 }
 
@@ -712,7 +703,7 @@ void Dead(void)
 		QOut(Term, "0As you come to your senses, you find....");
 		QOut(Term, "0");
 
-		PlacePlayer(User, 17);
+		PlacePlayer(User, ReviveRoom);
 		User->Poisoned = FALSE;
 		User->Con = Max(3, User->Con - 1);
 		if (User->Lvl > 2)
@@ -856,7 +847,7 @@ void ProtectNPC(UserPoint Player, MonsterPoint Monster)
 		LocalMsg(B1);
 		StopFollow(Player);
 		DeletePlayer(Player, Player->RmCode);
-		PlacePlayer(Player, 5);		/* jail */
+		PlacePlayer(Player, JailRoom);
 		RoomDisplay(Player->RmCode,	FALSE);
 	}
 

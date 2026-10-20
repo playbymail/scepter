@@ -101,3 +101,4 @@ char	HDMLIST[]	= WORKDIR "/dat/mlist.new";
 char	HDOLIST[]	= WORKDIR "/dat/olist.new";
 char	ERRLOG[]	= WORKDIR "/dat/errlog";
 char	PASSWD[]	= "/etc/passwd";
+char	SPECIAL[]	= WORKDIR "/dat/special";

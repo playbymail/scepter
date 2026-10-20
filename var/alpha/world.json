@@ -1,7 +1,17 @@
 {
   "name": "alpha",
+  "startRoom": 1,
   "reviveRoom": 5,
+  "jailRoom": 25,
   "monsterSpeed": 8,
+  "notice": "Welcome to alpha, the Scepter reference world.",
+  "news": [
+    "The old tower is said to hold a goblin king.",
+    "Travellers report a toll on the forest bridge.",
+    "The watch patrols Guild Street day and night.",
+    "A white stone circle hums in the glade.",
+    "Mind your manners: the village lockup has room."
+  ],
   "descriptions": [
     {
       "record": 1,
@@ -53,7 +63,9 @@
         "1/You are in the paladins' chapter house.# Shields bear the temple's sign.#/",
         "1/You are in the pawnshop.# Shelves sag under other people's things.#/",
         "1/You are in the smithy.# The forge glows and a hammer rings on the anvil.#/",
-        "1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/"
+        "1/You are at the newsstand.# Broadsheets flap from a line over the counter.#/",
+        "1/You are in the village lockup.# Damp straw and iron bars. Steps lead up.#/",
+        "1/You are on the forest bridge.# Black water slides by below.#/"
       ]
     },
     {
@@ -69,6 +81,21 @@
         "1/They say the old tower is full of goblins./",
         "1/I'd sell you another, but my tray is bare./",
         "1/Come back when I've restocked, friend./"
+      ]
+    },
+    {
+      "record": 6,
+      "lines": [
+        "1/A spider as big as a cartwheel, its fangs glistening./",
+        "1/A wight, its eyes cold pinpricks in a withered face./",
+        "1/A watchman in a dented helmet, leaning on his halberd./",
+        "1/A pale, flickering shape that might once have been a man./",
+        "1/A goblin with a tin crown and a very large club./",
+        "1/A wand of ash wood, scorched at the tip./",
+        "1/A ring of white standing stones, humming softly./",
+        "1/A tarot card showing a tower struck by lightning./",
+        "1/A red gem, cut square, warm to the touch./",
+        "1/A slim silver dagger, engraved with runes./"
       ]
     }
   ],
@@ -132,7 +159,7 @@
       "exits": [1, 13, 23, 22, 0, 0],
       "desc": {"record": 1, "line": 5},
       "greeting": "Merchant asks, \"What would you like to buy?\"",
-      "stock": [1, 2, 3, 6]
+      "stock": [1, 2, 3, 6, 10, 7]
     },
     {
       "id": 5,
@@ -147,6 +174,7 @@
           "weight": 1,
           "price": 5,
           "carry": true,
+          "permanent": true,
           "keys": {"unlocks": 21}
         }
       ]
@@ -154,7 +182,17 @@
     {
       "id": 6,
       "exits": [8, 2, 9, 0, 0, 0],
-      "desc": {"record": 1, "line": 7}
+      "desc": {"record": 1, "line": 7},
+      "objects": [
+        {
+          "name": "gate,toll *",
+          "article": "a",
+          "kind": "door",
+          "price": 2,
+          "permanent": true,
+          "door": {"to": 26, "spring": true, "toll": true}
+        }
+      ]
     },
     {
       "id": 7,
@@ -191,6 +229,15 @@
                 "carry": true,
                 "magic": true,
                 "scroll": {"spell": "heal"}
+              },
+              {
+                "name": "card,tarot *",
+                "article": "a",
+                "kind": "card",
+                "weight": 1,
+                "price": 5,
+                "desc": {"record": 6, "line": 8},
+                "carry": true
               }
             ]
           }
@@ -255,9 +302,27 @@
               "weight": 1,
               "price": 5,
               "carry": true,
+              "permanent": true,
               "keys": {"unlocks": 31}
             }
           ]
+        },
+        {
+          "name": "king,goblin *",
+          "article": "a",
+          "desc": {"record": 6, "line": 5},
+          "level": 4,
+          "hits": 25,
+          "maxHits": 25,
+          "ac": 3,
+          "attackSpeed": 4,
+          "treasureTable": 4,
+          "defend": true,
+          "attackLast": true,
+          "magic": true,
+          "castsSpells": true,
+          "unique": true,
+          "permanent": true
         }
       ]
     },
@@ -302,6 +367,7 @@
       "out": 6,
       "desc": {"record": 2, "line": 3},
       "antiMagic": true,
+      "notifyDM": true,
       "objects": [
         {
           "name": "ring,silver *",
@@ -311,14 +377,41 @@
           "price": 100,
           "carry": true,
           "magic": true,
+          "permanent": true,
           "ring": {"spell": "protection", "level": 1}
+        },
+        {
+          "name": "stones,white *",
+          "article": "some",
+          "kind": "teleport",
+          "desc": {"record": 6, "line": 7},
+          "permanent": true,
+          "teleport": {"to": 1, "activeRoom": 12}
         }
       ]
     },
     {
       "id": 13,
       "exits": [4, 15, 14, 16, 0, 0],
-      "desc": {"record": 2, "line": 4}
+      "desc": {"record": 2, "line": 4},
+      "monsters": [
+        {
+          "name": "watchman,*",
+          "article": "a",
+          "desc": {"record": 6, "line": 3},
+          "level": 4,
+          "hits": 20,
+          "maxHits": 20,
+          "ac": 4,
+          "attackSpeed": 4,
+          "defend": true,
+          "moralReact": true,
+          "nice": true,
+          "assistance": true,
+          "watch": true,
+          "permanent": true
+        }
+      ]
     },
     {
       "id": 14,
@@ -387,6 +480,28 @@
       "desc": {"record": 4, "line": 5},
       "greeting": "Paperboy says, \"Extra! Extra! Read all about it!\"",
       "newsstand": true
+    },
+    {
+      "id": 25,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "out": 13,
+      "desc": {"record": 4, "line": 6}
+    },
+    {
+      "id": 26,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 7},
+      "encounterTable": 3,
+      "encounterRate": 25,
+      "objects": [
+        {
+          "name": "gate,toll *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 6, "trap": 5, "spring": true}
+        }
+      ]
     }
   ],
   "monsters": [
@@ -460,6 +575,89 @@
       "defend": true,
       "attackLast": true,
       "castsSpells": true
+    },
+    {
+      "id": 6,
+      "name": "spider,giant *",
+      "article": "a",
+      "desc": {"record": 6, "line": 1},
+      "level": 2,
+      "hits": 9,
+      "maxHits": 9,
+      "ac": 6,
+      "attackSpeed": 5,
+      "defend": true,
+      "attackLast": true,
+      "fastReact": true,
+      "poison": true
+    },
+    {
+      "id": 7,
+      "name": "wight,*",
+      "article": "a",
+      "desc": {"record": 6, "line": 2},
+      "level": 3,
+      "hits": 16,
+      "maxHits": 16,
+      "ac": 4,
+      "attackSpeed": 3,
+      "treasureTable": 2,
+      "defend": true,
+      "attackLast": true,
+      "drain": true,
+      "antiMagic": true,
+      "undead": true,
+      "summonHelp": true
+    },
+    {
+      "id": 8,
+      "name": "watchman,*",
+      "article": "a",
+      "desc": {"record": 6, "line": 3},
+      "level": 4,
+      "hits": 20,
+      "maxHits": 20,
+      "ac": 4,
+      "attackSpeed": 4,
+      "defend": true,
+      "moralReact": true,
+      "nice": true,
+      "assistance": true,
+      "watch": true
+    },
+    {
+      "id": 9,
+      "name": "ghost,*",
+      "article": "a",
+      "desc": {"record": 6, "line": 4},
+      "level": 2,
+      "hits": 8,
+      "maxHits": 8,
+      "ac": 3,
+      "attackSpeed": 2,
+      "defend": true,
+      "slowReact": true,
+      "immoralReact": true,
+      "invisible": true,
+      "regenerate": true,
+      "undead": true
+    },
+    {
+      "id": 10,
+      "name": "king,goblin *",
+      "article": "a",
+      "desc": {"record": 6, "line": 5},
+      "level": 4,
+      "hits": 25,
+      "maxHits": 25,
+      "ac": 3,
+      "attackSpeed": 4,
+      "treasureTable": 4,
+      "defend": true,
+      "attackLast": true,
+      "magic": true,
+      "castsSpells": true,
+      "unique": true
     }
   ],
   "objects": [
@@ -524,15 +722,83 @@
       "price": 10,
       "carry": true,
       "shield": {"plus": 2, "hits": 50}
+    },
+    {
+      "id": 7,
+      "name": "wand,ash *",
+      "article": "an",
+      "kind": "device",
+      "weight": 1,
+      "price": 200,
+      "desc": {"record": 6, "line": 6},
+      "carry": true,
+      "magic": true,
+      "device": {"spell": "fireball", "charges": 5, "level": 2}
+    },
+    {
+      "id": 8,
+      "name": "key,skeleton *",
+      "article": "a",
+      "kind": "keys",
+      "weight": 1,
+      "price": 30,
+      "carry": true,
+      "keys": {"unlocks": 31, "uses": 3}
+    },
+    {
+      "id": 9,
+      "name": "ring,iron *",
+      "article": "an",
+      "kind": "ring",
+      "weight": 1,
+      "price": 50,
+      "carry": true,
+      "magic": true,
+      "cursed": true,
+      "ring": {"spell": "curse", "level": 1}
+    },
+    {
+      "id": 10,
+      "name": "dagger,silver *",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 2,
+      "price": 60,
+      "desc": {"record": 6, "line": 10},
+      "carry": true,
+      "magic": true,
+      "weapon": {"minDamage": 2, "maxDamage": 5, "strikes": 150, "skill": "thrust", "plus": 1}
+    },
+    {
+      "id": 11,
+      "name": "card,tarot *",
+      "article": "a",
+      "kind": "card",
+      "weight": 1,
+      "price": 5,
+      "desc": {"record": 6, "line": 8},
+      "carry": true
+    },
+    {
+      "id": 12,
+      "name": "gem,red *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 75,
+      "desc": {"record": 6, "line": 9},
+      "carry": true
     }
   ],
   "encounters": [
     {"id": 1, "entries": [1, 1, 3, 2, 5]},
-    {"id": 2, "entries": [3, 4]}
+    {"id": 2, "entries": [3, 4]},
+    {"id": 3, "entries": [6, 9, 7]}
   ],
   "treasures": [
     {"id": 1, "entries": [4, 1, 5]},
-    {"id": 2, "entries": [4, 3]},
-    {"id": 3, "entries": [1, 5, 6, 3, 1, 5, 6, 3]}
+    {"id": 2, "entries": [4, 3, 8]},
+    {"id": 3, "entries": [1, 5, 6, 3, 1, 5, 6, 3]},
+    {"id": 4, "entries": [12, 7, 9, 11]}
   ]
 }

@@ -44,10 +44,24 @@ typedef struct
 	RoomType	Rm;
 	ONode	*Objs[SavedItems + 1];
 	MNode	*Mons[SavedItems + 1];
+
+	/* special-room settings, written to dat/special (special.c) */
+	int		Role, RoleLine;
+	char	*Greeting;
+	int		NStock, Stock[20], StockLine;
+	int		NStagger, Stagger[20], StaggerLine;
+	unsigned	Trains;
 } RoomDef;
+
+static const char	*RoleNames[] =
+	{"none", "bar", "newsstand", "pawnshop", "store", "smith", NULL};
+static const char	*ClassNames[] =
+	{"fighter", "thief", "magic-user", "dm", "cleric", "paladin", "ranger",
+	 "barbarian", NULL};
 
 static char		WorldName[64];
 static int		MonSpeed = 10;
+static int		StartRm = 1, ReviveRm, JailRm, StartLine, ReviveLine, JailLine;
 static char		WNotice[256];
 static char		WNews[5][256];
 
@@ -237,11 +251,20 @@ static void WorldKey(char *k, char *v)
 		snprintf(WNotice, sizeof(WNotice), "%s", v);
 	else if (!strncmp(k, "news-", 5) && k[5] >= '1' && k[5] <= '5' && !k[6])
 		snprintf(WNews[k[5] - '1'], sizeof(WNews[0]), "%s", v);
+	else if (!strcmp(k, "start-room"))
+	{
+		if (ParseInt(v, 1, MaxRoom, &n))
+			StartRm = n, StartLine = LineNo;
+	}
 	else if (!strcmp(k, "revive-room"))
 	{
 		if (ParseInt(v, 1, MaxRoom, &n))
-			Warn(LineNo, "revive-room is not supported by the engine yet"
-				 " (it always uses room 17)");
+			ReviveRm = n, ReviveLine = LineNo;
+	}
+	else if (!strcmp(k, "jail-room"))
+	{
+		if (ParseInt(v, 1, MaxRoom, &n))
+			JailRm = n, JailLine = LineNo;
 	}
 	else
 		Err("unknown world key '%s'", k);
@@ -265,6 +288,7 @@ static void RoomKey(char *k, char *v)
 {
 	static const char	*Dirs[] =
 		{"north", "south", "east", "west", "up", "down", NULL};
+	RoomDef	*R = &Rooms[BlockId];
 	int		i, n;
 
 	for (i = 0; Dirs[i]; i++)
@@ -296,11 +320,46 @@ static void RoomKey(char *k, char *v)
 	else if (!strcmp(k, "anti-magic"))	CurRoom->AntiMagic = ParseBool(v);
 	else if (!strcmp(k, "dark"))		CurRoom->Dark = ParseBool(v);
 	else if (!strcmp(k, "notify-dm"))	CurRoom->NotifyDM = ParseBool(v);
-	else if (!strcmp(k, "greeting") || !strcmp(k, "role")
-		 ||	 !strcmp(k, "stock") || !strcmp(k, "staggers")
-		 ||	 !strcmp(k, "trains"))
-		Warn(LineNo, "room %s is not supported by the engine yet"
-			 " (special rooms are fixed by number)", k);
+	else if (!strcmp(k, "greeting"))
+	{
+		if (strlen(v) > 250)
+			Err("greeting is longer than 250 characters");
+		else if (!(R->Greeting = strdup(v)))
+			exit(2);
+	}
+	else if (!strcmp(k, "role"))
+	{
+		for (i = 1; RoleNames[i] && strcmp(v, RoleNames[i]); i++)
+			;
+		if (!RoleNames[i])
+			Err("role must be bar, newsstand, pawnshop, store or smith");
+		else
+			R->Role = i, R->RoleLine = LineNo;
+	}
+	else if (!strcmp(k, "stock"))
+	{
+		R->NStock = ParseList(v, 20, 1, RanObjLen, R->Stock);
+		R->StockLine = LineNo;
+	}
+	else if (!strcmp(k, "staggers"))
+	{
+		R->NStagger = ParseList(v, 20, 1, MaxRoom, R->Stagger);
+		R->StaggerLine = LineNo;
+	}
+	else if (!strcmp(k, "trains"))
+	{
+		char	*tok;
+
+		for (tok = strtok(v, " \t,"); tok; tok = strtok(NULL, " \t,"))
+		{
+			for (i = 0; ClassNames[i] && strcmp(tok, ClassNames[i]); i++)
+				;
+			if (!ClassNames[i])
+				Err("unknown class '%s'", tok);
+			else
+				R->Trains |= 1u << i;
+		}
+	}
 	else
 		Err("unknown room key '%s'", k);
 }
@@ -999,17 +1058,38 @@ static void Validate(void)
 					 " time the last player leaves the room (CleanRm)", What);
 			for (k = 1; k <= SavedItems; k++)
 				if (m->Inv[k])
-					Warn(m->Inv[k]->Line, "%s: monster inventory is not"
-						 " supported by the engine yet; ignored", What);
+				{
+					char	KWhat[80];
+
+					snprintf(KWhat, sizeof(KWhat), "%s object %d", What, k);
+					CheckObj(&m->Inv[k]->Obj, m->Inv[k]->Line, KWhat);
+				}
 		}
+
+		/* special-room settings */
+		for (j = 0; j < R->NStock; j++)
+			if (!ODefined[R->Stock[j]])
+			{
+				LineNo = R->StockLine;
+				Err("room %d stocks undefined object %d", i, R->Stock[j]);
+			}
+		if (R->NStock && R->Role != RoleStore)
+			Warn(R->StockLine, "room %d has stock but is not a store", i);
+		if (R->Role == RoleStore && !R->NStock)
+			Warn(R->RoleLine, "store room %d has no stock", i);
+		for (j = 0; j < R->NStagger; j++)
+			CheckRoomRef(R->StaggerLine, What, R->Stagger[j]);
+		if (R->NStagger && R->Role != RoleBar)
+			Warn(R->StaggerLine, "room %d has staggers but is not a bar", i);
 	}
 
-	if (!Rooms[1].Defined)
-		Warn(0, "room 1 (where new characters start) is not defined");
-	if (!Rooms[5].Defined)
-		Warn(0, "room 5 (the jail) is not defined");
-	if (!Rooms[17].Defined)
-		Warn(0, "room 17 (where dead characters revive) is not defined");
+	if (!ReviveRm)
+		ReviveRm = StartRm;
+	if (!JailRm)
+		JailRm = StartRm;
+	CheckRoomRef(StartLine, "start-room", StartRm);
+	CheckRoomRef(ReviveLine, "revive-room", ReviveRm);
+	CheckRoomRef(JailLine, "jail-room", JailRm);
 }
 
 /* ---------- output ---------- */
@@ -1175,6 +1255,15 @@ static void BuildDB(void)
 					}
 				Rec->Mon[i].Num = (char)(Same - Before > 9 ? 9 : Same - Before);
 				Rec->Mon[i].Top = Before == 0;
+
+				/* inventory: record type 9 + N, as in db.c */
+				{
+					ONode	*Inv[SavedItems];
+					int		NInv = Pack(Mons[i]->Inv, Inv);
+
+					if (NInv)
+						PutObjRec(Rm, 9 + i, Inv, NInv);
+				}
 			}
 		}
 	}
@@ -1202,6 +1291,46 @@ static void WriteGame(void)
 	WriteBlob("dat/mlist.new", MTmpl, sizeof(MonsterType), RanMonLen + 1);
 	WriteBlob("ram/olist.new", OTmpl, sizeof(ObjectType), RanObjLen + 1);
 	WriteBlob("dat/olist.new", OTmpl, sizeof(ObjectType), RanObjLen + 1);
+
+	/* special rooms, read by LoadSpecial() (special.c) */
+	fp = Create("dat/special");
+	fprintf(fp, "# special rooms for world %s, written by mkgame\n",
+			*WorldName ? WorldName : FileName);
+	fprintf(fp, "start %d\nrevive %d\njail %d\n", StartRm, ReviveRm, JailRm);
+	for (i = 1; i <= MaxRoom; i++)
+	{
+		RoomDef	*R = &Rooms[i];
+
+		if (!R->Defined)
+			continue;
+		if (R->Role)
+			fprintf(fp, "role %d %s\n", i, RoleNames[R->Role]);
+		if (R->Greeting)
+			fprintf(fp, "greeting %d %s\n", i, R->Greeting);
+		if (R->NStock)
+		{
+			fprintf(fp, "stock %d", i);
+			for (j = 0; j < R->NStock; j++)
+				fprintf(fp, " %d", R->Stock[j]);
+			fputc('\n', fp);
+		}
+		if (R->NStagger)
+		{
+			fprintf(fp, "staggers %d", i);
+			for (j = 0; j < R->NStagger; j++)
+				fprintf(fp, " %d", R->Stagger[j]);
+			fputc('\n', fp);
+		}
+		if (R->Trains)
+		{
+			fprintf(fp, "trains %d", i);
+			for (j = 0; ClassNames[j]; j++)
+				if (R->Trains & (1u << j))
+					fprintf(fp, " %s", ClassNames[j]);
+			fputc('\n', fp);
+		}
+	}
+	Close(fp, "dat/special");
 
 	/* same layout UpdateF() (cmd3.c) writes */
 	fp = Create("dat/efile");

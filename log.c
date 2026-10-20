@@ -95,7 +95,7 @@ void EnterSex(void)
 		return;
 	}
 
-	PlacePlayer(User, 1);
+	PlacePlayer(User, StartRoom);
 	Loc = LenBuf + 1;
 	AnnounceLogin();
 }

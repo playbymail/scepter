@@ -421,10 +421,10 @@ void Repair(char *Word, int Num)
 {
 	ObjectPoint	Obj;
 
-	if (W(User->RmCode) == 10)
+	if (RoomRole(W(User->RmCode)) == RoleStore)
 		QOut(Term, "0\"I don't have such skills.  Sorry!\"");
 	else
-	if (W(User->RmCode) != 18)
+	if (RoomRole(W(User->RmCode)) != RoleSmith)
 		QOut(Term, "0Find a smith first!");
 	else
 	if (!(Obj = FindObject(Word, Num, User->ObjectTail)))
