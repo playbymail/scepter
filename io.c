@@ -389,7 +389,7 @@ void Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V)
 
 	if (Rec != CurrentRec)
 	{
-		fseek(EDesc, (long)Rec * sizeof(DescBuf), 0);
+		SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
 		Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
 		CurrentRec = Found ? Rec : 0;
 	}

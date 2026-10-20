@@ -112,19 +112,24 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main() */
+	if (CheckGame(WORKDIR))
+	{
+		fprintf(stderr, "fightsim: cannot use this game directory\n");
+		return 1;
+	}
 	QCre();
 	Init_Scepter();
 	if (Seed >= 0)
 		SetRandom(Seed, Seed * 7 + 3);
 	LoadSpecial();
 	InitCmds();
-	if (!(EDesc = fopen(DSCRPT, FOPEN)) || !(OList = fopen(OLIST, FOPEN))
-	||	!(MList = fopen(MLIST, FOPEN)))
+	if (!(EDesc = OpenData(DSCRPT, DDesc)) || !(OList = OpenData(OLIST, DOList))
+	||	!(MList = OpenData(MLIST, DMList)))
 		Abort(" fightsim: cannot open game files.");
 	InitSpells();
 	FolCount = 0;
 	Init();
-	if (!(EDBMon = fopen(DBMON, FOPEN)) || !(EDBObj = fopen(DBOBJ, FOPEN)))
+	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
 		Abort(" fightsim: cannot open game files.");
 	OpenCave();
 	InitEvents();

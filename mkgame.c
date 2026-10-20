@@ -1119,11 +1119,13 @@ static void Close(FILE *fp, const char *Name)
 	}
 }
 
-static void WriteBlob(const char *Name, const void *Data, size_t Size, size_t N)
+/* A data file: its header (datafile.c), then N records of Kind. */
+static void WriteBlob(const char *Name, int Kind, const void *Data, size_t N)
 {
 	FILE	*fp = Create(Name);
 
-	if (N && fwrite(Data, Size, N, fp) != N)
+	if (!WriteDataHead(fp, Kind)
+	||	N && fwrite(Data, DataKind[Kind].RecSize, N, fp) != N)
 		Errors++;
 	Close(fp, Name);
 }
@@ -1279,18 +1281,18 @@ static void WriteGame(void)
 		if (Rooms[i].Defined)
 			Dungeon[i] = Rooms[i].Rm;
 
-	WriteBlob("ram/edungeon.new", Dungeon, sizeof(RoomType), NumSegsInit * 10);
-	WriteBlob("ram/dbobj.new", DBObj, sizeof(ObjRec), DBSize);
-	WriteBlob("ram/dbmon.new", DBMon, sizeof(MonRec), DBSize);
-	WriteBlob("ram/eperson.new", NULL, 0, 0);
+	WriteBlob("ram/edungeon.new", DDungeon, Dungeon, NumSegsInit * 10);
+	WriteBlob("ram/dbobj.new", DObjDB, DBObj, DBSize);
+	WriteBlob("ram/dbmon.new", DMonDB, DBMon, DBSize);
+	WriteBlob("ram/eperson.new", DPerson, NULL, 0);
 
 	/* the editor updates both the ram/ and dat/ copies of these */
-	WriteBlob("ram/dscrpt", Desc, sizeof(Desc[0]), MaxDescRec + 1);
-	WriteBlob("dat/dscrpt", Desc, sizeof(Desc[0]), MaxDescRec + 1);
-	WriteBlob("ram/mlist.new", MTmpl, sizeof(MonsterType), RanMonLen + 1);
-	WriteBlob("dat/mlist.new", MTmpl, sizeof(MonsterType), RanMonLen + 1);
-	WriteBlob("ram/olist.new", OTmpl, sizeof(ObjectType), RanObjLen + 1);
-	WriteBlob("dat/olist.new", OTmpl, sizeof(ObjectType), RanObjLen + 1);
+	WriteBlob("ram/dscrpt", DDesc, Desc, MaxDescRec + 1);
+	WriteBlob("dat/dscrpt", DDesc, Desc, MaxDescRec + 1);
+	WriteBlob("ram/mlist.new", DMList, MTmpl, RanMonLen + 1);
+	WriteBlob("dat/mlist.new", DMList, MTmpl, RanMonLen + 1);
+	WriteBlob("ram/olist.new", DOList, OTmpl, RanObjLen + 1);
+	WriteBlob("dat/olist.new", DOList, OTmpl, RanObjLen + 1);
 
 	/* special rooms, read by LoadSpecial() (special.c) */
 	fp = Create("dat/special");

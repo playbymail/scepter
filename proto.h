@@ -139,6 +139,15 @@ void	NetFlush(void);
 void	NetWho(void);
 void	NetCheckHup(void);
 
+/* datafile.c */
+int		WriteDataHead(FILE *fp, int Kind);
+int		ReadDataHead(FILE *fp, int Kind, unsigned long *Version, unsigned long *RecSize);
+void	DataProblem(int Result, int Kind, unsigned long Version,
+					unsigned long RecSize, char *Msg, size_t Len);
+FILE	*OpenData(const char *Path, int Kind);
+int		SeekRec(FILE *fp, long Offset);
+int		CheckGame(const char *Dir);
+
 /* edit1.c */
 void	Edit(void);
 int		GetEditParm(int LPList, char *Word, int *Num, int *Flag);

@@ -11,7 +11,7 @@ static UserPoint	MatchUser(UserPoint Usr);
 
 void OpenCave(void)
 {
-	if (!(ECaves = fopen(EDUNGEON, FOPEN)))
+	if (!(ECaves = OpenData(EDUNGEON, DDungeon)))
 		Abort(" Sce910 - Error opening dungeon file.");
 }
 
@@ -144,7 +144,7 @@ static void ReadSeg(int SlotNum, int SegNum)
 	int		RLoop, T;
 
 	SlotTbl[SlotNum] = SegNum;
-	fseek(ECaves, 10L * SegNum * sizeof(RoomType), 0);
+	SeekRec(ECaves, 10L * SegNum * sizeof(RoomType));
 
 	T = SlotNum * 10;
 	for (RLoop = 0; RLoop < 10; RLoop++)
@@ -166,7 +166,7 @@ void WriteSeg(int SlotNum, int SegNum, int Erase)
 {
 	int		RLoop, T;
 
-	fseek(ECaves, 10L * SegNum * sizeof(RoomType), 0);
+	SeekRec(ECaves, 10L * SegNum * sizeof(RoomType));
 	T = SlotNum * 10;
 	for (RLoop = 0; RLoop < 10; RLoop++)
 	{

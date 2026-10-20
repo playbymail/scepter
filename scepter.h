@@ -426,6 +426,33 @@ typedef struct
 	MonsterType	Mon[SavedItems];
 } MonRec;
 
+/* game data files and their headers (datafile.c, docs/data-files.md) */
+#define	DataVersion		1		/* bump when any record layout changes */
+#define	DataHeadSize	32
+
+enum { DDungeon, DObjDB, DMonDB, DPerson, DMList, DOList, DDesc, NDataKinds };
+#define	NDataFiles		10
+
+/* ReadDataHead() results */
+enum { DataOK, DataNoHead, DataWrongVersion, DataWrongSize, DataWrongKind,
+	   DataShort, DataForeign, DataUnreadable };
+
+typedef struct
+{
+	const char	*Magic;			/* 8 characters */
+	const char	*Label;
+	size_t		RecSize;
+} DataKindType;
+
+typedef struct
+{
+	const char	*Name;			/* relative to the game directory */
+	int			Kind;
+} DataFileType;
+
+extern DataKindType	DataKind[NDataKinds];
+extern DataFileType	DataFile[NDataFiles];
+
 
 /* global variables */
 extern FILE		*EDBMon;

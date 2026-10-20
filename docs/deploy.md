@@ -13,7 +13,7 @@ telnet isn't HTTP.
 
 | What          | Where                                         |
 |---------------|-----------------------------------------------|
-| Binaries      | `/usr/local/bin/scepterd`, `/usr/local/bin/mkgame` |
+| Binaries      | `/usr/local/bin/scepterd`, `mkgame`, `upgradegame` |
 | World file    | `/usr/local/share/scepter/alpha.world`        |
 | Game          | `/var/lib/scepter/alpha` (owned by `scepter`) |
 | Unit          | `/etc/systemd/system/scepter.service` (from `deploy/`) |
@@ -30,19 +30,34 @@ container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/o
 	docker.io/library/ubuntu:26.04 sh -c '
 	apt-get update -qq && apt-get install -y -qq build-essential python3 >/dev/null &&
 	cp -r /src /w && cd /w && make clean && make && make check-net &&
-	cp scepterd mkgame /out/'
+	cp scepterd mkgame upgradegame /out/'
 ```
 
 ## Upgrade
 
 ```sh
-scp out/scepterd out/mkgame tsogira:/tmp/
-ssh tsogira 'install -m 0755 /tmp/scepterd /tmp/mkgame /usr/local/bin/ &&
-	rm /tmp/scepterd /tmp/mkgame && systemctl restart scepter'
+scp out/scepterd out/mkgame out/upgradegame tsogira:/tmp/
+ssh tsogira
+systemctl stop scepter
+install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /usr/local/bin/
+rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame
+runuser -u scepter -- upgradegame /var/lib/scepter/alpha
+systemctl start scepter
 ```
 
-The restart saves every player and tells them `End - aborted`, so they have
-to reconnect.  The game directory is kept.
+Stopping the server saves every player and tells them `End - aborted`, so
+they have to reconnect.
+
+`upgradegame` does nothing if the game is already in the new build's
+format.  When the format has changed (docs/data-files.md), it first backs
+the game up to `/var/lib/scepter/alpha.backup-*`.  If it refuses or fails,
+the old files are still in place.  Reinstall the previous binaries, or fix
+the reported file, before starting the server again.  The new `scepterd`
+won't start on a game it can't read; check `journalctl -u scepter`.
+
+To roll back after an upgrade: stop the server, reinstall the previous
+binaries, and replace `/var/lib/scepter/alpha` with the backup.  Anything
+saved since the upgrade is lost.
 
 ## First install
 
