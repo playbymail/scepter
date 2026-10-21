@@ -190,7 +190,7 @@ void DeleteUsr(char *Nm)
 	if (SearchPlFile(Nm))
 	{
 		*UserFRec.User.Name = '\0';
-		fseek(EPerson, (long) -sizeof(UserFRec), 1);
+		fseek(EPerson, -(long)sizeof(UserFRec), 1);
 		if (!fwrite((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
 			Abort(" Sce208 - Error while deleting player.");
 	}
@@ -205,7 +205,7 @@ void ChangeUsrName(char *OldNm, char *NewNm)
 	{
 		CapAlfa(NewNm);
 		strcpy(UserFRec.User.Name, NewNm);
-		fseek(EPerson, (long) -sizeof(UserFRec), 1);
+		fseek(EPerson, -(long)sizeof(UserFRec), 1);
 		if (!fwrite((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
 			Abort(" Sce208 - Error while changing name.");
 	}
