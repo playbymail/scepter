@@ -9,17 +9,18 @@ story.
 
 ## History
 
-Sceptish grew from a set of QNX C files once circulated as Scepter of Goth's
-source.  Thanks to Shawn P. Stanley for supplying them.  The original author
-has [stated](https://github.com/shelches/scepter/issues/4#issue-1581465382)
-that they are not the original 1984 QNX source of the game, but a partial
-reimplementation written without access to it.  Sceptish is therefore not
-the original Scepter of Goth, nor a restoration of it: it is our own
-implementation.
+Sceptish is not the original Scepter of Goth, nor a restoration of it: it is
+our own implementation based on the set of QNX C files once circulated as
+Scepter of Goth's source.  The QNX source is probably descended from John
+Ryan's independent C translation of Alan Klietz's *Milieu*, subsequently ported
+to QNX by Francis Keys for *Ghostwheel*/*Wintermute* and preserved by Shawn P. Stanley.
+
+Klietz has [stated](https://github.com/shelches/scepter/issues/4#issue-1581465382)
+that the QNX source is not the original 1984 QNX source of the game, but a partial
+reimplementation written without access to it.
 
 **We maintain Sceptish, and we alone are responsible for its code, changes,
-behaviour, bugs and other shortcomings.**  None of them should be attributed
-to the original author, who didn't write Sceptish.
+behaviour, bugs and other shortcomings.**
 
 ## This repository
 
