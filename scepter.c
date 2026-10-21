@@ -53,7 +53,7 @@ int			Pid;
 
 char		B1[256], B2[256], B3[256], C1[256];
 
-char		*Event[MaxEvents], *NextEvent;
+char		*Event[MaxEvents];
 int			LenEvent;
 
 MonsterType	ProtoMonster;
