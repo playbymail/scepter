@@ -349,7 +349,20 @@ static const char	Migration1[] =
 	"	PRIMARY KEY (player, slot)\n"
 	") STRICT;\n"
 	"CREATE UNIQUE INDEX player_worn ON player_objects (player, worn) WHERE worn IS NOT NULL;\n";
+#ifdef TestMigration
+/*
+ * tools/datatest.py only: dbtest2 is dbtest built with this second
+ * migration, to migrate a whole game as a real schema change would.
+ */
+#undef	DBVersion
+#define	DBVersion	2
+static const char	Migration2[] =
+	"CREATE TABLE test_migration (x INTEGER) STRICT;\n"
+	"INSERT INTO test_migration VALUES (2);\n";
+static const char	*Migration[DBVersion + 1] = { NULL, Migration1, Migration2 };
+#else
 static const char	*Migration[DBVersion + 1] = { NULL, Migration1 };
+#endif
 
 /* ---------- reporting ---------- */
 

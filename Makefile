@@ -65,6 +65,13 @@ dbtest: tools/dbtest.o gamedb.o
 tools/dbtest.o: tools/dbtest.c gamedb.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dbtest.c -o $@
 
+# dbtest with a test-only migration 2, to migrate a whole game.
+dbtest2: tools/dbtest.o tools/gamedb2.o
+	$(CC) $(CFLAGS) -o $@ tools/dbtest.o tools/gamedb2.o $(SQLITELIB)
+
+tools/gamedb2.o: gamedb.c gamedb.h
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -DTestMigration -c gamedb.c -o $@
+
 # Combat simulator (tools/fightsim.c); links the engine without main.o.
 SIMOBJS = $(filter-out main.o,$(OBJS)) tools/fightsim.o
 
@@ -117,7 +124,7 @@ check-tintin: scepterd mkgame
 
 # Data file headers, tools/upgradegame, mkgame's game directory and the game
 # database (tools/datatest.py).
-check-data: scepterd mkgame upgradegame fightsim dmtest dbtest
+check-data: scepterd mkgame upgradegame fightsim dmtest dumpgame dbtest dbtest2
 	python3 -I tools/datatest.py . var/alpha/alpha.world
 
 # Player-reachable security bugs (tools/securitytest.py).  Run it on a build
@@ -129,9 +136,9 @@ check-security: scepterd mkgame dmtest
 	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
 
 clean:
-	rm -f scepterd mkgame fightsim dmtest dumpgame dbtest upgradegame $(OBJS) \
-		mkgame.o tools/fightsim.o tools/dmtest.o tools/dumpgame.o tools/dbtest.o \
-		tools/upgradegame.o
+	rm -f scepterd mkgame fightsim dmtest dumpgame dbtest dbtest2 upgradegame \
+		$(OBJS) mkgame.o tools/fightsim.o tools/dmtest.o tools/dumpgame.o \
+		tools/dbtest.o tools/gamedb2.o tools/upgradegame.o
 
 # The web site for sceptish.pbbgaming.com (docs/deploy.md), built into
 # out/site.

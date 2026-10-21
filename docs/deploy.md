@@ -113,6 +113,36 @@ Upgrade history:
 | 2026-10-21 | `dc25fd4` | 2, unchanged (#105, #46, #53, #19, #16) | none |
 | 2026-10-21 | `49498be` | 2, unchanged (#117, #49, #128, #41); game recreated with `mkgame -f` for the #128 room text, deleting every character | `/var/lib/scepter/havenford.backup-20261021-163121` |
 
+## The move to the game database (#153)
+
+The first deploy with the game database replaces the struct-file game with
+a new one, so every character is deleted (#71: reset, not converted).  The
+old game directory is kept aside, untouched.  Build as above, then:
+
+```sh
+scp out/scepterd out/mkgame out/upgradegame var/havenford/havenford.world tsogira:/tmp/
+ssh tsogira
+systemctl kill --kill-whom=main --signal=SIGUSR2 scepter    # reset warning
+sleep 120
+systemctl stop scepter
+cp -p /usr/local/bin/scepterd /usr/local/bin/mkgame /usr/local/bin/upgradegame \
+	/usr/local/share/scepter/prev/    # for rolling back
+install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /usr/local/bin/
+install -m 0644 /tmp/havenford.world /usr/local/share/scepter/
+mv /var/lib/scepter/havenford /var/lib/scepter/havenford.structs-$(date +%Y%m%d)
+install -d -m 0750 -o scepter -g scepter /var/lib/scepter/havenford
+runuser -u scepter -- /usr/local/bin/mkgame \
+	/usr/local/share/scepter/havenford.world /var/lib/scepter/havenford
+systemctl start scepter
+rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame /tmp/havenford.world
+```
+
+The new `scepterd` refuses the old directory ("make a new game with
+mkgame"), so it can't be started on it by mistake.  To roll back: stop the
+server, copy the previous binaries back from `/usr/local/share/scepter/prev/`,
+move the new `havenford` aside and the `havenford.structs-*` directory back
+to `havenford`, and start the server.
+
 ## Changing the world
 
 The server ran the alpha reference world until 2026-10-21, when it
