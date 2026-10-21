@@ -73,6 +73,7 @@ Upgrade history:
 | 2026-10-20 | `860c2a4` | 0 → 1 (headers, #83) | `/var/lib/scepter/alpha.backup-20261020-212823` (deleted 2026-10-21) |
 | 2026-10-21 | `45509f5` | 2 (password hashes, #82); game recreated with `mkgame`, since it held only test data | none |
 | 2026-10-21 | `cf44452` | 2; switched from alpha to Havenford (see below) | `/var/lib/scepter/alpha` left in place |
+| 2026-10-21 | `dc25fd4` | 2, unchanged (#105, #46, #53, #19, #16) | none |
 
 ## Changing the world
 
