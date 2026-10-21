@@ -715,24 +715,12 @@ void EditOList(EdFunc EditCmd, int OIndex)
 					Obj = ProtoObject;
 				/* else fall through */
 			case E_MODIFY:
-			{
-				FILE	*hdOList;
-
 				ModObject(&Obj);
-				SeekRec(OList, (long)OIndex * sizeof(ObjectType));
-				fwrite((char *)&Obj, sizeof(ObjectType), 1, OList);
-				fflush(OList);
-
-				if (hdOList = OpenData(HDOLIST, DOList))
-				{
-					SeekRec(hdOList, (long)OIndex * sizeof(ObjectType));
-					fwrite((char *)&Obj, sizeof(ObjectType), 1, hdOList);
-					fclose(hdOList);
-					QOut(Term, "0File modified.");
-				}
+				if (!PutObjTemplate(OIndex, &Obj))
+					Abort(" Cannot save an object template.");
+				QOut(Term, "0File modified.");
 				QOut(Term, "0OList updated.");
 				break;
-			}
 
 			case E_DISPLAY:
 				ObjDisplay(&Obj);
@@ -810,34 +798,18 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 
 			if (Rec > 1)
 			{
-				SeekRec(EDesc, (long)(Rec - 1) * sizeof(DescBuf));
-				if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
+				/* records are made in order: Rec - 1 must exist */
+				if (!ReadDesc(Rec - 1))
 					QOut(Term, "0Record beyond end of file.");
 				else
 				{
-					SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-					if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
-					{
-						FILE	*hdEDesc;
-
-						memset((char *)DescBuf, ' ', sizeof(DescBuf));
-						for (ILoop = 0; ILoop < StrPerSeg; ILoop++)
-							*DescBuf[ILoop] = '\0';
-						SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-						fwrite((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
-						fflush(EDesc);
-
-						if (hdEDesc = OpenData(HDDSCRPT, DDesc))
-						{
-							SeekRec(hdEDesc, (long)Rec * sizeof(DescBuf));
-							fwrite((char *)DescBuf, sizeof(DescBuf), 1, hdEDesc);
-							fclose(hdEDesc);
-							QOut(Term, "0File modified.");
-						}
-						QOut(Term, "0EDesc record created.");
-					}
-					else
-						QOut(Term, "0EDesc record already exists.");
+					memset((char *)DescBuf, ' ', sizeof(DescBuf));
+					for (ILoop = 0; ILoop < StrPerSeg; ILoop++)
+						*DescBuf[ILoop] = '\0';
+					if (!PutDesc(Rec, DescBuf))
+						Abort(" Cannot save a description.");
+					QOut(Term, "0File modified.");
+					QOut(Term, "0EDesc record created.");
 				}
 			}
 			else
@@ -868,30 +840,17 @@ void EnterDesc(void)
 	else
 	{
 		int		Rec, Line;
-		FILE	*hdEDesc;
 
 		Rec = User->Data / StrPerSeg;
 		Line = User->Data % StrPerSeg + 1;
 
 		if (Rec != CurrentRec)
-		{
-			SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-			if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
-				memset(DescBuf, 0, sizeof(DescBuf));	/* a new record */
-		}
+			ReadDesc(Rec);		/* none: a new record, all lines empty */
 
 		strcpy(DescBuf[Line - 1], B1);
-		SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-		fwrite((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
-		fflush(EDesc);
-
-		if (hdEDesc = OpenData(HDDSCRPT, DDesc))
-		{
-			SeekRec(hdEDesc, (long)Rec * sizeof(DescBuf));
-			fwrite((char *)DescBuf, sizeof(DescBuf), 1, hdEDesc);
-			fclose(hdEDesc);
-			QOut(Term, "0File modified.");
-		}
+		if (!PutDesc(Rec, DescBuf))
+			Abort(" Cannot save a description.");
+		QOut(Term, "0File modified.");
 		CurrentRec = 0;
 
 		QOut(Term, "0EDesc record updated.");

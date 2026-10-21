@@ -418,8 +418,8 @@ int ReadDesc(int Rec)
 {
 	int		Found;
 
-	SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-	Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc) == 1;
+	if (!GetDesc(Rec, DescBuf, &Found))
+		Abort(" Cannot read a description.");
 	CurrentRec = Found ? Rec : 0;
 	return Found;
 }

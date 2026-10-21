@@ -124,9 +124,6 @@ int main(int argc, char **argv)
 		SetRandom(Seed, Seed * 7 + 3);
 	LoadSpecial();
 	InitCmds();
-	if (!(EDesc = OpenData(DSCRPT, DDesc)) || !(OList = OpenData(OLIST, DOList))
-	||	!(MList = OpenData(MLIST, DMList)))
-		Abort(" fightsim: cannot open game files.");
 	InitSpells();
 	FolCount = 0;
 	Init();

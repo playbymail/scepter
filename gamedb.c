@@ -102,22 +102,36 @@ static int			Registered;		/* DBClose() runs at exit */
 	"	r_spell			INTEGER,\n" \
 	"	r_level			INTEGER,\n" \
 	"	CHECK ((kind = 'portal') = (to_where IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'weapon') = (min_hp IS NOT NULL AND max_hp IS NOT NULL\n" \
-	"		AND strikes IS NOT NULL AND wea_plus IS NOT NULL AND weap_type IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'shield') = (sh_plus IS NOT NULL AND sh_hits IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'armor') = (arm_plus IS NOT NULL AND arm_hits IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'weapon') = (min_hp IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'weapon') = (max_hp IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'weapon') = (strikes IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'weapon') = (wea_plus IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'weapon') = (weap_type IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'shield') = (sh_plus IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'shield') = (sh_hits IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'armor') = (arm_plus IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'armor') = (arm_hits IS NOT NULL)),\n" \
 	"	CHECK ((kind = 'coins') = (multiplier IS NOT NULL)),\n" \
 	"	CHECK ((kind = 'scroll') = (spell IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'chest') = (closed IS NOT NULL AND trap IS NOT NULL\n" \
-	"		AND locked IS NOT NULL AND num_inside IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'door') = (d_to_where IS NOT NULL AND d_closed IS NOT NULL\n" \
-	"		AND d_spring IS NOT NULL AND d_toll IS NOT NULL AND d_trap IS NOT NULL\n" \
-	"		AND d_locked IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'keys') = (unlock IS NOT NULL AND num_uses IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'device') = (m_spell IS NOT NULL AND num_charges IS NOT NULL\n" \
-	"		AND m_level IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'teleport') = (t_to_where IS NOT NULL AND t_active_rm IS NOT NULL)),\n" \
-	"	CHECK ((kind = 'ring') = (r_spell IS NOT NULL AND r_level IS NOT NULL))\n"
+	"	CHECK ((kind = 'chest') = (closed IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'chest') = (trap IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'chest') = (locked IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'chest') = (num_inside IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_to_where IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_closed IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_spring IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_toll IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_trap IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'door') = (d_locked IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'keys') = (unlock IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'keys') = (num_uses IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'device') = (m_spell IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'device') = (num_charges IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'device') = (m_level IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'teleport') = (t_to_where IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'teleport') = (t_active_rm IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'ring') = (r_spell IS NOT NULL)),\n" \
+	"	CHECK ((kind = 'ring') = (r_level IS NOT NULL))\n"
 
 #define	Mig1Monster \
 	"	name			TEXT NOT NULL,\n" \

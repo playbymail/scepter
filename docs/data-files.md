@@ -11,16 +11,12 @@ server never reads a file it wasn't built for.
 
 | File | Holds | Magic |
 |---|---|---|
-| `game.db` | the game database (see below) | |
+| `game.db` | the game database (see below): monster and object templates and descriptions so far | |
 | `edungeon` | rooms (`RoomType`), 10 per segment | `SCEPDUNG` |
 | `dbobj` | room and chest contents (`ObjRec`), a 1009-slot hash table | `SCEPDBOB` |
 | `dbmon` | room monsters (`MonRec`), a 1009-slot hash table | `SCEPDBMN` |
 | `eperson` | saved characters (`UserFRec`) | `SCEPPERS` |
-| `mlist`, `mlist.hd` | monster templates (`MonsterType`) | `SCEPMLST` |
-| `olist`, `olist.hd` | object templates (`ObjectType`) | `SCEPOLST` |
-| `dscrpt`, `dscrpt.hd` | description records (10 lines of 80 characters) | `SCEPDESC` |
 
-The DM editor updates both copies of the templates and descriptions.
 `efile` (game settings and news), `special` (special rooms) and `errlog`
 are text files without headers.  The hourly update writes `efile.tmp`
 and renames it over `efile`, so a failed write leaves the old file (#17).
@@ -39,8 +35,12 @@ so records stored past it can still be found (#64).
 version is `PRAGMA user_version`; this build reads version `DBVersion`
 (`gamedb.h`), currently 1.
 
-- **`mkgame`** creates it with the whole schema, empty for now.  The
-  game directory must already exist and be empty.
+- **`mkgame`** creates it with the whole schema, then fills the tables
+  moved so far (#148: `monster_templates`, `object_templates` and
+  `descriptions`).  The game directory must already exist and be empty.
+- **Rows:** `dbstore.c` turns each saved struct into a row and back.  The
+  DM editor's changes to a template or a description are one transaction
+  each.
 - **`scepterd`**, `fightsim`, `dmtest` and `dumpgame` refuse a game whose
   database is missing, read-only, not a SQLite database, damaged
   (`PRAGMA quick_check`), not in WAL mode, or of another version.  An older
@@ -192,7 +192,7 @@ CREATE TABLE object_templates (
 	kind			TEXT NOT NULL CHECK (kind IN ('portal', 'treasure', 'weapon', 'armor',
 						'shield', 'coins', 'scroll', 'chest', 'door', 'device', 'teleport',
 						'keys', 'card', 'ring', 'misc', 'dummy')),	-- ObClass
-	-- the kind's own fields (union tObject): set for that kind, NULL otherwise
+	-- the kind's own fields (union tObject): set for that kind, NULL for every other
 	to_where		INTEGER,			-- Portal.ToWhere
 	min_hp			INTEGER,			-- Weap.MinHp
 	max_hp			INTEGER,			-- Weap.MaxHp
@@ -225,22 +225,36 @@ CREATE TABLE object_templates (
 	r_spell			INTEGER,			-- Ring.RSpell
 	r_level			INTEGER,			-- Ring.RLevel
 	CHECK ((kind = 'portal') = (to_where IS NOT NULL)),
-	CHECK ((kind = 'weapon') = (min_hp IS NOT NULL AND max_hp IS NOT NULL
-		AND strikes IS NOT NULL AND wea_plus IS NOT NULL AND weap_type IS NOT NULL)),
-	CHECK ((kind = 'shield') = (sh_plus IS NOT NULL AND sh_hits IS NOT NULL)),
-	CHECK ((kind = 'armor') = (arm_plus IS NOT NULL AND arm_hits IS NOT NULL)),
+	CHECK ((kind = 'weapon') = (min_hp IS NOT NULL)),
+	CHECK ((kind = 'weapon') = (max_hp IS NOT NULL)),
+	CHECK ((kind = 'weapon') = (strikes IS NOT NULL)),
+	CHECK ((kind = 'weapon') = (wea_plus IS NOT NULL)),
+	CHECK ((kind = 'weapon') = (weap_type IS NOT NULL)),
+	CHECK ((kind = 'shield') = (sh_plus IS NOT NULL)),
+	CHECK ((kind = 'shield') = (sh_hits IS NOT NULL)),
+	CHECK ((kind = 'armor') = (arm_plus IS NOT NULL)),
+	CHECK ((kind = 'armor') = (arm_hits IS NOT NULL)),
 	CHECK ((kind = 'coins') = (multiplier IS NOT NULL)),
 	CHECK ((kind = 'scroll') = (spell IS NOT NULL)),
-	CHECK ((kind = 'chest') = (closed IS NOT NULL AND trap IS NOT NULL
-		AND locked IS NOT NULL AND num_inside IS NOT NULL)),
-	CHECK ((kind = 'door') = (d_to_where IS NOT NULL AND d_closed IS NOT NULL
-		AND d_spring IS NOT NULL AND d_toll IS NOT NULL AND d_trap IS NOT NULL
-		AND d_locked IS NOT NULL)),
-	CHECK ((kind = 'keys') = (unlock IS NOT NULL AND num_uses IS NOT NULL)),
-	CHECK ((kind = 'device') = (m_spell IS NOT NULL AND num_charges IS NOT NULL
-		AND m_level IS NOT NULL)),
-	CHECK ((kind = 'teleport') = (t_to_where IS NOT NULL AND t_active_rm IS NOT NULL)),
-	CHECK ((kind = 'ring') = (r_spell IS NOT NULL AND r_level IS NOT NULL))
+	CHECK ((kind = 'chest') = (closed IS NOT NULL)),
+	CHECK ((kind = 'chest') = (trap IS NOT NULL)),
+	CHECK ((kind = 'chest') = (locked IS NOT NULL)),
+	CHECK ((kind = 'chest') = (num_inside IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_to_where IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_closed IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_spring IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_toll IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_trap IS NOT NULL)),
+	CHECK ((kind = 'door') = (d_locked IS NOT NULL)),
+	CHECK ((kind = 'keys') = (unlock IS NOT NULL)),
+	CHECK ((kind = 'keys') = (num_uses IS NOT NULL)),
+	CHECK ((kind = 'device') = (m_spell IS NOT NULL)),
+	CHECK ((kind = 'device') = (num_charges IS NOT NULL)),
+	CHECK ((kind = 'device') = (m_level IS NOT NULL)),
+	CHECK ((kind = 'teleport') = (t_to_where IS NOT NULL)),
+	CHECK ((kind = 'teleport') = (t_active_rm IS NOT NULL)),
+	CHECK ((kind = 'ring') = (r_spell IS NOT NULL)),
+	CHECK ((kind = 'ring') = (r_level IS NOT NULL))
 	-- </object columns>
 ) STRICT;
 

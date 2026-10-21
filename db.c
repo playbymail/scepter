@@ -322,21 +322,13 @@ void DeleteMon(RmCodeType Rm)
 	DeleteRec(EDBMon, sizeof(MonRec), Rm, 0);
 }
 
-/* Read template *Index* from the MList file.  Pointer fields hold
- * whatever the writer had in memory, so they are cleared here. */
+/* Read MList template *Index*; FALSE, and a zeroed *Mon*, if there is none */
 int ReadMList(int Index, MonsterPoint Mon)
 {
 	int		Found;
 
-	SeekRec(MList, (long)Index * sizeof(MonsterType));
-	Found = fread((char *)Mon, sizeof(MonsterType), 1, MList) == 1;
-	if (!Found)
-		memset(Mon, 0, sizeof(*Mon));
-	Mon->Next = NULL;
-	Mon->DefMon = NULL;
-	Mon->DefPlayer = NULL;
-	Mon->CharmPlayer = NULL;
-	Mon->ObjectTail = NULL;
+	if (!GetMonTemplate(Index, Mon, &Found))
+		Abort(" Cannot read a monster template.");
 	return Found;
 }
 
@@ -359,18 +351,13 @@ MonsterPoint NewMList(int Index)
 	return Mon;
 }
 
-/* Read template *Index* from the OList file, clearing pointer fields. */
+/* Read OList template *Index*; FALSE, and a zeroed *Obj*, if there is none */
 int ReadOList(int Index, ObjectPoint Obj)
 {
 	int		Found;
 
-	SeekRec(OList, (long)Index * sizeof(ObjectType));
-	Found = fread((char *)Obj, sizeof(ObjectType), 1, OList) == 1;
-	if (!Found)
-		memset(Obj, 0, sizeof(*Obj));
-	Obj->Next = NULL;
-	if (Obj->ObClass == Chest)
-		Obj->Object.Chest.ObjectTail = NULL;
+	if (!GetObjTemplate(Index, Obj, &Found))
+		Abort(" Cannot read an object template.");
 	return Found;
 }
 

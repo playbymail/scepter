@@ -1328,6 +1328,36 @@ static void BuildDB(void)
 	}
 }
 
+/*
+ * The game database's tables, in one transaction (dbstore.c).  Every
+ * template slot is written, unused ones too, as the game has always had
+ * them, and every description record up to the highest.
+ */
+static void WriteTables(void)
+{
+	int		i, Ok;
+
+	if (!DBOpen(GameDir) || !DBBegin())
+	{
+		fprintf(stderr, "mkgame: cannot write %s/%s\n", GameDir, DBName);
+		exit(1);
+	}
+	Ok = TRUE;
+	for (i = 0; Ok && i <= MaxDescRec; i++)
+		Ok = PutDesc(i, Desc[i]);
+	for (i = 0; Ok && i <= RanMonLen; i++)
+		Ok = PutMonTemplate(i, &MTmpl[i]);
+	for (i = 0; Ok && i <= RanObjLen; i++)
+		Ok = PutObjTemplate(i, &OTmpl[i]);
+	if (!Ok || !DBCommit())
+	{
+		DBRollback();
+		fprintf(stderr, "mkgame: cannot write %s/%s\n", GameDir, DBName);
+		exit(1);
+	}
+	DBClose();
+}
+
 static void WriteGame(void)
 {
 	static RoomType	Dungeon[NumSegsInit * 10];
@@ -1343,13 +1373,7 @@ static void WriteGame(void)
 	WriteBlob("dbmon", DMonDB, DBMon, DBSize);
 	WriteBlob("eperson", DPerson, NULL, 0);
 
-	/* the editor updates both copies of these; .hd is the second */
-	WriteBlob("dscrpt", DDesc, Desc, MaxDescRec + 1);
-	WriteBlob("dscrpt.hd", DDesc, Desc, MaxDescRec + 1);
-	WriteBlob("mlist", DMList, MTmpl, RanMonLen + 1);
-	WriteBlob("mlist.hd", DMList, MTmpl, RanMonLen + 1);
-	WriteBlob("olist", DOList, OTmpl, RanObjLen + 1);
-	WriteBlob("olist.hd", DOList, OTmpl, RanObjLen + 1);
+	WriteTables();
 
 	/* special rooms, read by LoadSpecial() (special.c) */
 	fp = Create("special");
