@@ -214,8 +214,9 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 					if (!EncIndex(Room[Rm].WhichEncounter, ILoop))
 						break;
 				MonNum = EncIndex(Room[Rm].WhichEncounter, Rnd(ILoop) - 1);
-				Mon = (MonsterPoint)malloc(sizeof(MonsterType));
-				ReadMList(MonNum, Mon);
+				if (!(Mon = NewMList(MonNum)))
+					QOut(Term, NothingText);
+				else
 				if (Mon->Unique)
 				{
 					MonsterPoint	M;
@@ -252,7 +253,11 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 			{
 				MonsterPoint	Mon;
 
-				Mon = (MonsterPoint)malloc(sizeof(MonsterType));
+				if (!(Mon = (MonsterPoint)malloc(sizeof(MonsterType))))
+				{
+					QOut(Term, "0Spell fails.");
+					break;
+				}
 				*Mon = ProtoMonster;
 				strcpy(Mon->Name, Obj->Name);
 				Mon->Article = Obj->Article;
