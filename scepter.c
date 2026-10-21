@@ -7,10 +7,7 @@ struct tUserFRec	UserFRec;
 FILE		*EDBMon;
 FILE		*EDBObj;
 FILE		*ECaves;
-FILE		*EDesc;
 FILE		*EFile;
-FILE		*MList;
-FILE		*OList;
 
 RoomType	Room[RmLimit];
 int			SlotTbl[MaxPlusOne];
@@ -91,14 +88,8 @@ int					CurrentRec;
 /* data files */
 char	DBMON[]		= WORKDIR "/dbmon";
 char	DBOBJ[]		= WORKDIR "/dbobj";
-char	DSCRPT[]	= WORKDIR "/dscrpt";
-char	HDDSCRPT[]	= WORKDIR "/dscrpt.hd";
 char	EFILE[]		= WORKDIR "/efile";
 char	EDUNGEON[]	= WORKDIR "/edungeon";
-char	MLIST[]		= WORKDIR "/mlist";
-char	OLIST[]		= WORKDIR "/olist";
-char	HDMLIST[]	= WORKDIR "/mlist.hd";
-char	HDOLIST[]	= WORKDIR "/olist.hd";
 char	ERRLOG[]	= WORKDIR "/errlog";
 char	PASSWD[]	= "/etc/passwd";
 char	SPECIAL[]	= WORKDIR "/special";

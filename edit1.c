@@ -1007,19 +1007,9 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 	if (WhatCode == 15
 	&& (EditCmd == E_MODIFY || EditCmd == E_CREATE || EditCmd == E_COPY))
 	{
-		FILE	*hdMList;
-
-		SeekRec(MList, (long)Rm * sizeof(MonsterType));
-		fwrite((char *)Monster, sizeof(MonsterType), 1, MList);
-		fflush(MList);
-
-		if (hdMList = OpenData(HDMLIST, DMList))
-		{
-			SeekRec(hdMList, (long)Rm * sizeof(MonsterType));
-			fwrite((char *)Monster, sizeof(MonsterType), 1, hdMList);
-			fclose(hdMList);
-			QOut(Term, "0File modified.");
-		}
+		if (!PutMonTemplate(Rm, Monster))
+			Abort(" Cannot save a monster template.");
+		QOut(Term, "0File modified.");
 	}
 	if (WhatCode == 15)
 		free(Monster);					/* the MList copy, whatever the command (#21) */

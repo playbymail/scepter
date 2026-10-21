@@ -254,3 +254,15 @@ int		TrainsClass(int WRm, ChType Class);
 /* rand.c */
 int	Rand(void);
 void	Srand(int x1, int x2, int x3);
+
+/* dbstore.c */
+int		BindObj(sqlite3_stmt *St, int At, ObjectPoint O, const char *Where);
+int		ColObj(sqlite3_stmt *St, int At, ObjectPoint O, const char *Where);
+int		BindMon(sqlite3_stmt *St, int At, MonsterPoint M, const char *Where);
+int		ColMon(sqlite3_stmt *St, int At, MonsterPoint M, const char *Where);
+int		GetMonTemplate(int N, MonsterPoint M, int *Found);
+int		PutMonTemplate(int N, MonsterPoint M);
+int		GetObjTemplate(int N, ObjectPoint O, int *Found);
+int		PutObjTemplate(int N, ObjectPoint O);
+int		GetDesc(int Rec, char Lines[StrPerSeg][80], int *Found);
+int		PutDesc(int Rec, char Lines[StrPerSeg][80]);

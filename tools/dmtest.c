@@ -120,9 +120,8 @@ static void Test20(void)
 		  "an 80-character line is refused, as mkgame refuses it");
 
 	EnterLine(1, 10, Phrase(79));
-	SeekRec(EDesc, 1L * sizeof(DescBuf));
-	Check(fread(DescBuf, sizeof(DescBuf), 1, EDesc) == 1
-		  && !strcmp(DescBuf[9], Phrase(79)),
+	CurrentRec = 0;
+	Check(ReadDesc(1) && !strcmp(DescBuf[9], Phrase(79)),
 		  "a 79-character line is stored");
 }
 
@@ -1077,15 +1076,26 @@ static void Test46(void)
 		  != NULL, "the Assoc DM is shown after the name and level");
 }
 
-/* #16: buying an item the OList file has no template for */
+/* Damage the object templates: only 0 to 6 are left */
+static void NoTemplatesAfter6(void)
+{
+	char	*Err = NULL;
+
+	if (sqlite3_exec(GameDB, "DELETE FROM object_templates WHERE number > 6",
+					 NULL, NULL, &Err) != SQLITE_OK)
+	{
+		fprintf(stderr, "dmtest: %s\n", Err);
+		Abort(" dmtest: cannot delete templates.");
+	}
+}
+
+/* #16: buying an item with no object template */
 static void Test16(void)
 {
 	long	Money;
 
-	/* a damaged OList that ends after template 6; store 4 sells 1 2 3 6 10 7 */
-	fflush(OList);
-	if (ftruncate(fileno(OList), DataHeadSize + 7 * (long)sizeof(ObjectType)))
-		Abort(" dmtest: cannot truncate OList.");
+	/* store 4 sells 1 2 3 6 10 7 */
+	NoTemplatesAfter6();
 	MoveTo(User, 4);
 	User->Money = Money = 1000;
 	Capture();
@@ -1100,16 +1110,14 @@ static void Test16(void)
 		  "template 6 is still sold");
 }
 
-/* #120: listing and offering items the OList file has no template for */
+/* #120: listing and offering items with no object template */
 static void Test120(void)
 {
 	MonsterPoint	Mon;
 	int				J;
 
-	/* the damaged OList of #16: store 4 sells 1 2 3 6 10 7, 10 and 7 missing */
-	fflush(OList);
-	if (ftruncate(fileno(OList), DataHeadSize + 7 * (long)sizeof(ObjectType)))
-		Abort(" dmtest: cannot truncate OList.");
+	/* as in #16: store 4 sells 1 2 3 6 10 7, 10 and 7 missing */
+	NoTemplatesAfter6();
 	MoveTo(User, 4);
 	Capture();
 	Say("catalog");
@@ -1159,6 +1167,74 @@ static void Test136(void)
 		  && strstr(Captured(), "*** Reset in 30 seconds. ***")
 		  && !strstr(Captured(), "SAVE"),
 		  "a reset is announced twice, never suggesting SAVE");
+}
+
+static char	LastDBError[1024];
+
+static void KeepDBError(const char *Msg)
+{
+	snprintf(LastDBError, sizeof(LastDBError), "%s", Msg);
+}
+
+/* Run Sql on the game database, for setting up damaged data */
+static void Sql(const char *Sql)
+{
+	char	*Err = NULL;
+
+	if (sqlite3_exec(GameDB, Sql, NULL, NULL, &Err) != SQLITE_OK)
+	{
+		fprintf(stderr, "dmtest: %s\n", Err);
+		Abort(" dmtest: SQL failed.");
+	}
+}
+
+/* #148: invalid data is refused on the way in and on the way out */
+static void Test148(void)
+{
+	ObjectType	Obj, Back;
+	MonsterType	Mon;
+	char		Lines[StrPerSeg][80];
+	int			Found;
+
+	DBReport = KeepDBError;
+	ReadOList(2, &Obj);
+	Obj.Article = (ArticleType)7;
+	Check(!PutObjTemplate(2, &Obj) && strstr(LastDBError, "Article: no such value"),
+		  "an object with article 7 is refused, naming the field");
+	ReadOList(2, &Obj);
+	Obj.Object.Weap.WeapType = (SkillType)9;
+	Check(!PutObjTemplate(2, &Obj) && strstr(LastDBError, "WeapType"),
+		  "a weapon of skill 9 is refused");
+	ReadOList(2, &Obj);
+	Obj.ObClass = Chest;
+	Obj.Object.Chest.Closed = 2;
+	Check(!PutObjTemplate(2, &Obj) && strstr(LastDBError, "Closed: must be 0 or 1"),
+		  "a chest that is closed 2 is refused");
+	ReadOList(2, &Back);
+	Check(Back.ObClass == Weap && Back.Article == A, "and template 2 is unchanged");
+
+	ReadMList(1, &Mon);
+	Mon.Article = (ArticleType)-1;
+	Check(!PutMonTemplate(1, &Mon) && strstr(LastDBError, "Article"),
+		  "a monster with article -1 is refused");
+
+	Sql("UPDATE object_templates SET weight = 40000 WHERE number = 3");
+	Check(!GetObjTemplate(3, &Obj, &Found) && strstr(LastDBError, "weight: out of range"),
+		  "a stored weight too big for its field is refused when read");
+	Sql("UPDATE monster_templates SET name = 'a name much too long for the field'"
+		" WHERE number = 2");
+	Check(!GetMonTemplate(2, &Mon, &Found) && strstr(LastDBError, "name: too long"),
+		  "a stored name too long for its field is refused when read");
+	Sql("UPDATE descriptions SET text = printf('%.81c', 'x') WHERE record = 1 AND line = 1");
+	Check(!GetDesc(1, Lines, &Found) && strstr(LastDBError, "text: too long"),
+		  "a description line over 80 bytes is refused when read");
+	Check(sqlite3_exec(GameDB, "UPDATE object_templates SET kind = 'gadget'"
+					   " WHERE number = 4", NULL, NULL, NULL) == SQLITE_CONSTRAINT,
+		  "the schema refuses an unknown object kind");
+	Check(sqlite3_exec(GameDB, "UPDATE object_templates SET min_hp = 1"
+					   " WHERE number = 5", NULL, NULL, NULL) == SQLITE_CONSTRAINT,
+		  "and weapon fields on an object that isn't a weapon");
+	DBReport = DBLog;
 }
 
 /* Template Index from OList, put at the front of List */
@@ -1307,7 +1383,7 @@ int main(int argc, char **argv)
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
-		{"136", Test136},
+		{"136", Test136}, {"148", Test148},
 	};
 	int		I;
 
@@ -1338,9 +1414,6 @@ int main(int argc, char **argv)
 	Init_Scepter();
 	LoadSpecial();
 	InitCmds();
-	if (!(EDesc = OpenData(DSCRPT, DDesc)) || !(OList = OpenData(OLIST, DOList))
-	||	!(MList = OpenData(MLIST, DMList)))
-		Abort(" dmtest: cannot open game files.");
 	InitSpells();
 	FolCount = 0;
 	Init();

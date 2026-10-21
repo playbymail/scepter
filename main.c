@@ -86,16 +86,7 @@ int main(int argc, char **argv)
 	LoadSpecial();
 	InitCmds();
 
-	if ((EDesc = OpenData(DSCRPT, DDesc)) == NULL)
-		Abort(" File open error on DSCRPT.");
-
 	CurrentRec = 0;
-
-	if ((OList = OpenData(OLIST, DOList)) == NULL)
-		Abort(" File open error on DLIST.");
-
-	if ((MList = OpenData(MLIST, DMList)) == NULL)
-		Abort(" File open error on MLIST.");
 
 	InitSpells();
 	FolCount = 0;
@@ -181,9 +172,6 @@ int main(int argc, char **argv)
 	Off();
 
 	CurrentRec = 0;
-	fclose(EDesc);
-	fclose(OList);
-	fclose(MList);
 	fclose(EDBMon);
 	fclose(EDBObj);
 	CloseCave();

@@ -28,9 +28,6 @@ DataKindType DataKind[NDataKinds] =
 	{ "SCEPDBOB", "object db",		sizeof(ObjRec) },
 	{ "SCEPDBMN", "monster db",		sizeof(MonRec) },
 	{ "SCEPPERS", "player file",	sizeof(UserFRec) },
-	{ "SCEPMLST", "monster list",	sizeof(MonsterType) },
-	{ "SCEPOLST", "object list",	sizeof(ObjectType) },
-	{ "SCEPDESC", "descriptions",	sizeof(DescBuf) },
 };
 
 DataFileType DataFile[NDataFiles] =
@@ -39,12 +36,6 @@ DataFileType DataFile[NDataFiles] =
 	{ "dbobj",		DObjDB },
 	{ "dbmon",		DMonDB },
 	{ "eperson",	DPerson },
-	{ "mlist",		DMList },
-	{ "mlist.hd",	DMList },
-	{ "olist",		DOList },
-	{ "olist.hd",	DOList },
-	{ "dscrpt",		DDesc },
-	{ "dscrpt.hd",	DDesc },
 };
 
 static unsigned long GetU32(const unsigned char *p)

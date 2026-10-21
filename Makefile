@@ -31,7 +31,7 @@ SQLITELIB = -lsqlite3
 LIBS     = $(CRYPTLIB) $(SQLITELIB)
 
 OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o datafile.o db.o execute.o \
-	edit1.o edit2.o gamedb.o io.o ipc.o log.o main.o matt.o \
+	dbstore.o edit1.o edit2.o gamedb.o io.o ipc.o log.o main.o matt.o \
 	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o
 
 all: scepterd mkgame upgradegame
@@ -40,8 +40,8 @@ scepterd: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
 # World compiler; must be built from the same headers as scepterd.
-mkgame: mkgame.o datafile.o gamedb.o
-	$(CC) $(CFLAGS) -o $@ mkgame.o datafile.o gamedb.o $(SQLITELIB)
+mkgame: mkgame.o datafile.o dbstore.o gamedb.o
+	$(CC) $(CFLAGS) -o $@ mkgame.o datafile.o dbstore.o gamedb.o $(SQLITELIB)
 
 # Converts an older game directory to this build's data format.
 upgradegame: tools/upgradegame.o datafile.o

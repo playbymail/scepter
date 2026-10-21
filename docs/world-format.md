@@ -15,13 +15,11 @@ games. Each game keeps its own state in its directory:
 
 | File | Contents |
 |---|---|
-| `game.db` | the game database (empty for now; the files below move into it, #71) |
+| `game.db` | the game database: monster and object templates and description text so far; the files below move into it (#71) |
 | `efile` | notice, news, obituaries, run counter, monster speed, encounter and treasure tables |
 | `special` | start, revive and jail rooms; shop roles, greetings, stock, bar staggers, training rooms |
 | `edungeon` | rooms |
 | `dbobj`, `dbmon` | objects and monsters currently in rooms |
-| `mlist`, `olist` | monster and object templates (`mlist.hd` and `olist.hd` are second copies) |
-| `dscrpt` | description text (`dscrpt.hd` is a second copy) |
 | `eperson` | player characters (empty in a new game) |
 | `errlog` | server error log, made when something is first logged |
 

@@ -440,8 +440,8 @@ typedef struct
 #define	DataVersion		2		/* bump when any record layout changes */
 #define	DataHeadSize	32
 
-enum { DDungeon, DObjDB, DMonDB, DPerson, DMList, DOList, DDesc, NDataKinds };
-#define	NDataFiles		10
+enum { DDungeon, DObjDB, DMonDB, DPerson, NDataKinds };
+#define	NDataFiles		4
 
 /* ReadDataHead() results */
 enum { DataOK, DataNoHead, DataWrongVersion, DataWrongSize, DataWrongKind,
@@ -468,10 +468,7 @@ extern DataFileType	DataFile[NDataFiles];
 extern FILE		*EDBMon;
 extern FILE		*EDBObj;
 extern FILE		*ECaves;
-extern FILE		*EDesc;
 extern FILE		*EFile;
-extern FILE		*MList;
-extern FILE		*OList;
 
 extern RoomType	Room[RmLimit];
 extern int		SlotTbl[MaxPlusOne];
@@ -540,20 +537,14 @@ extern char				DescBuf[StrPerSeg][80];
 extern int				CurrentRec;
 
 /* function declarations */
-#include "proto.h"
 #include "gamedb.h"
+#include "proto.h"
 
 /* data files */
 extern char	DBMON[];
 extern char	DBOBJ[];
-extern char	DSCRPT[];
-extern char	HDDSCRPT[];
 extern char	EFILE[];
 extern char	EDUNGEON[];
-extern char	MLIST[];
-extern char	OLIST[];
-extern char	HDMLIST[];
-extern char	HDOLIST[];
 extern char	ERRLOG[];
 extern char	PASSWD[];
 extern char	SPECIAL[];

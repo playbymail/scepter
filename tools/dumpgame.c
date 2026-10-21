@@ -540,9 +540,6 @@ int main(int argc, char **argv)
 	QCre();
 	Init_Scepter();
 	LoadSpecial();
-	if (!(EDesc = OpenData(DSCRPT, DDesc)) || !(OList = OpenData(OLIST, DOList))
-	||	!(MList = OpenData(MLIST, DMList)))
-		Abort(" dumpgame: cannot open game files.");
 	Init();
 	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
 		Abort(" dumpgame: cannot open game files.");
@@ -555,9 +552,6 @@ int main(int argc, char **argv)
 	DumpRooms();
 	DumpPlayers();
 
-	fclose(EDesc);
-	fclose(OList);
-	fclose(MList);
 	fclose(EDBMon);
 	fclose(EDBObj);
 	CloseCave();

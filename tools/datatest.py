@@ -28,9 +28,6 @@ VERSION = 2
 FILES = {
     "edungeon": b"SCEPDUNG", "dbobj": b"SCEPDBOB",
     "dbmon": b"SCEPDBMN", "eperson": b"SCEPPERS",
-    "mlist": b"SCEPMLST", "mlist.hd": b"SCEPMLST",
-    "olist": b"SCEPOLST", "olist.hd": b"SCEPOLST",
-    "dscrpt": b"SCEPDESC", "dscrpt.hd": b"SCEPDESC",
 }
 
 BIN = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else ".")
@@ -189,18 +186,18 @@ def test_damaged():
         ("newer version", "dbmon",
          lambda g: patch(g, "dbmon", 8, struct.pack("<I", VERSION + 1)),
          ["dbmon", "format version %d" % (VERSION + 1), "newer scepterd"]),
-        ("record size", "olist",
-         lambda g: patch(g, "olist", 12, struct.pack("<I", 12345)),
-         ["olist", "12345 bytes"]),
+        ("record size", "edungeon",
+         lambda g: patch(g, "edungeon", 12, struct.pack("<I", 12345)),
+         ["edungeon", "12345 bytes"]),
         ("truncated header", "eperson",
          lambda g: open(os.path.join(g, "eperson"), "wb").write(b"SCEPPERS\1\0"),
          ["eperson", "truncated"]),
-        ("foreign file", "dscrpt.hd",
-         lambda g: open(os.path.join(g, "dscrpt.hd"), "wb").write(b"hello, world\n"),
-         ["dscrpt.hd", "not a Scepter data file"]),
-        ("missing file", "mlist.hd",
-         lambda g: os.remove(os.path.join(g, "mlist.hd")),
-         ["mlist.hd", "No such file"]),
+        ("foreign file", "dbmon",
+         lambda g: open(os.path.join(g, "dbmon"), "wb").write(b"hello, world\n"),
+         ["dbmon", "not a Scepter data file"]),
+        ("missing file", "edungeon",
+         lambda g: os.remove(os.path.join(g, "edungeon")),
+         ["edungeon", "No such file"]),
     ]
     for i, (what, f, damage, words) in enumerate(cases):
         g = game("damaged%d" % i)
@@ -342,6 +339,34 @@ def test_database():
     set_version(g, 0)
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
     check(rc == 1 and "schema version 0" in err, "fightsim refuses it too")
+
+
+def column_list(name):
+    """ObjCols or MonCols from gamedb.h, as a list of column names."""
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gamedb.h")) as f:
+        h = f.read()
+    import re
+    m = re.search(r"#define\t%s\t(.*?)\n(?=\n|#define)" % name, h, re.S)
+    text = "".join(re.findall(r'"([^"]*)"', m.group(1)))
+    return [c.strip() for c in text.split(",")]
+
+
+def test_columns():
+    """dbstore.c's column lists match every table that holds objects or monsters."""
+    g = game("columns")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    obj, mon = column_list("ObjCols"), column_list("MonCols")
+    for table, keys, cols in [
+            ("object_templates", ["number"], obj),
+            ("room_objects", ["room", "slot"], obj),
+            ("chest_objects", ["room", "chest", "slot"], obj),
+            ("monster_objects", ["room", "monster", "slot"], obj),
+            ("player_objects", ["player", "slot", "worn"], obj),
+            ("monster_templates", ["number"], mon),
+            ("room_monsters", ["room", "slot"], mon)]:
+        got = [r[1] for r in db.execute("PRAGMA table_info(%s)" % table)]
+        check(got == keys + cols, "%s has the columns dbstore.c reads and writes" % table)
+    db.close()
 
 
 def dbtest(*args):
@@ -504,9 +529,9 @@ def test_upgrade1():
 def test_partial(fresh):
     # an upgrade that stopped part way: some files done, some not
     g = game("partial")
-    strip(g, ["dbobj", "dscrpt.hd", "eperson"])
+    strip(g, ["dbobj", "eperson"])
     rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and out.count("upgrading") == 3 and same_tree(g, fresh),
+    check(rc == 0 and out.count("upgrading") == 2 and same_tree(g, fresh),
           "upgradegame finishes a partly upgraded game")
 
 
@@ -521,9 +546,9 @@ def test_fightsim(fresh):
     b = run("fightsim", "-r", "1", g, "4", "9")
     check(a[0] == 0 and a == b and "won 199 (99.5%)" in a[2] and "average 2.74" in a[2],
           "fightsim gives the same results on a fresh and an upgraded game")
-    strip(g, ["mlist"])
+    strip(g, ["edungeon"])
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
-    check(rc == 1 and "mlist" in err, "fightsim refuses a mismatched game")
+    check(rc == 1 and "edungeon" in err, "fightsim refuses a mismatched game")
 
 
 def main():
@@ -534,6 +559,7 @@ def main():
         test_gamedir()
         test_database()
         test_dbfuncs()
+        test_columns()
         test_upgrade(fresh)
         test_upgrade1()
         test_partial(fresh)
