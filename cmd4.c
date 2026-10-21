@@ -336,7 +336,8 @@ void Catalog(void)
 		ObjectType	ObjTemp;
 		char		*p;
 
-		ReadOList(StockItem(WRm, ILoop), &ObjTemp);
+		if (!ReadOList(StockItem(WRm, ILoop), &ObjTemp))
+			continue;					/* no template: BUY says out of stock */
 
 		switch ((int)ObjTemp.ObClass)
 		{

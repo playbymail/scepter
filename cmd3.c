@@ -776,17 +776,19 @@ void Parley(char *Word, int Num)
 	switch (Opt)
 	{
 		case 1:
+		{
+			ObjectType	ObjTemp;
+
 			N1 = 0;
 			Mon->MParley = 3;
 			if (Mon->WhichObj)
 				N1 = ObjIndex(Mon->WhichObj, Rnd(8) - 1);
+			if (N1 && !ReadOList(N1, &ObjTemp))		/* no such template */
+				N1 = 0;
 			if (!N1)
 				QOut(Term, "0I have nothing to sell you, good sir!");
 			else
 			{
-				ObjectType	ObjTemp;
-
-				ReadOList(N1, &ObjTemp);
 				User->Data = ObjTemp.Price / 2 + Rnd(ObjTemp.Price);
 				User->ParleyObj = N1;
 				PM(Mon, TRUE, B2);
@@ -798,6 +800,7 @@ void Parley(char *Word, int Num)
 				User->Entry = XParley;
 			}
 			break;
+		}
 
 		case 2:
 		case 3:
