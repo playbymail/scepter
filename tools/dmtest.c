@@ -8,7 +8,7 @@
  *
  * TEST is an issue number: 20, 23, 22, 24, 26, 82, 50 or 88; for the command
  * parser 45, 47 or 48; 17 for the hourly update; for play 27, 28, 29, 30, 32,
- * 33 or 38, which may use a second character on terminal 2; for the DM
+ * 33, 38 or 180, which may use a second character on terminal 2; for the DM
  * editor 21, 34, 35, 36, 37, 40 or 103; 46 for the Assoc DM line; 16 for a
  * missing object template; or for saving rooms 42,
  * 43, 44, 56 or 64, which save room objects and monsters and
@@ -922,6 +922,61 @@ static void Test33(void)
 		  "the pawned sword is gone and no longer wielded");
 }
 
+/*
+ * #180: the smith's repair never lowers durability.  An item already at or
+ * above the cap is turned away without charge; one below it is mended to
+ * the cap, and no further.
+ */
+static void Test180(void)
+{
+	ObjectPoint	Arm = Carried(User, "armor", Armor);
+	ObjectPoint	Shld = Carried(User, "shield", Shield);
+	ObjectPoint	Sword = Carried(User, "sword", Weap);
+	long		Money;
+
+	Arm->Price = Shld->Price = Sword->Price = 30;
+	Arm->Magic = Shld->Magic = Sword->Magic = FALSE;
+	Sword->Object.Weap.MinHp = 2;
+	Sword->Object.Weap.MaxHp = 9;		/* not a "great weapon", which may crack */
+	User->Money = Money = 1000;
+	MoveTo(User, 23);					/* the smithy */
+
+	Arm->Object.Armor.ArmHits = 200;
+	Shld->Object.Shield.ShHits = 150;
+	Sword->Object.Weap.Strikes = 300;
+	Capture();
+	Say("repair armor");
+	Check(User->Entry == XCmd && Arm->Object.Armor.ArmHits == 200
+		  && strstr(Captured(), "better shape than I could make it") != NULL,
+		  "armor with 200 hits is turned away, keeping them");
+	Say("repair shield");
+	Say("repair sword");
+	Check(User->Entry == XCmd && Shld->Object.Shield.ShHits == 150
+		  && Sword->Object.Weap.Strikes == 300 && User->Money == Money,
+		  "so are a 150-hit shield and a 300-strike sword, and nothing is charged");
+
+	Arm->Object.Armor.ArmHits = 50;
+	Say("repair armor");
+	Check(User->Entry == XCmd && Arm->Object.Armor.ArmHits == 50,
+		  "armor at the cap of 50 hits is turned away too");
+
+	Arm->Object.Armor.ArmHits = 40;
+	Say("repair armor");
+	Check(User->Entry == XRepair, "armor below the cap is offered a repair");
+	Say("yes");
+	Check(Arm->Object.Armor.ArmHits == 50 && User->Money < Money,
+		  "and is mended to 50 hits, for a fee");
+
+	Sword->Object.Weap.Strikes = 80;
+	Say("repair sword");
+	Say("yes");
+	Check(Sword->Object.Weap.Strikes == 100, "a sword is mended to 100 strikes");
+	Shld->Object.Shield.ShHits = 10;
+	Say("repair shield");
+	Say("yes");
+	Check(Shld->Object.Shield.ShHits == 45, "a worn shield doubles, plus 25");
+}
+
 /* #38: summoned monsters start at 90-100% of their hits, not always 100% */
 static void Test38(void)
 {
@@ -1671,7 +1726,7 @@ int main(int argc, char **argv)
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
 		{"149", Test149}, {"150", Test150}, {"151", Test151},
-		{"152", Test152}, {"93", Test93},
+		{"152", Test152}, {"93", Test93}, {"180", Test180},
 	};
 	int		I;
 

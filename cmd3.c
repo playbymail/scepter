@@ -442,6 +442,60 @@ void UpdateF(void)
 	}
 }
 
+/*
+ * Obj's durability (a weapon's strikes, a shield's or armor's hits), and
+ * in *After what the smith's repair makes it: doubled and a little more,
+ * up to the smith's cap.  A repair never lowers it (#180): an item at or
+ * above the cap, as a world or the DM editor may make one, keeps what it
+ * has.
+ */
+static short *Durability(ObjectPoint Obj, int *After)
+{
+	short	*Now;
+	int		Cap, Plus;
+
+	switch ((int)Obj->ObClass)
+	{
+		case Weap:
+			Now = &Obj->Object.Weap.Strikes;
+			Cap = 100;
+			Plus = 50;
+			break;
+
+		case Shield:
+			Now = &Obj->Object.Shield.ShHits;
+			Cap = 50;
+			Plus = 25;
+			break;
+
+		default:
+			Now = &Obj->Object.Armor.ArmHits;
+			Cap = 50;
+			Plus = 25;
+			break;
+	}
+	*After = Max(*Now, Min(Cap, *Now * 2 + Plus));
+	return Now;
+}
+
+/* Would the smith's repair add to Obj's durability? */
+static int NeedsMending(ObjectPoint Obj)
+{
+	int		After;
+	short	*Now = Durability(Obj, &After);
+
+	return After > *Now;
+}
+
+/* Repair Obj's durability, as Durability() says */
+static void Mend(ObjectPoint Obj)
+{
+	int		After;
+	short	*Now = Durability(Obj, &After);
+
+	*Now = (short)After;
+}
+
 void Repair(char *Word, int Num)
 {
 	ObjectPoint	Obj;
@@ -457,6 +511,9 @@ void Repair(char *Word, int Num)
 	else
 	if (Obj->ObClass != Weap && Obj->ObClass != Armor && Obj->ObClass != Shield)
 		QOut(Term, "0\"I don't know how to repair that!\"");
+	else
+	if (!NeedsMending(Obj))					/* nothing to gain: no charge (#180) */
+		QOut(Term, "0\"That's in better shape than I could make it!\"");
 	else
 	{
 		User->Data = (Obj->Price * 6) / 10 + Rnd(5);
@@ -1042,18 +1099,13 @@ void YesNo(void)
 						{
 							if (!Obj->Magic)
 								p->WeaPlus = Min(0, p->WeaPlus);
-							p->Strikes = Min(100, p->Strikes * 2 + 50);
+							Mend(Obj);
 						}
 						break;
 					}
 					case Shield:
-						Obj->Object.Shield.ShHits =
-							Min(50, Obj->Object.Shield.ShHits * 2 + 25);
-						break;
-
 					case Armor:
-						Obj->Object.Armor.ArmHits =
-							Min(50, Obj->Object.Armor.ArmHits * 2 + 25);
+						Mend(Obj);
 						break;
 				}
 
