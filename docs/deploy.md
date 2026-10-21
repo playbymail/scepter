@@ -122,6 +122,7 @@ Upgrade history:
 | 2026-10-21 | `dc25fd4` | 2, unchanged (#105, #46, #53, #19, #16) | none |
 | 2026-10-21 | `49498be` | 2, unchanged (#117, #49, #128, #41); game recreated with `mkgame -f` for the #128 room text, deleting every character | `/var/lib/scepter/havenford.backup-20261021-163121` |
 | 2026-10-21 | `1404c7e` | game database, schema version 1 (#71, #146–#153); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning) | `/var/lib/scepter/havenford.structs-20261021` (the old struct-file game, untouched) |
+| 2026-10-21 | `6e12f8e` | schema 1 → 2: the login limits in the database (#93); characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-201641` |
 
 ## The move to the game database (#153)
 
