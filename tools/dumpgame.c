@@ -531,19 +531,14 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main(), without players */
-	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
-	{
-		DBClose();
-		fprintf(stderr, "dumpgame: cannot use this game directory\n");
+	if (!OpenGame("dumpgame"))
 		return 1;
-	}
 	QCre();
 	Init_Scepter();
 	LoadSpecial();
 	Init();
 	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
 		Abort(" dumpgame: cannot open game files.");
-	OpenCave();
 
 	DumpSettings();
 	DumpSpecial();
@@ -554,7 +549,6 @@ int main(int argc, char **argv)
 
 	fclose(EDBMon);
 	fclose(EDBObj);
-	CloseCave();
 	DBClose();
 	return ferror(stdout) || fflush(stdout) ? 1 : 0;
 }

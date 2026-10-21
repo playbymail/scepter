@@ -6,7 +6,6 @@ struct tUserFRec	UserFRec;
 /* global variables */
 FILE		*EDBMon;
 FILE		*EDBObj;
-FILE		*ECaves;
 FILE		*EFile;
 
 RoomType	Room[RmLimit];
@@ -89,7 +88,6 @@ int					CurrentRec;
 char	DBMON[]		= WORKDIR "/dbmon";
 char	DBOBJ[]		= WORKDIR "/dbobj";
 char	EFILE[]		= WORKDIR "/efile";
-char	EDUNGEON[]	= WORKDIR "/edungeon";
 char	ERRLOG[]	= WORKDIR "/errlog";
 char	PASSWD[]	= "/etc/passwd";
 char	SPECIAL[]	= WORKDIR "/special";

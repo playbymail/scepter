@@ -427,26 +427,6 @@ int ColMon(sqlite3_stmt *St, int At, MonsterPoint M, const char *Where)
 		&& GETFLAG(MNice, M->Nice);
 }
 
-/* ---------- transactions ---------- */
-
-/* Start a transaction unless the caller has one; *Own says which */
-static int Start(int *Own)
-{
-	*Own = sqlite3_get_autocommit(GameDB);
-	return !*Own || DBBegin();
-}
-
-/* Finish what Start() began: commit if Ok, otherwise roll back */
-static int Finish(int Own, int Ok)
-{
-	if (!Own)
-		return Ok;
-	if (Ok && DBCommit())
-		return TRUE;
-	DBRollback();
-	return FALSE;
-}
-
 /* Run a statement that returns no rows */
 static int Done(sqlite3_stmt *St, const char *Where, const char *Doing)
 {
@@ -484,9 +464,9 @@ int PutMonTemplate(int N, MonsterPoint M)
 	int					Own;
 
 	snprintf(Where, sizeof(Where), "monster template %d", N);
-	if (!Start(&Own))
+	if (!DBStart(&Own))
 		return FALSE;
-	return Finish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO monster_templates"
+	return DBFinish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO monster_templates"
 								 " (number, " MonCols ") VALUES (?, " MonVals ")")
 				  && BindInt(St, 1, N) && BindMon(St, 2, M, Where)
 				  && Done(St, Where, "save"));
@@ -521,9 +501,9 @@ int PutObjTemplate(int N, ObjectPoint O)
 	int					Own;
 
 	snprintf(Where, sizeof(Where), "object template %d", N);
-	if (!Start(&Own))
+	if (!DBStart(&Own))
 		return FALSE;
-	return Finish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO object_templates"
+	return DBFinish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO object_templates"
 								 " (number, " ObjCols ") VALUES (?, " ObjVals ")")
 				  && BindInt(St, 1, N) && BindObj(St, 2, O, Where)
 				  && Done(St, Where, "save"));
@@ -573,7 +553,7 @@ int PutDesc(int Rec, char Lines[StrPerSeg][80])
 	int					Own, Line, Ok = TRUE;
 
 	snprintf(Where, sizeof(Where), "description record %d", Rec);
-	if (!Start(&Own))
+	if (!DBStart(&Own))
 		return FALSE;
 	for (Line = 0; Ok && Line < StrPerSeg; Line++)
 		Ok = DBPrepare(&St, "INSERT OR REPLACE INTO descriptions (record, line, text)"
@@ -581,5 +561,108 @@ int PutDesc(int Rec, char Lines[StrPerSeg][80])
 		  && BindInt(St, 1, Rec) && BindInt(St, 2, Line + 1)
 		  && BindText(St, 3, Lines[Line], 80)
 		  && Done(St, Where, "save");
-	return Finish(Own, Ok);
+	return DBFinish(Own, Ok);
+}
+
+/* ---------- rooms ---------- */
+
+/* Room Rm into R, its pointers NULL; *Found is FALSE, and R zero, if none */
+int GetRoom(int Rm, RoomType *R, int *Found)
+{
+	static sqlite3_stmt	*St;
+	char				Where[32];
+	long				V;
+	int					At = 0, Rc;
+
+	snprintf(Where, sizeof(Where), "room %d", Rm);
+	*Found = FALSE;
+	memset(R, 0, sizeof(*R));
+	if (!DBPrepare(&St, "SELECT north, south, east, west, up, down, out, desc_rec,"
+				   " desc_code, which_encounter, encounter_time, last_dir,"
+				   " notify_dm, safe, anti_magic, dark FROM rooms WHERE room = ?")
+	||	!BindInt(St, 1, Rm))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		*Found = Rc = GET(0, R->Adjoin[0], SHRT_MIN, SHRT_MAX)
+			&& GET(1, R->Adjoin[1], SHRT_MIN, SHRT_MAX)
+			&& GET(2, R->Adjoin[2], SHRT_MIN, SHRT_MAX)
+			&& GET(3, R->Adjoin[3], SHRT_MIN, SHRT_MAX)
+			&& GET(4, R->Adjoin[4], SHRT_MIN, SHRT_MAX)
+			&& GET(5, R->Adjoin[5], SHRT_MIN, SHRT_MAX)
+			&& GET(6, R->Out, SHRT_MIN, SHRT_MAX)
+			&& GET(7, R->DescRec, 0, UCHAR_MAX)
+			&& GET(8, R->DescCode, 0, UCHAR_MAX)
+			&& GET(9, R->WhichEncounter, 0, UCHAR_MAX)
+			&& GET(10, R->EncounterTime, 0, UCHAR_MAX)
+			&& GET(11, R->LastDir, 0, UCHAR_MAX)
+			&& GETFLAG(12, R->NotifyDM)
+			&& GETFLAG(13, R->Safe)
+			&& GETFLAG(14, R->AntiMagic)
+			&& GETFLAG(15, R->Dark);
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "read");
+	sqlite3_reset(St);			/* ends the read */
+	return Rc;
+}
+
+/* Store room Rm's own fields; its contents are saved separately */
+int PutRoom(int Rm, RoomType *R)
+{
+	static sqlite3_stmt	*St;
+	char				Where[32];
+	int					Own, I, Ok;
+
+	snprintf(Where, sizeof(Where), "room %d", Rm);
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = DBPrepare(&St, "INSERT OR REPLACE INTO rooms (room, north, south, east,"
+				   " west, up, down, out, desc_rec, desc_code, which_encounter,"
+				   " encounter_time, last_dir, notify_dm, safe, anti_magic, dark)"
+				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	  && BindInt(St, 1, Rm);
+	for (I = 0; Ok && I < 6; I++)
+		Ok = BindInt(St, 2 + I, R->Adjoin[I]);
+	return DBFinish(Own, Ok
+		&& BindInt(St, 8, R->Out)
+		&& BindInt(St, 9, R->DescRec)
+		&& BindInt(St, 10, R->DescCode)
+		&& BindInt(St, 11, R->WhichEncounter)
+		&& BindInt(St, 12, R->EncounterTime)
+		&& BindInt(St, 13, R->LastDir)
+		&& BindInt(St, 14, R->NotifyDM)
+		&& BindInt(St, 15, R->Safe)
+		&& BindInt(St, 16, R->AntiMagic)
+		&& BindInt(St, 17, R->Dark)
+		&& Done(St, Where, "save"));
+}
+
+/*
+ * The number of segments of rooms: the rooms must be 0 to N * 10 - 1, with
+ * none missing, or the table is refused.
+ */
+int CountSegs(int *NSegs)
+{
+	static sqlite3_stmt	*St;
+	sqlite3_int64		Count, Max;
+	int					Rc;
+
+	if (!DBPrepare(&St, "SELECT count(*), coalesce(max(room), -1) FROM rooms"))
+		return Failed(DBName ": rooms", "count");
+	if ((Rc = sqlite3_step(St)) != SQLITE_ROW)
+	{
+		sqlite3_reset(St);
+		return Failed(DBName ": rooms", "count");
+	}
+	Count = sqlite3_column_int64(St, 0);
+	Max = sqlite3_column_int64(St, 1);
+	sqlite3_reset(St);
+	if (!Count || Count != Max + 1 || Count % 10)
+	{
+		Bad(DBName ": rooms", "room numbers", "must run from 0 in whole segments"
+			" of 10", (long)Count);
+		return FALSE;
+	}
+	*NSegs = (int)(Count / 10);
+	return TRUE;
 }

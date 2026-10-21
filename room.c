@@ -9,18 +9,6 @@ static void	InActive(int Rm);
 static int	OkSend(UserPoint Usr);
 static UserPoint	MatchUser(UserPoint Usr);
 
-void OpenCave(void)
-{
-	if (!(ECaves = OpenData(EDUNGEON, DDungeon)))
-		Abort(" Sce910 - Error opening dungeon file.");
-}
-
-void CloseCave(void)
-{
-	if (fclose(ECaves))
-		Abort(" Sce911 - Error closing dungeon file.");
-}
-
 int W(int Rm)
 {
 	int		Where = 0;
@@ -142,48 +130,55 @@ void PlayerDisplay(UserPoint Plyer)
 	}
 }
 
+/*
+ * Load segment SegNum's rooms, and what is in them, into slot SlotNum.
+ * The room's contents come from their own store, which answers "none" for
+ * an empty room; the stored "has objects" pointer is gone (#5, #149).
+ */
 static void ReadSeg(int SlotNum, int SegNum)
 {
 	int		RLoop, T;
 
 	SlotTbl[SlotNum] = SegNum;
-	SeekRec(ECaves, 10L * SegNum * sizeof(RoomType));
 
 	T = SlotNum * 10;
 	for (RLoop = 0; RLoop < 10; RLoop++)
 	{
-		int		Rm, WRm;
+		int		Rm, WRm, Found;
 
 		Rm = RLoop + T;
-		if (!fread((char *)&Room[Rm], sizeof(RoomType), 1, ECaves))
-		{
-			/* a short dungeon file: leave the room empty */
-			ErrLog(" Sce912 - Short read on dungeon file.");
-			memset(&Room[Rm], 0, sizeof(RoomType));
-		}
-		Room[Rm].RmPlayerTail = NULL;
 		WRm = W(Rm);
-		if (Room[Rm].RmObjectTail)
-			ReadUObj(WRm, &Room[Rm].RmObjectTail, 0);
-		if (Room[Rm].RmMonsterTail)
-			ReadUMon(WRm, &Room[Rm].RmMonsterTail);
+		if (!GetRoom(WRm, &Room[Rm], &Found))
+			Abort(" Sce912 - Cannot read a room.");
+		if (!Found)		/* a missing room: leave it empty */
+			ErrLog(" Sce912 - A room is missing from the game.");
+		ReadUObj(WRm, &Room[Rm].RmObjectTail, 0);
+		ReadUMon(WRm, &Room[Rm].RmMonsterTail);
 	}
 }
 
+/*
+ * Save the rooms in slot SlotNum as segment SegNum, with their contents,
+ * in one transaction (or the caller's).  Erase frees the contents.
+ */
 void WriteSeg(int SlotNum, int SegNum, int Erase)
 {
-	int		RLoop, T;
+	int		RLoop, T, Own;
 
-	SeekRec(ECaves, 10L * SegNum * sizeof(RoomType));
+	if (!DBStart(&Own))
+		Abort(" Sce911 - Cannot save rooms.");
 	T = SlotNum * 10;
 	for (RLoop = 0; RLoop < 10; RLoop++)
 	{
 		int		Rm, WRm;
 
 		Rm = RLoop + T;
-		fwrite((char *)&Room[Rm], sizeof(RoomType), 1, ECaves);
-		fflush(ECaves);
-		WRm = W(Rm);
+		WRm = SegNum * 10 + RLoop;
+		if (!PutRoom(WRm, &Room[Rm]))
+		{
+			DBRollback();
+			Abort(" Sce911 - Cannot save a room.");
+		}
 
 		if (Room[Rm].RmObjectTail)
 		{
@@ -212,6 +207,8 @@ void WriteSeg(int SlotNum, int SegNum, int Erase)
 		else
 			DeleteMon(WRm);
 	}
+	if (!DBFinish(Own, TRUE))
+		Abort(" Sce911 - Cannot save rooms.");
 }
 
 static void EraseTail(ObjectPoint Object)

@@ -440,8 +440,8 @@ typedef struct
 #define	DataVersion		2		/* bump when any record layout changes */
 #define	DataHeadSize	32
 
-enum { DDungeon, DObjDB, DMonDB, DPerson, NDataKinds };
-#define	NDataFiles		4
+enum { DObjDB, DMonDB, DPerson, NDataKinds };
+#define	NDataFiles		3
 
 /* ReadDataHead() results */
 enum { DataOK, DataNoHead, DataWrongVersion, DataWrongSize, DataWrongKind,
@@ -467,7 +467,6 @@ extern DataFileType	DataFile[NDataFiles];
 /* global variables */
 extern FILE		*EDBMon;
 extern FILE		*EDBObj;
-extern FILE		*ECaves;
 extern FILE		*EFile;
 
 extern RoomType	Room[RmLimit];
@@ -544,7 +543,6 @@ extern int				CurrentRec;
 extern char	DBMON[];
 extern char	DBOBJ[];
 extern char	EFILE[];
-extern char	EDUNGEON[];
 extern char	ERRLOG[];
 extern char	PASSWD[];
 extern char	SPECIAL[];

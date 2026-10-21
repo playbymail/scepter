@@ -1237,6 +1237,30 @@ static void Test148(void)
 	DBReport = DBLog;
 }
 
+/* #149: rooms are rows; a new segment adds ten */
+static void Test149(void)
+{
+	int			NSegs, Found;
+	RoomType	R;
+
+	Sql("DELETE FROM rooms WHERE room = 905");
+	Capture();
+	Room[S(905)].Safe = TRUE;		/* loads segment 90 */
+	Check(strstr(ReadFile(ERRLOG), "A room is missing from the game.") != NULL,
+		  "a missing room is logged");
+	Room[S(905)].Safe = FALSE;
+	Check(!Room[S(905)].Adjoin[0] && !Room[S(905)].DescRec, "and left empty");
+
+	Sql("DELETE FROM rooms WHERE room >= 1990");
+	NumSegs = 199;
+	NumRooms = NumSegs * 10 - 1;
+	AddSeg();
+	Check(CountSegs(&NSegs) && NSegs == 200 && NumRooms == 1999,
+		  "AddSeg() stores a new segment of ten rooms");
+	Check(GetRoom(1999, &R, &Found) && Found && !R.Adjoin[0],
+		  "and its rooms are empty");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1384,6 +1408,7 @@ int main(int argc, char **argv)
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
+		{"149", Test149},
 	};
 	int		I;
 
@@ -1404,12 +1429,8 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main() */
-	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
-	{
-		DBClose();
-		fprintf(stderr, "dmtest: cannot use this game directory\n");
+	if (!OpenGame("dmtest"))
 		return 1;
-	}
 	QCre();
 	Init_Scepter();
 	LoadSpecial();
@@ -1419,7 +1440,6 @@ int main(int argc, char **argv)
 	Init();
 	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
 		Abort(" dmtest: cannot open game files.");
-	OpenCave();
 	InitEvents();
 	RealTime = time(NULL);
 	Today = GetDate(RealTime);

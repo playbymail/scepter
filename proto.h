@@ -110,8 +110,6 @@ void	TimeCheck(char *Prev, char *Now);
 void	SystemMsg(char *s);
 
 /* room.c */
-void	OpenCave(void);
-void	CloseCave(void);
 int		W(int Rm);
 void	Condition(UserPoint Plyr);
 void	PlayerDisplay(UserPoint Plyer);
@@ -266,3 +264,6 @@ int		GetObjTemplate(int N, ObjectPoint O, int *Found);
 int		PutObjTemplate(int N, ObjectPoint O);
 int		GetDesc(int Rec, char Lines[StrPerSeg][80], int *Found);
 int		PutDesc(int Rec, char Lines[StrPerSeg][80]);
+int		GetRoom(int Rm, RoomType *R, int *Found);
+int		PutRoom(int Rm, RoomType *R);
+int		CountSegs(int *NSegs);

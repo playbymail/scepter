@@ -381,9 +381,17 @@ void UpdateF(void)
 		for (ILoop = MsgTerm(SysMsg); ILoop > 0;)
 			QOut(TermList[--ILoop], "0Files updating.  Please wait.");
 
+	/* every loaded segment, in one transaction (#71) */
+	if (!DBBegin())
+		Abort(" UpdateF: cannot save rooms.");
 	for (ILoop = 0; ILoop <= MaxUsers; ILoop++)
 		if (SlotTbl[ILoop] > -1)
 			WriteSeg(ILoop, SlotTbl[ILoop], FALSE);
+	if (!DBCommit())
+	{
+		DBRollback();
+		Abort(" UpdateF: cannot save rooms.");
+	}
 
 	/*
 	 * Write a new copy and rename it over the old one, so that a full disk

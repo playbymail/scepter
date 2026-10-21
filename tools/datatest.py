@@ -26,7 +26,7 @@ import tempfile
 HEAD = 32
 VERSION = 2
 FILES = {
-    "edungeon": b"SCEPDUNG", "dbobj": b"SCEPDBOB",
+    "dbobj": b"SCEPDBOB",
     "dbmon": b"SCEPDBMN", "eperson": b"SCEPPERS",
 }
 
@@ -186,18 +186,18 @@ def test_damaged():
         ("newer version", "dbmon",
          lambda g: patch(g, "dbmon", 8, struct.pack("<I", VERSION + 1)),
          ["dbmon", "format version %d" % (VERSION + 1), "newer scepterd"]),
-        ("record size", "edungeon",
-         lambda g: patch(g, "edungeon", 12, struct.pack("<I", 12345)),
-         ["edungeon", "12345 bytes"]),
+        ("record size", "dbobj",
+         lambda g: patch(g, "dbobj", 12, struct.pack("<I", 12345)),
+         ["dbobj", "12345 bytes"]),
         ("truncated header", "eperson",
          lambda g: open(os.path.join(g, "eperson"), "wb").write(b"SCEPPERS\1\0"),
          ["eperson", "truncated"]),
         ("foreign file", "dbmon",
          lambda g: open(os.path.join(g, "dbmon"), "wb").write(b"hello, world\n"),
          ["dbmon", "not a Scepter data file"]),
-        ("missing file", "edungeon",
-         lambda g: os.remove(os.path.join(g, "edungeon")),
-         ["edungeon", "No such file"]),
+        ("missing file", "dbmon",
+         lambda g: os.remove(os.path.join(g, "dbmon")),
+         ["dbmon", "No such file"]),
     ]
     for i, (what, f, damage, words) in enumerate(cases):
         g = game("damaged%d" % i)
@@ -324,6 +324,13 @@ def test_database():
         with open(os.path.join(g, "game.db"), "r+b") as f:
             f.write(b"this is not a database at all, not even close" * 4)
     refuses("a corrupt database", garble, "not a database")
+
+    def gap(g):
+        db = sqlite3.connect(os.path.join(g, "game.db"))
+        db.execute("DELETE FROM rooms WHERE room = 1500")
+        db.commit()
+        db.close()
+    refuses("a game with a room missing", gap, "whole segments")
 
     def not_wal(g):
         db = sqlite3.connect(os.path.join(g, "game.db"))
@@ -546,9 +553,9 @@ def test_fightsim(fresh):
     b = run("fightsim", "-r", "1", g, "4", "9")
     check(a[0] == 0 and a == b and "won 199 (99.5%)" in a[2] and "average 2.74" in a[2],
           "fightsim gives the same results on a fresh and an upgraded game")
-    strip(g, ["edungeon"])
+    strip(g, ["dbmon"])
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
-    check(rc == 1 and "edungeon" in err, "fightsim refuses a mismatched game")
+    check(rc == 1 and "dbmon" in err, "fightsim refuses a mismatched game")
 
 
 def main():
