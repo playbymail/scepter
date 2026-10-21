@@ -1,12 +1,14 @@
 /*
  * dmtest -- regression tests for security bugs that only a DM or bad data
- * can reach, run against the real engine code.
+ * can reach, and for saving chests, run against the real engine code.
  *
  *	dmtest GAMEDIR TEST
  *	dmtest GAMEDIR legacy NAME PASSWORD
  *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88.  The game directory (made
+ * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88, or for chests
+ * 42, 43, 44 or 56, which save room objects and read them back as a
+ * segment swap would; they use rooms 900-930.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
  * each test sets up the state the DM editor or a corrupt record would leave
@@ -22,6 +24,7 @@
  *
  * main.c is included so the server's own start-up code can be reused.
  */
+#include <stdarg.h>
 #include <stddef.h>
 
 #define main scepterd_main
@@ -347,6 +350,141 @@ static void Test88(void)
 		  "a device with spell -300 does nothing");
 }
 
+/* A new object called Name; a chest is open and holds Inside */
+static ObjectPoint NewObj(const char *Name, ObClassType Class, ObjectPoint Inside)
+{
+	ObjectPoint	Obj;
+
+	if (!(Obj = (ObjectPoint)malloc(sizeof(ObjectType))))
+		Abort(" dmtest: out of memory.");
+	*Obj = ProtoObject;
+	snprintf(Obj->Name, sizeof(Obj->Name), "%s", Name);
+	Obj->ObClass = Class;
+	Obj->Next = NULL;
+	if (Class == Chest)
+	{
+		Obj->Object.Chest.ObjectTail = Inside;
+		Obj->Object.Chest.NumInside = Inside != NULL;
+	}
+	return Obj;
+}
+
+static ObjectPoint Box(const char *Name, const char *Inside)
+{
+	return NewObj(Name, Chest, Inside ? NewObj(Inside, Misc, NULL) : NULL);
+}
+
+/* Link the objects into a list, first to last */
+static ObjectPoint List(ObjectPoint First, ...)
+{
+	va_list		Args;
+	ObjectPoint	Obj = First;
+
+	va_start(Args, First);
+	while (Obj)
+		Obj = Obj->Next = va_arg(Args, ObjectPoint);
+	va_end(Args);
+	return First;
+}
+
+/* A list as text: "rock a[sword] b[]" */
+static const char *Show(ObjectPoint Obj)
+{
+	static char	Text[1024];
+	static int	Depth;
+
+	if (!Depth)
+		*Text = '\0';
+	for (; Obj; Obj = Obj->Next)
+	{
+		strcat(Text, Obj->Name);
+		if (Obj->ObClass == Chest)
+		{
+			strcat(Text, "[");
+			Depth++;
+			Show(Obj->Object.Chest.ObjectTail);
+			Depth--;
+			strcat(Text, "]");
+		}
+		if (Obj->Next)
+			strcat(Text, " ");
+	}
+	return Text;
+}
+
+/* Save Obj as room Rm's objects, as WriteSeg() does, and read them back */
+static const char *Reload(RmCodeType Rm, ObjectPoint Obj)
+{
+	ObjectPoint	Back;
+
+	WriteUObj(Rm, Obj, 0);
+	ReadUObj(Rm, &Back, 0);
+	return Show(Back);
+}
+
+static void Same(const char *Got, const char *Want, const char *What)
+{
+	char	Msg[1200];
+
+	snprintf(Msg, sizeof(Msg), "%s: %s", What, Got);
+	Check(!strcmp(Got, Want), Msg);
+}
+
+/* #42: an emptied or removed chest's old contents must not come back */
+static void Test42(void)
+{
+	Same(Reload(900, Box("a", "sword")), "a[sword]", "a chest is saved");
+	Same(Reload(900, Box("a", NULL)), "a[]", "the chest, emptied");
+
+	Reload(901, List(Box("a", "sword"), Box("b", "shield"), NULL));
+	Same(Reload(901, Box("b", "shield")), "b[shield]", "the first chest taken");
+	Same(Reload(901, List(Box("b", "shield"), Box("c", NULL), NULL)),
+		 "b[shield] c[]", "an empty chest put down");
+}
+
+/* #43: each chest in a room keeps its own contents */
+static void Test43(void)
+{
+	Same(Reload(910, List(NewObj("rock", Misc, NULL), Box("a", "sword"),
+						  Box("b", "shield"), NULL)),
+		 "rock a[sword] b[shield]", "two chests after a rock");
+	Same(Reload(911, List(Box("a", "sword"), Box("b", "shield"), NULL)),
+		 "a[sword] b[shield]", "two chests, one listed first");
+}
+
+/* #44: eight chests are all saved; a chest can't go into a chest */
+static void Test44(void)
+{
+	ObjectPoint	Crate;
+
+	Same(Reload(920, List(Box("a", "1"), Box("b", "2"), Box("c", "3"),
+						  Box("d", "4"), Box("e", "5"), Box("f", "6"),
+						  Box("g", "7"), Box("h", "8"), NULL)),
+		 "a[1] b[2] c[3] d[4] e[5] f[6] g[7] h[8]", "eight chests");
+	Same(Reload(921, NewObj("a", Chest, Box("inner", "sword"))),
+		 "a[inner[]]", "a chest inside a chest, from old data");
+
+	Crate = Box("crate,oak *", NULL);
+	Crate->Next = Room[User->RmCode].RmObjectTail;
+	Room[User->RmCode].RmObjectTail = Crate;
+	Carry(Box("box,small *", NULL));
+	Capture();
+	Say("put box crate");
+	Check(strstr(Captured(), "A chest won't fit inside another chest!") != NULL,
+		  "PUT refuses a chest into a chest");
+	Check(!Crate->Object.Chest.ObjectTail && User->ObjectTail
+		  && !strcmp(User->ObjectTail->Name, "box,small *"),
+		  "the box is still carried");
+}
+
+/* #56: an empty chest before a full one doesn't take its contents */
+static void Test56(void)
+{
+	Same(Reload(930, List(NewObj("sign", Misc, NULL), Box("a", NULL),
+						  Box("b", "sword"), NULL)),
+		 "sign a[] b[sword]", "an empty chest, then a full one");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -365,7 +503,8 @@ int main(int argc, char **argv)
 	static const struct { const char *Name; void (*Fn)(void); } Tests[] =
 	{
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
-		{"26", Test26}, {"82", Test82}, {"88", Test88},
+		{"26", Test26}, {"82", Test82}, {"88", Test88}, {"42", Test42},
+		{"43", Test43}, {"44", Test44}, {"56", Test56},
 	};
 	int		I;
 

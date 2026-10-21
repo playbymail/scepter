@@ -557,7 +557,7 @@ GAME = None
 
 
 # DM-only and bad-data tests, run by tools/dmtest.c
-DMTESTS = ["20", "23", "22", "24", "26", "82", "88"]
+DMTESTS = ["20", "23", "22", "24", "26", "82", "88", "42", "43", "44", "56"]
 
 
 def free_port():
