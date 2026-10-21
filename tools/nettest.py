@@ -282,6 +282,7 @@ def main():
 
     with tempfile.TemporaryDirectory() as tmp:
         game = os.path.join(tmp, "game")
+        os.mkdir(game)  # mkgame never creates it
         subprocess.run([mkgame, world, game], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         PORT = free_port()

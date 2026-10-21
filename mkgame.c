@@ -1,17 +1,20 @@
 /*
  * mkgame -- compile a text world into the data files for a new game.
  *
- *	mkgame [-f] WORLD GAMEDIR
+ *	mkgame WORLD GAMEDIR
  *
- * WORLD is a world file (see docs/world-format.md).  GAMEDIR is created
- * with the dat/ and ram/ files scepterd reads; run the server with
+ * WORLD is a world file (see docs/world-format.md).  GAMEDIR must be an
+ * existing, empty directory; mkgame writes the game database (gamedb.c)
+ * and the data files scepterd reads into it, and never creates or deletes
+ * a directory or a file that was there before.  Run the server with
  * "scepterd GAMEDIR".  The world file itself is never written, so one
- * world can seed any number of games.  -f overwrites an existing game.
+ * world can seed any number of games.
  *
  * Records are written with the engine's own structures (scepter.h), so
  * mkgame must be built from the same headers as scepterd.
  */
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <stdarg.h>
 #include <sys/stat.h>
@@ -48,7 +51,7 @@ typedef struct
 	ONode	*Objs[SavedItems + 1];
 	MNode	*Mons[SavedItems + 1];
 
-	/* special-room settings, written to dat/special (special.c) */
+	/* special-room settings, written to special (special.c) */
 	int		Role, RoleLine;
 	char	*Greeting;
 	int		NStock, Stock[20], StockLine;
@@ -1335,21 +1338,21 @@ static void WriteGame(void)
 		if (Rooms[i].Defined)
 			Dungeon[i] = Rooms[i].Rm;
 
-	WriteBlob("ram/edungeon.new", DDungeon, Dungeon, NumSegsInit * 10);
-	WriteBlob("ram/dbobj.new", DObjDB, DBObj, DBSize);
-	WriteBlob("ram/dbmon.new", DMonDB, DBMon, DBSize);
-	WriteBlob("ram/eperson.new", DPerson, NULL, 0);
+	WriteBlob("edungeon", DDungeon, Dungeon, NumSegsInit * 10);
+	WriteBlob("dbobj", DObjDB, DBObj, DBSize);
+	WriteBlob("dbmon", DMonDB, DBMon, DBSize);
+	WriteBlob("eperson", DPerson, NULL, 0);
 
-	/* the editor updates both the ram/ and dat/ copies of these */
-	WriteBlob("ram/dscrpt", DDesc, Desc, MaxDescRec + 1);
-	WriteBlob("dat/dscrpt", DDesc, Desc, MaxDescRec + 1);
-	WriteBlob("ram/mlist.new", DMList, MTmpl, RanMonLen + 1);
-	WriteBlob("dat/mlist.new", DMList, MTmpl, RanMonLen + 1);
-	WriteBlob("ram/olist.new", DOList, OTmpl, RanObjLen + 1);
-	WriteBlob("dat/olist.new", DOList, OTmpl, RanObjLen + 1);
+	/* the editor updates both copies of these; .hd is the second */
+	WriteBlob("dscrpt", DDesc, Desc, MaxDescRec + 1);
+	WriteBlob("dscrpt.hd", DDesc, Desc, MaxDescRec + 1);
+	WriteBlob("mlist", DMList, MTmpl, RanMonLen + 1);
+	WriteBlob("mlist.hd", DMList, MTmpl, RanMonLen + 1);
+	WriteBlob("olist", DOList, OTmpl, RanObjLen + 1);
+	WriteBlob("olist.hd", DOList, OTmpl, RanObjLen + 1);
 
 	/* special rooms, read by LoadSpecial() (special.c) */
-	fp = Create("dat/special");
+	fp = Create("special");
 	fprintf(fp, "# special rooms for world %s, written by mkgame\n",
 			*WorldName ? WorldName : FileName);
 	fprintf(fp, "start %d\nrevive %d\njail %d\n", StartRm, ReviveRm, JailRm);
@@ -1386,10 +1389,10 @@ static void WriteGame(void)
 			fputc('\n', fp);
 		}
 	}
-	Close(fp, "dat/special");
+	Close(fp, "special");
 
 	/* same layout UpdateF() (cmd3.c) writes */
-	fp = Create("dat/efile");
+	fp = Create("efile");
 	fprintf(fp, "%s\n", WNotice);
 	for (i = 0; i < 5; i++)
 		fprintf(fp, "%s\n", WNews[i]);
@@ -1402,47 +1405,72 @@ static void WriteGame(void)
 	for (i = 1; i <= ObjListLen; i++)
 		for (j = 0; j < 8; j++)
 			fprintf(fp, "%d%c", Tre[i][j], j == 7 ? '\n' : ' ');
-	Close(fp, "dat/efile");
+	Close(fp, "efile");
 }
 
-static void MakeDir(const char *Sub)
+static void DBError(const char *Msg)
 {
-	char	Path[1100];
+	fprintf(stderr, "mkgame: %s\n", Msg);
+}
 
-	char	*p;
+/*
+ * GAMEDIR must exist, be a directory and hold nothing at all, hidden files
+ * included, so a new game never mixes with an old one.  It is never
+ * created here (#147).
+ */
+static int EmptyDir(const char *Dir)
+{
+	struct stat		st;
+	struct dirent	*e;
+	DIR				*d;
+	int				N = 0;
 
-	snprintf(Path, sizeof(Path), "%s%s%s", GameDir, *Sub ? "/" : "", Sub);
-	for (p = Path + 1; *p; p++)		/* create parents, like mkdir -p */
-		if (*p == '/')
-		{
-			*p = '\0';
-			mkdir(Path, 0755);
-			*p = '/';
-		}
-	if (mkdir(Path, 0755) && errno != EEXIST)
+	if (stat(Dir, &st))
 	{
-		fprintf(stderr, "mkgame: %s: %s\n", Path, strerror(errno));
-		exit(1);
+		fprintf(stderr, "mkgame: %s: %s; create the game directory first\n",
+				Dir, strerror(errno));
+		return FALSE;
 	}
+	if (!S_ISDIR(st.st_mode))
+	{
+		fprintf(stderr, "mkgame: %s: not a directory\n", Dir);
+		return FALSE;
+	}
+	if (!(d = opendir(Dir)))
+	{
+		fprintf(stderr, "mkgame: %s: %s\n", Dir, strerror(errno));
+		return FALSE;
+	}
+	while ((e = readdir(d)))
+	{
+		if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, ".."))
+			continue;
+		if (N++ < 5)
+			fprintf(stderr, "%s%s", N == 1 ? "mkgame: " : ", ", e->d_name);
+	}
+	closedir(d);
+	if (N)
+	{
+		fprintf(stderr, "%s: %s is not empty; mkgame only makes a game in an"
+				" empty directory\n", N > 5 ? ", ..." : "", Dir);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 int main(int argc, char **argv)
 {
 	FILE		*fp;
-	struct stat	st;
-	int			Force = FALSE, i, NR = 0, NM = 0, NO = 0;
+	int			i, NR = 0, NM = 0, NO = 0;
 
-	if (argc > 1 && !strcmp(argv[1], "-f"))
-	{
-		Force = TRUE;
-		argc--;
-		argv++;
-	}
 	if (argc != 3)
 	{
-		fprintf(stderr, "usage: mkgame [-f] WORLD GAMEDIR\n");
+		fprintf(stderr, "usage: mkgame WORLD GAMEDIR\n");
 		return 2;
 	}
+	DBReport = DBError;
+	if (!EmptyDir(argv[2]))
+		return 1;
 
 	FileName = argv[1];
 	if (!(fp = fopen(FileName, "r")))
@@ -1467,20 +1495,11 @@ int main(int argc, char **argv)
 	}
 
 	snprintf(GameDir, sizeof(GameDir), "%s", argv[2]);
+	if (!EmptyDir(GameDir) || !DBCreate(GameDir))
 	{
-		char	Path[1100];
-
-		snprintf(Path, sizeof(Path), "%s/ram/eperson.new", GameDir);
-		if (!Force && stat(Path, &st) == 0)
-		{
-			fprintf(stderr, "mkgame: %s already holds a game (use -f to"
-					" overwrite it)\n", GameDir);
-			return 1;
-		}
+		fprintf(stderr, "mkgame: no game written\n");
+		return 1;
 	}
-	MakeDir("");
-	MakeDir("dat");
-	MakeDir("ram");
 
 	BuildDB();
 	WriteGame();

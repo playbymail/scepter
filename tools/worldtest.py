@@ -33,7 +33,8 @@ def mkgame(extra):
     world = os.path.join(TMP, "test.world")
     with open(WORLD) as f, open(world, "w") as out:
         out.write(f.read() + "\n" + extra)
-    p = subprocess.run([MKGAME, "-f", world, os.path.join(TMP, "game")],
+    game = tempfile.mkdtemp(dir=TMP)  # a new, empty game directory each time
+    p = subprocess.run([MKGAME, world, game],
                        capture_output=True, text=True, timeout=60)
     return p.returncode, p.stderr
 

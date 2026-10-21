@@ -21,6 +21,7 @@ SCEPTERD=$(cd "$(dirname "$SCEPTERD")" && pwd)/$(basename "$SCEPTERD")
 TMP=$(mktemp -d)
 trap 'kill $PID 2>/dev/null; rm -rf "$TMP"' EXIT
 
+mkdir "$TMP/game"		# mkgame never creates it
 "$MKGAME" "$WORLD" "$TMP/game" >/dev/null 2>&1 || exit 1
 PORT=$(python3 -I -c 'import socket; s = socket.socket(); s.bind(("127.0.0.1", 0)); print(s.getsockname()[1])')
 "$SCEPTERD" -l 127.0.0.1:$PORT "$TMP/game" 2>"$TMP/server.log" &

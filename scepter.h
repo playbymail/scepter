@@ -541,6 +541,7 @@ extern int				CurrentRec;
 
 /* function declarations */
 #include "proto.h"
+#include "gamedb.h"
 
 /* data files */
 extern char	DBMON[];

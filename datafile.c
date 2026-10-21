@@ -35,16 +35,16 @@ DataKindType DataKind[NDataKinds] =
 
 DataFileType DataFile[NDataFiles] =
 {
-	{ "ram/edungeon.new",	DDungeon },
-	{ "ram/dbobj.new",		DObjDB },
-	{ "ram/dbmon.new",		DMonDB },
-	{ "ram/eperson.new",	DPerson },
-	{ "ram/mlist.new",		DMList },
-	{ "dat/mlist.new",		DMList },
-	{ "ram/olist.new",		DOList },
-	{ "dat/olist.new",		DOList },
-	{ "ram/dscrpt",			DDesc },
-	{ "dat/dscrpt",			DDesc },
+	{ "edungeon",	DDungeon },
+	{ "dbobj",		DObjDB },
+	{ "dbmon",		DMonDB },
+	{ "eperson",	DPerson },
+	{ "mlist",		DMList },
+	{ "mlist.hd",	DMList },
+	{ "olist",		DOList },
+	{ "olist.hd",	DOList },
+	{ "dscrpt",		DDesc },
+	{ "dscrpt.hd",	DDesc },
 };
 
 static unsigned long GetU32(const unsigned char *p)

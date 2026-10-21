@@ -5,16 +5,20 @@
 
 ## Build and make a game
 
-The build needs libxcrypt, for password hashing: `libcrypt-dev` on Ubuntu
-or Debian, `brew install libxcrypt` on macOS (see the README).
+The build needs libxcrypt, for password hashing, and SQLite, for the game
+database: `libcrypt-dev` and `libsqlite3-dev` on Ubuntu or Debian; on
+macOS, `brew install libxcrypt`, and the SDK's SQLite (see the README).
 
 ```sh
 make
+mkdir -p games/alpha
 ./mkgame var/alpha/alpha.world games/alpha
 ```
 
 `mkgame` compiles a world file (see [world-format.md](world-format.md)) into a
-game directory.  The server reads and writes the files in that directory.
+game directory, which must already exist and be empty: `mkgame` never
+creates a directory, and refuses one that holds anything, hidden files
+included.  The server reads and writes the files in that directory.
 A newer `scepterd` may need the game converted first with
 `./upgradegame games/alpha`; it says so when it refuses to start (see
 [data-files.md](data-files.md)).
@@ -83,7 +87,7 @@ memory:
 While a limit applies, `CHANGEPW` is refused too, without asking for the old
 password.
 
-Every wrong password is logged to the game's `dat/errlog`, with the address.
+Every wrong password is logged to the game's `errlog`, with the address.
 
 ## What players see
 

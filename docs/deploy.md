@@ -30,7 +30,7 @@ release (26.04, x86-64), so the binaries link against the same glibc:
 mkdir -p out
 container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/out \
 	docker.io/library/ubuntu:26.04 sh -c '
-	apt-get update -qq && apt-get install -y -qq build-essential libcrypt-dev python3 >/dev/null &&
+	apt-get update -qq && apt-get install -y -qq build-essential libcrypt-dev libsqlite3-dev python3 >/dev/null &&
 	cp -r /src /w && cd /w && make clean && make && make check-net &&
 	cp scepterd mkgame upgradegame /out/'
 ```
@@ -38,6 +38,14 @@ container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/o
 `scepterd` links the system's libcrypt (libxcrypt) for password hashing.
 Ubuntu always installs its runtime, `libcrypt1`, so the droplet needs no
 extra package; the build container needs `libcrypt-dev`.
+
+`scepterd`, `mkgame` and `upgradegame` also link the system's SQLite, for
+the game database.  The droplet has the runtime, `libsqlite3-0` 3.46.1
+(checked 2026-10-21), and the build container installs the same version's
+`libsqlite3-dev`, so the binaries are built against the SQLite they run
+with.  The macOS SDK's SQLite is newer, so the container build is what
+catches a SQLite function the droplet doesn't have.  The droplet has no
+`sqlite3` command; install the `sqlite3` package to look inside a game.
 
 ## Upgrade
 
@@ -116,9 +124,9 @@ players start again, so warn them with the reset warning:
 scp var/havenford/havenford.world deploy/scepter.service tsogira:/tmp/
 ssh tsogira
 install -m 0644 /tmp/havenford.world /usr/local/share/scepter/
+install -d -m 0750 -o scepter -g scepter /var/lib/scepter/havenford
 runuser -u scepter -- /usr/local/bin/mkgame \
 	/usr/local/share/scepter/havenford.world /var/lib/scepter/havenford
-chmod 0750 /var/lib/scepter/havenford
 systemctl kill --kill-whom=main --signal=SIGUSR2 scepter    # reset warning
 sleep 120
 systemctl stop scepter
@@ -147,11 +155,12 @@ systemctl daemon-reload
 systemctl enable --now scepter
 ```
 
-`mkgame` won't overwrite an existing game unless you pass `-f`, and with
-`-f` it deletes every saved character.  Only change the world on purpose.
-
-`mkgame` creates the game directory with the default mode, 0755.  Run
-`chmod 0750` on the game directory afterwards, so only `scepter` can read it.
+`mkgame` never creates a directory: make the game directory first, empty,
+with `install -d -m 0750 -o scepter -g scepter`, so only `scepter` can read
+it.  `mkgame` refuses a directory that holds anything, so it never
+overwrites or deletes a game; to replace one, move the old directory
+aside.  (Until #147 `mkgame` made the directory itself and took `-f`; the
+first install above used that.)
 
 ## Web site
 

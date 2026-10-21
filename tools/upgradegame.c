@@ -87,45 +87,40 @@ static void CopyFile(const char *From, const char *To, const struct stat *st)
 		;	/* not root: the copy is ours, which is fine */
 }
 
-/* Copy GAMEDIR to GAMEDIR.backup-TIME, one directory level deep (dat/, ram/). */
+/*
+ * Copy the files in GAMEDIR to a new directory GAMEDIR.backup-TIME.  This
+ * still makes a directory; #153 replaces it with a backup of the database
+ * to a file in GAMEDIR (DBBackup).
+ */
 static void Backup(char *Dest, size_t Len)
 {
-	time_t		t = time(NULL);
-	char		Stamp[32];
-	const char	*Sub[] = { "", "/dat", "/ram" };
-	int			i;
+	time_t			t = time(NULL);
+	char			Stamp[32];
+	struct stat		st;
+	DIR				*d;
+	struct dirent	*e;
 
 	strftime(Stamp, sizeof Stamp, "%Y%m%d-%H%M%S", localtime(&t));
 	snprintf(Dest, Len, "%s.backup-%s", Game, Stamp);
 
-	for (i = 0; i < 3; i++)
+	if (stat(Game, &st))
+		Fail("%s: cannot read", Game);
+	if (mkdir(Dest, st.st_mode & 07777))
+		Fail("%s: cannot create the backup directory", Dest);
+	if (chown(Dest, st.st_uid, st.st_gid))
+		;
+	if (!(d = opendir(Game)))
+		Fail("%s: cannot list", Game);
+	while ((e = readdir(d)))
 	{
-		char			From[1100], To[1100];
-		struct stat		st;
-		DIR				*d;
-		struct dirent	*e;
+		char	F[1400], T[1400];
 
-		snprintf(From, sizeof From, "%s%s", Game, Sub[i]);
-		snprintf(To, sizeof To, "%s%s", Dest, Sub[i]);
-		if (stat(From, &st))
-			continue;
-		if (mkdir(To, st.st_mode & 07777))
-			Fail("%s: cannot create the backup directory", To);
-		if (chown(To, st.st_uid, st.st_gid))
-			;
-		if (!(d = opendir(From)))
-			Fail("%s: cannot list", From);
-		while ((e = readdir(d)))
-		{
-			char	F[1400], T[1400];
-
-			snprintf(F, sizeof F, "%s/%s", From, e->d_name);
-			snprintf(T, sizeof T, "%s/%s", To, e->d_name);
-			if (!stat(F, &st) && S_ISREG(st.st_mode))
-				CopyFile(F, T, &st);
-		}
-		closedir(d);
+		snprintf(F, sizeof F, "%s/%s", Game, e->d_name);
+		snprintf(T, sizeof T, "%s/%s", Dest, e->d_name);
+		if (!stat(F, &st) && S_ISREG(st.st_mode))
+			CopyFile(F, T, &st);
 	}
+	closedir(d);
 }
 
 /* Version 1 -> 2: give a player record a locked PWHash. */
