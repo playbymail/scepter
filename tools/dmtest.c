@@ -1100,6 +1100,37 @@ static void Test16(void)
 		  "template 6 is still sold");
 }
 
+/* #120: listing and offering items the OList file has no template for */
+static void Test120(void)
+{
+	MonsterPoint	Mon;
+	int				J;
+
+	/* the damaged OList of #16: store 4 sells 1 2 3 6 10 7, 10 and 7 missing */
+	fflush(OList);
+	if (ftruncate(fileno(OList), DataHeadSize + 7 * (long)sizeof(ObjectType)))
+		Abort(" dmtest: cannot truncate OList.");
+	MoveTo(User, 4);
+	Capture();
+	Say("catalog");
+	Check(strstr(Captured(), "\n 4 ") != NULL, "the catalog lists item 4");
+	Check(!strstr(Captured(), "\n 5 ") && !strstr(Captured(), "\n 6 "),
+		  "and leaves out items 5 and 6, which have no template");
+
+	/* a merchant whose every object is template 10 */
+	for (J = 0; J < 8; J++)
+		PutObjIndex(ObjListLen, J, 10);
+	Mon = NewMon("merchant", 4);
+	Mon->MParley = 1;
+	Mon->WhichObj = ObjListLen;
+	Capture();
+	Say("parley merchant");
+	Check(strstr(Captured(), "I have nothing to sell you") != NULL
+		  && !strstr(Captured(), "I will sell you"),
+		  "the merchant has nothing to sell");
+	Check(User->Entry != XParley, "and doesn't wait for an answer");
+}
+
 /* Save a 2nd-level character Name with password PassWord */
 static void Player(char *Name, char *PassWord)
 {
@@ -1121,7 +1152,7 @@ int main(int argc, char **argv)
 		{"29", Test29}, {"30", Test30}, {"32", Test32}, {"33", Test33},
 		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
-		{"103", Test103}, {"46", Test46}, {"16", Test16},
+		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121},
 	};
 	int		I;
