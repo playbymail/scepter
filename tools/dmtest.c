@@ -315,6 +315,33 @@ static void Test50(void)
 	Check(CheckPW(User->PWHash, "Swordfish"), "a master DM unlocks it");
 }
 
+/* #121: PW= takes the rest of the line, 8 to 72 characters, like CHANGEPW */
+static void Test121(void)
+{
+	char	H1[PWHashLen];
+
+	User->SSJ = User->Master = TRUE;
+	User->Entry = XEdit;
+	Say("modify player Dungeon pw=Swordfish");
+	strcpy(H1, User->PWHash);
+	Capture();
+	Say("modify player Dungeon pw=ab");
+	Check(strstr(Captured(), "Passwords must be 8 to 72 characters long.") != NULL
+		  && !strcmp(H1, User->PWHash), "a short password is refused");
+	Say("modify player Dungeon pw=correct horse battery");
+	Check(CheckPW(User->PWHash, "correct horse battery")
+		  && strstr(Captured(), "Password set.") != NULL,
+		  "a password may have spaces and be over 10 characters");
+	User->Lvl = 3;
+	Say("modify player Dungeon pw=open sesame lv=5");
+	Check(CheckPW(User->PWHash, "open sesame lv=5") && User->Lvl == 3,
+		  "parameters after PW= are part of the password");
+	User->Master = FALSE;
+	Say("modify player Dungeon pw=Swordfish lv=5");
+	Check(CheckPW(User->PWHash, "open sesame lv=5") && User->Lvl == 3,
+		  "an associate DM's PW= sets nothing, and nothing after it");
+}
+
 /* Give the character an object, as a corrupt record would leave it */
 static void Carry(ObjectType *Obj)
 {
@@ -1088,7 +1115,7 @@ int main(int argc, char **argv)
 		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
 		{"103", Test103}, {"46", Test46}, {"16", Test16},
-		{"50", Test50},
+		{"50", Test50}, {"121", Test121},
 	};
 	int		I;
 
