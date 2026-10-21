@@ -333,16 +333,13 @@ int BinaryMatch(char *Word, int Count, CmdListType NameList)
 	if (!CmpVal)
 		return Posit;
 
-	if (Posit == CmdListLen)
+	if (!SubSet(Word, NameList[Posit]) && ++Posit > Count)
 		return 0;
-
-	if (!SubSet(Word, NameList[Posit]))
-		Posit++;
 
 	if (!SubSet(Word, NameList[Posit]))
 		return 0;
 
-	if (Posit <= CmdListLen && SubSet(Word, NameList[Posit + 1]))
+	if (Posit < Count && SubSet(Word, NameList[Posit + 1]))
 	{
 		sprintf(B1, "0%s is not unique.", Word);
 		QOut(Term, B1);

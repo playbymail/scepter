@@ -232,7 +232,7 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 				if (Mon)
 				{
 					Mon->Hits = Min(Mon->MaxHits,
-									Max(1, (12 - Rnd(3)) * Mon->MaxHits));
+									Max(1, (12 - Rnd(3)) * Mon->MaxHits / 10));
 					Mon->Lvl = Min(25, Max(1, Mon->Lvl + 2 - Rnd(3)));
 					InsertMonster(Mon, Rm);
 					NonDMs = 0;

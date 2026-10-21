@@ -348,6 +348,7 @@ struct tUserType
 	Alfa		LastCmd;
 	Alfa		WData;
 	long		Data;
+	ObjectPoint	Pending;		/* item offered to REPAIR or PAWN (#33) */
 	int			ParleyObj;		/* OList index offered by PARLEY (XParley) */
 	char		NewPWHash[PWHashLen];	/* CHANGEPW: the new password, to confirm */
 };

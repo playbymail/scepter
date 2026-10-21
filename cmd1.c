@@ -81,6 +81,8 @@ void StopUsing(UserPoint Usr, ObjectPoint Object)
 	if (!Object)
 		return;
 
+	if (Object == Usr->Pending)
+		Usr->Pending = NULL;
 	if (Object == Usr->USWeap)
 		Usr->USWeap = NULL;
 	else
@@ -116,8 +118,8 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 
 	if (*Word2)
 	{
-		if (!(Box = FindObject(Word2, Num, Room[Rm].RmObjectTail)))
-			if ((Box = FindObject(Word2, Num, User->ObjectTail)) != NULL)
+		if (!(Box = FindObject(Word2, Num2, Room[Rm].RmObjectTail)))
+			if ((Box = FindObject(Word2, Num2, User->ObjectTail)) != NULL)
 				Held = TRUE;
 
 		if (!Box)
@@ -264,14 +266,14 @@ void DropObject(char *Word, int Num, RmCodeType Rm)
 	GetWord(Word2, &Num2);
 	if (*Word2)
 	{
-		Held = TRUE;
+		Held = FALSE;
 		Where = NoWhere;
-		if (!(Box = FindObject(Word2, Num2, Room[Rm].RmObjectTail))
-		&&	!(Box = FindObject(Word2, Num, User->ObjectTail)))
-		{
-			Held = FALSE;
+		if (!(Box = FindObject(Word2, Num2, Room[Rm].RmObjectTail)))
+			if ((Box = FindObject(Word2, Num2, User->ObjectTail)) != NULL)
+				Held = TRUE;
+
+		if (!Box)
 			QOut(Term, "0That container isn't here!");
-		}
 		else
 		if (Box->ObClass != Chest)
 			QOut(Term, "0It won't fit in that!");
@@ -877,7 +879,7 @@ void HitShArmor(UserPoint Plyr, int *Damage)
 		Temp->Object.Armor.ArmHits = Max(0, Temp->Object.Armor.ArmHits - 1);
 		if (!Temp->Object.Armor.ArmHits)
 		{
-			QOut(Term, "0Your armor falls apart!");
+			QOut(Plyr->Trm, "0Your armor falls apart!");
 			DeleteObject(Temp, &Plyr->ObjectTail);
 			Plyr->Weight -= Temp->Weight;
 			StopUsing(Plyr, Temp);
@@ -891,7 +893,7 @@ void HitShArmor(UserPoint Plyr, int *Damage)
 		Temp->Object.Shield.ShHits = Max(0, Temp->Object.Shield.ShHits - 1);
 		if (!Temp->Object.Shield.ShHits)
 		{
-			QOut(Term, "0Your shield falls apart!");
+			QOut(Plyr->Trm, "0Your shield falls apart!");
 			DeleteObject(Temp, &Plyr->ObjectTail);
 			Plyr->Weight -= Temp->Weight;
 			StopUsing(Plyr, Temp);

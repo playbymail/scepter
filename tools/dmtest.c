@@ -1,14 +1,17 @@
 /*
  * dmtest -- regression tests for security bugs that only a DM or bad data
- * can reach, and for saving rooms, run against the real engine code.
+ * can reach, for saving rooms, and for play that needs two characters or
+ * a fixed outcome, run against the real engine code.
  *
  *	dmtest GAMEDIR TEST
  *	dmtest GAMEDIR legacy NAME PASSWORD
  *	dmtest - layout
  *
  * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88; for the command
- * parser 47 or 48; 17 for saving EFILE; or for saving rooms 42, 43, 44, 56
- * or 64, which save room objects and monsters and
+ * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
+ * 33 or 38, which may use a second character on terminal 2; or for saving
+ * rooms 42,
+ * 43, 44, 56 or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
@@ -578,6 +581,29 @@ static void Test47(void)
 		  "leading zeros don't saturate");
 }
 
+/* The command table entry Abbrev matches: 0 none, -1 not unique */
+static int Match(const char *Abbrev)
+{
+	Alfa	Word;
+
+	snprintf(Word, sizeof(Word), "%s", Abbrev);
+	return BinaryMatch(Word, CmdListLen, CmdList);
+}
+
+/* #45: abbreviations of the last command, YELL, match it */
+static void Test45(void)
+{
+	Check(!strcmp(CmdList[CmdListLen], "YELL"), "YELL is the last command");
+	Check(Match("Y") == CmdListLen && Match("YE") == CmdListLen
+		  && Match("YEL") == CmdListLen && Match("YELL") == CmdListLen,
+		  "Y, YE, YEL and YELL are YELL");
+	Check(Match("YELLS") == 0 && Match("Z") == 0, "YELLS and Z are no command");
+	Check(Match("WI") > 0 && !strcmp(CmdList[Match("WI")], "WIELD"), "WI is WIELD");
+	Check(Match("T") == -1, "T is not unique");
+	Check(Match("*A") > 0 && !strcmp(CmdList[Match("*A")], "*ABORT"),
+		  "*A, at the start of the table, is *ABORT");
+}
+
 /* #48: an empty message is an empty line */
 static void Test48(void)
 {
@@ -606,6 +632,227 @@ static void Test17(void)
 	Check(access(WORKDIR "/dat/efile.tmp", F_OK), "no efile.tmp is left behind");
 }
 
+/* Act as Plyr: commands come from Plyr's terminal */
+static void As(UserPoint Plyr)
+{
+	User = Plyr;
+	Pid = Term = Plyr->Trm;
+}
+
+/*
+ * Log in another fighter Name on terminal Trm.  Only terminal 1's output
+ * is captured, so a character whose messages are checked must be the DM.
+ */
+static UserPoint Another(const char *Name, int Trm)
+{
+	UserPoint	Me = User, Plyr;
+
+	Pid = Term = Trm;
+	User = Plyr = Login();
+	Say(Name);
+	Say("fighter");
+	Say("15, 7, 9, 10, 9");
+	Say("sharp");
+	Say("secretpw");
+	Say("male");
+	As(Me);
+	if (Plyr->Entry != XCmd)
+		Abort(" dmtest: could not create a second character.");
+	return Plyr;
+}
+
+static void MoveTo(UserPoint Plyr, int Rm)
+{
+	DeletePlayer(Plyr, Plyr->RmCode);
+	PlacePlayer(Plyr, Rm);
+}
+
+/* An object Name of Class that Plyr carries */
+static ObjectPoint Carried(UserPoint Plyr, const char *Name, ObClassType Class)
+{
+	ObjectPoint	Obj = NewObj(Name, Class, NULL);
+
+	Obj->Carry = TRUE;
+	Obj->Next = Plyr->ObjectTail;
+	Plyr->ObjectTail = Obj;
+	return Obj;
+}
+
+/* The first object called Name that Plyr carries (FindObject changes Name) */
+static ObjectPoint Holds(UserPoint Plyr, const char *Name)
+{
+	Alfa	Word;
+
+	snprintf(Word, sizeof(Word), "%s", Name);
+	return FindObject(Word, 0, Plyr->ObjectTail);
+}
+
+/* #27: OFFER goes ahead only when the other player has what is asked for */
+static void Test27(void)
+{
+	UserPoint	Dm = User, Bob = Another("Bob", 2);
+	ObjectPoint	Sword = Carried(User, "sword", Weap);
+	ObjectPoint	Shld = Carried(Bob, "shield", Shield);
+
+	MoveTo(Bob, 1);						/* the DM's room */
+	MoveTo(User, 1);
+	Capture();
+	Say("offer bob sword for helmet");
+	Check(strstr(Captured(), "Player doesn't have that!") != NULL,
+		  "an offer for something Bob doesn't have is refused");
+	Say("offer bob sword for shield");
+	Check(strstr(Captured(), "Offer sent to Bob.") != NULL,
+		  "an offer for Bob's shield is sent");
+	As(Bob);
+	Say("accept");
+	As(Dm);
+	Check(Holds(Bob, "sword") == Sword && Holds(User, "shield") == Shld,
+		  "Bob accepts: they swap the sword and the shield");
+}
+
+/* #28: FEINT and CIRCLE delay the victim by 10 and 8 seconds */
+static void Test28(void)
+{
+	UserPoint	Victim = Another("Victim", 2);
+
+	MoveTo(User, 8);					/* not a safe haven */
+	MoveTo(Victim, 8);
+	User->Dex = 50;						/* the feint always works */
+	Say("feint victim");
+	Check(Victim->LastAtk == RealTime + 10, "FEINT delays the victim 10 seconds");
+	User->LastAtk = 0;
+	Say("circle victim");
+	Check(Victim->LastAtk == RealTime + 8, "CIRCLE delays the victim 8 seconds");
+}
+
+/* #29: stealing cash isn't noticed just because a ring slot is empty */
+static void Test29(void)
+{
+	UserPoint	Victim = User, Robber = Another("Robber", 2);
+	int			I;
+
+	MoveTo(Victim, 8);
+	MoveTo(Robber, 8);
+	Victim->Money = 1000;
+	Robber->Class = Thief;
+	Robber->Lvl = 20;					/* StealChance well over 100 */
+	Robber->Dex = 50;
+	Capture();
+	As(Robber);
+	for (I = 0; I < 20; I++)
+	{
+		Robber->LastAtk = 0;
+		Say("steal 1 dungeon");
+	}
+	As(Victim);
+	Check(Victim->Money == 980, "the thief steals 20 shillings");
+	Check(!strstr(Captured(), "steals"), "the victim notices none of it");
+}
+
+/* #30, #31: PUT into a chest on the ground puts the weight down; GET and
+ * PUT find chest#2 */
+static void Test30(void)
+{
+	ObjectPoint	Gem = Carried(User, "gem", Misc), Chest2 = Box("chest", NULL);
+	int			Weight = User->Weight;
+	RmCodeType	Rm = User->RmCode;
+
+	Gem->Weight = 10;
+	User->Weight += 10;
+	Chest2->Next = Room[Rm].RmObjectTail;
+	Room[Rm].RmObjectTail = Box("chest", NULL);
+	Room[Rm].RmObjectTail->Next = Chest2;
+
+	Say("put gem chest");
+	Check(Room[Rm].RmObjectTail->Object.Chest.ObjectTail == Gem,
+		  "PUT gem chest puts it in the first chest");
+	Check(User->Weight == Weight, "the gem's weight is put down");
+	Say("get gem chest");
+	Check(Holds(User, "gem") == Gem && User->Weight == Weight + 10,
+		  "GET gem chest takes it back, weight and all");
+
+	Say("put gem chest#2");
+	Check(Chest2->Object.Chest.ObjectTail == Gem,
+		  "PUT gem chest#2 puts it in the second chest");
+	Say("get gem chest#2");
+	Check(Holds(User, "gem") == Gem, "GET gem chest#2 takes it back");
+	Check(User->Weight == Weight + 10, "the gem's weight is carried once");
+}
+
+/* #32: the victim, not the attacker, hears that their armor falls apart */
+static void Test32(void)
+{
+	UserPoint	Victim = User, Attacker = Another("Attacker", 2);
+	ObjectPoint	Arm = Carried(Victim, "armor", Armor);
+
+	MoveTo(Victim, 8);
+	MoveTo(Attacker, 8);
+	Arm->Object.Armor.ArmHits = 1;
+	Victim->USArm = Arm;
+	Capture();
+	As(Attacker);
+	Attacker->DefPlayer = Victim;
+	HitPlayer(1);
+	As(Victim);
+	Check(!Victim->USArm, "the armor falls apart");
+	Check(strstr(Captured(), "Your armor falls apart!") != NULL,
+		  "the victim is told");
+}
+
+/* #33: REPAIR and PAWN offers for the armor don't unwield the weapon */
+static void Test33(void)
+{
+	ObjectPoint	Sword = Carried(User, "sword", Weap);
+
+	Carried(User, "armor", Armor)->Price = 30;
+	Carried(User, "shield", Shield)->Price = 10;
+	User->USWeap = Sword;
+	User->Money = 1000;
+	MoveTo(User, 23);					/* the smithy */
+	Say("repair armor");
+	Check(User->Entry == XRepair && User->USWeap == Sword,
+		  "the smith's offer leaves the sword wielded");
+	Say("no");
+	Check(User->USWeap == Sword, "declining leaves the sword wielded");
+	Say("repair armor");
+	Say("yes");
+	Check(User->USWeap == Sword, "repairing the armor leaves the sword wielded");
+
+	MoveTo(User, 22);					/* the pawnshop */
+	Say("pawn shield");
+	Check(User->Entry == XSell && User->USWeap == Sword,
+		  "the pawnbroker's offer leaves the sword wielded");
+	Say("no");
+	Check(User->USWeap == Sword, "declining leaves the sword wielded");
+	Say("pawn armor");
+	Say("yes");
+	Check(User->USWeap == Sword && !Holds(User, "armor"),
+		  "pawning the armor leaves the sword wielded");
+	Say("pawn sword");
+	Say("yes");
+	Check(!User->USWeap && !Holds(User, "sword"),
+		  "the pawned sword is gone and no longer wielded");
+}
+
+/* #38: summoned monsters start at 90-100% of their hits, not always 100% */
+static void Test38(void)
+{
+	MonsterPoint	Mon;
+	int				I, Hurt = 0, Bad = 0;
+
+	MoveTo(User, 8);					/* encounter table 1 */
+	for (I = 0; I < 60; I++)
+		SpellMon(SPELL_SUMMON, 10, 10, User, NULL, NULL, "");
+	for (Mon = Room[User->RmCode].RmMonsterTail; Mon; Mon = Mon->Next)
+		if (Mon->Hits < Mon->MaxHits)
+			Hurt++;
+		else
+		if (Mon->Hits > Mon->MaxHits || Mon->Hits < Mon->MaxHits * 9 / 10)
+			Bad++;
+	Check(Hurt > 0, "some summoned monsters start below full hits");
+	Check(!Bad, "none start outside 90-100%");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -626,7 +873,9 @@ int main(int argc, char **argv)
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
 		{"26", Test26}, {"82", Test82}, {"88", Test88}, {"42", Test42},
 		{"43", Test43}, {"44", Test44}, {"56", Test56}, {"64", Test64},
-		{"47", Test47}, {"48", Test48}, {"17", Test17},
+		{"47", Test47}, {"48", Test48}, {"17", Test17}, {"28", Test28},
+		{"29", Test29}, {"30", Test30}, {"32", Test32}, {"33", Test33},
+		{"38", Test38}, {"27", Test27}, {"45", Test45},
 	};
 	int		I;
 

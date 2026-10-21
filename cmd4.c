@@ -187,7 +187,7 @@ void Pawn(char *Word, int Num)
 		QOut(Term, "0Is this to your satisfaction?\"");
 		User->Entry = XSell;
 		User->Data = Amount;
-		User->USWeap = Object;
+		User->Pending = Object;
 	}
 	else
 		QOut(Term, "0You don't own that item.");
