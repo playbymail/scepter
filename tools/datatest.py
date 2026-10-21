@@ -100,6 +100,19 @@ def clear_padding(path):
         fp.write(data)
 
 
+def lock(path):
+    """Give each player record the locked hash that upgradegame writes (#50)."""
+    lay = layout()
+    p = os.path.join(path, "ram/eperson.new")
+    with open(p, "rb") as fp:
+        data = bytearray(fp.read())
+    at = lay["pwhash"]
+    for i in range(HEAD, len(data), lay["record"]):
+        data[i + at:i + at + lay["pwhashlen"]] = b"*".ljust(lay["pwhashlen"], b"\0")
+    with open(p, "wb") as fp:
+        fp.write(data)
+
+
 def downgrade(path, names=FILES):
     """Turn version 2 files into version 1: player records lose PWHash."""
     lay = layout()
@@ -242,10 +255,11 @@ def test_upgrade(fresh):
 def test_upgrade1():
     # a version 1 game with a saved character
     g = game("v1")
-    rc, _, err = run("dmtest", g, "legacy", "Oldtimer", "ac")
-    check(rc == 0, "dmtest saves an old-style character")
+    rc, _, err = run("dmtest", g, "player", "Oldtimer", "ac secret")
+    check(rc == 0, "dmtest saves a character")
     want = snapshot(g)
     clear_padding(want)
+    lock(want)
     downgrade(g)
     ok, err = server_refuses(g, "format version 1", "upgradegame")
     check(ok and all(f in err for f in FILES),
@@ -256,15 +270,18 @@ def test_upgrade1():
     rc, out, err = run("upgradegame", g)
     check(rc == 0 and "now at format version %d" % VERSION in out,
           "upgradegame upgrades a version 1 game")
-    check(same_tree(g, want), "the character is kept, with an empty password hash")
+    check(same_tree(g, want), "the character is kept, with a locked password hash")
     ok, _ = server_ok(g)
     check(ok, "scepterd starts on the upgraded game")
+    rc, out, _ = run("scepterd", "-c", g, stdin="Oldtimer\nac secret\n")
+    check("Wrong password, sorry." in out, "the locked character refuses its old password")
 
     # the same character in a version 0 game
     g = game("v0person")
-    run("dmtest", g, "legacy", "Oldtimer", "ac")
+    run("dmtest", g, "player", "Oldtimer", "ac secret")
     want = snapshot(g)
     clear_padding(want)
+    lock(want)
     downgrade(g)
     strip(g)
     rc, out, err = run("upgradegame", g)

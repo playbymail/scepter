@@ -377,8 +377,8 @@ static void ModPlayer(UserPoint Player, int OnLine)
 			case 22:
 				if (User->Master)
 				{
-					if (*Word && SetPW(Player->PWHash, Word))
-						Player->PW = 0;
+					if (*Word)
+						SetPW(Player->PWHash, Word);
 				}
 				else
 					QOut(Term, "0Only master DMs may alter passwords.");

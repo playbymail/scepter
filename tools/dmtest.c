@@ -4,10 +4,10 @@
  * a fixed outcome, run against the real engine code.
  *
  *	dmtest GAMEDIR TEST
- *	dmtest GAMEDIR legacy NAME PASSWORD
+ *	dmtest GAMEDIR player NAME PASSWORD
  *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88; for the command
+ * TEST is an issue number: 20, 23, 22, 24, 26, 82, 50 or 88; for the command
  * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
  * 33 or 38, which may use a second character on terminal 2; for the DM
  * editor 21, 34, 35, 36, 37, 40 or 103; 46 for the Assoc DM line; 16 for a
@@ -22,9 +22,8 @@
  * Run it under a sanitizer, as tools/securitytest.py does, to catch the
  * memory errors themselves.
  *
- * Two helpers serve the other tests.  "legacy" saves a 2nd-level character
- * NAME whose password is in the old form, as upgradegame leaves a version 1
- * character.  "layout" prints where the password fields are in a player
+ * Two helpers serve the other tests.  "player" saves a 2nd-level character
+ * NAME with password PASSWORD, for the login tests.  "layout" prints where the password fields are in a player
  * record, so tools/datatest.py can make version 1 files.
  *
  * main.c is included so the server's own start-up code can be reused.
@@ -299,8 +298,21 @@ static void Test82(void)
 	Check(!strcmp(H1, User->PWHash), "an associate DM cannot set a password");
 	User->Master = TRUE;
 	Say("modify player Dungeon pw=Swordfish");
-	Check(CheckPW(User->PWHash, "Swordfish") && !CheckPW(User->PWHash, "SWORDFISH")
-		  && !User->PW, "a master DM sets a password, case and all");
+	Check(CheckPW(User->PWHash, "Swordfish") && !CheckPW(User->PWHash, "SWORDFISH"),
+		  "a master DM sets a password, case and all");
+}
+
+/* #50: a locked hash, as upgradegame leaves it, takes no password until a
+ * master DM sets one */
+static void Test50(void)
+{
+	Check(!CheckPW(LockedPW, "") && !CheckPW(LockedPW, "*")
+		  && !CheckPW(LockedPW, "open sesame"), "a locked hash takes no password");
+	strcpy(User->PWHash, LockedPW);
+	User->SSJ = User->Master = TRUE;
+	User->Entry = XEdit;
+	Say("modify player Dungeon pw=Swordfish");
+	Check(CheckPW(User->PWHash, "Swordfish"), "a master DM unlocks it");
 }
 
 /* Give the character an object, as a corrupt record would leave it */
@@ -1054,17 +1066,14 @@ static void Test16(void)
 		  "template 6 is still sold");
 }
 
-/* Save a 2nd-level character Name with only the old hash of PassWord */
-static void Legacy(char *Name, char *PassWord)
+/* Save a 2nd-level character Name with password PassWord */
+static void Player(char *Name, char *PassWord)
 {
 	strcpy(User->Name, Name);
 	User->Lvl = 2;
-	User->PW = Hash(PassWord);
-#ifdef PWHashLen
-	memset(User->PWHash, 0, sizeof(User->PWHash));
-#endif
+	Check(SetPW(User->PWHash, PassWord), "the password is hashed");
 	WritePlayer(User);
-	Check(PlayerOnFile(Name), "an old-style character is saved");
+	Check(PlayerOnFile(Name), "the character is saved");
 }
 
 int main(int argc, char **argv)
@@ -1079,6 +1088,7 @@ int main(int argc, char **argv)
 		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
 		{"103", Test103}, {"46", Test46}, {"16", Test16},
+		{"50", Test50},
 	};
 	int		I;
 
@@ -1091,9 +1101,9 @@ int main(int argc, char **argv)
 		return 0;
 	}
 #endif
-	if (!(argc == 3 || argc == 5 && !strcmp(argv[2], "legacy")) || chdir(argv[1]))
+	if (!(argc == 3 || argc == 5 && !strcmp(argv[2], "player")) || chdir(argv[1]))
 	{
-		fprintf(stderr, "usage: dmtest GAMEDIR TEST | GAMEDIR legacy NAME PASSWORD"
+		fprintf(stderr, "usage: dmtest GAMEDIR TEST | GAMEDIR player NAME PASSWORD"
 				" | - layout\n");
 		return 2;
 	}
@@ -1139,9 +1149,9 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (!strcmp(argv[2], "legacy"))
+	if (!strcmp(argv[2], "player"))
 	{
-		Legacy(argv[3], argv[4]);
+		Player(argv[3], argv[4]);
 		return Failures ? 1 : 0;
 	}
 	for (I = 0; I < (int)(sizeof(Tests) / sizeof(Tests[0])); I++)

@@ -296,16 +296,6 @@ UserPoint FindPid(int FPid)
 	return NULL;
 }
 
-int Hash(char *Word)
-{
-	int		Total, ILoop;
-
-	/* Capitalise while summing; Word may be a string literal. */
-	for (Total = ILoop = 0; Word[ILoop]; ILoop++)
-		Total += (char)Cap(Word[ILoop]) * (ILoop + 1);
-	return Total;
-}
-
 /* Hashing passwords, with libxcrypt's bcrypt (#82) */
 static struct crypt_data	PWData;
 
@@ -546,7 +536,7 @@ void Init(void)
 	ProtoUser.Con			= 11;
 	ProtoUser.Evil			= FALSE;
 	ProtoUser.LastAccess	= Today;
-	ProtoUser.PW			= Hash("DUMMY");
+	ProtoUser.PW			= 0;
 	ProtoUser.Money			= 200;
 	ProtoUser.Invisible		= FALSE;
 	ProtoUser.Fatigue		= 10;

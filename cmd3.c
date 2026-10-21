@@ -550,7 +550,6 @@ void EnterAgainPW(void)
 	else
 	{
 		strcpy(User->PWHash, User->NewPWHash);
-		User->PW = 0;
 		QOut(Term, "0PW change complete.");
 		QOut(Term, "0Be sure to \"SAVE\" your character to record the change.");
 	}

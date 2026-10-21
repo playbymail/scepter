@@ -11,9 +11,10 @@
  *
  *	0 -> 1	files from before headers existed get a header; the records
  *			are unchanged
- *	1 -> 2	player records gain PWHash (#82), empty, so each character
- *			logs in once more with its old password, which is then
- *			hashed with bcrypt; the other records are unchanged
+ *	1 -> 2	player records gain PWHash (#82), locked: the old password
+ *			hash is no longer accepted (#50), so no password opens the
+ *			character until a master DM sets a new one; the other
+ *			records are unchanged
  *
  * Stop the server first.  Nothing is changed unless every file can be
  * upgraded.  The whole game directory is first copied to
@@ -127,11 +128,13 @@ static void Backup(char *Dest, size_t Len)
 	}
 }
 
-/* Version 1 -> 2: give a player record an empty PWHash. */
+/* Version 1 -> 2: give a player record a locked PWHash. */
 static void Upgrade1Person(const UserFRec1 *Old, struct tUserFRec *New)
 {
 	memset(New, 0, sizeof(*New));
 	memcpy(&New->User, &Old->User, sizeof(Old->User.Saved));
+	New->User.PW = 0;
+	strcpy(New->User.PWHash, LockedPW);
 	/* the rest is laid out alike: copy it whole, padding and all */
 	memcpy(&New->NObj, &Old->NObj, sizeof(*Old) - offsetof(UserFRec1, NObj));
 }

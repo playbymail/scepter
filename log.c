@@ -243,10 +243,7 @@ void NewPW(void)
 		QOut(Term, B1);
 	}
 	else if (SetPW(User->PWHash, PassWord))
-	{
-		User->PW = 0;
 		User->Entry = XSex;
-	}
 }
 
 void EnterStats(void)
@@ -375,8 +372,7 @@ void MatchPW(void)
 {
 	const char	*Host = QHost(Term);
 	char		PassWord[MaxPWLen + 1];
-	int			Dummy, Len, Start = Loc, Wait, OK;
-	Alfa		Word;
+	int			Wait, OK;
 
 	if ((Wait = LoginWait(Host, User->Name)))
 	{
@@ -388,15 +384,8 @@ void MatchPW(void)
 		return;
 	}
 
-	/* a character not on since version 2 has only the old hash of one word */
-	GetWord(Word, &Dummy);
-	CapAlfa(Word);
-	Loc = Start;
-	Len = GetPW(PassWord);
-	if (*User->PWHash)
-		OK = CheckPW(User->PWHash, PassWord);
-	else
-		OK = Len > 0 && *Word && User->PW && Hash(Word) == User->PW;
+	GetPW(PassWord);
+	OK = CheckPW(User->PWHash, PassWord);
 
 	if (!OK)
 	{
@@ -412,18 +401,6 @@ void MatchPW(void)
 		LoginOK(Host, User->Name);
 		PlacePlayer(User, User->RmCode);
 		AnnounceLogin();
-		if (!*User->PWHash && SetPW(User->PWHash, PassWord))
-		{
-			User->PW = 0;
-			QOut(Term, "0Passwords now tell capital letters from small ones.  Yours is");
-			QOut(Term, "0now exactly what you typed just now.");
-			if (Len < MinPWLen)
-			{
-				sprintf(B1, "0Please use CHANGEPW to choose one of at least %d characters.",
-						MinPWLen);
-				QOut(Term, B1);
-			}
-		}
 		User->Entry = XCmd;
 		Loc = LenBuf + 1;
 	}

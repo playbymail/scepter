@@ -61,5 +61,5 @@ let many different passwords open the same character.  The port instead:
 
 The player record gained a field for the hash, so the data format is now
 version 2.  `upgradegame` converts older games, keeping a backup; nothing
-converts a game back.  A character saved before the change logs in once
-more with its old password, which is then hashed exactly as typed.
+converts a game back.  The old hash is no longer accepted (#50): a character
+saved before the change is locked until a master DM sets a new password.
