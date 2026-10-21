@@ -1,5 +1,7 @@
-# Havenford: original Scepter testing world, source format docs/world-format.md
-# No encounters inside the city or on the approach to the warning post.
+# Scepter world "Havenford".
+# Format: docs/world-format.md.  Keep var/*/world.json in sync with
+# tools/worldjson.py (make check-worlds).
+
 [world]
 name = Havenford
 start-room = 1
@@ -12,6 +14,8 @@ news-2 = Roads north of the city remain safe through the frontier post.
 news-3 = Beyond the warning sign, beasts wander in the meadow.
 news-4 = The northwest Aether Observatory welcomes apprentice magic-users.
 news-5 = The southwest keep offers locks, traps and ascending thief challenges.
+
+# ---- descriptions: RECORD:LINE is referenced by desc = ----
 
 [description 1]
 1 = 1/You are in Havenford Refuge. The square and guild signs are east./
@@ -82,8 +86,6 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 2 = 1/A scarred bandit captain wears a faded blue cloak./
 3 = 1/A carved wooden sign points south to the safety of Havenford./
 
-
-# The Graveward: a safe western approach, then increasingly dangerous crypts.
 [description 8]
 1 = 1/You are in the Chapel Cloister. Graveward signs point west./
 2 = 1/You are on the west pilgrim road. Quiet fields surround the path./
@@ -114,13 +116,85 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 3 = 1/A polished shard of pale moonstone, cool in the palm./
 4 = 1/A silver reliquary bearing a faded protective blessing./
 
+[description 11]
+1 = 1/You are on the south-west lane. A ruined keep rises beyond the fields./
+2 = 1/You are on the old causeway. The keep stands to the west./
+3 = 1/You are at the keep's warning board. The gate is west./
+4 = 1/You stand in Lockspire courtyard. Entry to the keep lies west./
+5 = 1/You are in the ground-floor entry. Practice corridors lead west./
+6 = 1/You are in the novice lock hall. Two doors lead to practice chambers./
+7 = 1/You are in the brass-lock chamber. A low chest rests on a bench./
+8 = 1/You are in the needle-lock chamber. A chest bears a tiny keyhole./
+9 = 1/You are at the first stairwell. Steps climb to the second floor./
+10 = 1/You are on the second landing. A corridor runs west./
+
+[description 12]
+1 = 1/You are in the warded corridor. Faint holes mark the stonework./
+2 = 1/You are in the old records room. Shelves surround a heavy chest./
+3 = 1/You are in the armory vault. A steel-bound strongbox waits here./
+4 = 1/You are at the second stairwell. Steps climb to the third floor./
+5 = 1/You are on the third landing. Fine locks adorn two dark doors./
+6 = 1/You are in the master lock hall. Dust outlines hidden trigger plates./
+7 = 1/You are in the jewel chamber. A carved chest stands under a lamp./
+8 = 1/You are in the artificer's treasury. Complex mechanisms hum softly./
+9 = 1/You are at the roof stair. The final flight rises above./
+10 = 1/You are on the battlement. The city and Graveward lie below./
+
+[description 13]
+1 = 1/You are in the crowning vault. A final chest awaits a master thief./
+2 = 1/THIEVES: This keep has locks and traps. Every staircase stays open./
+3 = 1/Begin with the first floor. Locks and trap risk rise as you climb./
+4 = 1/A battered practice chest with a simple latch and blunt trap pin./
+5 = 1/A narrow strongbox with carefully fitted brass mechanisms./
+6 = 1/A reinforced coffer with hidden spring needles./
+7 = 1/A steel vault chest engraved with winding geometric lines./
+8 = 1/A jewel casket with a subtle pressure-release catch./
+9 = 1/A masterwork clockwork chest with intricate internal tumblers./
+10 = 1/A crown-shaped iron chest surrounded by concealed trigger slots./
+
+[description 14]
+1 = 1/You are on Scholar's Walk. A sign points west to the observatory./
+2 = 1/You are in the arcane garden. Quiet lanterns float above the path./
+3 = 1/You are at the novice colonnade. Lecture rooms stand east and south./
+4 = 1/You are on the crystal causeway. The observatory looms west./
+5 = 1/You are at the Aether Warning Gate. Danger lies north./
+6 = 1/You are in the spark meadow. Weak magical motes flicker around you./
+7 = 1/You are in the mirror thicket. Strange lights dart through the trees./
+8 = 1/You stand before a shattered arch. Arcane echoes pulse beyond it./
+9 = 1/You are in the broken observatory. Stairs spiral upward./
+10 = 1/You are in the stargazer's loft. A broken telescope points skyward./
+
+[description 15]
+1 = 1/You are in the upper prism hall. Light scatters from cracked glass./
+2 = 1/You are in the high aether chamber. Reality seems thin here./
+3 = 1/You are in the spell library. Manuals teach safe magical practice./
+4 = 1/You are in the darkened study. A lantern sits beside the door./
+5 = 1/You are in the null-magic room. Enchantments fall silent here./
+6 = 1/You are in the apprentice workshop. Test equipment covers the tables./
+7 = 1/A small flickering mote drifts just above the ground./
+8 = 1/A translucent sprite hums around a cluster of flowers./
+9 = 1/A crackling spark elemental glows like a burning ember./
+10 = 1/A shimmering mirror shade distorts the air around it./
+
+[description 16]
+1 = 1/A prismatic guardian stands between shards of colored glass./
+2 = 1/A wild aether warden crackles with unstable magic./
+3 = 1/DANGER AHEAD! Arcane creatures roam north. Return south to train./
+4 = 1/A note reads: Dark rooms test light. Magic will fail in the null room./
+5 = 1/An old apprentice's scroll, neatly marked with the heal spell./
+6 = 1/A polished charm bearing the sigil of the observatory./
+7 = 1/A blue crystal that pulses with stored energy./
+8 = 1/A glass prism containing a faint sliver of starlight./
+
+# ---- object templates (OList) ----
+
 [object 1]
 name = dagger,*
 article = a
 kind = weapon
+weight = 2
 price = 12
 carry = yes
-weight = 2
 min-damage = 1
 max-damage = 4
 strikes = 100
@@ -130,9 +204,9 @@ skill = thrust
 name = sword,practice *
 article = a
 kind = weapon
+weight = 4
 price = 20
 carry = yes
-weight = 4
 min-damage = 1
 max-damage = 5
 strikes = 110
@@ -142,9 +216,9 @@ skill = sharp
 name = armor,leather *
 article = a
 kind = armor
+weight = 14
 price = 30
 carry = yes
-weight = 14
 plus = 1
 hits = 65
 
@@ -152,9 +226,9 @@ hits = 65
 name = shield,wooden *
 article = a
 kind = shield
+weight = 6
 price = 15
 carry = yes
-weight = 6
 plus = 1
 hits = 65
 
@@ -162,9 +236,9 @@ hits = 65
 name = scroll,healing *
 article = a
 kind = scroll
+weight = 1
 price = 40
 carry = yes
-weight = 1
 magic = yes
 spell = heal
 
@@ -172,43 +246,43 @@ spell = heal
 name = coins,copper *
 article = a
 kind = coins
+weight = 1
 price = 3
 carry = yes
-weight = 1
 multiplier = 1
 
 [object 7]
 name = coins,silver *
 article = a
 kind = coins
+weight = 1
 price = 14
 carry = yes
-weight = 1
 multiplier = 1
 
 [object 8]
 name = pouch,woven *
 article = a
 kind = treasure
+weight = 1
 price = 28
 carry = yes
-weight = 1
 
 [object 9]
 name = gem,blue *
 article = a
 kind = treasure
+weight = 1
 price = 65
 carry = yes
-weight = 1
 
 [object 10]
 name = blade,tempered *
 article = a
 kind = weapon
+weight = 5
 price = 120
 carry = yes
-weight = 5
 min-damage = 3
 max-damage = 8
 strikes = 130
@@ -219,9 +293,9 @@ plus = 1
 name = ring,amber *
 article = a
 kind = ring
+weight = 1
 price = 175
 carry = yes
-weight = 1
 magic = yes
 spell = protection
 level = 2
@@ -230,37 +304,35 @@ level = 2
 name = relic,silver *
 article = a
 kind = treasure
+weight = 2
 price = 340
 carry = yes
-weight = 2
 
-
-# Graveward treasure: rewards increase deeper in the necromancy region.
 [object 13]
 name = token,silver *
 article = a
 kind = treasure
-price = 18
-carry = yes
 weight = 1
+price = 18
 desc = 10:2
+carry = yes
 
 [object 14]
 name = shard,moonstone *
 article = a
 kind = treasure
-price = 75
-carry = yes
 weight = 1
+price = 75
 desc = 10:3
+carry = yes
 
 [object 15]
 name = mace,blessed *
 article = a
 kind = weapon
+weight = 5
 price = 170
 carry = yes
-weight = 5
 min-damage = 3
 max-damage = 8
 strikes = 120
@@ -271,10 +343,102 @@ plus = 1
 name = reliquary,silver *
 article = a
 kind = treasure
-price = 300
-carry = yes
 weight = 2
+price = 300
 desc = 10:4
+carry = yes
+
+[object 17]
+name = token,copper *
+article = a
+kind = treasure
+weight = 1
+price = 20
+carry = yes
+
+[object 18]
+name = clasp,silver *
+article = a
+kind = treasure
+weight = 1
+price = 75
+carry = yes
+
+[object 19]
+name = brooch,gold *
+article = a
+kind = treasure
+weight = 1
+price = 180
+carry = yes
+
+[object 20]
+name = crystal,prismatic *
+article = a
+kind = treasure
+weight = 1
+price = 360
+carry = yes
+
+[object 21]
+name = diadem,ancient *
+article = an
+kind = treasure
+weight = 2
+price = 650
+carry = yes
+
+[object 22]
+name = scroll,apprentice *
+article = a
+kind = scroll
+weight = 1
+price = 45
+desc = 16:5
+carry = yes
+magic = yes
+spell = heal
+
+[object 23]
+name = charm,etched *
+article = a
+kind = treasure
+weight = 1
+price = 40
+desc = 16:6
+carry = yes
+
+[object 24]
+name = crystal,azure *
+article = a
+kind = treasure
+weight = 1
+price = 120
+desc = 16:7
+carry = yes
+
+[object 25]
+name = prism,starlight *
+article = a
+kind = treasure
+weight = 1
+price = 300
+desc = 16:8
+carry = yes
+
+[object 26]
+name = wand,spark *
+article = a
+kind = device
+weight = 1
+price = 180
+carry = yes
+magic = yes
+spell = fireball
+charges = 3
+level = 2
+
+# ---- monster templates (MList) ----
 
 [monster 1]
 name = rat,field *
@@ -405,9 +569,6 @@ treasure-table = 3
 defend = yes
 attack-last = yes
 
-
-# None has drain, poison, spellcasting, fast-react or follow.
-# The first monsters are passive until attacked where supported.
 [monster 11]
 name = skeleton,shambling *
 article = a
@@ -477,1035 +638,6 @@ treasure-table = 6
 defend = yes
 attack-last = yes
 undead = yes
-
-[encounter 1]
-monsters = 1 1 2 3 4
-
-[encounter 2]
-monsters = 4 5 5 6 7
-
-[encounter 3]
-monsters = 8 8 9 9 10
-
-[treasure 1]
-objects = 6 6
-
-[treasure 2]
-objects = 6 7 7 8
-
-[treasure 3]
-objects = 7 8 9 10 11 12
-
-
-[encounter 4]
-monsters = 11 11 11 12
-
-[encounter 5]
-monsters = 12 12 13 13
-
-[encounter 6]
-monsters = 13 14 14 15
-
-[treasure 4]
-objects = 6 6 13
-
-[treasure 5]
-objects = 7 13 13 14
-
-[treasure 6]
-objects = 14 14 15 16 12
-
-[room 1]
-desc = 1:1
-east = 2
-safe = yes
-
-[room 1 / object 1]
-name = dagger,starter *
-article = a
-kind = weapon
-weight = 2
-price = 5
-carry = yes
-min-damage = 1
-max-damage = 4
-strikes = 100
-skill = thrust
-
-[room 2]
-desc = 1:2
-west = 1
-north = 3
-south = 10
-east = 16
-safe = yes
-
-[room 3]
-desc = 1:3
-south = 2
-west = 4
-east = 5
-north = 6
-safe = yes
-
-[room 4]
-desc = 1:4
-east = 3
-north = 7
-trains = fighter barbarian
-safe = yes
-
-[room 5]
-desc = 1:5
-west = 3
-trains = ranger
-safe = yes
-
-[room 6]
-desc = 1:6
-south = 3
-east = 9
-west = 79
-trains = magic-user
-safe = yes
-
-[room 7]
-desc = 1:7
-south = 4
-north = 8
-west = 43
-trains = cleric paladin
-safe = yes
-
-[room 8]
-desc = 1:8
-south = 7
-north = 40
-trains = thief
-safe = yes
-
-[room 9]
-desc = 1:9
-west = 6
-trains = dm
-safe = yes
-
-[room 10]
-desc = 1:10
-north = 2
-east = 11
-west = 12
-south = 13
-safe = yes
-
-[room 11]
-desc = 2:1
-west = 10
-role = store
-greeting = Keeper: Basic supplies for careful travellers.
-stock = 1 2 3 4 5 6
-safe = yes
-
-[room 12]
-desc = 2:2
-east = 10
-role = smith
-greeting = Smith: I can repair your worn equipment.
-safe = yes
-
-[room 13]
-desc = 2:3
-north = 10
-east = 14
-west = 15
-role = bar
-greeting = Innkeeper: The city is safe; danger lies past the north road.
-staggers = 1 2 10 13
-safe = yes
-
-[room 14]
-desc = 2:4
-west = 13
-role = newsstand
-greeting = Newskeeper: Read the road warnings before leaving town.
-safe = yes
-
-[room 15]
-desc = 2:5
-east = 13
-south = 58
-role = pawnshop
-greeting = Broker: Bring me your unwanted finds.
-safe = yes
-
-[room 16]
-desc = 2:6
-west = 2
-north = 17
-east = 41
-safe = yes
-
-[room 17]
-desc = 2:7
-south = 16
-north = 18
-safe = yes
-
-[room 17 / object 1]
-name = sign,direction *
-article = a
-kind = misc
-weight = 100
-desc = 7:3
-permanent = yes
-
-[room 18]
-desc = 2:8
-south = 17
-north = 19
-safe = yes
-
-[room 19]
-desc = 2:9
-south = 18
-east = 20
-north = 21
-west = 38
-safe = yes
-
-[room 20]
-desc = 2:10
-west = 19
-safe = yes
-
-[room 21]
-desc = 3:1
-south = 19
-north = 22
-safe = yes
-
-[room 22]
-desc = 3:2
-south = 21
-north = 23
-safe = yes
-
-[room 22 / object 1]
-name = sign,warning *
-article = a
-kind = misc
-weight = 100
-desc = 6:1
-permanent = yes
-
-[room 23]
-desc = 3:3
-south = 22
-north = 24
-encounter-table = 1
-encounter-rate = 100
-
-[room 24]
-desc = 3:4
-south = 23
-north = 25
-encounter-table = 1
-encounter-rate = 85
-
-[room 25]
-desc = 3:5
-south = 24
-north = 26
-encounter-table = 1
-encounter-rate = 80
-
-[room 26]
-desc = 3:6
-south = 25
-north = 27
-encounter-table = 1
-encounter-rate = 75
-
-[room 27]
-desc = 3:7
-south = 26
-north = 28
-encounter-table = 1
-encounter-rate = 65
-
-[room 28]
-desc = 3:8
-south = 27
-north = 29
-west = 32
-encounter-table = 2
-encounter-rate = 65
-
-[room 29]
-desc = 3:9
-south = 28
-north = 30
-encounter-table = 2
-encounter-rate = 60
-
-[room 30]
-desc = 3:10
-south = 29
-north = 31
-encounter-table = 2
-encounter-rate = 55
-
-[room 31]
-desc = 4:1
-south = 30
-north = 33
-encounter-table = 2
-encounter-rate = 55
-
-[room 32]
-desc = 4:2
-east = 28
-west = 37
-encounter-table = 2
-encounter-rate = 50
-
-[room 33]
-desc = 4:3
-south = 31
-north = 34
-encounter-table = 3
-encounter-rate = 55
-
-[room 34]
-desc = 4:4
-south = 33
-north = 35
-encounter-table = 3
-encounter-rate = 45
-
-[room 35]
-desc = 4:5
-south = 34
-up = 36
-encounter-table = 3
-encounter-rate = 40
-
-[room 36]
-desc = 4:6
-down = 35
-encounter-table = 3
-encounter-rate = 40
-
-[room 37]
-desc = 4:7
-east = 32
-encounter-table = 2
-encounter-rate = 70
-
-[room 38]
-desc = 4:8
-east = 19
-west = 39
-safe = yes
-
-[room 39]
-desc = 4:9
-east = 38
-safe = yes
-
-[room 40]
-desc = 4:10
-south = 8
-safe = yes
-
-[room 41]
-desc = 5:1
-west = 16
-north = 42
-safe = yes
-
-[room 42]
-desc = 5:2
-south = 41
-safe = yes
-
-
-# ---- Graveward, west of the Lantern Chapel ----
-# Chapel -> cloister -> pilgrim road -> garden -> watch post -> warning.
-# No monsters or encounters occur on the safe approach.
-[room 43]
-desc = 8:1
-east = 7
-west = 44
-safe = yes
-
-[room 44]
-desc = 8:2
-east = 43
-west = 45
-safe = yes
-
-[room 45]
-desc = 8:3
-east = 44
-west = 46
-safe = yes
-
-[room 46]
-desc = 8:4
-east = 45
-west = 47
-safe = yes
-
-[room 47]
-desc = 8:5
-east = 46
-west = 48
-safe = yes
-
-[room 47 / object 1]
-name = sign,graveward *
-article = a
-kind = misc
-weight = 100
-desc = 9:6
-permanent = yes
-
-# Cemetery: gentle level 1-2 undead, infrequent encounters.
-[room 48]
-desc = 8:6
-east = 47
-west = 49
-encounter-table = 4
-encounter-rate = 110
-
-[room 49]
-desc = 8:7
-east = 48
-west = 50
-north = 56
-encounter-table = 4
-encounter-rate = 95
-
-[room 50]
-desc = 8:8
-east = 49
-west = 51
-encounter-table = 4
-encounter-rate = 85
-
-# Mausoleum: level 2-3 undead and moderate treasure.
-[room 51]
-desc = 8:9
-east = 50
-down = 52
-encounter-table = 5
-encounter-rate = 75
-
-[room 52]
-desc = 8:10
-up = 51
-west = 53
-encounter-table = 5
-encounter-rate = 65
-
-[room 53]
-desc = 9:1
-east = 52
-west = 54
-south = 55
-encounter-table = 5
-encounter-rate = 60
-
-# Deep crypt: level 3-5 undead; valuable rewards.
-[room 54]
-desc = 9:2
-east = 53
-west = 57
-encounter-table = 6
-encounter-rate = 55
-
-[room 55]
-desc = 9:4
-north = 53
-encounter-table = 5
-encounter-rate = 70
-
-# Overlook is a safe detour from the early cemetery.
-[room 56]
-desc = 9:5
-south = 49
-safe = yes
-
-[room 57]
-desc = 9:3
-east = 54
-encounter-table = 6
-encounter-rate = 45
-
-# ---- South-west: Lockspire Keep, the thieves' testing grounds ----
-# Safe route from pawnshop (15) south to 58, west across the causeway.
-# Stairwells are always accessible; locked doors lead to optional challenge rooms.
-# Lock identifiers are mechanisms, not difficulty scores; trap values escalate.
-# No wandering monsters in the keep: focus is on thief skills.
-
-[description 11]
-1 = 1/You are on the south-west lane. A ruined keep rises beyond the fields./
-2 = 1/You are on the old causeway. The keep stands to the west./
-3 = 1/You are at the keep's warning board. The gate is west./
-4 = 1/You stand in Lockspire courtyard. Entry to the keep lies west./
-5 = 1/You are in the ground-floor entry. Practice corridors lead west./
-6 = 1/You are in the novice lock hall. Two doors lead to practice chambers./
-7 = 1/You are in the brass-lock chamber. A low chest rests on a bench./
-8 = 1/You are in the needle-lock chamber. A chest bears a tiny keyhole./
-9 = 1/You are at the first stairwell. Steps climb to the second floor./
-10 = 1/You are on the second landing. A corridor runs west./
-
-[description 12]
-1 = 1/You are in the warded corridor. Faint holes mark the stonework./
-2 = 1/You are in the old records room. Shelves surround a heavy chest./
-3 = 1/You are in the armory vault. A steel-bound strongbox waits here./
-4 = 1/You are at the second stairwell. Steps climb to the third floor./
-5 = 1/You are on the third landing. Fine locks adorn two dark doors./
-6 = 1/You are in the master lock hall. Dust outlines hidden trigger plates./
-7 = 1/You are in the jewel chamber. A carved chest stands under a lamp./
-8 = 1/You are in the artificer's treasury. Complex mechanisms hum softly./
-9 = 1/You are at the roof stair. The final flight rises above./
-10 = 1/You are on the battlement. The city and Graveward lie below./
-
-[description 13]
-1 = 1/You are in the crowning vault. A final chest awaits a master thief./
-2 = 1/THIEVES: This keep has locks and traps. Every staircase stays open./
-3 = 1/Begin with the first floor. Locks and trap risk rise as you climb./
-4 = 1/A battered practice chest with a simple latch and blunt trap pin./
-5 = 1/A narrow strongbox with carefully fitted brass mechanisms./
-6 = 1/A reinforced coffer with hidden spring needles./
-7 = 1/A steel vault chest engraved with winding geometric lines./
-8 = 1/A jewel casket with a subtle pressure-release catch./
-9 = 1/A masterwork clockwork chest with intricate internal tumblers./
-10 = 1/A crown-shaped iron chest surrounded by concealed trigger slots./
-
-[object 17]
-name = token,copper *
-article = a
-kind = treasure
-price = 20
-carry = yes
-weight = 1
-
-[object 18]
-name = clasp,silver *
-article = a
-kind = treasure
-price = 75
-carry = yes
-weight = 1
-
-[object 19]
-name = brooch,gold *
-article = a
-kind = treasure
-price = 180
-carry = yes
-weight = 1
-
-[object 20]
-name = crystal,prismatic *
-article = a
-kind = treasure
-price = 360
-carry = yes
-weight = 1
-
-[object 21]
-name = diadem,ancient *
-article = an
-kind = treasure
-price = 650
-carry = yes
-weight = 2
-
-# south-west lane, safe and freely traversable
-[room 58]
-desc = 11:1
-north = 15
-west = 59
-safe = yes
-
-[room 59]
-desc = 11:2
-east = 58
-west = 60
-safe = yes
-
-[room 60]
-desc = 11:3
-east = 59
-west = 61
-safe = yes
-
-[room 60 / object 1]
-name = sign,lockspire *
-article = a
-kind = misc
-weight = 100
-desc = 13:2
-permanent = yes
-
-[room 61]
-desc = 11:4
-east = 60
-west = 62
-safe = yes
-
-# Ground floor: introductory locks and gentle traps (0-3).
-[room 62]
-desc = 11:5
-east = 61
-west = 63
-safe = yes
-greeting = A plaque reads: Practice locks first; then try the upper floors.
-
-[room 63]
-desc = 11:6
-east = 62
-west = 65
-safe = yes
-
-[room 63 / object 1]
-name = door,brass *
-article = a
-kind = door
-to = 64
-closed = yes
-lock = 101
-permanent = yes
-
-[room 63 / object 2]
-name = door,needle *
-article = a
-kind = door
-to = 76
-closed = yes
-lock = 102
-trap = 2
-permanent = yes
-
-[room 64]
-desc = 11:7
-safe = yes
-
-[room 64 / object 1]
-name = door,brass *
-article = a
-kind = door
-to = 63
-closed = yes
-lock = 101
-permanent = yes
-
-[room 64 / object 2]
-name = chest,practice *
-article = a
-kind = chest
-weight = 100
-desc = 13:4
-closed = yes
-lock = 102
-trap = 1
-permanent = yes
-
-[room 64 / object 2 / object 1]
-name = token,copper *
-article = a
-kind = treasure
-price = 20
-weight = 1
-carry = yes
-
-[room 65]
-desc = 11:9
-east = 63
-up = 66
-safe = yes
-
-[room 66]
-desc = 11:10
-down = 65
-west = 67
-safe = yes
-
-# Second floor: stronger locks and visible trap escalation (5-12).
-[room 67]
-desc = 12:1
-east = 66
-west = 69
-safe = yes
-
-[room 67 / object 1]
-name = door,records *
-article = a
-kind = door
-to = 68
-closed = yes
-lock = 204
-trap = 5
-permanent = yes
-
-[room 67 / object 2]
-name = door,armory *
-article = an
-kind = door
-to = 77
-closed = yes
-lock = 205
-trap = 8
-permanent = yes
-
-[room 68]
-desc = 12:2
-safe = yes
-
-[room 68 / object 1]
-name = door,records *
-article = a
-kind = door
-to = 67
-closed = yes
-lock = 204
-permanent = yes
-
-[room 68 / object 2]
-name = chest,records *
-article = a
-kind = chest
-weight = 100
-desc = 13:5
-closed = yes
-lock = 205
-trap = 8
-permanent = yes
-
-[room 68 / object 2 / object 1]
-name = clasp,silver *
-article = a
-kind = treasure
-price = 75
-weight = 1
-carry = yes
-
-[room 69]
-desc = 12:4
-east = 67
-up = 70
-safe = yes
-
-[room 70]
-desc = 12:5
-down = 69
-west = 71
-safe = yes
-
-# Third floor: expert locks and more dangerous mechanical traps (11-17).
-[room 71]
-desc = 12:6
-east = 70
-west = 73
-safe = yes
-
-[room 71 / object 1]
-name = door,jewel *
-article = a
-kind = door
-to = 72
-closed = yes
-lock = 307
-trap = 11
-permanent = yes
-
-[room 71 / object 2]
-name = door,artificer *
-article = an
-kind = door
-to = 78
-closed = yes
-lock = 308
-trap = 12
-permanent = yes
-
-[room 72]
-desc = 12:7
-safe = yes
-
-[room 72 / object 1]
-name = door,jewel *
-article = a
-kind = door
-to = 71
-closed = yes
-lock = 307
-permanent = yes
-
-[room 72 / object 2]
-name = chest,jewel *
-article = a
-kind = chest
-weight = 100
-desc = 13:8
-closed = yes
-lock = 308
-trap = 16
-permanent = yes
-
-[room 72 / object 2 / object 1]
-name = brooch,gold *
-article = a
-kind = treasure
-price = 180
-weight = 1
-carry = yes
-
-[room 73]
-desc = 12:9
-east = 71
-up = 74
-safe = yes
-
-# Roof: highest difficulty. The final door is optional. Trap damage can kill.
-[room 74]
-desc = 12:10
-down = 73
-safe = yes
-
-[room 74 / object 1]
-name = door,crowning *
-article = a
-kind = door
-to = 75
-closed = yes
-lock = 409
-trap = 18
-permanent = yes
-
-[room 75]
-desc = 13:1
-safe = yes
-
-[room 75 / object 1]
-name = door,crowning *
-article = a
-kind = door
-to = 74
-closed = yes
-lock = 409
-permanent = yes
-
-[room 75 / object 2]
-name = chest,crown *
-article = a
-kind = chest
-weight = 100
-desc = 13:10
-closed = yes
-lock = 409
-trap = 19
-permanent = yes
-
-[room 75 / object 2 / object 1]
-name = diadem,ancient *
-article = an
-kind = treasure
-price = 650
-weight = 2
-carry = yes
-
-# Extra optional side rooms, accessible exclusively through lockable doors.
-[room 76]
-desc = 11:8
-safe = yes
-
-[room 76 / object 1]
-name = door,needle *
-article = a
-kind = door
-to = 63
-closed = yes
-lock = 102
-permanent = yes
-
-[room 76 / object 2]
-name = chest,needle *
-article = a
-kind = chest
-weight = 100
-desc = 13:5
-closed = yes
-lock = 103
-trap = 3
-permanent = yes
-
-[room 76 / object 2 / object 1]
-name = token,copper *
-article = a
-kind = treasure
-price = 30
-weight = 1
-carry = yes
-
-[room 77]
-desc = 12:3
-safe = yes
-
-[room 77 / object 1]
-name = door,armory *
-article = an
-kind = door
-to = 67
-closed = yes
-lock = 205
-permanent = yes
-
-[room 77 / object 2]
-name = chest,armory *
-article = a
-kind = chest
-weight = 100
-desc = 13:6
-closed = yes
-lock = 206
-trap = 12
-permanent = yes
-
-[room 77 / object 2 / object 1]
-name = brooch,gold *
-article = a
-kind = treasure
-price = 180
-weight = 1
-carry = yes
-
-[room 78]
-desc = 12:8
-safe = yes
-
-[room 78 / object 1]
-name = door,artificer *
-article = an
-kind = door
-to = 71
-closed = yes
-lock = 308
-permanent = yes
-
-[room 78 / object 2]
-name = chest,clockwork *
-article = a
-kind = chest
-weight = 100
-desc = 13:9
-closed = yes
-lock = 309
-trap = 17
-permanent = yes
-
-[room 78 / object 2 / object 1]
-name = crystal,prismatic *
-article = a
-kind = treasure
-price = 360
-weight = 1
-carry = yes
-
-# ---- Northwest: the Aether Observatory (magic-user testing region) ----
-# Reach it by going west from the Academy of Sparks (room 6).
-# Rooms 79-83 and 91-93 are safe. The warning is in room 83.
-# No wandering encounters until room 84. Encounters intensify farther northwest.
-# Scepter has no scripted training dummies or spell puzzles in the world format.
-# Instead, harmless side rooms demonstrate dark and anti-magic room flags.
-
-[description 14]
-1 = 1/You are on Scholar's Walk. A sign points west to the observatory./
-2 = 1/You are in the arcane garden. Quiet lanterns float above the path./
-3 = 1/You are at the novice colonnade. Lecture rooms stand east and south./
-4 = 1/You are on the crystal causeway. The observatory looms west./
-5 = 1/You are at the Aether Warning Gate. Danger lies north./
-6 = 1/You are in the spark meadow. Weak magical motes flicker around you./
-7 = 1/You are in the mirror thicket. Strange lights dart through the trees./
-8 = 1/You stand before a shattered arch. Arcane echoes pulse beyond it./
-9 = 1/You are in the broken observatory. Stairs spiral upward./
-10 = 1/You are in the stargazer's loft. A broken telescope points skyward./
-
-[description 15]
-1 = 1/You are in the upper prism hall. Light scatters from cracked glass./
-2 = 1/You are in the high aether chamber. Reality seems thin here./
-3 = 1/You are in the spell library. Manuals teach safe magical practice./
-4 = 1/You are in the darkened study. A lantern sits beside the door./
-5 = 1/You are in the null-magic room. Enchantments fall silent here./
-6 = 1/You are in the apprentice workshop. Test equipment covers the tables./
-7 = 1/A small flickering mote drifts just above the ground./
-8 = 1/A translucent sprite hums around a cluster of flowers./
-9 = 1/A crackling spark elemental glows like a burning ember./
-10 = 1/A shimmering mirror shade distorts the air around it./
-
-[description 16]
-1 = 1/A prismatic guardian stands between shards of colored glass./
-2 = 1/A wild aether warden crackles with unstable magic./
-3 = 1/DANGER AHEAD! Arcane creatures roam north. Return south to train./
-4 = 1/A note reads: Dark rooms test light. Magic will fail in the null room./
-5 = 1/An old apprentice's scroll, neatly marked with the heal spell./
-6 = 1/A polished charm bearing the sigil of the observatory./
-7 = 1/A blue crystal that pulses with stored energy./
-8 = 1/A glass prism containing a faint sliver of starlight./
-
-[object 22]
-name = scroll,apprentice *
-article = a
-kind = scroll
-weight = 1
-price = 45
-carry = yes
-magic = yes
-desc = 16:5
-spell = heal
-
-[object 23]
-name = charm,etched *
-article = a
-kind = treasure
-weight = 1
-price = 40
-carry = yes
-desc = 16:6
-
-[object 24]
-name = crystal,azure *
-article = a
-kind = treasure
-weight = 1
-price = 120
-carry = yes
-desc = 16:7
-
-[object 25]
-name = prism,starlight *
-article = a
-kind = treasure
-weight = 1
-price = 300
-carry = yes
-desc = 16:8
-
-[object 26]
-name = wand,spark *
-article = a
-kind = device
-weight = 1
-price = 180
-carry = yes
-magic = yes
-spell = fireball
-charges = 3
-level = 2
 
 [monster 16]
 name = mote,flickering *
@@ -1586,6 +718,26 @@ treasure-table = 9
 defend = yes
 attack-last = yes
 
+# ---- random encounter and treasure tables ----
+
+[encounter 1]
+monsters = 1 1 2 3 4
+
+[encounter 2]
+monsters = 4 5 5 6 7
+
+[encounter 3]
+monsters = 8 8 9 9 10
+
+[encounter 4]
+monsters = 11 11 11 12
+
+[encounter 5]
+monsters = 12 12 13 13
+
+[encounter 6]
+monsters = 13 14 14 15
+
 [encounter 7]
 monsters = 16 16 16 17
 
@@ -1594,6 +746,24 @@ monsters = 17 18 18 19
 
 [encounter 9]
 monsters = 19 20 20 21
+
+[treasure 1]
+objects = 6 6
+
+[treasure 2]
+objects = 6 7 7 8
+
+[treasure 3]
+objects = 7 8 9 10 11 12
+
+[treasure 4]
+objects = 6 6 13
+
+[treasure 5]
+objects = 7 13 13 14
+
+[treasure 6]
+objects = 14 14 15 16 12
 
 [treasure 7]
 objects = 6 6 23
@@ -1604,38 +774,832 @@ objects = 7 23 24 24
 [treasure 9]
 objects = 24 24 25 26
 
-# The quiet approach is 5 moves west and north from the Academy.
+# ---- rooms ----
+
+[room 1]
+east = 2
+desc = 1:1
+safe = yes
+
+[room 2]
+north = 3
+south = 10
+east = 16
+west = 1
+desc = 1:2
+safe = yes
+
+[room 3]
+north = 6
+south = 2
+east = 5
+west = 4
+desc = 1:3
+safe = yes
+
+[room 4]
+north = 7
+east = 3
+desc = 1:4
+safe = yes
+trains = fighter barbarian
+
+[room 5]
+west = 3
+desc = 1:5
+safe = yes
+trains = ranger
+
+[room 6]
+south = 3
+east = 9
+west = 79
+desc = 1:6
+safe = yes
+trains = magic-user
+
+[room 7]
+north = 8
+south = 4
+west = 43
+desc = 1:7
+safe = yes
+trains = cleric paladin
+
+[room 8]
+north = 40
+south = 7
+desc = 1:8
+safe = yes
+trains = thief
+
+[room 9]
+west = 6
+desc = 1:9
+safe = yes
+trains = dm
+
+[room 10]
+north = 2
+south = 13
+east = 11
+west = 12
+desc = 1:10
+safe = yes
+
+[room 11]
+west = 10
+desc = 2:1
+greeting = Keeper: Basic supplies for careful travellers.
+safe = yes
+role = store
+stock = 1 2 3 4 5 6
+
+[room 12]
+east = 10
+desc = 2:2
+greeting = Smith: I can repair your worn equipment.
+safe = yes
+role = smith
+
+[room 13]
+north = 10
+east = 14
+west = 15
+desc = 2:3
+greeting = Innkeeper: The city is safe; danger lies past the north road.
+safe = yes
+role = bar
+staggers = 1 2 10 13
+
+[room 14]
+west = 13
+desc = 2:4
+greeting = Newskeeper: Read the road warnings before leaving town.
+safe = yes
+role = newsstand
+
+[room 15]
+south = 58
+east = 13
+desc = 2:5
+greeting = Broker: Bring me your unwanted finds.
+safe = yes
+role = pawnshop
+
+[room 16]
+north = 17
+east = 41
+west = 2
+desc = 2:6
+safe = yes
+
+[room 17]
+north = 18
+south = 16
+desc = 2:7
+safe = yes
+
+[room 17 / object 1]
+name = sign,direction *
+article = a
+kind = misc
+weight = 100
+desc = 7:3
+permanent = yes
+
+[room 18]
+north = 19
+south = 17
+desc = 2:8
+safe = yes
+
+[room 19]
+north = 21
+south = 18
+east = 20
+west = 38
+desc = 2:9
+safe = yes
+
+[room 20]
+west = 19
+desc = 2:10
+safe = yes
+
+[room 21]
+north = 22
+south = 19
+desc = 3:1
+safe = yes
+
+[room 22]
+north = 23
+south = 21
+desc = 3:2
+safe = yes
+
+[room 22 / object 1]
+name = sign,warning *
+article = a
+kind = misc
+weight = 100
+desc = 6:1
+permanent = yes
+
+[room 23]
+north = 24
+south = 22
+desc = 3:3
+encounter-table = 1
+encounter-rate = 100
+
+[room 24]
+north = 25
+south = 23
+desc = 3:4
+encounter-table = 1
+encounter-rate = 85
+
+[room 25]
+north = 26
+south = 24
+desc = 3:5
+encounter-table = 1
+encounter-rate = 80
+
+[room 26]
+north = 27
+south = 25
+desc = 3:6
+encounter-table = 1
+encounter-rate = 75
+
+[room 27]
+north = 28
+south = 26
+desc = 3:7
+encounter-table = 1
+encounter-rate = 65
+
+[room 28]
+north = 29
+south = 27
+west = 32
+desc = 3:8
+encounter-table = 2
+encounter-rate = 65
+
+[room 29]
+north = 30
+south = 28
+desc = 3:9
+encounter-table = 2
+encounter-rate = 60
+
+[room 30]
+north = 31
+south = 29
+desc = 3:10
+encounter-table = 2
+encounter-rate = 55
+
+[room 31]
+north = 33
+south = 30
+desc = 4:1
+encounter-table = 2
+encounter-rate = 55
+
+[room 32]
+east = 28
+west = 37
+desc = 4:2
+encounter-table = 2
+encounter-rate = 50
+
+[room 33]
+north = 34
+south = 31
+desc = 4:3
+encounter-table = 3
+encounter-rate = 55
+
+[room 34]
+north = 35
+south = 33
+desc = 4:4
+encounter-table = 3
+encounter-rate = 45
+
+[room 35]
+south = 34
+up = 36
+desc = 4:5
+encounter-table = 3
+encounter-rate = 40
+
+[room 36]
+down = 35
+desc = 4:6
+encounter-table = 3
+encounter-rate = 40
+
+[room 37]
+east = 32
+desc = 4:7
+encounter-table = 2
+encounter-rate = 70
+
+[room 38]
+east = 19
+west = 39
+desc = 4:8
+safe = yes
+
+[room 39]
+east = 38
+desc = 4:9
+safe = yes
+
+[room 40]
+south = 8
+desc = 4:10
+safe = yes
+
+[room 41]
+north = 42
+west = 16
+desc = 5:1
+safe = yes
+
+[room 42]
+south = 41
+desc = 5:2
+safe = yes
+
+[room 43]
+east = 7
+west = 44
+desc = 8:1
+safe = yes
+
+[room 44]
+east = 43
+west = 45
+desc = 8:2
+safe = yes
+
+[room 45]
+east = 44
+west = 46
+desc = 8:3
+safe = yes
+
+[room 46]
+east = 45
+west = 47
+desc = 8:4
+safe = yes
+
+[room 47]
+east = 46
+west = 48
+desc = 8:5
+safe = yes
+
+[room 47 / object 1]
+name = sign,graveward *
+article = a
+kind = misc
+weight = 100
+desc = 9:6
+permanent = yes
+
+[room 48]
+east = 47
+west = 49
+desc = 8:6
+encounter-table = 4
+encounter-rate = 110
+
+[room 49]
+north = 56
+east = 48
+west = 50
+desc = 8:7
+encounter-table = 4
+encounter-rate = 95
+
+[room 50]
+east = 49
+west = 51
+desc = 8:8
+encounter-table = 4
+encounter-rate = 85
+
+[room 51]
+east = 50
+down = 52
+desc = 8:9
+encounter-table = 5
+encounter-rate = 75
+
+[room 52]
+west = 53
+up = 51
+desc = 8:10
+encounter-table = 5
+encounter-rate = 65
+
+[room 53]
+south = 55
+east = 52
+west = 54
+desc = 9:1
+encounter-table = 5
+encounter-rate = 60
+
+[room 54]
+east = 53
+west = 57
+desc = 9:2
+encounter-table = 6
+encounter-rate = 55
+
+[room 55]
+north = 53
+desc = 9:4
+encounter-table = 5
+encounter-rate = 70
+
+[room 56]
+south = 49
+desc = 9:5
+safe = yes
+
+[room 57]
+east = 54
+desc = 9:3
+encounter-table = 6
+encounter-rate = 45
+
+[room 58]
+north = 15
+west = 59
+desc = 11:1
+safe = yes
+
+[room 59]
+east = 58
+west = 60
+desc = 11:2
+safe = yes
+
+[room 60]
+east = 59
+west = 61
+desc = 11:3
+safe = yes
+
+[room 60 / object 1]
+name = sign,lockspire *
+article = a
+kind = misc
+weight = 100
+desc = 13:2
+permanent = yes
+
+[room 61]
+east = 60
+west = 62
+desc = 11:4
+safe = yes
+
+[room 62]
+east = 61
+west = 63
+desc = 11:5
+greeting = A plaque reads: Practice locks first; then try the upper floors.
+safe = yes
+
+[room 63]
+east = 62
+west = 65
+desc = 11:6
+safe = yes
+
+[room 63 / object 1]
+name = door,brass *
+article = a
+kind = door
+permanent = yes
+to = 64
+closed = yes
+lock = 101
+
+[room 63 / object 2]
+name = door,needle *
+article = a
+kind = door
+permanent = yes
+to = 76
+closed = yes
+lock = 102
+trap = 2
+
+[room 64]
+desc = 11:7
+safe = yes
+
+[room 64 / object 1]
+name = door,brass *
+article = a
+kind = door
+permanent = yes
+to = 63
+closed = yes
+lock = 101
+
+[room 64 / object 2]
+name = chest,practice *
+article = a
+kind = chest
+weight = 100
+desc = 13:4
+permanent = yes
+closed = yes
+trap = 1
+lock = 102
+
+[room 64 / object 2 / object 1]
+name = token,copper *
+article = a
+kind = treasure
+weight = 1
+price = 20
+carry = yes
+
+[room 65]
+east = 63
+up = 66
+desc = 11:9
+safe = yes
+
+[room 66]
+west = 67
+down = 65
+desc = 11:10
+safe = yes
+
+[room 67]
+east = 66
+west = 69
+desc = 12:1
+safe = yes
+
+[room 67 / object 1]
+name = door,records *
+article = a
+kind = door
+permanent = yes
+to = 68
+closed = yes
+lock = 204
+trap = 5
+
+[room 67 / object 2]
+name = door,armory *
+article = an
+kind = door
+permanent = yes
+to = 77
+closed = yes
+lock = 205
+trap = 8
+
+[room 68]
+desc = 12:2
+safe = yes
+
+[room 68 / object 1]
+name = door,records *
+article = a
+kind = door
+permanent = yes
+to = 67
+closed = yes
+lock = 204
+
+[room 68 / object 2]
+name = chest,records *
+article = a
+kind = chest
+weight = 100
+desc = 13:5
+permanent = yes
+closed = yes
+trap = 8
+lock = 205
+
+[room 68 / object 2 / object 1]
+name = clasp,silver *
+article = a
+kind = treasure
+weight = 1
+price = 75
+carry = yes
+
+[room 69]
+east = 67
+up = 70
+desc = 12:4
+safe = yes
+
+[room 70]
+west = 71
+down = 69
+desc = 12:5
+safe = yes
+
+[room 71]
+east = 70
+west = 73
+desc = 12:6
+safe = yes
+
+[room 71 / object 1]
+name = door,jewel *
+article = a
+kind = door
+permanent = yes
+to = 72
+closed = yes
+lock = 307
+trap = 11
+
+[room 71 / object 2]
+name = door,artificer *
+article = an
+kind = door
+permanent = yes
+to = 78
+closed = yes
+lock = 308
+trap = 12
+
+[room 72]
+desc = 12:7
+safe = yes
+
+[room 72 / object 1]
+name = door,jewel *
+article = a
+kind = door
+permanent = yes
+to = 71
+closed = yes
+lock = 307
+
+[room 72 / object 2]
+name = chest,jewel *
+article = a
+kind = chest
+weight = 100
+desc = 13:8
+permanent = yes
+closed = yes
+trap = 16
+lock = 308
+
+[room 72 / object 2 / object 1]
+name = brooch,gold *
+article = a
+kind = treasure
+weight = 1
+price = 180
+carry = yes
+
+[room 73]
+east = 71
+up = 74
+desc = 12:9
+safe = yes
+
+[room 74]
+down = 73
+desc = 12:10
+safe = yes
+
+[room 74 / object 1]
+name = door,crowning *
+article = a
+kind = door
+permanent = yes
+to = 75
+closed = yes
+lock = 409
+trap = 18
+
+[room 75]
+desc = 13:1
+safe = yes
+
+[room 75 / object 1]
+name = door,crowning *
+article = a
+kind = door
+permanent = yes
+to = 74
+closed = yes
+lock = 409
+
+[room 75 / object 2]
+name = chest,crown *
+article = a
+kind = chest
+weight = 100
+desc = 13:10
+permanent = yes
+closed = yes
+trap = 19
+lock = 409
+
+[room 75 / object 2 / object 1]
+name = diadem,ancient *
+article = an
+kind = treasure
+weight = 2
+price = 650
+carry = yes
+
+[room 76]
+desc = 11:8
+safe = yes
+
+[room 76 / object 1]
+name = door,needle *
+article = a
+kind = door
+permanent = yes
+to = 63
+closed = yes
+lock = 102
+
+[room 76 / object 2]
+name = chest,needle *
+article = a
+kind = chest
+weight = 100
+desc = 13:5
+permanent = yes
+closed = yes
+trap = 3
+lock = 103
+
+[room 76 / object 2 / object 1]
+name = token,copper *
+article = a
+kind = treasure
+weight = 1
+price = 30
+carry = yes
+
+[room 77]
+desc = 12:3
+safe = yes
+
+[room 77 / object 1]
+name = door,armory *
+article = an
+kind = door
+permanent = yes
+to = 67
+closed = yes
+lock = 205
+
+[room 77 / object 2]
+name = chest,armory *
+article = a
+kind = chest
+weight = 100
+desc = 13:6
+permanent = yes
+closed = yes
+trap = 12
+lock = 206
+
+[room 77 / object 2 / object 1]
+name = brooch,gold *
+article = a
+kind = treasure
+weight = 1
+price = 180
+carry = yes
+
+[room 78]
+desc = 12:8
+safe = yes
+
+[room 78 / object 1]
+name = door,artificer *
+article = an
+kind = door
+permanent = yes
+to = 71
+closed = yes
+lock = 308
+
+[room 78 / object 2]
+name = chest,clockwork *
+article = a
+kind = chest
+weight = 100
+desc = 13:9
+permanent = yes
+closed = yes
+trap = 17
+lock = 309
+
+[room 78 / object 2 / object 1]
+name = crystal,prismatic *
+article = a
+kind = treasure
+weight = 1
+price = 360
+carry = yes
+
 [room 79]
-desc = 14:1
 east = 6
 west = 80
+desc = 14:1
 safe = yes
 
 [room 80]
-desc = 14:2
-east = 79
 north = 81
 south = 93
+east = 79
+desc = 14:2
 safe = yes
 
 [room 81]
-desc = 14:3
 south = 80
-west = 82
 east = 91
+west = 82
+desc = 14:3
 safe = yes
 
 [room 82]
-desc = 14:4
+south = 92
 east = 81
 west = 83
-south = 92
+desc = 14:4
 safe = yes
 
 [room 83]
-desc = 14:5
-east = 82
 north = 84
+east = 82
+desc = 14:5
 safe = yes
 
 [room 83 / object 1]
@@ -1646,62 +1610,58 @@ weight = 100
 desc = 16:3
 permanent = yes
 
-# Beginner outdoor spell encounters: level 1-2.
 [room 84]
-desc = 14:6
-south = 83
 north = 85
+south = 83
+desc = 14:6
 encounter-table = 7
 encounter-rate = 110
 
 [room 85]
-desc = 14:7
 south = 84
 west = 86
+desc = 14:7
 encounter-table = 7
 encounter-rate = 90
 
-# Intermediate creatures farther northwest.
 [room 86]
-desc = 14:8
-east = 85
 north = 87
+east = 85
+desc = 14:8
 encounter-table = 8
 encounter-rate = 80
 
 [room 87]
-desc = 14:9
 south = 86
 up = 88
+desc = 14:9
 encounter-table = 8
 encounter-rate = 70
 
 [room 88]
-desc = 14:10
-down = 87
 up = 89
+down = 87
+desc = 14:10
 encounter-table = 8
 encounter-rate = 65
 
-# The top floors host the strongest arcane creatures.
 [room 89]
-desc = 15:1
-down = 88
 up = 90
+down = 88
+desc = 15:1
 encounter-table = 9
 encounter-rate = 55
 
 [room 90]
-desc = 15:2
 down = 89
+desc = 15:2
 encounter-table = 9
 encounter-rate = 45
 
-# Safe rooms for experimenting with room flags and equipment.
 [room 91]
-desc = 15:3
-west = 81
 south = 94
+west = 81
+desc = 15:3
 safe = yes
 
 [room 91 / object 1]
@@ -1713,14 +1673,14 @@ desc = 16:4
 permanent = yes
 
 [room 92]
-desc = 15:5
 north = 82
+desc = 15:5
 safe = yes
 anti-magic = yes
 
 [room 93]
-desc = 15:6
 north = 80
+desc = 15:6
 safe = yes
 
 [room 93 / object 1]
@@ -1729,14 +1689,14 @@ article = a
 kind = scroll
 weight = 1
 price = 45
-carry = yes
 desc = 16:5
+carry = yes
 magic = yes
-spell = heal
 permanent = yes
+spell = heal
 
 [room 94]
-desc = 15:4
 north = 91
+desc = 15:4
 safe = yes
 dark = yes
