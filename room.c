@@ -568,7 +568,7 @@ void RoomDisplay(int Rm, int Brief)
 	{
 		strcpy(B1, "0Obvious exits are ");
 		for (ILoop = 0; ILoop < 7; ILoop++)
-			if (ILoop == 6 && Room[Rm].Out || Room[Rm].Adjoin[ILoop])
+			if (ILoop == 6 ? Room[Rm].Out : Room[Rm].Adjoin[ILoop])
 			{
 				strcat(B1, DirList[ILoop]);
 				if (Count == 1)

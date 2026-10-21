@@ -105,7 +105,7 @@ void StopUsing(UserPoint Usr, ObjectPoint Object)
 
 void GetObject(char *Word, int Num, RmCodeType Rm)
 {
-	ObjectPoint Object, ObTail;
+	ObjectPoint Object = NULL, ObTail;
 	ObjectPoint Box = NULL;
 	int Num2;
 	int Held = FALSE;
@@ -149,7 +149,7 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 		Object	= FindObject(Word, Num, ObTail);
 	}
 
-	if (!Object || Where == NoWhere)
+	if (Where == NoWhere || !Object)
 	{
 		if (Where != NoWhere)
 			QOut(Term, "0That object isn't here.");

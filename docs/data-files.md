@@ -18,7 +18,8 @@ built for.
 
 The DM editor updates both the `ram/` and `dat/` copies.  `dat/efile`
 (game settings and news), `dat/special` (special rooms) and `dat/errlog`
-are text files without headers.
+are text files without headers.  The hourly update writes `dat/efile.tmp`
+and renames it over `dat/efile`, so a failed write leaves the old file (#17).
 
 `dbobj.new` and `dbmon.new` always hold 1009 records.  A record's slot is
 `(room × 73 + type) mod 1009`, or the next slot along that isn't taken.

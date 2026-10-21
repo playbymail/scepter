@@ -218,6 +218,9 @@ int GetPW(char *PassWord)
 	return End - Start;
 }
 
+/* Numbers typed by players saturate here rather than overflow an int. */
+#define	MaxNum		999999999
+
 void GetWord(char *Word, int *Num)
 {
 	*Word = '\0';
@@ -226,7 +229,7 @@ void GetWord(char *Word, int *Num)
 	{
 		if (Buf[Loc] == ',')
 			Loc++;
-		while (Buf[Loc] == ' ' && Loc < LenBuf)
+		while (Loc < LenBuf && Buf[Loc] == ' ')
 			Loc++;
 
 		if (Loc < LenBuf)
@@ -241,15 +244,17 @@ void GetWord(char *Word, int *Num)
 				if (Buf[Loc] == '#')
 				{
 					LbSign = TRUE;
-					Loc++;
+					if (++Loc >= LenBuf)	/* a trailing # (#47) */
+						break;
 				}
 				if (ILoop < sizeof(Alfa) - 1 && !LbSign)
 					Word[ILoop++] = Buf[Loc];
 				else
 				if (LbSign && Buf[Loc] >= '0' && Buf[Loc] <= '9')
-					*Num = *Num * 10 + Buf[Loc] - '0';
+					*Num = *Num < MaxNum / 10
+						 ? *Num * 10 + Buf[Loc] - '0' : MaxNum;
 				Loc++;
-			} while (Buf[Loc] != ' ' && Buf[Loc] != ',' && Loc < LenBuf);
+			} while (Loc < LenBuf && Buf[Loc] != ' ' && Buf[Loc] != ',');
 			Word[ILoop] = '\0';
 
 			if (*Word >= '0' && *Word <= '9' || *Word == '-')
@@ -265,11 +270,13 @@ void GetWord(char *Word, int *Num)
 					{
 						if (Buf[ILoop] == '-')
 							*Num = -*Num;
-						else
+						else if (Digit <= MaxNum / 10 + 1)
 						{
 							*Num += (Buf[ILoop] - '0') * Digit;
 							Digit *= 10;
 						}
+						else if (Buf[ILoop] != '0')
+							*Num = MaxNum;
 						--ILoop;
 					}
 					else
@@ -293,7 +300,7 @@ void GetWord(char *Word, int *Num)
 void DoInput(void)
 {
 	Loc = 0;
-	LenBuf = Min(256, strlen(C1) - 1);
+	LenBuf = Max(0, Min(sizeof(Buf), (int)strlen(C1) - 1));
 	if (LenBuf)
 	{
 		int		ILoop;
