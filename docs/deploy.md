@@ -14,8 +14,8 @@ telnet isn't HTTP.
 | What          | Where                                         |
 |---------------|-----------------------------------------------|
 | Binaries      | `/usr/local/bin/scepterd`, `mkgame`, `upgradegame` |
-| World file    | `/usr/local/share/scepter/alpha.world`        |
-| Game          | `/var/lib/scepter/alpha` (owned by `scepter`) |
+| World file    | `/usr/local/share/scepter/havenford.world`    |
+| Game          | `/var/lib/scepter/havenford` (owned by `scepter`) |
 | Unit          | `/etc/systemd/system/scepter.service` (from `deploy/`) |
 | Logs          | `journalctl -u scepter`                       |
 
@@ -47,7 +47,7 @@ cp -p /usr/local/bin/scepterd /usr/local/bin/mkgame /usr/local/bin/upgradegame \
 systemctl stop scepter
 install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /usr/local/bin/
 rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame
-runuser -u scepter -- upgradegame /var/lib/scepter/alpha
+runuser -u scepter -- upgradegame /var/lib/scepter/havenford
 systemctl start scepter
 ```
 
@@ -56,14 +56,14 @@ they have to reconnect.
 
 `upgradegame` does nothing if the game is already in the new build's
 format.  When the format has changed (docs/data-files.md), it first backs
-the game up to `/var/lib/scepter/alpha.backup-*`.  If it refuses or fails,
+the game up to `/var/lib/scepter/havenford.backup-*`.  If it refuses or fails,
 the old files are still in place.  Reinstall the previous binaries, or fix
 the reported file, before starting the server again.  The new `scepterd`
 won't start on a game it can't read; check `journalctl -u scepter`.
 
 To roll back after an upgrade: stop the server, copy the previous binaries
 back from `/usr/local/share/scepter/prev/`, and replace
-`/var/lib/scepter/alpha` with the backup.  Anything saved since the upgrade
+`/var/lib/scepter/havenford` with the backup.  Anything saved since the upgrade
 is lost.
 
 Upgrade history:
@@ -72,10 +72,31 @@ Upgrade history:
 |---|---|---|---|
 | 2026-10-20 | `860c2a4` | 0 → 1 (headers, #83) | `/var/lib/scepter/alpha.backup-20261020-212823` (deleted 2026-10-21) |
 | 2026-10-21 | `45509f5` | 2 (password hashes, #82); game recreated with `mkgame`, since it held only test data | none |
+| 2026-10-21 | `cf44452` | 2; switched from alpha to Havenford (see below) | `/var/lib/scepter/alpha` left in place |
+
+## Changing the world
+
+The server ran the alpha reference world until 2026-10-21, when it
+switched to Havenford (var/havenford), the beta test world.  To switch
+worlds, make a new game next to the old one and point the unit at it.
+The old game, and every character in it, is left untouched:
+
+```sh
+scp var/havenford/havenford.world deploy/scepter.service tsogira:/tmp/
+ssh tsogira
+install -m 0644 /tmp/havenford.world /usr/local/share/scepter/
+runuser -u scepter -- /usr/local/bin/mkgame \
+	/usr/local/share/scepter/havenford.world /var/lib/scepter/havenford
+chmod 0750 /var/lib/scepter/havenford
+systemctl stop scepter
+install -m 0644 /tmp/scepter.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl start scepter
+```
 
 ## First install
 
-These steps were done once, on 2026-10-20:
+These steps were done once, on 2026-10-20, with the alpha world:
 
 ```sh
 scp out/scepterd out/mkgame var/alpha/alpha.world deploy/scepter.service tsogira:/tmp/
@@ -97,7 +118,7 @@ systemctl enable --now scepter
 `-f` it deletes every saved character.  Only change the world on purpose.
 
 `mkgame` creates the game directory with the default mode, 0755.  Run
-`chmod 0750 /var/lib/scepter/alpha` afterwards, so only `scepter` can read it.
+`chmod 0750` on the game directory afterwards, so only `scepter` can read it.
 
 ## Firewall
 
