@@ -53,7 +53,7 @@ void GoDirection(char *Word, int Num)
 		else if (Object->ObClass == Door && Object->Object.Door.DClosed)
 		{
 			PrintObj(Object, TRUE, FALSE, B2);
-			sprintf(B1, "0Clunk!  You bang your nose against %s.", B2);
+			snprintf(B1, sizeof(B1), "0Clunk!  You bang your nose against %s.", B2);
 			QOut(Term, B1);
 		}
 		else
@@ -75,7 +75,7 @@ void GoDirection(char *Word, int Num)
 			&& (CmdCode >= 7 || Mon->DefPlayer == User && Rnd(100) < 50))
 		{
 			PM(Mon, TRUE, B2);
-			sprintf(B1, "0%s blocks your way!", B2);
+			snprintf(B1, sizeof(B1), "0%s blocks your way!", B2);
 			QOut(Term, B1);
 			Blocked = TRUE;
 			break;
@@ -88,7 +88,7 @@ void GoDirection(char *Word, int Num)
 
 		if (CmdCode == 9 && Object->ObClass == Door && Object->Object.Door.DToll)
 		{
-			sprintf(B1, "0\"That'll be %d shillings, please.\"", Object->Price);
+			snprintf(B1, sizeof(B1), "0\"That'll be %d shillings, please.\"", Object->Price);
 			QOut(Term, B1);
 			if (User->Money >= Object->Price)
 			{
@@ -115,7 +115,7 @@ void GoDirection(char *Word, int Num)
 					||	Mon->Follow && Mon->DefPlayer == User && Rnd(100) < 70)
 				{
 					PM(Mon, TRUE, B2);
-					sprintf(B1, "0%s follows you!", B2);
+					snprintf(B1, sizeof(B1), "0%s follows you!", B2);
 					QOut(Term, B1);
 					Followed = TRUE;
 					DeleteMonster(Mon, Rm);
@@ -136,7 +136,7 @@ void GoDirection(char *Word, int Num)
 
 	if (!User->Hidden && (FolCount == 0 || Followed || Blocked))
 	{
-		sprintf(B1, "0%s%s just %s ", RmPt->Dark ? "Someone" : User->Name, FollowPlyr ? "'s group" : "",
+		snprintf(B1, sizeof(B1), "0%s%s just %s ", RmPt->Dark ? "Someone" : User->Name, FollowPlyr ? "'s group" : "",
 				User->Drunk - RealTime > 30 ? "staggered" : "went");
 
 		if (CmdCode == 9)
@@ -149,10 +149,10 @@ void GoDirection(char *Word, int Num)
 			strcat(B1, DirList[CmdCode - 1]);
 
 		if (Followed)
-			sprintf(B2, " and something followed %s!",
+			snprintf(B2, sizeof(B2), " and something followed %s!",
 					FollowPlyr ? "them" : Pro[(int)User->Sex]);
 		else if (Blocked)
-			sprintf(B2, " but then something stopped %s!",
+			snprintf(B2, sizeof(B2), " but then something stopped %s!",
 					FollowPlyr ? "them" : Pro[(int)User->Sex]);
 		else
 			strcpy(B2, ".");
@@ -174,10 +174,10 @@ void GoDirection(char *Word, int Num)
 
 	if (!User->Hidden && !FolCount)
 	{
-		sprintf(B1, "0%s%s just arrived",
+		snprintf(B1, sizeof(B1), "0%s%s just arrived",
 				Room[User->RmCode].Dark ? "Someone" : User->Name, FollowPlyr ? "'s group" : "");
 		if (Followed)
-			sprintf(B2, " with something following %s!",
+			snprintf(B2, sizeof(B2), " with something following %s!",
 					FollowPlyr ? "them" : Pro[(int)User->Sex]);
 		else
 			strcpy(B2, ".");
@@ -189,7 +189,7 @@ void GoDirection(char *Word, int Num)
 	{
 		UserPoint	Dm;
 
-		sprintf(B1, "0*** %s entered room %d.", User->Name, NewRm);
+		snprintf(B1, sizeof(B1), "0*** %s entered room %d.", User->Name, NewRm);
 		for (Dm = FindDm(UserTail); Dm; Dm = FindDm(Dm->NextUser))
 			QOut(Dm->Trm, B1);
 	}
@@ -247,7 +247,7 @@ void GoDirection(char *Word, int Num)
 		}
 
 		PrintObj(Object, TRUE, TRUE, B2);
-		sprintf(B1, "0%s slams shut!", B2);
+		snprintf(B1, sizeof(B1), "0%s slams shut!", B2);
 		Count = MsgTerm(Local);
 		TermList[Count++] = User->Trm;
 		for (ILoop = 0; ILoop < Count; ILoop++)
@@ -259,7 +259,7 @@ void GoDirection(char *Word, int Num)
 
 		if (Greeting)
 		{
-			sprintf(B1, "0%.250s", Greeting);
+			snprintf(B1, sizeof(B1), "0%.250s", Greeting);
 			QOut(Term, B1);
 		}
 	}
@@ -299,7 +299,7 @@ void Track(void)
 	{
 		static char	*Melee[3] = {"battle", "struggle", "skirmish"};
 
-		sprintf(B1, "0You see signs of a %s.",
+		snprintf(B1, sizeof(B1), "0You see signs of a %s.",
 				Melee[(Room[User->RmCode].EncounterTime - 1) / 20]);
 		QOut(Term, B1);
 	}
@@ -319,7 +319,7 @@ void Track(void)
 		case 4:
 		case 5:
 		case 6:
-			sprintf(B1, "0You see some tracks leading %s.", DirList[Dir - 1]);
+			snprintf(B1, sizeof(B1), "0You see some tracks leading %s.", DirList[Dir - 1]);
 			QOut(Term, B1);
 			break;
 
@@ -335,7 +335,7 @@ void Track(void)
 				if (Obj->ObClass == Portal || Obj->ObClass == Door)
 				{
 					PrintObj(Obj, TRUE, FALSE, B2);
-					sprintf(B1, "0You see some tracks leading to %s.", B2);
+					snprintf(B1, sizeof(B1), "0You see some tracks leading to %s.", B2);
 					QOut(Term, B1);
 					break;
 				}
@@ -367,7 +367,7 @@ int UseObject(char *Word, int Num)
 			if (Mon->Guard)
 			{
 				PM(Mon, TRUE, B2);
-				sprintf(B1, "0%s stops you from touching it.", B2);
+				snprintf(B1, sizeof(B1), "0%s stops you from touching it.", B2);
 				QOut(Term, B1);
 				return 0;
 			}
@@ -380,7 +380,7 @@ int UseObject(char *Word, int Num)
 		}
 
 		PrintObj(Object, TRUE, FALSE, B2);
-		sprintf(B1, "0%s touches %s.", User->Name, B2);
+		snprintf(B1, sizeof(B1), "0%s touches %s.", User->Name, B2);
 		LocalMsg(B1);
 		OnGround = TRUE;
 	}
@@ -400,7 +400,7 @@ int UseObject(char *Word, int Num)
 				StopUsing(User, User->USWeap);
 				User->USWeap = Object;
 				PrintObj(Object, FALSE, FALSE, B2);
-				sprintf(B1, "0%s pulls out %s!", User->Name, B2);
+				snprintf(B1, sizeof(B1), "0%s pulls out %s!", User->Name, B2);
 				LocalMsg(B1);
 				QOut(Term, "0You ready your weapon!");
 			}
@@ -416,7 +416,7 @@ int UseObject(char *Word, int Num)
 				User->AC =
 					Max(-50, Min(50, User->AC - Object->Object.Armor.ArmPlus));
 				PrintObj(Object, FALSE, FALSE, B2);
-				sprintf(B1, "0%s puts on %s.", User->Name, B2);
+				snprintf(B1, sizeof(B1), "0%s puts on %s.", User->Name, B2);
 				LocalMsg(B1);
 				QOut(Term, "0You put on your armor.");
 			}
@@ -432,7 +432,7 @@ int UseObject(char *Word, int Num)
 				User->AC =
 					Max(-50, Min(50, User->AC - Object->Object.Shield.ShPlus));
 				PrintObj(Object, FALSE, FALSE, B2);
-				sprintf(B1, "0%s wields %s.", User->Name, B2);
+				snprintf(B1, sizeof(B1), "0%s wields %s.", User->Name, B2);
 				LocalMsg(B1);
 				QOut(Term, "0You ready your shield.");
 			}
@@ -462,7 +462,7 @@ int UseObject(char *Word, int Num)
 				QOut(Term, NothingText);
 			else
 			{
-				sprintf(B1, "0%s suddenly vanishes in a blinding flash!",
+				snprintf(B1, sizeof(B1), "0%s suddenly vanishes in a blinding flash!",
 						User->Name);
 				LocalMsg(B1);
 				StopFollow(User);
@@ -470,7 +470,7 @@ int UseObject(char *Word, int Num)
 				PlacePlayer(User, Object->Object.Teleport.TToWhere);
 				QOut(Term, "0Everything swirls around in a blinding flash!  You find...");
 				RoomDisplay(User->RmCode, FALSE);
-				sprintf(B1, "0%s suddenly appears in a blinding flash!",
+				snprintf(B1, sizeof(B1), "0%s suddenly appears in a blinding flash!",
 						User->Name);
 				LocalMsg(B1);
 			}
@@ -525,7 +525,7 @@ int UseObject(char *Word, int Num)
 					StopFollow(User);
 					DeletePlayer(User, User->RmCode);
 					PlacePlayer(User, W(Plyr->RmCode));
-					sprintf(B1, "0You teleport to player %s.", Plyr->Name);
+					snprintf(B1, sizeof(B1), "0You teleport to player %s.", Plyr->Name);
 					QOut(Term, B1);
 					RoomDisplay(User->RmCode, FALSE);
 				}
@@ -556,7 +556,7 @@ int UseObject(char *Word, int Num)
 				break;
 			}
 			PrintObj(Object, FALSE, FALSE, B2);
-			sprintf(B1, "0%s puts on %s.", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s puts on %s.", User->Name, B2);
 			LocalMsg(B1);
 			QOut(Term, "0You put on the ring.");
 			break;
@@ -727,7 +727,7 @@ void Dead(void)
 				case 1: p = &User->Str; break;
 				case 2: p = &User->Int; break;
 				case 3: p = &User->Dex; break;
-				case 4: p = &User->Con; break;
+				default: p = &User->Con; break;
 			}
 			*p = Max(3, *p - 1);
 		}
@@ -785,7 +785,7 @@ static void ShareExperience(MonsterPoint Mon, RmCodeType Rm)
 			Plyr->Experience += NewExp * 2;
 		else if (Plyr->DefMon == Mon)
 		{
-			sprintf(B1, "0You earned %d exp for the melee.", NewExp);
+			snprintf(B1, sizeof(B1), "0You earned %d exp for the melee.", NewExp);
 			QOut(Plyr->Trm, B1);
 			Plyr->Experience += NewExp;
 		}
@@ -808,7 +808,7 @@ static void SharePlayerExp(UserPoint Plyr, RmCodeType Rm)
 			Player->Experience += NewExp * 2;
 		else if (Player->DefPlayer == Plyr)
 		{
-			sprintf(B1, "0You earned %d exp for the melee.", NewExp);
+			snprintf(B1, sizeof(B1), "0You earned %d exp for the melee.", NewExp);
 			QOut(Player->Trm, B1);
 			Player->Experience += NewExp;
 		}
@@ -818,7 +818,7 @@ void ProtectNPC(UserPoint Player, MonsterPoint Monster)
 {
 #ifdef USEJAIL
 	PrintMon(Monster, TRUE, FALSE, B2);
-	sprintf(B1, "0As you step forward to attack, %s yells,", B2);
+	snprintf(B1, sizeof(B1), "0As you step forward to attack, %s yells,", B2);
 	QOut(Term, B1);
 	QOut(Term, "0\"Help!  Help!  Guards!  Guards!\"... In seconds, several");
 	QOut(Term, "0burly guards grab you and take away your weapon!");
@@ -838,7 +838,7 @@ void ProtectNPC(UserPoint Player, MonsterPoint Monster)
 	{
 		QOut(Term, "0Since you are a young, inexperienced adventurer, they give");
 		QOut(Term, "0you a stern warning and decide not to throw you in jail.");
-		sprintf(B1, "0%s assaults %s, but the town guards stop %s.",
+		snprintf(B1, sizeof(B1), "0%s assaults %s, but the town guards stop %s.",
 				Player->Name, B2, Pro[(int)Player->Sex]);
 		LocalMsg(B1);
 	}
@@ -846,7 +846,7 @@ void ProtectNPC(UserPoint Player, MonsterPoint Monster)
 	{
 		QOut(Term, "0Then they throw you in jail!");
 		QOut(Term, "0");
-		sprintf(B1, "0### %s was thrown in jail for assaulting %s.",
+		snprintf(B1, sizeof(B1), "0### %s was thrown in jail for assaulting %s.",
 				Player->Name, B2);
 		LocalMsg(B1);
 		StopFollow(Player);
@@ -869,7 +869,7 @@ static void MakeTreasure(MonsterPoint Monster, int Rm)
 
 	Nothing = TRUE;
 	PM(Monster, FALSE, B2);
-	sprintf(B1, "0On %s you find:", B2);
+	snprintf(B1, sizeof(B1), "0On %s you find:", B2);
 	QOut(Term, B1);
 
 	if (Monster->ObjectTail)
@@ -920,7 +920,7 @@ static void MakeTreasure(MonsterPoint Monster, int Rm)
 		for (Obj = Room[Rm].RmObjectTail; Obj != LastObj; Obj = Obj->Next)
 		{
 			PrintObj(Obj, FALSE, TRUE, B2);
-			sprintf(B1, "0    %s", B2);
+			snprintf(B1, sizeof(B1), "0    %s", B2);
 			QOut(Term, B1);
 		}
 	}
@@ -935,7 +935,7 @@ void Turn(char *Word, int Num)
 	else if (!Mon->Undead)
 	{
 		PM(Mon, TRUE, B2);
-		sprintf(B1, "0%s is not undead!", B2);
+		snprintf(B1, sizeof(B1), "0%s is not undead!", B2);
 		QOut(Term, B1);
 	}
 	else if (User->Class != Cleric && User->Class != Paladin && User->Class != DM)
@@ -961,27 +961,27 @@ void Turn(char *Word, int Num)
 		PM(Mon, TRUE, B2);
 		if (Factor < 0)
 		{
-			sprintf(B1, "0%s ignores your command!", B2);
+			snprintf(B1, sizeof(B1), "0%s ignores your command!", B2);
 			QOut(Term, B1);
 			p = "fails to turn away";
 		}
 		else if (Factor < 4)
 		{
 			Mon->MaxHits >>= 1;	/* since hits are used to calculate exp */
-			sprintf(B1, "0%s flees at your command!", B2);
+			snprintf(B1, sizeof(B1), "0%s flees at your command!", B2);
 			QOut(Term, B1);
 			p = "turns away";
 		}
 		else
 		{
-			sprintf(B1, "0%s collapses and turns to dust!", B2);
+			snprintf(B1, sizeof(B1), "0%s collapses and turns to dust!", B2);
 			QOut(Term, B1);
 			p = "damns and destroys";
 			MakeTreasure(Mon, User->RmCode);
 		}
 
 		PM(Mon, FALSE, B2);
-		sprintf(B1, "0%s %s %s!", User->Name, p, B2);
+		snprintf(B1, sizeof(B1), "0%s %s %s!", User->Name, p, B2);
 		LocalMsg(B1);
 
 		if (Factor >= 0)
@@ -1000,11 +1000,11 @@ void HitPlayer(int Damage)
 	Player = User->DefPlayer;
 	HitShArmor(Player, &Damage);
 	PrintDmg(Player, Damage, User->Brief, B2);
-	sprintf(B1, "0You hit %s for %s", Player->Name, B2);
+	snprintf(B1, sizeof(B1), "0You hit %s for %s", Player->Name, B2);
 	QOut(Term, B1);
 
 	PrintDmg(Player, Damage, Player->Brief, B2);
-	sprintf(B1, "0%s hits you for %s", User->Name, B2);
+	snprintf(B1, sizeof(B1), "0%s hits you for %s", User->Name, B2);
 	QOut(Player->Trm, B1);
 
 	if (Player->Hits + Player->Fatigue > Damage)
@@ -1024,14 +1024,14 @@ void HitPlayer(int Damage)
 		int				Merc, Cold;
 		MonsterPoint	Revenent;
 
-		sprintf(B1, "0You killed %s!", Pro[(int)Player->Sex]);
+		snprintf(B1, sizeof(B1), "0You killed %s!", Pro[(int)Player->Sex]);
 		QOut(Term, B1);
-		sprintf(B1, "0You're dead, %s!", Player->Name);
+		snprintf(B1, sizeof(B1), "0You're dead, %s!", Player->Name);
 		QOut(Player->Trm, B1);
 
 		Merc = User->Lvl - Player->Lvl > 3;
 		Cold = !Player->DefPlayer;
-		sprintf(B1, "0### %s just killed %s%s%s!", User->Name, Player->Name,
+		snprintf(B1, sizeof(B1), "0### %s just killed %s%s%s!", User->Name, Player->Name,
 				Merc ? " mercilessly" : "", Cold ? " in cold blood" : "");
 		AllMsg(B1);
 
@@ -1069,7 +1069,7 @@ void HitPlayer(int Damage)
 		{
 			QOut(Term, "0Enough is enough!  The people rise up against you in an angry mob!");
 			QOut(Term, "0You have been lynched!");
-			sprintf(B1, "0### %s the %s was just lynched by an angry mob!",
+			snprintf(B1, sizeof(B1), "0### %s the %s was just lynched by an angry mob!",
 					User->Name, CName[(int)User->Class]);
 			AllMsg(B1);
 			User->Dead = TRUE;
@@ -1092,16 +1092,16 @@ void HitMonster(int Damage)
 	if (Monster->Hits <= Damage)
 	{
 		PrintMon(Monster, TRUE, FALSE, B2);
-		sprintf(B1, "0You killed %s!", B2);
+		snprintf(B1, sizeof(B1), "0You killed %s!", B2);
 		QOut(Term, B1);
 		PM(Monster, FALSE, B2);
-		sprintf(B1, "0%s just killed %s!", User->Name, B2);
+		snprintf(B1, sizeof(B1), "0%s just killed %s!", User->Name, B2);
 		LocalMsg(B1);
 		if (Monster->Nice && !User->Evil)
 		{
 			QOut(Term, "0You suck!");
 			User->Suck = TRUE;
-			sprintf(B1, "0%s sucks!", User->Sex == Male ? "He" : "She");
+			snprintf(B1, sizeof(B1), "0%s sucks!", User->Sex == Male ? "He" : "She");
 			LocalMsg(B1);
 		}
 		ShareExperience(Monster, Rm);
@@ -1122,7 +1122,7 @@ void HitMonster(int Damage)
 		strcpy(B2, "it");
 	else
 		PrintMon(Monster, TRUE, FALSE, B2);
-	sprintf(B1, "0You hit %s for %d hit points!", B2, Damage);
+	snprintf(B1, sizeof(B1), "0You hit %s for %d hit points!", B2, Damage);
 	QOut(Term, B1);
 
 	if ((Monster->Flee || User->Lvl >= Monster->Lvl + 5)
@@ -1131,11 +1131,11 @@ void HitMonster(int Damage)
 		int		GoodDir, Dir, ILoop;
 
 		PrintMon(Monster, TRUE, TRUE, B2);
-		sprintf(B1, "0%s flees from your attack!", B2);
+		snprintf(B1, sizeof(B1), "0%s flees from your attack!", B2);
 		QOut(Term, B1);
 
 		PM(Monster, TRUE, B2);
-		sprintf(B1, "0%s flees from %s's attack!", B2, User->Name);
+		snprintf(B1, sizeof(B1), "0%s flees from %s's attack!", B2, User->Name);
 		LocalMsg(B1);
 
 		for (GoodDir = ILoop = 0; !GoodDir && ILoop < 5; ILoop++)
@@ -1161,7 +1161,7 @@ void HitMonster(int Damage)
 				strcpy(B2, "Something");
 			else
 				PrintMon(Monster, FALSE, TRUE, B2);
-			sprintf(B1, "0%s just arrived!", B2);
+			snprintf(B1, sizeof(B1), "0%s just arrived!", B2);
 			for (Plyr = NextOkSend(Room[NewRm].RmPlayerTail);
 				Plyr;
 				Plyr = NextOkSend(Plyr->Next))
@@ -1183,7 +1183,7 @@ void HitMonster(int Damage)
 		int				ILoop, NonDMs, NumMons;
 
 		PM(Monster, TRUE, B2);
-		sprintf(B1, "0%s cries out for help!", B2);
+		snprintf(B1, sizeof(B1), "0%s cries out for help!", B2);
 		NonDMs = 0;
 		for (Plyr = Room[Rm].RmPlayerTail; Plyr; Plyr = Plyr->Next)
 		{

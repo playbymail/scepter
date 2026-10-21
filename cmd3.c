@@ -34,7 +34,7 @@ static void HitAtMonster(ObjectPoint Weapon, int Plus)
 
 	if (User->DefMon->Magic && !Weapon->Magic)
 	{
-		sprintf(B1, "0Your %s strikes with no effect!",
+		snprintf(B1, sizeof(B1), "0Your %s strikes with no effect!",
 				WithFist ? "fist" : "weapon");
 		QOut(Term, B1);
 	}
@@ -158,7 +158,7 @@ static void HitAtPlayer(ObjectPoint Weapon, int Plus)
 					 - Plyr->AC + Plyr->Dex / 6 - Plus))
 	{
 		QOut(Term, WithFist ? "0Whooosh!  Your fist misses!" : "0You missed!");
-		sprintf(B1, "0%s %s you!", User->Name, WithFist ? "takes a swing"
+		snprintf(B1, sizeof(B1), "0%s %s you!", User->Name, WithFist ? "takes a swing"
 														: "misses");
 		QOut(Plyr->Trm, B1);
 	}
@@ -211,7 +211,7 @@ static ToWhatType AttackWhat(char *Word, int Num, RmCodeType Rm)
 				QOut(Term, "0Use the command \"SMASH\" instead.");
 			else
 			{
-				sprintf(B1, "0%s isn't here.", Word);
+				snprintf(B1, sizeof(B1), "0%s isn't here.", Word);
 				QOut(Term, B1);
 			}
 			return ToNone;
@@ -219,7 +219,7 @@ static ToWhatType AttackWhat(char *Word, int Num, RmCodeType Rm)
 		if (OldDefMon != User->DefMon)
 		{
 			PM(User->DefMon, FALSE, B2);
-			sprintf(B1, "0%s attacks %s!", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s attacks %s!", User->Name, B2);
 			LocalMsg(B1);
 		}
 		return ToMonster;
@@ -228,10 +228,10 @@ static ToWhatType AttackWhat(char *Word, int Num, RmCodeType Rm)
 	{
 		int		ILoop, Count;
 
-		sprintf(B1, "0%s is attacking you!", User->Name);
+		snprintf(B1, sizeof(B1), "0%s is attacking you!", User->Name);
 		QOut(User->DefPlayer->Trm, B1);
 
-		sprintf(B1, "0%s attacks %s!", User->Name, User->DefPlayer->Name);
+		snprintf(B1, sizeof(B1), "0%s attacks %s!", User->Name, User->DefPlayer->Name);
 		Count = MsgTerm(Local);
 		for (ILoop = 0; ILoop < Count; ILoop++)
 			if (TermList[ILoop] != User->DefPlayer->Trm)
@@ -242,7 +242,7 @@ static ToWhatType AttackWhat(char *Word, int Num, RmCodeType Rm)
 
 void Attack(char *Word, int Num, RmCodeType Rm)
 {
-	int			Plus;
+	int			Plus = 0;
 	ObjectPoint	Weapon;
 	ToWhatType	ToWhat = ToNone;
 
@@ -308,17 +308,17 @@ void Attack(char *Word, int Num, RmCodeType Rm)
 			else
 			{
 				User->DefPlayer->LastAtk = RealTime + (CmdCode == 85 ? 10 : 8);
-				sprintf(B1, "0%s %s you!", User->Name,
+				snprintf(B1, sizeof(B1), "0%s %s you!", User->Name,
 						CmdCode == 85 ? "feints at" : "circles");
 				QOut(User->DefPlayer->Trm, B1);
 				if (CmdCode == 85)
 				{
-					sprintf(B1, "0%s falls back!",
+					snprintf(B1, sizeof(B1), "0%s falls back!",
 							User->DefPlayer->Sex == Male ? "He" : "She");
 					B1[1] = Cap(B1[1]);
 				}
 				else
-					sprintf(B1, "0You circle %s!",
+					snprintf(B1, sizeof(B1), "0You circle %s!",
 							Pro[(int)User->DefPlayer->Sex]);
 				QOut(Term, B1);
 			}
@@ -456,7 +456,7 @@ void Repair(char *Word, int Num)
 			QOut(Term, "0\"I'm not sure I can repair such a great weapon!\"");
 
 		PrintObj(Obj, FALSE, FALSE, B2);
-		sprintf(B1,
+		snprintf(B1, sizeof(B1),
 			"0Hmm.  Repairing %s will cost you %ld shillings.  Do you accept?",
 			B2, User->Data);
 		QOut(Term, B1);
@@ -481,7 +481,7 @@ void ChangeName(char *Word, int Num)
 		QOut(Term, "0Name already in use elsewhere.");
 	else
 	{
-		sprintf(B1, "0### %s just changed name to %s.", User->Name, Word);
+		snprintf(B1, sizeof(B1), "0### %s just changed name to %s.", User->Name, Word);
 		AllMsg(B1);
 		ChangeUsrName(User->Name, Word);
 		strcpy(User->Name, Word);
@@ -531,7 +531,7 @@ void EnterNewPW(void)
 	User->Entry = XCmd;
 	if (GetPW(PassWord) < MinPWLen)
 	{
-		sprintf(B1, "0Passwords must be %d to %d characters long.  Password not changed.",
+		snprintf(B1, sizeof(B1), "0Passwords must be %d to %d characters long.  Password not changed.",
 				MinPWLen, MaxPWLen);
 		QOut(Term, B1);
 	}
@@ -565,7 +565,7 @@ void Offer(char *Word, int Num)
 
 	if (TradeTime >= RealTime)
 	{
-		sprintf(B1, "0Trade already in progess.  Try again in %ld seconds.",
+		snprintf(B1, sizeof(B1), "0Trade already in progess.  Try again in %ld seconds.",
 				TradeTime - RealTime);
 		QOut(Term, B1);
 		return;
@@ -595,7 +595,7 @@ void Offer(char *Word, int Num)
 		return;
 	}
 
-	sprintf(B1, "0Offer sent to %s.", TPlyr->Name);
+	snprintf(B1, sizeof(B1), "0Offer sent to %s.", TPlyr->Name);
 	QOut(Term, B1);
 
 	FCash = Max(0, Num);
@@ -613,21 +613,21 @@ void Offer(char *Word, int Num)
 	if (FObj)
 	{
 		PrintObj(FObj, FALSE, FALSE, B3);
-		sprintf(B2, "0%s offers you %s", User->Name, B3);
+		snprintf(B2, sizeof(B2), "0%s offers you %s", User->Name, B3);
 	}
 	else
-		sprintf(B2, "0%s offers you %d shillings", User->Name, FCash);
+		snprintf(B2, sizeof(B2), "0%s offers you %d shillings", User->Name, FCash);
 
 	if (TObj)
 	{
 		PrintObj(TObj, TRUE, FALSE, B3);
-		sprintf(B1, "%s %s.", B2, B3);
+		snprintf(B1, sizeof(B1), "%s %s.", B2, B3);
 	}
 	else
 	if (TCash)
-		sprintf(B1, "%s for %d shillings.", B2, TCash);
+		snprintf(B1, sizeof(B1), "%s for %d shillings.", B2, TCash);
 	else
-		sprintf(B1, "%s.", B2);
+		snprintf(B1, sizeof(B1), "%s.", B2);
 	QOut(TPlyr->Trm, B1);
 	QOut(TPlyr->Trm, "0Enter \"ACCEPT\" to accept the offer.");
 }
@@ -703,9 +703,9 @@ void Accept(void)
 	}
 
 	TradeTime = RealTime - 50;
-	sprintf(B1, "0Ok, you trade with %s.", Pro[(int)FPlyr->Sex]);
+	snprintf(B1, sizeof(B1), "0Ok, you trade with %s.", Pro[(int)FPlyr->Sex]);
 	QOut(Term, B1);
-	sprintf(B1, "0%s accepts your offer and trades with you.", User->Name);
+	snprintf(B1, sizeof(B1), "0%s accepts your offer and trades with you.", User->Name);
 	QOut(FPlyr->Trm, B1);
 }
 
@@ -717,13 +717,13 @@ void NumUsers(void)
 	for (ILoop = 0, Plyr = UserTail; Plyr; Plyr = Plyr->NextUser)
 		if (Plyr->Invisible)
 			ILoop++;
-	sprintf(B1, "0%2d users (Max Online)", MaxUsers);
+	snprintf(B1, sizeof(B1), "0%2d users (Max Online)", MaxUsers);
 	QOut(Term, B1);
-	sprintf(B1, "0%2d users (Active)", User->SSJ ? NUsers : NUsers - ILoop);
+	snprintf(B1, sizeof(B1), "0%2d users (Active)", User->SSJ ? NUsers : NUsers - ILoop);
 	QOut(Term, B1);
 	if (User->SSJ)
 	{
-		sprintf(B1, "0%2d users (Invisible)", ILoop);
+		snprintf(B1, sizeof(B1), "0%2d users (Invisible)", ILoop);
 		QOut(Term, B1);
 	}
 }
@@ -743,7 +743,7 @@ void Help(void)
 		}
 		if (User->SSJ || (*CmdList[ILoop] != '*'))
 		{
-			sprintf(B2, "  %-10s", CmdList[ILoop]);
+			snprintf(B2, sizeof(B2), "  %-10s", CmdList[ILoop]);
 			strcat(B1, B2);
 		}
 	}
@@ -770,7 +770,7 @@ void Parley(char *Word, int Num)
 		Opt = 0;
 
 	PM(Mon, FALSE, B2);
-	sprintf(B1, "0%s talks with %s.", User->Name, B2);
+	snprintf(B1, sizeof(B1), "0%s talks with %s.", User->Name, B2);
 	LocalMsg(B1);
 
 	switch (Opt)
@@ -791,7 +791,7 @@ void Parley(char *Word, int Num)
 				User->ParleyObj = N1;
 				PM(Mon, TRUE, B2);
 				PrintObj(&ObjTemp, FALSE, FALSE, B3);
-				sprintf(B1,
+				snprintf(B1, sizeof(B1),
 					"0%s says, \"I will sell you %s for a mere %ld shillings.\"",
 					B2, B3, User->Data);
 				QOut(Term, B1);
@@ -810,7 +810,7 @@ void Parley(char *Word, int Num)
 			else
 				N1 = Rnd(10);
 			PM(Mon, TRUE, B1);
-			sprintf(B2, "0%s says, \"", B1);
+			snprintf(B2, sizeof(B2), "0%s says, \"", B1);
 			PrintDesc(Mon->DescRec, N1, 0, FALSE, B2, B1);
 			strcat(B1, "\"");
 			QOut(Term, B1);
@@ -819,13 +819,13 @@ void Parley(char *Word, int Num)
 		case 5:
 		case 8:
 		{
-			ObjectPoint	Obj;
+			ObjectPoint	Obj = NULL;
 			int			N2;
 
 			if (User->Lvl < Mon->Lvl + 5)
 			{
 				PM(Mon, TRUE, B2);
-				sprintf(B1, "0%s stands its ground!", B2);
+				snprintf(B1, sizeof(B1), "0%s stands its ground!", B2);
 				QOut(Term, B1);
 				break;
 			}
@@ -851,10 +851,10 @@ void Parley(char *Word, int Num)
 			if (N1)
 			{
 				PrintObj(Obj, FALSE, FALSE, B3);
-				sprintf(B1, "0%s throws down %s and ", B2, B3);
+				snprintf(B1, sizeof(B1), "0%s throws down %s and ", B2, B3);
 			}
 			else
-				sprintf(B1, "0%s ", B2);
+				snprintf(B1, sizeof(B1), "0%s ", B2);
 			strcat(B1, N2 == 1 ? "begs for mercy!" : "flees from your sight!");
 			QOut(Term, B1);
 
@@ -862,15 +862,15 @@ void Parley(char *Word, int Num)
 			if (N1)
 			{
 				PrintObj(Obj, FALSE, FALSE, B3);
-				sprintf(B1, "0%s throws down %s and ", B2, B3);
+				snprintf(B1, sizeof(B1), "0%s throws down %s and ", B2, B3);
 			}
 			else
-				sprintf(B1, "0%s ", B2);
+				snprintf(B1, sizeof(B1), "0%s ", B2);
 			if (N2 == 1)
 				strcat(B1, "begs for mercy!");
 			else
 			{
-				sprintf(B2, "flees from %s's sight!", User->Name);
+				snprintf(B2, sizeof(B2), "flees from %s's sight!", User->Name);
 				strcat(B1, B2);
 			}
 			LocalMsg(B1);
@@ -888,10 +888,10 @@ void Parley(char *Word, int Num)
 			{
 				Mon->MReact = 2;
 				Mon->DefPlayer = NULL;
-				sprintf(B1, "0%s pauses for a moment.", B2);
+				snprintf(B1, sizeof(B1), "0%s pauses for a moment.", B2);
 			}
 			else
-				sprintf(B1, "0%s makes no apparent response.", B2);
+				snprintf(B1, sizeof(B1), "0%s makes no apparent response.", B2);
 			QOut(Term, B1);
 			break;
 
@@ -900,10 +900,10 @@ void Parley(char *Word, int Num)
 			if (Mon->CharmPlayer == User)
 				Mon->CharmPlayer = NULL;
 			PM(Mon, TRUE, B2);
-			sprintf(B1, "0%s attacks you!", B2);
+			snprintf(B1, sizeof(B1), "0%s attacks you!", B2);
 			QOut(Term, B1);
 
-			sprintf(B1, "0%s attacks %s!", B2, User->Name);
+			snprintf(B1, sizeof(B1), "0%s attacks %s!", B2, User->Name);
 			LocalMsg(B1);
 			break;
 
@@ -915,14 +915,14 @@ void Parley(char *Word, int Num)
 			NewRm = TeleportRoom(User->RmCode, Mon->Lvl, TRUE);
 			if (!NewRm)
 			{
-				sprintf(B1, "0%s makes no apparent response.", B2);
+				snprintf(B1, sizeof(B1), "0%s makes no apparent response.", B2);
 				QOut(Term, B1);
 				break;
 			}
-			sprintf(B1, "0** ZAP **  %s teleports you elsewhere!", B2);
+			snprintf(B1, sizeof(B1), "0** ZAP **  %s teleports you elsewhere!", B2);
 			QOut(Term, B1);
 
-			sprintf(B1, "0%s makes %s vanish in a cloud of smoke!",
+			snprintf(B1, sizeof(B1), "0%s makes %s vanish in a cloud of smoke!",
 					B2, User->Name);
 			LocalMsg(B1);
 
@@ -938,7 +938,7 @@ void Parley(char *Word, int Num)
 		case 14:
 		case 15:
 			PM(Mon, TRUE, B3);
-			sprintf(B2, "0%s says, \"", B3);
+			snprintf(B2, sizeof(B2), "0%s says, \"", B3);
 			PrintDesc(Mon->DescRec, Opt - 10, 0, FALSE, B2, B1);
 			strcat(B1, "\"");
 			QOut(Term, B1);
@@ -946,7 +946,7 @@ void Parley(char *Word, int Num)
 
 		default:
 			PM(Mon, TRUE, B2);
-			sprintf(B1, "0%s makes no apparent response.", B2);
+			snprintf(B1, sizeof(B1), "0%s makes no apparent response.", B2);
 			QOut(Term, B1);
 			break;
 	}
@@ -1080,7 +1080,7 @@ void EnterNews(void)
 			NewsBuf[ILoop][KLoop++] = Buf[JLoop];
 		NewsBuf[ILoop][KLoop] = '\0';
 
-		sprintf(B1, "0Entered as line %d.", ILoop + 1);
+		snprintf(B1, sizeof(B1), "0Entered as line %d.", ILoop + 1);
 		QOut(Term, B1);
 	}
 
@@ -1146,7 +1146,7 @@ void StealObj(Alfa Word, int Num)
 	User->DefMon = NULL;
 	if (Notice)
 	{
-		sprintf(B1, "0%s %s ", User->Name, Steal ? "steals" : "fails to steal");
+		snprintf(B1, sizeof(B1), "0%s %s ", User->Name, Steal ? "steals" : "fails to steal");
 		if (Obj)
 		{
 			PrintObj(Obj, TRUE, FALSE, B2);
@@ -1156,7 +1156,7 @@ void StealObj(Alfa Word, int Num)
 		else
 		if (!*Word)
 		{
-			sprintf(B2, "%d shillings ", Num);
+			snprintf(B2, sizeof(B2), "%d shillings ", Num);
 			strcat(B1, B2);
 		}
 		strcat(B1, "from you!");

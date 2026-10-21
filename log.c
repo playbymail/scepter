@@ -125,9 +125,9 @@ void LoginOK(const char *Host, char *Name)
 void TooManyPW(int Wait)
 {
 	if (Wait < 120)
-		sprintf(B1, "0Too many wrong passwords.  Try again in %d seconds.", Wait);
+		snprintf(B1, sizeof(B1), "0Too many wrong passwords.  Try again in %d seconds.", Wait);
 	else
-		sprintf(B1, "0Too many wrong passwords.  Try again in %d minutes.",
+		snprintf(B1, sizeof(B1), "0Too many wrong passwords.  Try again in %d minutes.",
 				(Wait + 59) / 60);
 	QOut(Term, B1);
 }
@@ -150,7 +150,7 @@ static void AnnounceLogin(void)
 			}
 			else
 			{
-				sprintf(B1, "0Daily %d guild fee paid in full.  Thank you!",
+				snprintf(B1, sizeof(B1), "0Daily %d guild fee paid in full.  Thank you!",
 						User->Lvl * 20);
 				QOut(Term, B1);
 			}
@@ -158,7 +158,7 @@ static void AnnounceLogin(void)
 	}
 
 	CmdCode = 0;
-	sprintf(B1, "0### Please welcome %s, the %s.",
+	snprintf(B1, sizeof(B1), "0### Please welcome %s, the %s.",
 			User->Name, CName[(int) User->Class]);
 	AllMsg(B1);
 
@@ -166,7 +166,7 @@ static void AnnounceLogin(void)
 		User->NonExistant = User->Invisible = FALSE;
 	if (User->Invisible)
 	{
-		sprintf(B1, "0You are currently %s.",
+		snprintf(B1, sizeof(B1), "0You are currently %s.",
 				User->NonExistant ? "nonexistant" : "invisible");
 		QOut(Term, B1);
 	}
@@ -181,13 +181,13 @@ UserPoint Login(void)
 	NUsers++;
 	NewUser = malloc(sizeof(UserType));
 	*NewUser = ProtoUser;
-	sprintf(B1, "0Scepter Fantasy Role-Playing Game  Ver 2.4.3  (Run %d)",
+	snprintf(B1, sizeof(B1), "0Scepter Fantasy Role-Playing Game  Ver 2.4.3  (Run %d)",
 			NumRun);
 	QOut(Term, B1);
 
 	if (*Notice)
 	{
-		sprintf(B1, "0Notice:  %s", Notice);
+		snprintf(B1, sizeof(B1), "0Notice:  %s", Notice);
 		QOut(Term, B1);
 	}
 
@@ -238,7 +238,7 @@ void NewPW(void)
 		return;
 	if (Len < MinPWLen)
 	{
-		sprintf(B1, "0Passwords must be %d to %d characters long.", MinPWLen,
+		snprintf(B1, sizeof(B1), "0Passwords must be %d to %d characters long.", MinPWLen,
 				MaxPWLen);
 		QOut(Term, B1);
 	}
@@ -309,7 +309,7 @@ void EnterSkill(void)
 
 	if (Loc >= LenBuf)
 	{
-		sprintf(B1, "0Choose a password of %d to %d characters.  Spaces are allowed,",
+		snprintf(B1, sizeof(B1), "0Choose a password of %d to %d characters.  Spaces are allowed,",
 				MinPWLen, MaxPWLen);
 		QOut(Term, B1);
 		QOut(Term, "0and capital letters are different from small ones.");

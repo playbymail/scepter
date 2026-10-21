@@ -85,7 +85,7 @@ void Edit(void)
 	WhatCode = WordMatch(What, 19, EditList);
 	if (WhatCode <= E_END)
 	{
-		sprintf(B1, "0Bad operand - %s", What);
+		snprintf(B1, sizeof(B1), "0Bad operand - %s", What);
 		QOut(Term, B1);
 		return;
 	}
@@ -142,7 +142,7 @@ void Edit(void)
 				{
 					RmOrMonNum++;
 					QOut(Term, "0");
-					sprintf(B1, "0MList #%d", RmOrMonNum);
+					snprintf(B1, sizeof(B1), "0MList #%d", RmOrMonNum);
 					QOut(Term, B1);
 					EditMonster(EditNum, Which, RmOrMonNum, WhatCode);
 				}
@@ -159,7 +159,7 @@ void Edit(void)
 				{
 					RmOrMonNum++;
 					QOut(Term, "0");
-					sprintf(B1, "0OList #%d", RmOrMonNum);
+					snprintf(B1, sizeof(B1), "0OList #%d", RmOrMonNum);
 					QOut(Term, B1);
 					EditOList(EditNum, RmOrMonNum);
 				}
@@ -383,7 +383,7 @@ static void ModPlayer(UserPoint Player, int OnLine)
 					QOut(Term, "0Only master DMs may alter passwords.");
 				else if (Len < MinPWLen)
 				{
-					sprintf(B1, "0Passwords must be %d to %d characters long.  Password not changed.",
+					snprintf(B1, sizeof(B1), "0Passwords must be %d to %d characters long.  Password not changed.",
 							MinPWLen, MaxPWLen);
 					QOut(Term, B1);
 				}
@@ -508,7 +508,7 @@ static void EditPlayer(EdFunc EditCmd, char *Which)
 				{
 					int		ILoop, Count;
 
-					sprintf(B1, "0### A lightning bolt hits %s and turns %s into ashes!",
+					snprintf(B1, sizeof(B1), "0### A lightning bolt hits %s and turns %s into ashes!",
 							Player->Name, Pro[(int) Player->Sex]);
 					Count = MsgTerm(SysMsg);
 					for (ILoop = 0; ILoop < Count; ILoop++)
@@ -713,18 +713,18 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 			strcpy(B1, "0");
 			for (ILoop = 0; ILoop < 6; ILoop++)
 			{
-				sprintf(B2, "%c=%d, ",
+				snprintf(B2, sizeof(B2), "%c=%d, ",
 						Cap(*DirList[ILoop]), RmPt->Adjoin[ILoop]);
 				strcat(B1, B2);
 			}
 
 			if (RmPt->Out)
 			{
-				sprintf(B2, "OUT=%d, ", RmPt->Out);
+				snprintf(B2, sizeof(B2), "OUT=%d, ", RmPt->Out);
 				strcat(B1, B2);
 			}
 
-			sprintf(B2, "DR=%d, DI=%d, EN=%d, ET=%d.",
+			snprintf(B2, sizeof(B2), "DR=%d, DI=%d, EN=%d, ET=%d.",
 					RmPt->DescRec, RmPt->DescCode,
 					RmPt->WhichEncounter, RmPt->EncounterTime);
 			strcat(B1, B2);
@@ -1037,7 +1037,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 		Loc++;
 	if (Loc >= LenBuf - 1 || Buf[Loc] != '=')
 	{
-		sprintf(B1, "0Bad parameter: %s", Parm);
+		snprintf(B1, sizeof(B1), "0Bad parameter: %s", Parm);
 		QOut(Term, B1);
 		return 0;
 	}
@@ -1057,7 +1057,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 
 	if (WhichParm > LPList)
 	{
-		sprintf(B1, "0Unknown parameter: %s", Parm);
+		snprintf(B1, sizeof(B1), "0Unknown parameter: %s", Parm);
 		QOut(Term, B1);
 		return 0;
 	}
@@ -1074,7 +1074,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 			else
 			{
 				WhichParm = 0;
-				sprintf(B1, "0%s - must be true or false.", Parm);
+				snprintf(B1, sizeof(B1), "0%s - must be true or false.", Parm);
 				QOut(Term, B1);
 			}
 
@@ -1087,7 +1087,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 			if (*Word)
 			{
 				WhichParm = 0;
-				sprintf(B1, "0%s - must be a number.", Parm);
+				snprintf(B1, sizeof(B1), "0%s - must be a number.", Parm);
 				QOut(Term, B1);
 			}
 			break;
@@ -1097,7 +1097,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 			if (!*Word && *Num)
 			{
 				WhichParm = 0;
-				sprintf(B1, "0%s - only string allowed.", Parm);
+				snprintf(B1, sizeof(B1), "0%s - only string allowed.", Parm);
 				QOut(Term, B1);
 			}
 			break;

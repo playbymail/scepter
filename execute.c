@@ -200,7 +200,7 @@ void ExecuteCommand(void)
 			break;
 
 		case 26:
-			sprintf(B1, "0%sA random monster check occurs every %d seconds.",
+			snprintf(B1, sizeof(B1), "0%sA random monster check occurs every %d seconds.",
 					ctime(&RealTime), MSpeed);
 			QOut(Term, B1);
 			break;
@@ -213,7 +213,7 @@ void ExecuteCommand(void)
 			QOut(Term, "0Active  SlotTbl");
 			for (ILoop = 0; ILoop <= MaxUsers; ILoop++)
 			{
-				sprintf(B1, "0%3d     %3d", Active[ILoop], SlotTbl[ILoop]);
+				snprintf(B1, sizeof(B1), "0%3d     %3d", Active[ILoop], SlotTbl[ILoop]);
 				QOut(Term, B1);
 			}
 			break;
@@ -222,13 +222,13 @@ void ExecuteCommand(void)
 		case 30:
 			User->Invisible = !User->Invisible;
 			User->NonExistant = FALSE;
-			sprintf(B1, "0You are now %svisible.", User->Invisible ? "in" : "");
+			snprintf(B1, sizeof(B1), "0You are now %svisible.", User->Invisible ? "in" : "");
 			QOut(Term, B1);
 			break;
 
 		case 34:
 			User->Echo = !User->Echo;
-			sprintf(B1, "0Echo mode %s.", User->Echo ? "on" : "off");
+			snprintf(B1, sizeof(B1), "0Echo mode %s.", User->Echo ? "on" : "off");
 			QOut(Term, B1);
 			break;
 
@@ -255,7 +255,7 @@ void ExecuteCommand(void)
 
 		case 25:
 			User->Brief = !User->Brief;
-			sprintf(B1, "0Brief mode %s.", User->Brief ? "on" : "off");
+			snprintf(B1, sizeof(B1), "0Brief mode %s.", User->Brief ? "on" : "off");
 			QOut(Term, B1);
 			break;
 
@@ -299,13 +299,13 @@ void ExecuteCommand(void)
 
 		case 54:
 			MSpeed = Max(1, Min(10, Num));
-			sprintf(B1, "0Monspeed set to %d.", MSpeed);
+			snprintf(B1, sizeof(B1), "0Monspeed set to %d.", MSpeed);
 			QOut(Term, B1);
 			break;
 
 		case 76:
 			User->MesBlock = !User->MesBlock;
-			sprintf(B1, "0Send messages %sed.",
+			snprintf(B1, sizeof(B1), "0Send messages %sed.",
 					User->MesBlock ? "block" : "receiv");
 			QOut(Term, B1);
 			break;

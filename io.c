@@ -345,7 +345,7 @@ int BinaryMatch(char *Word, int Count, CmdListType NameList)
 
 	if (Posit < Count && SubSet(Word, NameList[Posit + 1]))
 	{
-		sprintf(B1, "0%s is not unique.", Word);
+		snprintf(B1, sizeof(B1), "0%s is not unique.", Word);
 		QOut(Term, B1);
 		return -1;
 	}
@@ -379,7 +379,7 @@ int WordMatch(char *Word, int Count, NameTList NameList)
 		if (SubSet(Word, NameList[JLoop]))
 			if (strcmp(NameList[ILoop], NameList[JLoop]))
 			{
-				sprintf(B1, "0%s is not unique.", Word);
+				snprintf(B1, sizeof(B1), "0%s is not unique.", Word);
 				QOut(Term, B1);
 				return -1;
 			}

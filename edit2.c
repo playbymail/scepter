@@ -480,7 +480,7 @@ static void SetClass(ObjectPoint Obj, ObClassType Class)
 
 static void BadClass(int WhichParm)
 {
-	sprintf(B1, "0%s - bad parameter for this obtype.  Mod not made.",
+	snprintf(B1, sizeof(B1), "0%s - bad parameter for this obtype.  Mod not made.",
 			Parms[WhichParm].PName);
 	QOut(Term, B1);
 }
@@ -499,9 +499,9 @@ static ObjectPoint InsertObject(ObjectPoint *Tail)
 
 void EditObject(EdFunc EditCmd, char *Which, int ONum)
 {
-	ObjectPoint		Object, Container, PTemp;
-	UserPoint		Player;
-	MonsterPoint	Monster;
+	ObjectPoint		Object, Container = NULL, PTemp;
+	UserPoint		Player = NULL;
+	MonsterPoint	Monster = NULL;
 	Alfa			Word1, Word2;
 	int				Rm;
 	enum eEditT
@@ -674,7 +674,7 @@ void EditObject(EdFunc EditCmd, char *Which, int ONum)
 	else
 	if (EditT == InRoom && Object->ObClass == Door && EditCmd != E_DISPLAY)
 	{
-		sprintf(B1, "0Don't forget to %s companion door.",
+		snprintf(B1, sizeof(B1), "0Don't forget to %s companion door.",
 				EditCmd == E_MODIFY ? "modify the"
 			  : EditCmd == E_DELETE ? "delete the" : "create a");
 		QOut(Term, B1);
@@ -774,13 +774,13 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 				QOut(Term, "0No such EDesc record.");
 			else
 			{
-				sprintf(B1, "0EDesc record %d:", Rec);
+				snprintf(B1, sizeof(B1), "0EDesc record %d:", Rec);
 				QOut(Term, B1);
 				if (Line)
 				{
 					if (Line <= StrPerSeg)
 					{
-						sprintf(B1, "0%2d:  %.80s", Line, DescBuf[Line - 1]);
+						snprintf(B1, sizeof(B1), "0%2d:  %.80s", Line, DescBuf[Line - 1]);
 						QOut(Term, B1);
 					}
 					else
@@ -789,7 +789,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 				else
 					for (Line = 0; Line < StrPerSeg; Line++)
 					{
-						sprintf(B1, "0%2d:  %.80s", Line + 1, DescBuf[Line]);
+						snprintf(B1, sizeof(B1), "0%2d:  %.80s", Line + 1, DescBuf[Line]);
 						QOut(Term, B1);
 					}
 			}
@@ -870,7 +870,8 @@ void EnterDesc(void)
 		if (Rec != CurrentRec)
 		{
 			SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-			fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
+			if (!fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc))
+				memset(DescBuf, 0, sizeof(DescBuf));	/* a new record */
 		}
 
 		strcpy(DescBuf[Line - 1], B1);
@@ -965,7 +966,7 @@ static void ShowETList(int type, int Index)
 
 	for (ILoop = 0; ILoop < 8; ILoop++)
 		Entry[ILoop] = GetETIndex(type, Index, ILoop);
-	sprintf(B1, "0%3d.  %3d %3d %3d %3d %3d %3d %3d %3d.", Index,
+	snprintf(B1, sizeof(B1), "0%3d.  %3d %3d %3d %3d %3d %3d %3d %3d.", Index,
 		Entry[0], Entry[1], Entry[2], Entry[3],
 		Entry[4], Entry[5], Entry[6], Entry[7]);
 	QOut(Term, B1);

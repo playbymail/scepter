@@ -126,13 +126,17 @@ useful with a sanitizer build:
 
 ```sh
 make clean
-make CFLAGS='-g -O1 -fsanitize=address,undefined' check-net
+make CFLAGS='-g -O1 -fno-common -fsanitize=address,undefined' check-net
 ```
+
+`-fno-common` matters: without it, clang leaves the global message buffers
+(`B1`, `B2`, ...) as common symbols, which the address sanitizer doesn't
+guard, and an overflow out of one goes unreported.
 
 `check-security` needs such a build; add `-ftrivial-auto-var-init=pattern`
 so that an uninitialized pointer crashes instead of happening to be NULL:
 
 ```sh
 make clean
-make CFLAGS='-g -O1 -fsanitize=address,undefined -ftrivial-auto-var-init=pattern' check-security
+make CFLAGS='-g -O1 -fno-common -fsanitize=address,undefined -ftrivial-auto-var-init=pattern' check-security
 ```

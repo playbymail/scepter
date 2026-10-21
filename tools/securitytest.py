@@ -529,6 +529,19 @@ permanent = yes
 """
 
 
+def test_119(port):
+    """A world notice of 250 characters must not overflow B1 at login (#119)."""
+    a = login(port, "Alpha")
+    if not check(a is not None, "Alpha logs in past the long notice"):
+        return
+    alive(a, "Alpha", "a long notice")
+
+
+def long_notice(world):
+    """World whose notice fills mkgame's 255-byte buffer."""
+    return re.sub(r"(?m)^notice = .*$", "notice = " + "N" * 250, world, count=1)
+
+
 def saved(dmtest, game):
     """Save Oldtimer, a 2nd-level character whose password is "ac"."""
     subprocess.run([dmtest, game, "player", "Oldtimer", "ac"], check=True,
@@ -576,6 +589,7 @@ TESTS = {
     "82-change": (test_82_change, None, saved),
     "82-limit": (test_82_limit, None, saved),
     "92": (test_92, None, saved),
+    "119": (test_119, long_notice, None),
 }
 GAME = None
 

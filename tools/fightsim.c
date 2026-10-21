@@ -141,8 +141,11 @@ int main(int argc, char **argv)
 		fprintf(stderr, "fightsim: bad monster template or room\n");
 		return 1;
 	}
-	if (!Verbose)
-		freopen("/dev/null", "w", stdout);
+	if (!Verbose && !freopen("/dev/null", "w", stdout))
+	{
+		perror("fightsim: /dev/null");
+		return 1;
+	}
 
 	/* create the character by answering the login prompts */
 	Pid = Term = 1;

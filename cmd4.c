@@ -39,11 +39,11 @@ void Appeal(void)
 		{
 			char	*p, *s;
 
-			sprintf(B1, "0*** %s summons your assistance.", User->Name);
+			snprintf(B1, sizeof(B1), "0*** %s summons your assistance.", User->Name);
 			QOut(Dm->Trm, B1);
-			sprintf(B1, "0*** Piety rating is %d.", User->Pty);
+			snprintf(B1, sizeof(B1), "0*** Piety rating is %d.", User->Pty);
 			QOut(Dm->Trm, B1);
-			sprintf(B1, "0*** Recommended reaction:  ");
+			snprintf(B1, sizeof(B1), "0*** Recommended reaction:  ");
 
 			p = Pro[(int)User->Sex];
 			if (User->Pty < -2)
@@ -72,7 +72,7 @@ void Appeal(void)
 			else
 				s = "Save player and then send %s on a quest.";
 
-			sprintf(B2, s, p);
+			snprintf(B2, sizeof(B2), s, p);
 			strcat(B1, B2);
 			QOut(Dm->Trm, B1);
 		}
@@ -117,7 +117,7 @@ void Run(void)
 			DrShield = TRUE;
 		}
 
-		sprintf(B1, "0%s ", User->Name);
+		snprintf(B1, sizeof(B1), "0%s ", User->Name);
 		if (DrWeap || DrShield)
 		{
 			strcat(B1, User->Sex == Male ? "drops his " : "drops her ");
@@ -182,7 +182,7 @@ void Pawn(char *Word, int Num)
 			Amount >>= 1;
 
 		PrintObj(Object, TRUE, FALSE, B2);
-		sprintf(B1, "0\"Well, I'll give you %d shillings for %s.", Amount, B2);
+		snprintf(B1, sizeof(B1), "0\"Well, I'll give you %d shillings for %s.", Amount, B2);
 		QOut(Term, B1);
 		QOut(Term, "0Is this to your satisfaction?\"");
 		User->Entry = XSell;
@@ -237,7 +237,7 @@ void Buy(int Num, int Rm)
 
 				--User->Money;
 				QOut(Term, "0");
-				sprintf(B1, "0((( The County Press.  Issue #%d, %d/%d. )))",
+				snprintf(B1, sizeof(B1), "0((( The County Press.  Issue #%d, %d/%d. )))",
 						NumRun, Today >> 7, Today & 0x3f);
 				QOut(Term, B1);
 				QOut(Term, "0");
@@ -245,7 +245,7 @@ void Buy(int Num, int Rm)
 				for (ILoop = 0; ILoop < 5; ILoop++)
 					if (NewsBuf[ILoop][0])
 					{
-						sprintf(B1, "0%s", NewsBuf[ILoop]);
+						snprintf(B1, sizeof(B1), "0%s", NewsBuf[ILoop]);
 						QOut(Term, B1);
 					}
 				QOut(Term, "0");
@@ -265,14 +265,14 @@ void Buy(int Num, int Rm)
 						};
 
 						PNth(TLvl[ILoop], B2);
-						sprintf(B1, "0%s the %s level %s was %s %s yesterday.",
+						snprintf(B1, sizeof(B1), "0%s the %s level %s was %s %s yesterday.",
 								TName[ILoop], B2, TClass[ILoop],
 								adv[Rnd(6) - 1], ver[Rnd(6) - 1]);
 						QOut(Term, B1);
 
 						if (*TBuf[ILoop])
 						{
-							sprintf(B1, "0%s", TBuf[ILoop]);
+							snprintf(B1, sizeof(B1), "0%s", TBuf[ILoop]);
 							QOut(Term, B1);
 						}
 						QOut(Term, "0");
@@ -302,7 +302,7 @@ void Buy(int Num, int Rm)
 					User->Money -= Object->Price;
 					Object->Next = Room[User->RmCode].RmObjectTail;
 					Room[User->RmCode].RmObjectTail = Object;
-					sprintf(B1, "0\"Here you are, %s.  Thank you!\"",
+					snprintf(B1, sizeof(B1), "0\"Here you are, %s.  Thank you!\"",
 							User->Sex == Male ? "sir" : "ma'am");
 					QOut(Term, B1);
 					QOut(Term,
@@ -346,10 +346,10 @@ void Catalog(void)
 			default:	 p = "Other "; break;
 		}
 		PrintObj(&ObjTemp, FALSE, TRUE, B2);
-		sprintf(B1, "0%2d %s %5d %6d %s",
+		snprintf(B1, sizeof(B1), "0%2d %s %5d %6d %s",
 				ILoop, p, ObjTemp.Price, ObjTemp.Weight, B2);
 		if (ObjTemp.ObClass == Weap)
-			sprintf(B2, ", %d-%d hits.",
+			snprintf(B2, sizeof(B2), ", %d-%d hits.",
 					ObjTemp.Object.Weap.MinHp, ObjTemp.Object.Weap.MaxHp);
 		else
 			strcpy(B2, ".");
@@ -379,9 +379,9 @@ void TagPlayer(char *Word)
 		User->Hidden = FALSE;
 		User->It = FALSE;
 		Plyr->It = TRUE;
-		sprintf(B1, "0You tag %s!", Pro[(int)Plyr->Sex]);
+		snprintf(B1, sizeof(B1), "0You tag %s!", Pro[(int)Plyr->Sex]);
 		QOut(Term, B1);
-		sprintf(B1, "0%s tags you!", User->Name);
+		snprintf(B1, sizeof(B1), "0%s tags you!", User->Name);
 		QOut(Plyr->Trm, B1);
 		QOut(Plyr->Trm, "0You are It!");
 	}
@@ -403,7 +403,7 @@ void FollowPlayer(char *Word)
 		QOut(Term, "0Ok.");
 		if (!User->Hidden && !User->Invisible)
 		{
-			sprintf(B1, "0%s follows you!", User->Name);
+			snprintf(B1, sizeof(B1), "0%s follows you!", User->Name);
 			QOut(Leader->Trm, B1);
 		}
 	}
@@ -424,13 +424,13 @@ void Lose(char *Word)
 	&& (Rnd(3) == 1 || User->Weight < FollowPlyr->Weight))
 	{
 		FollowPlyr->Follow = NULL;
-		sprintf(B1, "0You lose %s!", Pro[(int)FollowPlyr->Sex]);
+		snprintf(B1, sizeof(B1), "0You lose %s!", Pro[(int)FollowPlyr->Sex]);
 		QOut(Term, B1);
 	}
 	else
 	{
 		QOut(Term, "0Didn't work!");
-		sprintf(B1, "0%s fails to lose you!", User->Name);
+		snprintf(B1, sizeof(B1), "0%s fails to lose you!", User->Name);
 		QOut(FollowPlyr->Trm, B1);
 	}
 }
@@ -499,7 +499,7 @@ void Quit(int QuitHow)
 	else
 	if (Delay < QuitWait)
 	{
-		sprintf(B1,
+		snprintf(B1, sizeof(B1),
 			"0Sorry, you must wait at least %ld more seconds before quitting.",
 			QuitWait - Delay);
 		QOut(Term, B1);
@@ -507,11 +507,11 @@ void Quit(int QuitHow)
 	else
 	{
 		if (QuitHow == 39)	/* suicide */
-			sprintf(B1,
+			snprintf(B1, sizeof(B1),
 				"0### %s just killed %sself.  We shall all miss %s dearly.",
 				User->Name, Pro[(int)User->Sex], Pro[(int)User->Sex]);
 		else
-			sprintf(B1, "0### %s has quit adventuring.", User->Name);
+			snprintf(B1, sizeof(B1), "0### %s has quit adventuring.", User->Name);
 		AllMsg(B1);
 
 		if (QuitHow == 39)	/* suicide */
@@ -533,7 +533,7 @@ static void DispStatus(UserPoint Plr)
 {
 	char	*Cp;
 
-	sprintf(B1, "0%-10s %c%c%-10s ", Plr->Name, Plr->MesBlock ? '*' : ' ',
+	snprintf(B1, sizeof(B1), "0%-10s %c%c%-10s ", Plr->Name, Plr->MesBlock ? '*' : ' ',
 			Plr->It && User->SSJ ? '+' : ' ',
 			Plr->Status == SNormal ? Plr->LastCmd : "login");
 
@@ -556,7 +556,7 @@ static void DispStatus(UserPoint Plr)
 
 	if (User->SSJ)
 	{
-		sprintf(B2, " %d", Plr->Lvl);
+		snprintf(B2, sizeof(B2), " %d", Plr->Lvl);
 		strcat(B1, B2);
 	}
 
@@ -571,7 +571,7 @@ static void DispStatus(UserPoint Plr)
 
 	if (User->SSJ && Plr->Status == SNormal)
 	{
-		sprintf(B2, " (%d)", W(Plr->RmCode));
+		snprintf(B2, sizeof(B2), " (%d)", W(Plr->RmCode));
 		strcat(B1, B2);
 	}
 
@@ -630,7 +630,7 @@ static void SendMsg(int Tm, char *Verb, int MStart, int MEnd, int NoID, int NoQu
 	}
 	else
 	{
-		sprintf(B1, "0%s%s%s", User->Name, Verb, NoQuote ? "" : " \"");
+		snprintf(B1, sizeof(B1), "0%s%s%s", User->Name, Verb, NoQuote ? "" : " \"");
 		LineLen = 79 - strlen(B1);
 	}
 
@@ -700,7 +700,7 @@ void Talk(char *Word)
 							for (ILoop = 0; ILoop < Count; ILoop++)
 								if (TermList[ILoop] != Plyr->Trm)
 								{
-									sprintf(B1,
+									snprintf(B1, sizeof(B1),
 										"0You overhear %s whispering to %s!",
 										User->Name, Plyr->Name);
 									QOut(TermList[ILoop], B1);
@@ -711,7 +711,7 @@ void Talk(char *Word)
 					}
 					else
 					{
-						sprintf(B1, "0%s is not here.", Word);
+						snprintf(B1, sizeof(B1), "0%s is not here.", Word);
 						QOut(Term, B1);
 					}
 					break;
@@ -753,7 +753,7 @@ void Talk(char *Word)
 						}
 						else
 						{
-							sprintf(B1, "0%s cannot be found.", Word);
+							snprintf(B1, sizeof(B1), "0%s cannot be found.", Word);
 							QOut(Term, B1);
 						}
 					}
@@ -847,7 +847,7 @@ void DoCmd(void)
 				User->Hits = Max(0,	User->Hits - Rnd(2) * User->Lvl);
 				if (!User->Hits || User->Dead)
 				{
-					sprintf(B1,
+					snprintf(B1, sizeof(B1),
 						"0### %s the %s finally died from %s poisonous wounds.",
 						User->Name, CName[(int)User->Class],
 						Pro[(int)User->Sex]);

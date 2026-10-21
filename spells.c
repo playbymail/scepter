@@ -23,13 +23,13 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 	{
 		case SPELL_VIGOR:		/* vigor, OnUsPlayer */
 			Plyr->Fatigue = Min(Plyr->MaxFatigue, Plyr->Fatigue + Level * 4);
-			sprintf(B1, "0You now have %d fatigue points.", Plyr->Fatigue);
+			snprintf(B1, sizeof(B1), "0You now have %d fatigue points.", Plyr->Fatigue);
 			QOut(Plyr->Trm, B1);
 			break;
 
 		case SPELL_HEAL:		/* heal, OnUsPlayer */
 			Plyr->Hits = Min(Plyr->MaxHits, Plyr->Hits + Level * 3);
-			sprintf(B1, "0You now have %d vitality points.", Plyr->Hits);
+			snprintf(B1, sizeof(B1), "0You now have %d vitality points.", Plyr->Hits);
 			QOut(Plyr->Trm, B1);
 			break;
 
@@ -194,7 +194,7 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 			FixMonCount(Room[User->RmCode].RmMonsterTail, TmpName);
 			FixMonCount(Room[User->RmCode].RmMonsterTail, Monster->Name);
 			PrintMon(Monster, FALSE, FALSE, B3);
-			sprintf(B1, "0%s transforms into %s!", B2, B3);
+			snprintf(B1, sizeof(B1), "0%s transforms into %s!", B2, B3);
 			LocalMsg(B1);
 			QOut(Term, B1);
 			break;
@@ -530,7 +530,7 @@ void Spell(int SpellCode)
 
 	if (MagType != Device)
 	{
-		sprintf(B1, "0You cast %s %s spell!", Pa(*Dummy), Dummy);
+		snprintf(B1, sizeof(B1), "0You cast %s %s spell!", Pa(*Dummy), Dummy);
 		QOut(Term, B1);
 	}
 	else
@@ -542,27 +542,27 @@ void Spell(int SpellCode)
 		if (Mon)
 		{
 			PM(Mon, FALSE, B2);
-			sprintf(B1, "0%s casts %s %s spell on %s!",
+			snprintf(B1, sizeof(B1), "0%s casts %s %s spell on %s!",
 					User->Name, Pa(*Dummy), Dummy, B2);
 		}
 		else
 		if (Obj)
 		{
 			PrintObj(Obj, TRUE, FALSE, B2);
-			sprintf(B1, "0%s casts %s %s spell on %s!",
+			snprintf(B1, sizeof(B1), "0%s casts %s %s spell on %s!",
 					User->Name, Pa(*Dummy), Dummy, B2);
 		}
 		else if (Player->Trm != TermList[ILoop])
 		{
 			if (User == Player)
-				sprintf(B1, "0%s casts %s %s spell!",
+				snprintf(B1, sizeof(B1), "0%s casts %s %s spell!",
 						User->Name, Pa(*Dummy), Dummy);
 			else
-				sprintf(B1, "0%s casts %s %s spell on %s!",
+				snprintf(B1, sizeof(B1), "0%s casts %s %s spell on %s!",
 						User->Name, Pa(*Dummy), Dummy, Player->Name);
 		}
 		else
-			sprintf(B1, "0%s casts %s %s spell on you!",
+			snprintf(B1, sizeof(B1), "0%s casts %s %s spell on you!",
 					User->Name, Pa(*Dummy), Dummy);
 
 		QOut(TermList[ILoop], B1);

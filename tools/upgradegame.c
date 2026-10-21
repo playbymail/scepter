@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 {
 	int				Result[NDataFiles];
 	unsigned long	Version[NDataFiles], RecSize;
-	long			Size;
+	long			Size = 0;
 	int				i, Opt, Bad = 0, Todo = 0;
 	char			Path[1100], Msg[256], Dest[1100];
 

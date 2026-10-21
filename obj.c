@@ -220,30 +220,30 @@ void PrintObj(ObjectPoint Obj, int Singular, int Capital, char *Str)
 void ObjDisplay(ObjectPoint Object)
 {
 	PrintObj(Object, FALSE, TRUE, B2);
-	sprintf(B1, "0%s, ", B2);
+	snprintf(B1, sizeof(B1), "0%s, ", B2);
 	if (Object->Carry)
 		strcat(B1, "carryable, ");
-	sprintf(B2, "%d lbs, %d shillings.", Object->Weight, Object->Price);
+	snprintf(B2, sizeof(B2), "%d lbs, %d shillings.", Object->Weight, Object->Price);
 	strcat(B1, B2);
 	QOut(Term, B1);
 
 	if (Object->DescRec && Object->ObClass != Scroll)
 	{
-		sprintf(B1, "0DR=%d, DI=%d.", Object->DescRec, Object->DescCode);
+		snprintf(B1, sizeof(B1), "0DR=%d, DI=%d.", Object->DescRec, Object->DescCode);
 		QOut(Term, B1);
 		strcpy(B2, "0Descrp:  ");
 		PrintDesc(Object->DescRec, Object->DescCode, 0, FALSE, B2, B1);
 		QOut(Term, B1);
 	}
 
-	sprintf(B1, "0Magic=%s, Permanent=%s, Invisible=%s.",
+	snprintf(B1, sizeof(B1), "0Magic=%s, Permanent=%s, Invisible=%s.",
 			Pb(Object->Magic), Pb(Object->Permanent), Pb(Object->Invisible));
 	QOut(Term, B1);
 
 	switch ((int)Object->ObClass)
 	{
 		case Portal:
-			sprintf(B1, "0Portal to room %d.", Object->Object.Portal.ToWhere);
+			snprintf(B1, sizeof(B1), "0Portal to room %d.", Object->Object.Portal.ToWhere);
 			QOut(Term, B1);
 			break;
 
@@ -253,7 +253,7 @@ void ObjDisplay(ObjectPoint Object)
 			struct tWeap	*Wp;
 
 			Wp = &Object->Object.Weap;
-			sprintf(B1, "0Offensive weapon:  %d-%d HP, %d strikes left.",
+			snprintf(B1, sizeof(B1), "0Offensive weapon:  %d-%d HP, %d strikes left.",
 					Wp->MinHp, Wp->MaxHp, Wp->Strikes);
 			QOut(Term, B1);
 
@@ -265,30 +265,30 @@ void ObjDisplay(ObjectPoint Object)
 				case Long:		p = "Long";		break;
 				default:		p = "Unknown";	break;
 			}
-			sprintf(B1, "0%s class weapon, + %d to hit.", p, Wp->WeaPlus);
+			snprintf(B1, sizeof(B1), "0%s class weapon, + %d to hit.", p, Wp->WeaPlus);
 			QOut(Term, B1);
 			break;
 		}
 		case Shield:
-			sprintf(B1, "0Shield: + %d protection, %d hits left.",
+			snprintf(B1, sizeof(B1), "0Shield: + %d protection, %d hits left.",
 					Object->Object.Shield.ShPlus, Object->Object.Shield.ShHits);
 			QOut(Term, B1);
 			break;
 
 		case Armor:
-			sprintf(B1, "0Armor: + %d protection, %d hits left.",
+			snprintf(B1, sizeof(B1), "0Armor: + %d protection, %d hits left.",
 					Object->Object.Armor.ArmPlus, Object->Object.Armor.ArmHits);
 			QOut(Term, B1);
 			break;
 
 		case Coins:
-			sprintf(B1, "0Money, value multiplier:  X%d.",
+			snprintf(B1, sizeof(B1), "0Money, value multiplier:  X%d.",
 					Object->Object.Coins.Multiplier);
 			QOut(Term, B1);
 			break;
 
 		case Scroll:
-			sprintf(B1, "0Scroll, spell = %s.",
+			snprintf(B1, sizeof(B1), "0Scroll, spell = %s.",
 					SpellName(Object->Object.Scroll.Spell));
 			QOut(Term, B1);
 			break;
@@ -299,7 +299,7 @@ void ObjDisplay(ObjectPoint Object)
 			struct tChest	*Ch;
 
 			Ch = &Object->Object.Chest;
-			sprintf(B1, "0Container, objects=%d, trap=%d, lock type=%d.",
+			snprintf(B1, sizeof(B1), "0Container, objects=%d, trap=%d, lock type=%d.",
 					Ch->NumInside, Ch->Trap, Ch->Locked);
 			QOut(Term, B1);
 
@@ -309,7 +309,7 @@ void ObjDisplay(ObjectPoint Object)
 				while (TObj)
 				{
 					PrintObj(TObj, FALSE, FALSE, B2);
-					sprintf(B1, "0  %s", B2);
+					snprintf(B1, sizeof(B1), "0  %s", B2);
 					QOut(Term, B1);
 					TObj = TObj->Next;
 				}
@@ -321,12 +321,12 @@ void ObjDisplay(ObjectPoint Object)
 			struct tDoor	*Dr;
 
 			Dr = &Object->Object.Door;
-			sprintf(B1, "0Door, portal to room %d.  Trap=%d, lock type=%d.",
+			snprintf(B1, sizeof(B1), "0Door, portal to room %d.  Trap=%d, lock type=%d.",
 					Dr->DToWhere, Dr->DTrap, Dr->DLocked);
 			QOut(Term, B1);
 			if (Dr->DToll)
 			{
-				sprintf(B1, "0A %d-shilling toll will be charged for passage.",
+				snprintf(B1, sizeof(B1), "0A %d-shilling toll will be charged for passage.",
 						Object->Price);
 				QOut(Term, B1);
 			}
@@ -336,24 +336,24 @@ void ObjDisplay(ObjectPoint Object)
 		}
 		case MagDevice:
 			PNth(Object->Object.MagDevice.MLevel, B2);
-			sprintf(B1, "0%s level magical device, spell = %s.  Number of charges = %d.",
+			snprintf(B1, sizeof(B1), "0%s level magical device, spell = %s.  Number of charges = %d.",
 					B2, SpellName(Object->Object.MagDevice.MSpell),
 					Object->Object.MagDevice.NumCharges);
 			QOut(Term, B1);
 			break;
 
 		case Teleport:
-			sprintf(B1, "0Teleport device, from room %d to room %d.",
+			snprintf(B1, sizeof(B1), "0Teleport device, from room %d to room %d.",
 					Object->Object.Teleport.TActiveRm,
 					Object->Object.Teleport.TToWhere);
 			QOut(Term, B1);
 			break;
 
 		case Keys:
-			sprintf(B1, "0Keys, unlock type=%d.", Object->Object.Keys.UnLock);
+			snprintf(B1, sizeof(B1), "0Keys, unlock type=%d.", Object->Object.Keys.UnLock);
 			if (Object->Object.Keys.NumUses > 0)
 			{
-				sprintf(B2, "  (%d uses remaining)",
+				snprintf(B2, sizeof(B2), "  (%d uses remaining)",
 						Object->Object.Keys.NumUses);
 				strcat(B1, B2);
 			}
@@ -370,7 +370,7 @@ void ObjDisplay(ObjectPoint Object)
 
 		case Ring:
 			PNth(Object->Object.Ring.RLevel, B2);
-			sprintf(B1, "0%s level ring, spell = %s.",
+			snprintf(B1, sizeof(B1), "0%s level ring, spell = %s.",
 					B2, SpellName(Object->Object.Ring.RSpell));
 			QOut(Term, B1);
 			break;

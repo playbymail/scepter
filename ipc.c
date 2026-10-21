@@ -249,7 +249,7 @@ void Who(void)
 		QOut(Term, "0Name");
 	for (Player = UserTail; Player; Player = Player->NextUser)
 	{
-		sprintf(B1, "0%s%s", Player->Name,
+		snprintf(B1, sizeof(B1), "0%s%s", Player->Name,
 				Player->NonExistant ? " (talk)" : "");
 		QOut(Term, B1);
 	}

@@ -36,7 +36,7 @@ int W(int Rm)
 
 void Condition(UserPoint Plyr)
 {
-	sprintf(B1,
+	snprintf(B1, sizeof(B1),
 		"0You have %d/%d vitality pts, %d/%d fatigue pts, and %d/%d magic pts.",
 			Plyr->Hits, Plyr->MaxHits, Plyr->Fatigue, Plyr->MaxFatigue,
 			Plyr->Magic, Plyr->MaxMagic);
@@ -49,7 +49,7 @@ void PlayerDisplay(UserPoint Plyer)
 	int			Count;
 
 	PNth(Plyer->Lvl, B2);
-	sprintf(B1, "0%s, the %s level %s",
+	snprintf(B1, sizeof(B1), "0%s, the %s level %s",
 			Plyer->Name, B2, CName[(int)Plyer->Class]);
 	if (Plyer->PlayTester)
 		strcat(B1, " (PlayTester)");
@@ -57,7 +57,7 @@ void PlayerDisplay(UserPoint Plyer)
 	{
 		if (Plyer->Assoc)
 		{
-			sprintf(B2, " (Assoc DM %d)", Plyer->Assoc);
+			snprintf(B2, sizeof(B2), " (Assoc DM %d)", Plyer->Assoc);
 			strcat(B1, B2);
 		}
 		else
@@ -65,7 +65,7 @@ void PlayerDisplay(UserPoint Plyer)
 	}
 	if (User->SSJ)
 	{
-		sprintf(B2, " in room %d/%d", Plyer->RmCode, W(Plyer->RmCode));
+		snprintf(B2, sizeof(B2), " in room %d/%d", Plyer->RmCode, W(Plyer->RmCode));
 		strcat(B1, B2);
 	}
 	strcat(B1, ".");
@@ -85,7 +85,7 @@ void PlayerDisplay(UserPoint Plyer)
 	if (Plyer->Suck)
 		QOut(Term, "0You suck!");
 
-	sprintf(B1,
+	snprintf(B1, sizeof(B1),
 		"0With %d/%d vitality pts, %d/%d fatigue pts, and %d/%d magic pts.",
 		Plyer->Hits, Plyer->MaxHits, Plyer->Fatigue, Plyer->MaxFatigue,
 		Plyer->Magic, Plyer->MaxMagic);
@@ -97,15 +97,15 @@ void PlayerDisplay(UserPoint Plyer)
 		QOut(Term, "0You are dying from poison!");
 	if (Plyer->Follow)
 	{
-		sprintf(B1, "0You are following %s.", Plyer->Follow->Name);
+		snprintf(B1, sizeof(B1), "0You are following %s.", Plyer->Follow->Name);
 		QOut(Term, B1);
 	}
-	sprintf(B1, "0You have a defensive armor class of %d.", Plyer->AC);
+	snprintf(B1, sizeof(B1), "0You have a defensive armor class of %d.", Plyer->AC);
 	QOut(Term, B1);
-	sprintf(B1, "0Str=%d, Int=%d, Dex=%d, Pty=%d, Con=%d.",
+	snprintf(B1, sizeof(B1), "0Str=%d, Int=%d, Dex=%d, Pty=%d, Con=%d.",
 			Plyer->Str, Plyer->Int, Plyer->Dex, Plyer->Pty, Plyer->Con);
 	QOut(Term, B1);
-	sprintf(B1,
+	snprintf(B1, sizeof(B1),
 			"0Weapon skills:  Sharp-%d%%, Thrust-%d%%, Blunt-%d%%, Pole-%d%%.",
 			Plyer->SSharp * 10, Plyer->SThrust * 10,
 			Plyer->SBlunt * 10, Plyer->SLong * 10);
@@ -113,13 +113,13 @@ void PlayerDisplay(UserPoint Plyer)
 
 	PrintExp(Plyer);
 	QOut(Term, "0");
-	sprintf(B1, "0You are carrying %d lbs of items:", Plyer->Weight);
+	snprintf(B1, sizeof(B1), "0You are carrying %d lbs of items:", Plyer->Weight);
 	QOut(Term, B1);
 
 	for (Count = 0, Obj = Plyer->ObjectTail; Obj; Obj = Obj->Next)
 	{
 		PrintObj(Obj, FALSE, TRUE, B2);
-		sprintf(B1, "0 %c %d) %s",
+		snprintf(B1, sizeof(B1), "0 %c %d) %s",
 			Obj == Plyer->USWeap
 		||	Obj == Plyer->USShield
 		||	Obj == Plyer->USArm
@@ -129,14 +129,14 @@ void PlayerDisplay(UserPoint Plyer)
 	}
 	if (Count > MaxObjs)
 	{
-		sprintf(B1, "0Only the first %d items will be saved when you log out.",
+		snprintf(B1, sizeof(B1), "0Only the first %d items will be saved when you log out.",
 				MaxObjs);
 		QOut(Term, B1);
 	}
 
 	if (User->SSJ)
 	{
-		sprintf(B1, "0Last logged in on %d/%d.",
+		snprintf(B1, sizeof(B1), "0Last logged in on %d/%d.",
 				Plyer->LastAccess >> 7, Plyer->LastAccess & 0x3f);
 		QOut(Term, B1);
 	}
@@ -155,7 +155,12 @@ static void ReadSeg(int SlotNum, int SegNum)
 		int		Rm, WRm;
 
 		Rm = RLoop + T;
-		fread((char *)&Room[Rm], sizeof(RoomType), 1, ECaves);
+		if (!fread((char *)&Room[Rm], sizeof(RoomType), 1, ECaves))
+		{
+			/* a short dungeon file: leave the room empty */
+			ErrLog(" Sce912 - Short read on dungeon file.");
+			memset(&Room[Rm], 0, sizeof(RoomType));
+		}
 		Room[Rm].RmPlayerTail = NULL;
 		WRm = W(Rm);
 		if (Room[Rm].RmObjectTail)
@@ -282,7 +287,7 @@ void AddSeg(void)
 
 			SlotTbl[ILoop] = NumSegs;
 			T = NumSegs * 10;
-			sprintf(B1, "0New rooms %d to %d created.", T, T + 9);
+			snprintf(B1, sizeof(B1), "0New rooms %d to %d created.", T, T + 9);
 			QOut(Term, B1);
 			NumSegs++;
 			WriteSeg(ILoop, NumSegs - 1, FALSE);
@@ -553,7 +558,7 @@ void RoomDisplay(int Rm, int Brief)
 	PrintDesc(Room[Rm].DescRec, Room[Rm].DescCode, 0, Brief, "0", B1);
 	if (User->SSJ)
 	{
-		sprintf(B2, "  (%d)", W(Rm));
+		snprintf(B2, sizeof(B2), "  (%d)", W(Rm));
 		strcat(B1, B2);
 		if (Room[Rm].Dark)
 			strcat(B1, "  (Dark)");
@@ -672,7 +677,7 @@ void RoomDisplay(int Rm, int Brief)
 		if (Monster->DefPlayer)
 		{
 			PM(Monster, TRUE, B2);
-			sprintf(B1, "0%s is attacking %s!", B2, Monster->DefPlayer->Name);
+			snprintf(B1, sizeof(B1), "0%s is attacking %s!", B2, Monster->DefPlayer->Name);
 			QOut(Term, B1);
 		}
 
@@ -686,9 +691,9 @@ void RoomDisplay(int Rm, int Brief)
 			*/
 				PM(Player->DefMon, FALSE, B2);
 				if (Player == User)
-					sprintf(B1, "0You're attacking %s!", B2);
+					snprintf(B1, sizeof(B1), "0You're attacking %s!", B2);
 				else
-					sprintf(B1, "0%s is attacking %s!", Player->Name, B2);
+					snprintf(B1, sizeof(B1), "0%s is attacking %s!", Player->Name, B2);
 				QOut(Term, B1);
 			/*
 			}
@@ -697,9 +702,9 @@ void RoomDisplay(int Rm, int Brief)
 		if (Player->DefPlayer)
 		{
 			if (Player == User)
-				sprintf(B1, "0You're attacking %s!", Player->DefPlayer->Name);
+				snprintf(B1, sizeof(B1), "0You're attacking %s!", Player->DefPlayer->Name);
 			else
-				sprintf(B1, "0%s is attacking %s!",
+				snprintf(B1, sizeof(B1), "0%s is attacking %s!",
 						Player->Name, Player->DefPlayer->Name);
 			QOut(Term, B1);
 		}

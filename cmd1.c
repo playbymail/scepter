@@ -58,14 +58,14 @@ static void TrapCheck(int Trap)
 	Dmg = Max(0, Trap + User->AC - 10);
 	Dmg = Dmg / 2 + Rnd(Dmg);
 	PrintDmg(User, Dmg, User->Brief, B2);
-	sprintf(B1, "0It hits you for %s", B2);
+	snprintf(B1, sizeof(B1), "0It hits you for %s", B2);
 	QOut(Term, B1);
 
 	if (User->Hits + User->Fatigue <= Dmg)
 	{
 		User->Dead = TRUE;
 		User->Fatigue = User->Hits = 0;
-		sprintf(B1, "0### %s was just killed by a deadly trap.", User->Name);
+		snprintf(B1, sizeof(B1), "0### %s was just killed by a deadly trap.", User->Name);
 		AllMsg(B1);
 	}
 	else
@@ -168,7 +168,7 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 			if (Mon->Guard && !Held)
 			{
 				PM(Mon, TRUE, B2);
-				sprintf(B1, "0%s stops you from getting it.", B2);
+				snprintf(B1, sizeof(B1), "0%s stops you from getting it.", B2);
 				QOut(Term, B1);
 				return;
 			}
@@ -187,11 +187,11 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 			if (Where == Container)
 			{
 				PrintObj(Box, FALSE, FALSE, B3);
-				sprintf(B1, "0%s picked up %s from inside %s.",
+				snprintf(B1, sizeof(B1), "0%s picked up %s from inside %s.",
 						User->Name, B2, B3);
 			}
 			else
-				sprintf(B1, "0%s picked up %s.", User->Name, B2);
+				snprintf(B1, sizeof(B1), "0%s picked up %s.", User->Name, B2);
 			LocalMsg(B1);
 
 			if (Where == Container)
@@ -207,7 +207,7 @@ void GetObject(char *Word, int Num, RmCodeType Rm)
 			if (Object->ObClass == Coins)
 			{
 				User->Money += Object->Price;
-				sprintf(B1, "0You now have %ld shillings in cash.",
+				snprintf(B1, sizeof(B1), "0You now have %ld shillings in cash.",
 					User->Money);
 				QOut(Term, B1);
 				free(Object);
@@ -284,7 +284,7 @@ void DropObject(char *Word, int Num, RmCodeType Rm)
 		if (Box->Object.Chest.NumInside >= 6 || Box->Weight > 200)
 		{
 			PrintObj(Box, TRUE, FALSE, B2);
-			sprintf(B1,
+			snprintf(B1, sizeof(B1),
 					"0There is no more room inside %s for more objects!", B2);
 			QOut(Term, B1);
 		}
@@ -334,10 +334,10 @@ void DropObject(char *Word, int Num, RmCodeType Rm)
 	if (Where == Container)
 	{
 		PrintObj(Box, TRUE, FALSE, B3);
-		sprintf(B1, "0%s dropped %s into %s.", User->Name, B2, B3);
+		snprintf(B1, sizeof(B1), "0%s dropped %s into %s.", User->Name, B2, B3);
 	}
 	else
-		sprintf(B1, "0%s dropped %s.", User->Name, B2);
+		snprintf(B1, sizeof(B1), "0%s dropped %s.", User->Name, B2);
 	LocalMsg(B1);
 }
 
@@ -399,18 +399,18 @@ int Look(char *Word, int Num)
 		if (Player->USArm && !Player->USArm->Invisible)
 		{
 			PrintObj(Player->USArm, FALSE, FALSE, B2);
-			sprintf(B1, "0%s the %s is wearing %s.",
+			snprintf(B1, sizeof(B1), "0%s the %s is wearing %s.",
 					Player->Name, CName[(int) Player->Class], B2);
 		}
 		else
-			sprintf(B1, "0You see %s the %s.",
+			snprintf(B1, sizeof(B1), "0You see %s the %s.",
 					Player->Name, CName[(int) Player->Class]);
 		QOut(Term, B1);
 
 		if (Player->USWeap && !Player->USWeap->Invisible
 		||	Player->USShield && !Player->USShield->Invisible)
 		{
-			sprintf(B1, "0%s is holding ", Player->Sex == Male ? "He" : "She");
+			snprintf(B1, sizeof(B1), "0%s is holding ", Player->Sex == Male ? "He" : "She");
 			if (Player->USWeap && !Player->USWeap->Invisible)
 			{
 				PrintObj(Player->USWeap, FALSE, FALSE, B2);
@@ -431,13 +431,13 @@ int Look(char *Word, int Num)
 		if (Player->USRingL && !Player->USRingL->Invisible)
 		{
 			PrintObj(Player->USRingL, FALSE, FALSE, B2);
-			sprintf(B1, "0On %s left hand is %s.", Player->Sex == Male ? "his" : "her", B2);
+			snprintf(B1, sizeof(B1), "0On %s left hand is %s.", Player->Sex == Male ? "his" : "her", B2);
 			QOut(Term, B1);
 		}
 		if (Player->USRingR && !Player->USRingR->Invisible)
 		{
 			PrintObj(Player->USRingR, FALSE, FALSE, B2);
-			sprintf(B1, "0On %s right hand is %s.", Player->Sex == Male ? "his" : "her", B2);
+			snprintf(B1, sizeof(B1), "0On %s right hand is %s.", Player->Sex == Male ? "his" : "her", B2);
 			QOut(Term, B1);
 		}
 
@@ -494,7 +494,7 @@ int Look(char *Word, int Num)
 					else
 					{
 						PrintObj(Object, FALSE, FALSE, B2);
-						sprintf(B1, "0%s %s.",
+						snprintf(B1, sizeof(B1), "0%s %s.",
 							Where == Ground ? "It's" : "You are holding", B2);
 					}
 					QOut(Term, B1);
@@ -506,7 +506,7 @@ int Look(char *Word, int Num)
 							"sharp, bladed", "thrusting", "blunt", "pole"
 						};
 
-						sprintf(B1, "0This is a %s weapon.",
+						snprintf(B1, sizeof(B1), "0This is a %s weapon.",
 								wtxt[(int)Object->Object.Weap.WeapType]);
 						QOut(Term, B1);
 					}
@@ -523,7 +523,7 @@ int Look(char *Word, int Num)
 							ObjectPoint	TObj;
 
 							PrintObj(Object, TRUE, FALSE, B2);
-							sprintf(B1,
+							snprintf(B1, sizeof(B1),
 									"0Inside %s you see the following:", B2);
 							QOut(Term, B1);
 
@@ -532,7 +532,7 @@ int Look(char *Word, int Num)
 								TObj = TObj->Next)
 							{
 								PrintObj(TObj, FALSE, FALSE, B2);
-								sprintf(B1, "0  %s", B2);
+								snprintf(B1, sizeof(B1), "0  %s", B2);
 								QOut(Term, B1);
 							}
 						}
@@ -542,7 +542,7 @@ int Look(char *Word, int Num)
 				if (Object->ObClass == Scroll && CmdCode != 31)
 				{
 					PrintObj(Object, TRUE, TRUE, B2);
-					sprintf(B1, "0%s disintegrates!", B2);
+					snprintf(B1, sizeof(B1), "0%s disintegrates!", B2);
 					QOut(Term, B1);
 
 					DeleteObject(Object, &User->ObjectTail);
@@ -577,7 +577,7 @@ int Look(char *Word, int Num)
 				Lev = ((Mon->Lvl - 1) / 5) * 5 + 1;
 				PNth(Lev, LevBuf);
 				PNth(Lev + 4, B3);
-				sprintf(B1, "0It's %s, %s to %s level.", B2, LevBuf, B3);
+				snprintf(B1, sizeof(B1), "0It's %s, %s to %s level.", B2, LevBuf, B3);
 				QOut(Term, B1);
 
 				if (Mon->Magic)
@@ -617,7 +617,7 @@ void Train(void)
 		return;
 	}
 
-	sprintf(B1, "0After many weeks of training %syou find...",
+	snprintf(B1, sizeof(B1), "0After many weeks of training %syou find...",
 			User->Class != Barbarian && User->Class != Thief
 		&&	User->Class != Fighter ? "and meditation " : "");
 	QOut(Term, B1);
@@ -687,7 +687,7 @@ void OpenClose(char *Word, int Num)
 		{
 			ObClosed = TRUE;
 			PrintObj(Obj, TRUE, FALSE, B2);
-			sprintf(B1, "0%s just closed %s.", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s just closed %s.", User->Name, B2);
 			LocalMsg(B1);
 			QOut(Term, "0Ok.");
 			Succeeded = TRUE;
@@ -718,7 +718,7 @@ void OpenClose(char *Word, int Num)
 			&&	UnLock != 1000)
 			{
 				PrintObj(Key, TRUE, FALSE, B2);
-				sprintf(B1, "0%s doesn't work!", B2);
+				snprintf(B1, sizeof(B1), "0%s doesn't work!", B2);
 				QOut(Term, B1);
 			}
 			else
@@ -726,7 +726,7 @@ void OpenClose(char *Word, int Num)
 				ObClosed = CmdCode == 67;
 				PrintObj(Obj, TRUE, FALSE, B2);
 				PrintObj(Key, FALSE, FALSE, B3);
-				sprintf(B1, "0%s just %s %s with %s.", User->Name,
+				snprintf(B1, sizeof(B1), "0%s just %s %s with %s.", User->Name,
 						ObClosed ? "locked" : "unlocked", B2, B3);
 				LocalMsg(B1);
 				QOut(Term, "0Ok.");
@@ -736,7 +736,7 @@ void OpenClose(char *Word, int Num)
 				&&	--Key->Object.Keys.NumUses == 0)
 				{
 					PrintObj(Key, TRUE, TRUE, B2);
-					sprintf(B1, "0%s falls apart!", B2);
+					snprintf(B1, sizeof(B1), "0%s falls apart!", B2);
 					QOut(Term, B1);
 					DeleteObject(Key, &User->ObjectTail);
 					User->Weight -= Key->Weight;
@@ -757,7 +757,7 @@ void OpenClose(char *Word, int Num)
 		{
 			ObClosed = FALSE;
 			PrintObj(Obj, TRUE, FALSE, B2);
-			sprintf(B1, "0%s just opened %s.", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s just opened %s.", User->Name, B2);
 			LocalMsg(B1);
 			QOut(Term, "0Ok.");
 			Succeeded = TRUE;
@@ -780,7 +780,7 @@ void OpenClose(char *Word, int Num)
 			if (User->Class != Thief)
 			{
 				PrintObj(Obj, TRUE, FALSE, B2);
-				sprintf(B1, "0%s picks the lock on %s open!", User->Name, B2);
+				snprintf(B1, sizeof(B1), "0%s picks the lock on %s open!", User->Name, B2);
 				LocalMsg(B1);
 				Succeeded = TRUE;
 			}
@@ -798,7 +798,7 @@ void OpenClose(char *Word, int Num)
 		{
 			User->LastAtk = RealTime + 15;
 			PrintObj(Obj, TRUE, FALSE, B2);
-			sprintf(B1, "0%s fails to smash %s open.", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s fails to smash %s open.", User->Name, B2);
 			LocalMsg(B1);
 			QOut(Term, "0Bang!  You fail to smash it open!");
 
@@ -808,7 +808,7 @@ void OpenClose(char *Word, int Num)
 
 				Count = 0;
 				RoomMsg(&Room[S(Obj->Object.Door.DToWhere)], &Count);
-				sprintf(B1, "0You hear a noise on the other side of %s.", B2);
+				snprintf(B1, sizeof(B1), "0You hear a noise on the other side of %s.", B2);
 				for (ILoop = 0; ILoop < Count; ILoop++)
 					QOut(TermList[ILoop], B1);
 			}
@@ -816,7 +816,7 @@ void OpenClose(char *Word, int Num)
 		else
 		{
 			PrintObj(Obj, TRUE, FALSE, B2);
-			sprintf(B1, "0%s smashes %s open.", User->Name, B2);
+			snprintf(B1, sizeof(B1), "0%s smashes %s open.", User->Name, B2);
 			LocalMsg(B1);
 			ObClosed = FALSE;
 			QOut(Term, "0You smash it open!");
@@ -856,7 +856,7 @@ void OpenClose(char *Word, int Num)
 					UserPoint	OPly;
 
 					PrintObj(OtherDoor, TRUE, FALSE, B2);
-					sprintf(B1, "0Someone just %sed %s.",
+					snprintf(B1, sizeof(B1), "0Someone just %sed %s.",
 							ObClosed ? "clos" : "open", B2);
 					for (OPly = NextOkSend(Room[S(Dr->DToWhere)].RmPlayerTail);
 						OPly;
@@ -928,12 +928,12 @@ void Hide(char *Word, int Num)
 		Room[User->RmCode].RmObjectTail = Obj;
 		Obj->Invisible = TRUE;
 		PrintObj(Obj, TRUE, FALSE, B2);
-		sprintf(B1, "0You carefully hide %s in the room.", B2);
+		snprintf(B1, sizeof(B1), "0You carefully hide %s in the room.", B2);
 		QOut(Term,B1);
 		if (Rnd(4) == 1)
 		{
 			PrintObj(Obj, FALSE, FALSE, B2);
-			sprintf(B1, "0You see %s trying to hide %s in the room.",
+			snprintf(B1, sizeof(B1), "0You see %s trying to hide %s in the room.",
 					User->Name, B2);
 			LocalMsg(B1);
 			Obj->Invisible = FALSE;
@@ -965,7 +965,7 @@ void Search(void)
 		{
 			HidPlyr->Hidden = FALSE;
 			Find = TRUE;
-			sprintf(B1, "0You spot %s hiding in the shadows.", HidPlyr->Name);
+			snprintf(B1, sizeof(B1), "0You spot %s hiding in the shadows.", HidPlyr->Name);
 			QOut(Term, B1);
 		}
 
@@ -974,7 +974,7 @@ void Search(void)
 		{
 			Find = TRUE;
 			PrintObj(HidObj, FALSE, FALSE, B2);
-			sprintf(B1, "0While searching, you discover %s!", B2);
+			snprintf(B1, sizeof(B1), "0While searching, you discover %s!", B2);
 			QOut(Term, B1);
 		}
 

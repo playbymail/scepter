@@ -84,19 +84,19 @@ void MonDisplay(MonsterPoint Mon)
 
 	PM(Mon, TRUE, B2);
 	PNth(Mon->Lvl, B3);
-	sprintf(B1, "0%s is a %s level monster with %d/%d H.P.",
+	snprintf(B1, sizeof(B1), "0%s is a %s level monster with %d/%d H.P.",
 			B2, B3, Mon->Hits, Mon->MaxHits);
 	QOut(Term, B1);
 
-	sprintf(B1, "0Defend=%s, Block=%s, Follow=%s, Watch=%s,",
+	snprintf(B1, sizeof(B1), "0Defend=%s, Block=%s, Follow=%s, Watch=%s,",
 			Pb(Mon->Defend), Pb(Mon->Block), Pb(Mon->Follow), Pb(Mon->Watch));
 	QOut(Term, B1);
 
-	sprintf(B1, "0Guard=%s, AtkLastAggr=%s, DR=%d, DI=%d.",
+	snprintf(B1, sizeof(B1), "0Guard=%s, AtkLastAggr=%s, DR=%d, DI=%d.",
 			Pb(Mon->Guard), Pb(Mon->AtkLastAggr), Mon->DescRec, Mon->DescCode);
 	QOut(Term, B1);
 
-	sprintf(B1, "0%8d E.P., Permanent=%s, AtkRate=%d, AC=%d.",
+	snprintf(B1, sizeof(B1), "0%8d E.P., Permanent=%s, AtkRate=%d, AC=%d.",
 			MonExperience(Mon), Pb(Mon->Permanent), Mon->AtkSpeed, Mon->AC);
 	QOut(Term, B1);
 
@@ -143,12 +143,12 @@ void MonDisplay(MonsterPoint Mon)
 		QOut(Term, "0Anyone who'd kill such a nice monster must suck.");
 	if (Mon->MParley)
 	{
-		sprintf(B1, "0Monster will do type %d parley.", Mon->MParley);
+		snprintf(B1, sizeof(B1), "0Monster will do type %d parley.", Mon->MParley);
 		QOut(Term, B1);
 	}
 	if (Mon->CharmPlayer)
 		QOut(Term, "0Monster is charmed.");
-	sprintf(B1, "0Treasure type:  %d.", Mon->WhichObj);
+	snprintf(B1, sizeof(B1), "0Treasure type:  %d.", Mon->WhichObj);
 	QOut(Term, B1);
 
 	if (Object = Mon->ObjectTail)
@@ -157,7 +157,7 @@ void MonDisplay(MonsterPoint Mon)
 		do
 		{
 			PrintObj(Object, FALSE, TRUE, B2);
-			sprintf(B1, "0%s", B2);
+			snprintf(B1, sizeof(B1), "0%s", B2);
 			QOut(Term, B1);
 		} while (Object = Object->Next);
 	}
