@@ -70,7 +70,7 @@ Upgrade history:
 
 | Date | Commit | Format | Backup |
 |---|---|---|---|
-| 2026-10-20 | `860c2a4` | 0 → 1 (headers, #83) | `/var/lib/scepter/alpha.backup-20261020-212823` |
+| 2026-10-20 | `860c2a4` | 0 → 1 (headers, #83) | `/var/lib/scepter/alpha.backup-20261020-212823` (deleted 2026-10-21) |
 | 2026-10-21 | `45509f5` | 2 (password hashes, #82); game recreated with `mkgame`, since it held only test data | none |
 
 ## First install
@@ -95,6 +95,9 @@ systemctl enable --now scepter
 
 `mkgame` won't overwrite an existing game unless you pass `-f`, and with
 `-f` it deletes every saved character.  Only change the world on purpose.
+
+`mkgame` creates the game directory with the default mode, 0755.  Run
+`chmod 0750 /var/lib/scepter/alpha` afterwards, so only `scepter` can read it.
 
 ## Firewall
 
