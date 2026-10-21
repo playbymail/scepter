@@ -5,7 +5,8 @@ into the data files for a new game:
 
 ```sh
 make
-./mkgame var/alpha/alpha.world games/one      # create a game
+mkdir -p games/one                            # an empty directory
+./mkgame var/alpha/alpha.world games/one      # create a game in it
 ./scepterd games/one                          # play it
 ```
 
@@ -14,17 +15,19 @@ games. Each game keeps its own state in its directory:
 
 | File | Contents |
 |---|---|
-| `dat/efile` | notice, news, obituaries, run counter, monster speed, encounter and treasure tables |
-| `dat/special` | start, revive and jail rooms; shop roles, greetings, stock, bar staggers, training rooms |
-| `ram/edungeon.new` | rooms |
-| `ram/dbobj.new`, `ram/dbmon.new` | objects and monsters currently in rooms |
-| `ram/mlist.new`, `ram/olist.new` | monster and object templates (`dat/` holds a second copy) |
-| `ram/dscrpt` | description text (`dat/` holds a second copy) |
-| `ram/eperson.new` | player characters (empty in a new game) |
-| `dat/errlog` | server error log |
+| `game.db` | the game database (empty for now; the files below move into it, #71) |
+| `efile` | notice, news, obituaries, run counter, monster speed, encounter and treasure tables |
+| `special` | start, revive and jail rooms; shop roles, greetings, stock, bar staggers, training rooms |
+| `edungeon` | rooms |
+| `dbobj`, `dbmon` | objects and monsters currently in rooms |
+| `mlist`, `olist` | monster and object templates (`mlist.hd` and `olist.hd` are second copies) |
+| `dscrpt` | description text (`dscrpt.hd` is a second copy) |
+| `eperson` | player characters (empty in a new game) |
+| `errlog` | server error log, made when something is first logged |
 
-`mkgame` refuses to write into a directory that already holds a game,
-unless you pass `-f`.
+The directory must exist and be empty before `mkgame` runs; `mkgame`
+never creates a directory and never overwrites or deletes anything.  To
+make a game again, empty the directory or use a new one.
 
 Every world file has a JSON copy beside it, `var/NAME/world.json`. The
 world file is the source; `tools/worldjson.py` converts in both directions,

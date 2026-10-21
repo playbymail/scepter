@@ -347,7 +347,7 @@ def test_82_limit(port):
     c, got = enter(port, "Oldtimer", "ac")
     check(got and b"Too many wrong passwords.  Try again in 10 minutes." in got,
           "then even the right one is refused for 10 minutes")
-    with open(os.path.join(GAME, "dat", "errlog")) as f:
+    with open(os.path.join(GAME, "errlog")) as f:
         log = f.read()
     check(log.count("Wrong password for Oldtimer from 127.0.0.1") == 5
           and "address refused for 10 minutes" in log, "errlog records the failures")
@@ -375,7 +375,7 @@ def test_92(port):
     c, got = enter(port, "Oldtimer", "ac")
     check(got and b"Too many wrong passwords.  Try again in 10 minutes." in got,
           "and logging in again from that address is refused too")
-    with open(os.path.join(GAME, "dat", "errlog")) as f:
+    with open(os.path.join(GAME, "errlog")) as f:
         log = f.read()
     check(log.count("Wrong password for Oldtimer from 127.0.0.1") == 5
           and "address refused for 10 minutes" in log, "errlog records the failures")
@@ -620,6 +620,7 @@ def run_dm(name, dmtest, mkgame, world):
     print("# #%s: dmtest %s" % (name, name))
     with tempfile.TemporaryDirectory() as tmp:
         game = os.path.join(tmp, "game")
+        os.mkdir(game)  # mkgame never creates it
         subprocess.run([mkgame, world, game], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         try:
@@ -648,6 +649,7 @@ def run(name, scepterd, mkgame, world, dmtest):
             with open(world, "w") as f:
                 f.write(text)
         game = os.path.join(tmp, "game")
+        os.mkdir(game)  # mkgame never creates it
         subprocess.run([mkgame, world, game], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if setup:

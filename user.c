@@ -4,7 +4,7 @@
 #include "scepter.h"
 
 static FILE			*EPerson;
-static char			*EPERSON = WORKDIR "/ram/eperson.new";
+static char			*EPERSON = WORKDIR "/eperson";
 
 static void	OpenPer(void);
 static void	ClosePer(void);

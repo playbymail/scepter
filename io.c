@@ -78,7 +78,7 @@ long MaxL(long a, long b)
 	return a > b ? a : b;
 }
 
-/* Add Msg to dat/errlog */
+/* Add Msg to errlog */
 void ErrLog(char *Msg)
 {
 	FILE	*fp;
@@ -92,11 +92,26 @@ void ErrLog(char *Msg)
 	}
 }
 
-/* Log Error and exit; stderr too, in case dat/errlog can't be opened */
+/* Report a database problem (gamedb.c) in errlog and on stderr */
+void DBLog(const char *Msg)
+{
+	char	Line[1100];
+
+	snprintf(Line, sizeof(Line), " %s", Msg);
+	ErrLog(Line);
+	fprintf(stderr, "scepterd:%s\n", Line);
+}
+
+/*
+ * Log Error and exit; stderr too, in case errlog can't be opened.  A save
+ * in progress is rolled back, so the database keeps the last whole one.
+ */
 void Abort(char *Error)
 {
 	ErrLog(Error);
 	fprintf(stderr, "scepterd:%s\n", Error);
+	DBRollback();
+	DBClose();
 	exit(1);
 }
 

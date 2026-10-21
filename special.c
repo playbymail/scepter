@@ -2,7 +2,7 @@
  * Special rooms: shops, training halls and the start/revive/jail rooms.
  *
  * The QNX version fixed these by room number.  They now come from the
- * world (see docs/world-format.md); mkgame writes them to dat/special,
+ * world (see docs/world-format.md); mkgame writes them to SPECIAL,
  * one setting per line:
  *
  *	start ROOM				revive ROOM				jail ROOM

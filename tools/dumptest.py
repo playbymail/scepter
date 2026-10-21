@@ -202,6 +202,7 @@ def main():
     try:
         for name, world, test in CASES:
             game = os.path.join(tmp, name)
+            os.mkdir(game)  # mkgame never creates it
             run(bindir, "mkgame", os.path.join(ROOT, world), game)
             if test:
                 run(bindir, "dmtest", game, test)

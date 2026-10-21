@@ -265,7 +265,7 @@ static void Test82(void)
 		}
 		Check(I == 5, "each refusal doubles, up to 2 hours");
 	}
-	Check(strstr(ReadFile("dat/errlog"), "Wrong password for Dungeon from 10.0.0.1;"
+	Check(strstr(ReadFile("errlog"), "Wrong password for Dungeon from 10.0.0.1;"
 				 " address refused for 10 minutes.") != NULL,
 		  "wrong passwords and refusals are logged");
 	RealTime += 7200;
@@ -687,7 +687,7 @@ static void Test48(void)
 	Check(LenBuf == 0, "an empty message gives LenBuf 0");
 }
 
-/* #17: the hourly update must survive a read-only data directory */
+/* #17: the hourly update must survive a read-only game directory */
 static void Test17(void)
 {
 	char	Old[8192];
@@ -695,21 +695,21 @@ static void Test17(void)
 	strcpy(Old, ReadFile(EFILE));
 	strcpy(Notice, "A new notice");
 	if (geteuid() == 0)
-		fprintf(stderr, "skip a read-only dat: root can write to it\n");
+		fprintf(stderr, "skip a read-only game directory: root can write to it\n");
 	else
 	{
-		if (chmod(WORKDIR "/dat", 0555))
-			Abort(" dmtest: cannot chmod dat.");
+		if (chmod(WORKDIR, 0555))
+			Abort(" dmtest: cannot chmod the game directory.");
 		UpdateF();
-		chmod(WORKDIR "/dat", 0755);
+		chmod(WORKDIR, 0755);
 		Check(*Old && !strcmp(ReadFile(EFILE), Old),
-			  "a read-only dat leaves EFILE as it was");
+			  "a read-only game directory leaves EFILE as it was");
 	}
 
 	UpdateF();
 	Check(!strncmp(ReadFile(EFILE), "A new notice\n", 13),
-		  "a writable dat gets the new EFILE");
-	Check(access(WORKDIR "/dat/efile.tmp", F_OK), "no efile.tmp is left behind");
+		  "a writable game directory gets the new EFILE");
+	Check(access(WORKDIR "/efile.tmp", F_OK), "no efile.tmp is left behind");
 }
 
 /* Act as Plyr: commands come from Plyr's terminal */
@@ -1328,8 +1328,9 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main() */
-	if (CheckGame(WORKDIR))
+	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
 	{
+		DBClose();
 		fprintf(stderr, "dmtest: cannot use this game directory\n");
 		return 1;
 	}

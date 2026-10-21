@@ -42,6 +42,7 @@ int		Max(int a, int b);
 long	MinL(long a, long b);
 long	MaxL(long a, long b);
 void	ErrLog(char *Msg);
+void	DBLog(const char *Msg);
 void	Abort(char *Error);
 void	SetRandom(int a, int b);
 int		Rnd(int X);

@@ -14,16 +14,17 @@ This repository ports that game to macOS and Linux:
 
 ## Build
 
-You need a C compiler, `make`, Python 3 for the tests, and libxcrypt for
-password hashing:
+You need a C compiler, `make`, Python 3 for the tests, libxcrypt for
+password hashing, and SQLite for the game database:
 
 | System | Install |
 |---|---|
-| Ubuntu or Debian | `apt-get install build-essential libcrypt-dev python3` |
-| macOS | Xcode command line tools, then `brew install libxcrypt` |
+| Ubuntu or Debian | `apt-get install build-essential libcrypt-dev libsqlite3-dev python3` |
+| macOS | Xcode command line tools (they include SQLite), then `brew install libxcrypt` |
 
 ```sh
 make
+mkdir -p games/alpha                     # mkgame needs an empty directory
 ./mkgame var/alpha/alpha.world games/alpha
 ./scepterd games/alpha
 ```

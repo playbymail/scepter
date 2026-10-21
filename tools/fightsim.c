@@ -112,8 +112,9 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main() */
-	if (CheckGame(WORKDIR))
+	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
 	{
+		DBClose();
 		fprintf(stderr, "fightsim: cannot use this game directory\n");
 		return 1;
 	}

@@ -64,12 +64,16 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	/* Refuse a game whose data files this build can't read (datafile.c). */
-	if (CheckGame(WORKDIR))
+	/* Refuse a game whose data files or database this build can't read
+	 * (datafile.c, gamedb.c), on stderr only, creating nothing; report every
+	 * problem, not just the first.  Database errors in play are logged. */
+	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
 	{
+		DBClose();
 		fprintf(stderr, "%s: cannot use this game directory\n", argv[0]);
 		exit(1);
 	}
+	DBReport = DBLog;
 
 	/* The QNX server forked into the background here.  It now runs in the
 	 * foreground, serving telnet connections (telnet.c), or with -c the
@@ -183,6 +187,7 @@ int main(int argc, char **argv)
 	fclose(EDBMon);
 	fclose(EDBObj);
 	CloseCave();
+	DBClose();
 	exit(0);
 }
 

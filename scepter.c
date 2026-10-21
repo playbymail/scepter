@@ -89,16 +89,16 @@ int					CurrentRec;
 #include "proto.h"
 
 /* data files */
-char	DBMON[]		= WORKDIR "/ram/dbmon.new";
-char	DBOBJ[]		= WORKDIR "/ram/dbobj.new";
-char	DSCRPT[]	= WORKDIR "/ram/dscrpt";
-char	HDDSCRPT[]	= WORKDIR "/dat/dscrpt";
-char	EFILE[]		= WORKDIR "/dat/efile";
-char	EDUNGEON[]	= WORKDIR "/ram/edungeon.new";
-char	MLIST[]		= WORKDIR "/ram/mlist.new";
-char	OLIST[]		= WORKDIR "/ram/olist.new";
-char	HDMLIST[]	= WORKDIR "/dat/mlist.new";
-char	HDOLIST[]	= WORKDIR "/dat/olist.new";
-char	ERRLOG[]	= WORKDIR "/dat/errlog";
+char	DBMON[]		= WORKDIR "/dbmon";
+char	DBOBJ[]		= WORKDIR "/dbobj";
+char	DSCRPT[]	= WORKDIR "/dscrpt";
+char	HDDSCRPT[]	= WORKDIR "/dscrpt.hd";
+char	EFILE[]		= WORKDIR "/efile";
+char	EDUNGEON[]	= WORKDIR "/edungeon";
+char	MLIST[]		= WORKDIR "/mlist";
+char	OLIST[]		= WORKDIR "/olist";
+char	HDMLIST[]	= WORKDIR "/mlist.hd";
+char	HDOLIST[]	= WORKDIR "/olist.hd";
+char	ERRLOG[]	= WORKDIR "/errlog";
 char	PASSWD[]	= "/etc/passwd";
-char	SPECIAL[]	= WORKDIR "/dat/special";
+char	SPECIAL[]	= WORKDIR "/special";
