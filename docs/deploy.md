@@ -128,11 +128,11 @@ systemctl enable --now scepter
 
 `https://sceptish.pbbgaming.com/` is a static page for new players: how
 to connect with Mudlet, and the Havenford map at `/map.html`.  The page
-is `site/index.html`.  `make site` builds the site into `out/site`, with
-the map copied from `var/havenford/world-map.html`, and the avatar
-lightened, resized and converted from `var/havenford/avatar.png`.  It
-needs ImageMagick (`magick`).  The avatar is too large to commit and so
-are the images built from it, so build the site where you have a copy.
+is `site/index.html`, and its hero image is `site/avatar.webp`, the
+Havenford avatar lightened and resized to 800 pixels.  `make site` builds
+the site into `out/site`, with the map copied from
+`var/havenford/world-map.html` and the icon made from the avatar.  It
+needs ImageMagick (`magick`).
 
 To update the site:
 
