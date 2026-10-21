@@ -9,8 +9,8 @@
  *
  * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88; for the command
  * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
- * 33 or 38, which may use a second character on terminal 2; or for saving
- * rooms 42,
+ * 33 or 38, which may use a second character on terminal 2; for the DM
+ * editor 21, 34, 35, 36, 37, 40 or 103; or for saving rooms 42,
  * 43, 44, 56 or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
@@ -619,12 +619,17 @@ static void Test17(void)
 
 	strcpy(Old, ReadFile(EFILE));
 	strcpy(Notice, "A new notice");
-	if (chmod(WORKDIR "/dat", 0555))
-		Abort(" dmtest: cannot chmod dat.");
-	UpdateF();
-	chmod(WORKDIR "/dat", 0755);
-	Check(*Old && !strcmp(ReadFile(EFILE), Old),
-		  "a read-only dat leaves EFILE as it was");
+	if (geteuid() == 0)
+		fprintf(stderr, "skip a read-only dat: root can write to it\n");
+	else
+	{
+		if (chmod(WORKDIR "/dat", 0555))
+			Abort(" dmtest: cannot chmod dat.");
+		UpdateF();
+		chmod(WORKDIR "/dat", 0755);
+		Check(*Old && !strcmp(ReadFile(EFILE), Old),
+			  "a read-only dat leaves EFILE as it was");
+	}
 
 	UpdateF();
 	Check(!strncmp(ReadFile(EFILE), "A new notice\n", 13),
@@ -853,6 +858,139 @@ static void Test38(void)
 	Check(!Bad, "none start outside 90-100%");
 }
 
+/* Type Text to the DM editor as a master DM */
+static void EditLine(const char *Text)
+{
+	User->SSJ = User->Master = TRUE;
+	User->Assoc = 0;
+	snprintf(C1, sizeof(C1), "1%s", Text);
+	DoInput();
+	Edit();
+}
+
+/* A new monster called Name in room Rm */
+static MonsterPoint NewMon(const char *Name, int Rm)
+{
+	MonsterPoint	Mon;
+
+	if (!(Mon = (MonsterPoint)malloc(sizeof(MonsterType))))
+		Abort(" dmtest: out of memory.");
+	*Mon = ProtoMonster;
+	snprintf(Mon->Name, sizeof(Mon->Name), "%s", Name);
+	InsertMonster(Mon, S(Rm));
+	return Mon;
+}
+
+/* #34: EX= sets only the experience */
+static void Test34(void)
+{
+	UserPoint	Bob = Another("Bob", 2);
+	int			AC = Bob->AC;
+
+	EditLine("modify player bob ex=5000");
+	Check(Bob->Experience == 5000, "EX=5000 sets Bob's experience");
+	Check(Bob->AC == AC, "and leaves his AC alone");
+}
+
+/* #35, #37: COPY and MOVE OBJECT don't delete it; DR= stops at 255 */
+static void Test35(void)
+{
+	RmCodeType	Rm = User->RmCode;
+	ObjectPoint	Sword = NewObj("sword", Weap, NULL);
+
+	Sword->Next = Room[Rm].RmObjectTail;
+	Room[Rm].RmObjectTail = Sword;
+	Capture();
+	EditLine("copy object sword 1");
+	EditLine("move object sword 1");
+	Check(strstr(Captured(), "Objects can't be copied or moved.") != NULL,
+		  "COPY and MOVE OBJECT are refused");
+	Check(Room[Rm].RmObjectTail == Sword, "the sword is still in room 1");
+
+	EditLine("modify object sword 1 dr=300");
+	Check(Sword->DescRec == 255, "DR=300 gives description record 255");
+}
+
+/* #36: COPY ROOM keeps the target room's players, monsters and objects */
+static void Test36(void)
+{
+	UserPoint		Bob = Another("Bob", 2);
+	MonsterPoint	Wolf = NewMon("wolf", 8);
+	ObjectPoint		Rock = NewObj("rock", Misc, NULL);
+	RoomType		*To;
+
+	MoveTo(Bob, 8);
+	To = &Room[S(8)];
+	Rock->Next = To->RmObjectTail;
+	To->RmObjectTail = Rock;
+	EditLine("copy room 5 8");
+	To = &Room[S(8)];
+	Check(To->Safe && To->DescRec == Room[S(5)].DescRec,
+		  "room 8 is now a copy of room 5");
+	Check(To->RmPlayerTail == Bob && Bob->RmCode == S(8),
+		  "Bob is still in room 8's player list");
+	Check(To->RmMonsterTail == Wolf && To->RmObjectTail == Rock,
+		  "room 8 keeps its wolf and its rock");
+}
+
+/* #40: EDIT MODIFY FILE doesn't create a missing player */
+static void Test40(void)
+{
+	UserPoint	Bob = Another("Bob", 2);
+	UserPoint	Back = malloc(sizeof(UserType));
+
+	Capture();
+	EditLine("modify file nobody lv=5");
+	Check(strstr(Captured(), "Entry not found.") != NULL, "Nobody isn't found");
+	Check(!PlayerOnFile("nobody"), "and isn't saved");
+
+	WritePlayer(Bob);
+	EditLine("modify file bob lv=7");
+	ReadPlayer(Back, "bob");
+	Check(*Back->Name && Back->Lvl == 7, "MODIFY FILE still changes a saved player");
+	FreePlayer(Back);
+}
+
+/*
+ * #21: the editor frees what it reads.  Only LeakSanitizer (Linux) sees a
+ * leak; this runs each path that leaked.
+ */
+static void Test21(void)
+{
+	UserPoint	Bob = Another("Bob", 2);
+
+	Carried(Bob, "sword", Weap);
+	WritePlayer(Bob);
+	Capture();
+	EditLine("display file bob");
+	EditLine("display object sword file bob");
+	EditLine("display object helmet file bob");
+	EditLine("display mlist 1");
+	EditLine("delete mlist 1");
+	EditLine("move mlist 1");
+	EditLine("copy mlist 1 99999");
+	Check(strstr(Captured(), "Object not found.") != NULL
+		  && strstr(Captured(), "Bad MList number.") != NULL,
+		  "the editor reads Bob's file and MList 1");
+}
+
+/* #103: a parameter that runs to the end of a full Buf */
+static void Test103(void)
+{
+	static const char	Cmd[] = "modify player dungeon ";
+
+	Another("Bob", 2);
+	User->SSJ = User->Master = TRUE;
+	memset(Buf, 'x', sizeof(Buf));		/* letters to the very end, no NUL */
+	memcpy(Buf, Cmd, strlen(Cmd));
+	LenBuf = sizeof(Buf);
+	Loc = 0;
+	Capture();
+	Edit();
+	Check(strstr(Captured(), "Bad parameter") != NULL,
+		  "a parameter with no = is refused");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -875,7 +1013,9 @@ int main(int argc, char **argv)
 		{"43", Test43}, {"44", Test44}, {"56", Test56}, {"64", Test64},
 		{"47", Test47}, {"48", Test48}, {"17", Test17}, {"28", Test28},
 		{"29", Test29}, {"30", Test30}, {"32", Test32}, {"33", Test33},
-		{"38", Test38}, {"27", Test27}, {"45", Test45},
+		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
+		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
+		{"103", Test103},
 	};
 	int		I;
 

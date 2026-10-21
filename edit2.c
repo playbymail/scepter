@@ -202,7 +202,7 @@ static void ModObject(ObjectPoint Object)
 				break;
 
 			case 19:
-				Object->DescRec = Max(0, Min(256, Number));
+				Object->DescRec = Max(0, Min(255, Number));
 				break;
 
 			case 20:
@@ -374,7 +374,7 @@ static void ModObject(ObjectPoint Object)
 
 void ModName(char *Str)
 {
-	while (Buf[Loc] != '"' && Loc < LenBuf)
+	while (Loc < LenBuf && Buf[Loc] != '"')
 		Loc++;
 	if (Loc < LenBuf - 1)
 	{
@@ -384,7 +384,7 @@ void ModName(char *Str)
 		Loc++;
 		*TempName = '\0';
 		ILoop = 0;
-		while (Buf[Loc] != '"' && Loc < LenBuf)
+		while (Loc < LenBuf && Buf[Loc] != '"')
 		{
 			if (ILoop < 20)
 			{
@@ -509,6 +509,12 @@ void EditObject(EdFunc EditCmd, char *Which, int ONum)
 		InRoom, OnPlayerX, InContainer, OnMonster, InFile, ENone
 	} EditT;
 
+	if (EditCmd == E_COPY || EditCmd == E_MOVE)	/* never written (#35) */
+	{
+		QOut(Term, "0Objects can't be copied or moved.");
+		return;
+	}
+
 	EditT = ENone;
 	Object = NULL;
 	GetWord(Word1, &Rm);
@@ -616,6 +622,8 @@ void EditObject(EdFunc EditCmd, char *Which, int ONum)
 	if (!Object || EditT == ENone)
 	{
 		QOut(Term, "0Object not found.");
+		if (EditT == InFile)
+			FreePlayer(Player);			/* #21 */
 		return;
 	}
 
@@ -674,7 +682,7 @@ void EditObject(EdFunc EditCmd, char *Which, int ONum)
 
 	if (EditCmd == E_DELETE)
 	{
-		free(Object);
+		ODestroy(Object);				/* and a chest's contents */
 		QOut(Term, "0Object deleted.");
 	}
 }
