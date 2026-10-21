@@ -57,7 +57,7 @@ void MonAttack(void)
 
 void MonStrike(RmCodeType Rm)
 {
-	MonsterPoint	Monster;
+	MonsterPoint	Monster, Last = NULL;
 	UserPoint		Plyr;
 	int				ILoop, Count;
 
@@ -87,10 +87,8 @@ void MonStrike(RmCodeType Rm)
 
 		for (ILoop = 0; ILoop < NumMons; ILoop++)
 		{
-			if (Monster = (MonsterPoint)malloc(sizeof(MonsterType)))
+			if (Monster = NewMList(MonNum))
 			{
-				ReadMList(MonNum, Monster);
-
 				if (Monster->Unique)
 				{
 					MonsterPoint	M;
@@ -114,8 +112,9 @@ void MonStrike(RmCodeType Rm)
 									Max(1, (12 - Rnd(3)) * Monster->Hits / 10));
 				Monster->Lvl = Min(25, Max(1, Monster->Lvl + 2 - Rnd(3)));
 				InsertMonster(Monster, Rm);
+				Last = Monster;
 			}
-			else	/* malloc failed */
+			else	/* no template, or malloc failed */
 			{
 				NumMons = ILoop;
 				break;
@@ -123,7 +122,7 @@ void MonStrike(RmCodeType Rm)
 		}
 
 		if (NumMons)
-			EncounterMsg(Monster, Rm, NumMons, NonDMs);
+			EncounterMsg(Last, Rm, NumMons, NonDMs);
 	}
 
 	if (!Room[Rm].Safe)

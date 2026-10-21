@@ -10,7 +10,8 @@
  * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88; for the command
  * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
  * 33 or 38, which may use a second character on terminal 2; for the DM
- * editor 21, 34, 35, 36, 37, 40 or 103; or for saving rooms 42,
+ * editor 21, 34, 35, 36, 37, 40 or 103; 46 for the Assoc DM line; 16 for a
+ * missing object template; or for saving rooms 42,
  * 43, 44, 56 or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
@@ -1019,6 +1020,40 @@ static void Test103(void)
 		  "a parameter with no = is refused");
 }
 
+/* #46: an Assoc DM's line keeps the name and level */
+static void Test46(void)
+{
+	User->SSJ = TRUE;
+	User->Assoc = 3;
+	Capture();
+	PlayerDisplay(User);
+	Check(strstr(Captured(), "Dungeon, the first level Fighter (Assoc DM 3) in room")
+		  != NULL, "the Assoc DM is shown after the name and level");
+}
+
+/* #16: buying an item the OList file has no template for */
+static void Test16(void)
+{
+	long	Money;
+
+	/* a damaged OList that ends after template 6; store 4 sells 1 2 3 6 10 7 */
+	fflush(OList);
+	if (ftruncate(fileno(OList), DataHeadSize + 7 * (long)sizeof(ObjectType)))
+		Abort(" dmtest: cannot truncate OList.");
+	MoveTo(User, 4);
+	User->Money = Money = 1000;
+	Capture();
+	Say("buy 5");
+	Check(strstr(Captured(), "out of stock") != NULL && User->Money == Money
+		  && !Room[User->RmCode].RmObjectTail,
+		  "template 10 is out of stock, and nothing is sold");
+	Check(strstr(ReadFile(ERRLOG), "OList has no template 10.") != NULL,
+		  "errlog names the missing template");
+	Say("buy 4");
+	Check(Room[User->RmCode].RmObjectTail && User->Money < Money,
+		  "template 6 is still sold");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -1043,7 +1078,7 @@ int main(int argc, char **argv)
 		{"29", Test29}, {"30", Test30}, {"32", Test32}, {"33", Test33},
 		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
-		{"103", Test103},
+		{"103", Test103}, {"46", Test46}, {"16", Test16},
 	};
 	int		I;
 

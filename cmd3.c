@@ -1,16 +1,14 @@
 #include "scepter.h"
 
-static ObjectPoint	Fist(void);
+static void	Fist(ObjectPoint Weapon);
 static void	HitAtMonster(ObjectPoint Weapon, int Plus);
 static void	HitAtPlayer(ObjectPoint Weapon, int Plus);
 static ObjectPoint	SelectWeap(void);
 static ToWhatType	AttackWhat(char *Word, int Num, RmCodeType Rm);
 
-static ObjectPoint Fist(void)
+/* Make *Weapon* a bare fist */
+static void Fist(ObjectPoint Weapon)
 {
-	ObjectPoint	Weapon;
-
-	Weapon = (ObjectPoint)malloc(sizeof(UserType));
 	*Weapon = ProtoObject;
 	Weapon->ObClass = Weap;
 	Weapon->Object.Weap.MinHp = 1;
@@ -18,19 +16,20 @@ static ObjectPoint Fist(void)
 	Weapon->Object.Weap.Strikes = 1;
 	Weapon->Object.Weap.WeaPlus = -2;
 	Weapon->Object.Weap.WeapType = Blunt;
-	return Weapon;
 }
 
 static void HitAtMonster(ObjectPoint Weapon, int Plus)
 {
-	int		WithFist;
+	ObjectType	FistObj;
+	int			WithFist;
 
 	if (Weapon)
 		WithFist = FALSE;
 	else
 	{
 		WithFist = TRUE;
-		Weapon = Fist();
+		Fist(&FistObj);
+		Weapon = &FistObj;
 	}
 
 	if (User->DefMon->Magic && !Weapon->Magic)
@@ -131,13 +130,11 @@ static void HitAtMonster(ObjectPoint Weapon, int Plus)
 			HitMonster(Damage);
 		}
 	}
-
-	if (WithFist)
-		free(Weapon);
 }
 
 static void HitAtPlayer(ObjectPoint Weapon, int Plus)
 {
+	ObjectType		FistObj;
 	int				WithFist;
 	UserPoint		Plyr;
 	struct tWeap	*p;
@@ -150,7 +147,8 @@ static void HitAtPlayer(ObjectPoint Weapon, int Plus)
 	else
 	{
 		WithFist = TRUE;
-		Weapon = Fist();
+		Fist(&FistObj);
+		Weapon = &FistObj;
 	}
 	p = &Weapon->Object.Weap;
 
@@ -177,9 +175,6 @@ static void HitAtPlayer(ObjectPoint Weapon, int Plus)
 	}
 
 	Plyr->HitAtTime = RealTime;
-
-	if (WithFist)
-		free(Weapon);
 }
 
 static ObjectPoint SelectWeap(void)
@@ -842,10 +837,10 @@ void Parley(char *Word, int Num)
 				Mon->MParley = 5;
 				if (Mon->WhichObj)
 					N1 = ObjIndex(Mon->WhichObj, Rnd(8) - 1);
+				if (N1 && !(Obj = NewOList(N1)))
+					N1 = 0;
 				if (N1)
 				{
-					Obj = (ObjectPoint)malloc(sizeof(ObjectType));
-					ReadOList(N1, Obj);
 					Obj->Next = Room[User->RmCode].RmObjectTail;
 					Room[User->RmCode].RmObjectTail = Obj;
 					N1 = 1;
@@ -977,10 +972,11 @@ void YesNo(void)
 		if (User->Data > User->Money)
 			p = "0You have not enough money, Effendi!";
 		else
+		if (!(Obj = NewOList(User->ParleyObj)))
+			p = "0Alas, I seem to have mislaid it, Effendi!";
+		else
 		{
 			User->Money -= User->Data;
-			Obj = (ObjectPoint)malloc(sizeof(ObjectType));
-			ReadOList(User->ParleyObj, Obj);
 			Obj->Next = Room[User->RmCode].RmObjectTail;
 			Room[User->RmCode].RmObjectTail = Obj;
 			p = "0Here you are, my friend.  You are indeed a shrewd buyer, Effendi!";

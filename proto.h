@@ -15,6 +15,8 @@ void	WriteUMon(RmCodeType Rm, MonsterPoint Monster);
 void	DeleteMon(RmCodeType Rm);
 int		ReadMList(int Index, MonsterPoint Mon);
 int		ReadOList(int Index, ObjectPoint Obj);
+MonsterPoint	NewMList(int Index);
+ObjectPoint	NewOList(int Index);
 
 /* log.c */
 UserPoint	Login(void);

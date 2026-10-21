@@ -289,8 +289,9 @@ void Buy(int Num, int Rm)
 			{
 				ObjectPoint	Object;
 
-				Object = (ObjectPoint)malloc(sizeof(ObjectType));
-				ReadOList(StockItem(W(Rm), Num), Object);
+				if (!(Object = NewOList(StockItem(W(Rm), Num))))
+					QOut(Term, "0\"Sorry, that's out of stock.\"");
+				else
 				if (Object->Price > User->Money)
 				{
 					QOut(Term, "0You don't have enough cash to buy that.");

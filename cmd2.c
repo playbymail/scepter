@@ -904,10 +904,9 @@ static void MakeTreasure(MonsterPoint Monster, int Rm)
 			NumObjs = Rnd(4) == 1 ? Rnd(4) : 1;
 		for (ILoop = 0; ILoop < NumObjs; ILoop++)
 			if ((ObNum = ObjIndex(Monster->WhichObj, Rnd(8) - 1))
-				&&	(Obj = (ObjectPoint)malloc(sizeof(ObjectType))))
+				&&	(Obj = NewOList(ObNum)))
 			{
 				Nothing = FALSE;
-				ReadOList(ObNum, Obj);
 				Obj->Price = (int)(Obj->Price * (80.0 + Rnd(40)) / 100.0);
 				Obj->Next = Room[Rm].RmObjectTail;
 				Room[Rm].RmObjectTail = Obj;

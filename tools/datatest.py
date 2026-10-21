@@ -11,6 +11,7 @@ upgradegame make of it.  `make check-data` runs this.
 
 import filecmp
 import os
+import time
 import shutil
 import stat
 import struct
@@ -197,6 +198,18 @@ def test_damaged():
               "upgradegame refuses it too and changes nothing")
 
 
+def test_missing_efile():
+    # #53: an error before the main loop is logged with the real time
+    g = game("noefile")
+    os.remove(os.path.join(g, "dat/efile"))
+    ok, err = server_refuses(g, "File open error on EFILE")
+    check(ok, "scepterd reports a missing dat/efile on stderr")
+    with open(os.path.join(g, "dat/errlog")) as f:
+        log = f.read()
+    check(time.strftime("%Y") in log.split("\n")[0] and "File open error on EFILE" in log,
+          "errlog records it with today's date")
+
+
 def test_upgrade(fresh):
     g = game("v0")
     strip(g)
@@ -297,6 +310,7 @@ def main():
     try:
         fresh = test_fresh()
         test_damaged()
+        test_missing_efile()
         test_upgrade(fresh)
         test_upgrade1()
         test_partial(fresh)

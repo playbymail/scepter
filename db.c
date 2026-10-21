@@ -340,6 +340,25 @@ int ReadMList(int Index, MonsterPoint Mon)
 	return Found;
 }
 
+/* A new monster from MList template *Index*, or NULL if there is no
+ * such template (logged) or no memory */
+MonsterPoint NewMList(int Index)
+{
+	MonsterPoint	Mon;
+	char			Msg[64];
+
+	if (!(Mon = malloc(sizeof(MonsterType))))
+		return NULL;
+	if (!ReadMList(Index, Mon))
+	{
+		free(Mon);
+		snprintf(Msg, sizeof(Msg), " MList has no template %d.", Index);
+		ErrLog(Msg);
+		return NULL;
+	}
+	return Mon;
+}
+
 /* Read template *Index* from the OList file, clearing pointer fields. */
 int ReadOList(int Index, ObjectPoint Obj)
 {
@@ -353,4 +372,23 @@ int ReadOList(int Index, ObjectPoint Obj)
 	if (Obj->ObClass == Chest)
 		Obj->Object.Chest.ObjectTail = NULL;
 	return Found;
+}
+
+/* A new object from OList template *Index*, or NULL if there is no
+ * such template (logged) or no memory */
+ObjectPoint NewOList(int Index)
+{
+	ObjectPoint	Obj;
+	char		Msg[64];
+
+	if (!(Obj = malloc(sizeof(ObjectType))))
+		return NULL;
+	if (!ReadOList(Index, Obj))
+	{
+		free(Obj);
+		snprintf(Msg, sizeof(Msg), " OList has no template %d.", Index);
+		ErrLog(Msg);
+		return NULL;
+	}
+	return Obj;
 }

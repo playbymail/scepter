@@ -83,6 +83,8 @@ void ErrLog(char *Msg)
 {
 	FILE	*fp;
 
+	if (!RealTime)
+		RealTime = time(NULL);
 	if (fp = fopen(ERRLOG, "a"))
 	{
 		fprintf(fp, "%s%s\n", ctime(&RealTime), Msg);
@@ -90,9 +92,11 @@ void ErrLog(char *Msg)
 	}
 }
 
+/* Log Error and exit; stderr too, in case dat/errlog can't be opened */
 void Abort(char *Error)
 {
 	ErrLog(Error);
+	fprintf(stderr, "scepterd:%s\n", Error);
 	exit(1);
 }
 

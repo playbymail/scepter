@@ -56,7 +56,10 @@ void PlayerDisplay(UserPoint Plyer)
 	if (Plyer->SSJ)
 	{
 		if (Plyer->Assoc)
-			sprintf(B1, " (Assoc DM %d)", Plyer->Assoc);
+		{
+			sprintf(B2, " (Assoc DM %d)", Plyer->Assoc);
+			strcat(B1, B2);
+		}
 		else
 			strcat(B1, Plyer->Master ? " (Master DM)" : " (DM)");
 	}
