@@ -57,6 +57,7 @@ void ReadPlayer(UserPoint Player, char *Name)
 		Player->AC			= 10;
 		Player->Next		= NULL;
 		Player->USWeap		= NULL;
+		Player->Pending		= NULL;
 		Player->USShield	= NULL;
 		Player->USArm		= NULL;
 		Player->USRingL		= NULL;
@@ -569,6 +570,7 @@ void Init(void)
 	ProtoUser.LastInput		= 0;
 	ProtoUser.Next			= NULL;
 	ProtoUser.USWeap		= NULL;
+	ProtoUser.Pending		= NULL;
 	ProtoUser.USArm			= NULL;
 	ProtoUser.USShield		= NULL;
 	ProtoUser.USRingL		= NULL;

@@ -312,7 +312,7 @@ void Attack(char *Word, int Num, RmCodeType Rm)
 				User->DefMon->MReact = CmdCode == 85 ? 3 : 2;
 			else
 			{
-				User->DefPlayer->LastAtk = RealTime + CmdCode == 85 ? 10 : 8;
+				User->DefPlayer->LastAtk = RealTime + (CmdCode == 85 ? 10 : 8);
 				sprintf(B1, "0%s %s you!", User->Name,
 						CmdCode == 85 ? "feints at" : "circles");
 				QOut(User->DefPlayer->Trm, B1);
@@ -466,7 +466,7 @@ void Repair(char *Word, int Num)
 			B2, User->Data);
 		QOut(Term, B1);
 		User->Entry = XRepair;
-		User->USWeap = Obj;
+		User->Pending = Obj;
 	}
 }
 
@@ -595,9 +595,9 @@ void Offer(char *Word, int Num)
 		QOut(Term, "0You don't have that!");
 		return;
 	}
-	if ((TObj = FindObject(Word4, Num2, TPlyr->ObjectTail)) && *Word4)
+	if (!(TObj = FindObject(Word4, Num2, TPlyr->ObjectTail)) && *Word4)
 	{
-		QOut(Term, "0Transaction cancelled.");
+		QOut(Term, "0Player doesn't have that!");
 		return;
 	}
 
@@ -990,8 +990,8 @@ void YesNo(void)
 	else
 	if (User->Entry == XSell)
 	{
-		Obj = User->USWeap;
-		User->USWeap = NULL;
+		Obj = User->Pending;
+		User->Pending = NULL;
 		if (Yes && Obj)
 		{
 			User->Money += User->Data;
@@ -1003,8 +1003,8 @@ void YesNo(void)
 	}
 	else	/* XRepair */
 	{
-		Obj = User->USWeap;
-		User->USWeap = NULL;
+		Obj = User->Pending;
+		User->Pending = NULL;
 		if (Yes && Obj)
 		{
 			if (User->Data > User->Money)
@@ -1141,8 +1141,8 @@ void StealObj(Alfa Word, int Num)
 		StealChance = -1;
 
 	Steal = Rnd(100) < StealChance;
-	if (Obj == Plyr->USWeap || Obj == Plyr->USArm || Obj == Plyr->USShield
-	||	Obj == Plyr->USRingL || Obj == Plyr->USRingR)
+	if (Obj && (Obj == Plyr->USWeap || Obj == Plyr->USArm || Obj == Plyr->USShield
+			||	Obj == Plyr->USRingL || Obj == Plyr->USRingR))
 		Notice = TRUE;
 	else
 		Notice = Rnd(100) >= StealChance;
