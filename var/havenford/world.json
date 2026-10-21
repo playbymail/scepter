@@ -76,8 +76,8 @@
     {
       "record": 5,
       "lines": [
-        "1/You are on the eastern promenade. The chapel is west./",
-        "1/You are at the training yard. The academy is west./"
+        "1/You are on the eastern promenade. The garden is west, a yard north./",
+        "1/You are at the training yard. Straw dummies stand in rows. Exit south./"
       ]
     },
     {

@@ -775,7 +775,11 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 		Monster = FindMonster(Dummy, MNum, Room[Rm].RmMonsterTail);
 		if (EditCmd == E_CREATE)
 		{
-			Monster = (MonsterPoint)malloc(sizeof(MonsterType));
+			if (!(Monster = (MonsterPoint)malloc(sizeof(MonsterType))))
+			{
+				QOut(Term, "0Out of memory.  Monster not created.");
+				return;
+			}
 			*Monster = ProtoMonster;
 			strcpy(Monster->Name, Which);
 			InsertMonster(Monster, Rm);
@@ -785,8 +789,17 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 	else
 	if (Rm >= 1 && Rm <= RanMonLen)
 	{
-		Monster = (MonsterPoint)malloc(sizeof(MonsterType));
-		ReadMList(Rm, Monster);
+		if (!(Monster = (MonsterPoint)malloc(sizeof(MonsterType))))
+		{
+			QOut(Term, "0Out of memory.");
+			return;
+		}
+		/* a master may create a template where none was read */
+		if (!ReadMList(Rm, Monster) && !(EditCmd == E_CREATE && User->Master))
+		{
+			free(Monster);
+			Monster = NULL;
+		}
 	}
 	else
 	{

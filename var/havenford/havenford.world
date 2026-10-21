@@ -66,8 +66,8 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 10 = 1/You are in the guild library. Books explain the roads ahead./
 
 [description 5]
-1 = 1/You are on the eastern promenade. The chapel is west./
-2 = 1/You are at the training yard. The academy is west./
+1 = 1/You are on the eastern promenade. The garden is west, a yard north./
+2 = 1/You are at the training yard. Straw dummies stand in rows. Exit south./
 
 [description 6]
 1 = 1/DANGER AHEAD! Monsters roam north of this post. Turn back if unready./

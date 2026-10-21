@@ -489,7 +489,11 @@ static ObjectPoint InsertObject(ObjectPoint *Tail)
 {
 	ObjectPoint	Obj;
 
-	Obj = (ObjectPoint)malloc(sizeof(ObjectType));
+	if (!(Obj = (ObjectPoint)malloc(sizeof(ObjectType))))
+	{
+		QOut(Term, "0Out of memory.  Object not created.");
+		return NULL;
+	}
 	*Obj = ProtoObject;
 	Obj->Next = *Tail;
 	*Tail = Obj;
@@ -544,7 +548,11 @@ void EditObject(EdFunc EditCmd, char *Which, int ONum)
 
 		EditT = InFile;
 		GetWord(Word2, &Num2);
-		Player = (UserPoint)malloc(sizeof(UserType));
+		if (!(Player = (UserPoint)malloc(sizeof(UserType))))
+		{
+			QOut(Term, "0Out of memory.");
+			return;
+		}
 		ReadPlayer(Player, Word2);
 		if (!*Player->Name)
 		{

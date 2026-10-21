@@ -146,7 +146,7 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 			break;
 
 		case SPELL_INTOXICATE:	/* intoxicate, OnUsPlayer */
-			Plyr->Drunk = Max(RealTime, Plyr->Drunk) + 60;
+			Plyr->Drunk = (RealTime > Plyr->Drunk ? RealTime : Plyr->Drunk) + 60;
 			QOut(Plyr->Trm, "0(HIC)  You feel tipsy.");
 			break;
 
