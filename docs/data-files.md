@@ -11,8 +11,7 @@ server never reads a file it wasn't built for.
 
 | File | Holds | Magic |
 |---|---|---|
-| `game.db` | the game database (see below): monster and object templates and descriptions so far | |
-| `edungeon` | rooms (`RoomType`), 10 per segment | `SCEPDUNG` |
+| `game.db` | the game database (see below): templates, descriptions and rooms so far | |
 | `dbobj` | room and chest contents (`ObjRec`), a 1009-slot hash table | `SCEPDBOB` |
 | `dbmon` | room monsters (`MonRec`), a 1009-slot hash table | `SCEPDBMN` |
 | `eperson` | saved characters (`UserFRec`) | `SCEPPERS` |
@@ -37,7 +36,12 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
 
 - **`mkgame`** creates it with the whole schema, then fills the tables
   moved so far (#148: `monster_templates`, `object_templates` and
-  `descriptions`).  The game directory must already exist and be empty.
+  `descriptions`; #149: `rooms`).  The game directory must already exist
+  and be empty.
+- **Rooms:** `rooms` holds every room of every segment, 0 to
+  `NumSegs * 10 - 1`, and the server counts the segments from it; a gap
+  is refused at start-up.  A segment swap saves its ten rooms in one
+  transaction, and the hourly update saves every loaded segment in one.
 - **Rows:** `dbstore.c` turns each saved struct into a row and back.  The
   DM editor's changes to a template or a description are one transaction
   each.

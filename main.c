@@ -5,6 +5,7 @@
 #include "common.h"
 #include "scepter.h"
 
+static int	OpenGame(const char *Prog);
 static void	Init_Scepter(void);
 static void	DoEntry(void);
 static void	DeployWarning(int Reset);
@@ -64,15 +65,8 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	/* Refuse a game whose data files or database this build can't read
-	 * (datafile.c, gamedb.c), on stderr only, creating nothing; report every
-	 * problem, not just the first.  Database errors in play are logged. */
-	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
-	{
-		DBClose();
-		fprintf(stderr, "%s: cannot use this game directory\n", argv[0]);
+	if (!OpenGame(argv[0]))
 		exit(1);
-	}
 	DBReport = DBLog;
 
 	/* The QNX server forked into the background here.  It now runs in the
@@ -99,7 +93,6 @@ int main(int argc, char **argv)
 	if ((EDBObj = OpenData(DBOBJ, DObjDB)) == NULL)
 		Abort(" File open error on DBOBJ.");
 
-	OpenCave();
 
 	InitEvents();
 
@@ -174,7 +167,6 @@ int main(int argc, char **argv)
 	CurrentRec = 0;
 	fclose(EDBMon);
 	fclose(EDBObj);
-	CloseCave();
 	DBClose();
 	exit(0);
 }
@@ -220,6 +212,27 @@ static void DeployCountdown(void)
 	WarnAll(WarnReset ? "0*** Reset in 30 seconds. ***"
 					  : "0*** Restarting in 30 seconds. Type SAVE now. ***");
 	WarnReset = -1;
+}
+
+/*
+ * Open the game in the current directory, refusing one whose data files or
+ * database this build can't use (datafile.c, gamedb.c).  Problems go to
+ * stderr only, so a refused game is left exactly as it was; every problem
+ * is reported, not just the first.  Sets NumSegs from the rooms.
+ */
+static int OpenGame(const char *Prog)
+{
+	int		Bad;
+
+	Bad = CheckGame(WORKDIR) + !DBOpen(WORKDIR);
+	if (!Bad && !CountSegs(&NumSegs))
+		Bad++;
+	if (Bad)
+	{
+		DBClose();
+		fprintf(stderr, "%s: cannot use this game directory\n", Prog);
+	}
+	return !Bad;
 }
 
 /* One line of EFILE without its newline; the rest of a long line is skipped. */
@@ -287,8 +300,7 @@ static void Init_Scepter(void)
 	RealTime = time((long *) 0);
 	SetRandom((int) (RealTime & 0x7fff), getpid());
 
-	NumSegs	= 200;
-	NumRooms = NumSegs * 10 - 1;
+	NumRooms = NumSegs * 10 - 1;		/* NumSegs is set by OpenGame() */
 	UserTail = NULL;
 	NUsers = 0;
 	LenBuf = 0;

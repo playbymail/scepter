@@ -38,6 +38,8 @@ int		DBBackup(const char *Dir, const char *To);
 int		DBRestore(const char *From, const char *Dir);
 int		DBBegin(void);
 int		DBCommit(void);
+int		DBStart(int *Own);
+int		DBFinish(int Own, int Ok);
 void	DBRollback(void);
 sqlite3_stmt	*DBPrepare(sqlite3_stmt **Cache, const char *Sql);
 

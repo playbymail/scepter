@@ -112,12 +112,8 @@ int main(int argc, char **argv)
 	}
 
 	/* the same start-up as scepterd's main() */
-	if (CheckGame(WORKDIR) + !DBOpen(WORKDIR))
-	{
-		DBClose();
-		fprintf(stderr, "fightsim: cannot use this game directory\n");
+	if (!OpenGame("fightsim"))
 		return 1;
-	}
 	QCre();
 	Init_Scepter();
 	if (Seed >= 0)
@@ -129,7 +125,6 @@ int main(int argc, char **argv)
 	Init();
 	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
 		Abort(" fightsim: cannot open game files.");
-	OpenCave();
 	InitEvents();
 	RealTime = time(NULL);
 	Today = GetDate(RealTime);

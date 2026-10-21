@@ -24,7 +24,6 @@
 
 DataKindType DataKind[NDataKinds] =
 {
-	{ "SCEPDUNG", "dungeon",		sizeof(RoomType) },
 	{ "SCEPDBOB", "object db",		sizeof(ObjRec) },
 	{ "SCEPDBMN", "monster db",		sizeof(MonRec) },
 	{ "SCEPPERS", "player file",	sizeof(UserFRec) },
@@ -32,7 +31,6 @@ DataKindType DataKind[NDataKinds] =
 
 DataFileType DataFile[NDataFiles] =
 {
-	{ "edungeon",	DDungeon },
 	{ "dbobj",		DObjDB },
 	{ "dbmon",		DMonDB },
 	{ "eperson",	DPerson },

@@ -1261,7 +1261,6 @@ static void BuildDB(void)
 		NObj = Pack(R->Objs, Objs);
 		if (NObj)
 		{
-			R->Rm.RmObjectTail = (ObjectPoint)1;	/* "has objects" flag, room.c */
 			for (i = 0; i < NObj; i++)
 				if (Objs[i]->Obj.ObClass == Chest)
 				{
@@ -1295,7 +1294,6 @@ static void BuildDB(void)
 		{
 			MonRec	*Rec = &DBMon[DBSlot(MonRoomOf, Rm, 0)];
 
-			R->Rm.RmMonsterTail = (MonsterPoint)1;
 			Rec->Room = (RmCodeType)Rm;
 			Rec->DataType = 0;
 			Rec->Num = (char)NMon;
@@ -1331,7 +1329,8 @@ static void BuildDB(void)
 /*
  * The game database's tables, in one transaction (dbstore.c).  Every
  * template slot is written, unused ones too, as the game has always had
- * them, and every description record up to the highest.
+ * them, every description record up to the highest, and every room of
+ * every segment, room 0 and empty rooms included.
  */
 static void WriteTables(void)
 {
@@ -1349,6 +1348,8 @@ static void WriteTables(void)
 		Ok = PutMonTemplate(i, &MTmpl[i]);
 	for (i = 0; Ok && i <= RanObjLen; i++)
 		Ok = PutObjTemplate(i, &OTmpl[i]);
+	for (i = 0; Ok && i <= MaxRoom; i++)
+		Ok = PutRoom(i, &Rooms[i].Rm);
 	if (!Ok || !DBCommit())
 	{
 		DBRollback();
@@ -1360,15 +1361,9 @@ static void WriteTables(void)
 
 static void WriteGame(void)
 {
-	static RoomType	Dungeon[NumSegsInit * 10];
 	FILE	*fp;
 	int		i, j;
 
-	for (i = 1; i <= MaxRoom; i++)
-		if (Rooms[i].Defined)
-			Dungeon[i] = Rooms[i].Rm;
-
-	WriteBlob("edungeon", DDungeon, Dungeon, NumSegsInit * 10);
 	WriteBlob("dbobj", DObjDB, DBObj, DBSize);
 	WriteBlob("dbmon", DMonDB, DBMon, DBSize);
 	WriteBlob("eperson", DPerson, NULL, 0);

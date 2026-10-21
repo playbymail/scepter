@@ -946,6 +946,27 @@ int DBCommit(void)
 	return Exec(GameDB, DBName, "COMMIT");
 }
 
+/* Start a transaction unless one is open; *Own says whether this did */
+int DBStart(int *Own)
+{
+	*Own = sqlite3_get_autocommit(GameDB);
+	return !*Own || DBBegin();
+}
+
+/*
+ * Finish what DBStart() began: commit if Ok, otherwise roll back.  A
+ * caller that didn't own the transaction just passes Ok on to its owner.
+ */
+int DBFinish(int Own, int Ok)
+{
+	if (!Own)
+		return Ok;
+	if (Ok && DBCommit())
+		return TRUE;
+	DBRollback();
+	return FALSE;
+}
+
 void DBRollback(void)
 {
 	if (GameDB && !sqlite3_get_autocommit(GameDB))
