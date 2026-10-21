@@ -332,6 +332,13 @@ static void Test121(void)
 	Check(CheckPW(User->PWHash, "correct horse battery")
 		  && strstr(Captured(), "Password set.") != NULL,
 		  "a password may have spaces and be over 10 characters");
+	Say("modify player Dungeon pw=   open sesame   ");
+	Check(CheckPW(User->PWHash, "open sesame")
+		  && !CheckPW(User->PWHash, "   open sesame   "),
+		  "spaces around the password are dropped");
+	strcpy(H1, User->PWHash);
+	Say("modify player Dungeon pw=   abcdef   ");
+	Check(!strcmp(H1, User->PWHash), "spaces don't count toward the length");
 	User->Lvl = 3;
 	Say("modify player Dungeon pw=open sesame lv=5");
 	Check(CheckPW(User->PWHash, "open sesame lv=5") && User->Lvl == 3,
