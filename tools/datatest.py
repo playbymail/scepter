@@ -379,24 +379,29 @@ def test_upgradegame():
           and ver.strip() == str(VERSION), "upgradegame migrates a version 0 database")
 
 
-def test_upgrade_1_to_2():
-    """A version 1 game, like the one deployed before #93, upgrades to 2."""
-    g = game("v1")
+# The tables each migration after the first adds, to make an older game
+OLD_TABLES = {2: ["login_hosts", "login_names"], 3: ["rank_changes"]}
+
+
+def test_upgrade_old(version):
+    """A game at an older version, as deployed before a migration, upgrades."""
+    g = game("v%d" % version)
     run("dmtest", g, "player", "Oldtimer", "ac secret")
+    added = [t for v in range(version + 1, VERSION + 1) for t in OLD_TABLES[v]]
     db = sqlite3.connect(os.path.join(g, "game.db"))
-    db.executescript("DROP TABLE login_hosts; DROP TABLE login_names;"
-                     " PRAGMA user_version = 1;")
+    db.executescript("".join("DROP TABLE %s; " % t for t in added)
+                     + "PRAGMA user_version = %d;" % version)
     db.close()
-    ok, _ = server_refuses(g, "schema version 1", "upgradegame")
-    check(ok, "scepterd refuses a version 1 game")
+    ok, _ = server_refuses(g, "schema version %d" % version, "upgradegame")
+    check(ok, "scepterd refuses a version %d game" % version)
     rc, out, err = run("upgradegame", g)
     db = sqlite3.connect(os.path.join(g, "game.db"))
     tables = {r[0] for r in db.execute("SELECT name FROM sqlite_schema WHERE type = 'table'")}
     who = db.execute("SELECT name FROM players").fetchall()
     db.close()
-    check(rc == 0 and "migrated from schema version 1 to 2" in out
-          and {"login_hosts", "login_names"} <= tables and who == [("OLDTIMER",)],
-          "upgradegame adds the login tables (migration 2), keeping the character")
+    check(rc == 0 and "migrated from schema version %d to %d" % (version, VERSION) in out
+          and set(added) <= tables and who == [("OLDTIMER",)],
+          "upgradegame adds %s, keeping the character" % ", ".join(added))
     rc, out, _ = run("scepterd", "-c", g, stdin="Oldtimer\nac secret\nquit\ny\n")
     check("Oldtimer" in out and "Wrong password" not in out,
           "and Oldtimer logs in to the upgraded game")
@@ -444,7 +449,8 @@ def main():
         test_dbfuncs()
         test_columns()
         test_upgradegame()
-        test_upgrade_1_to_2()
+        for version in range(1, VERSION):
+            test_upgrade_old(version)
         test_migration()
         test_fightsim()
     finally:

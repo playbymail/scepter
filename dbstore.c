@@ -1672,3 +1672,71 @@ int NextLogin(int Hosts, char *Key, size_t Size, LoginHostType *H,
 	sqlite3_reset(St);
 	return Rc;
 }
+
+/* ---------- rank changes (#139) ---------- */
+
+static const char	*RankName[] = { "none", "associate", "dm", "master", NULL };
+
+/* Bind rank Rank to parameter At: NULL for -1, a character made or removed */
+static int BindRank(sqlite3_stmt *St, int At, int Rank, const char *Where)
+{
+	return Rank < 0 ? sqlite3_bind_null(St, At) == SQLITE_OK
+		 : BindEnum(St, At, Rank, RankName, Where, "rank");
+}
+
+static int ColRank(sqlite3_stmt *St, int Col, int *Rank, const char *Where)
+{
+	*Rank = -1;
+	return sqlite3_column_type(St, Col) == SQLITE_NULL
+		|| ColEnum(St, Col, RankName, Rank, Where);
+}
+
+/* Add *R to the history of rank changes */
+int PutRankChange(RankChangeType *R)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "rank changes";
+
+	return DBPrepare(&St, "INSERT INTO rank_changes (time, player, old_rank,"
+					 " new_rank, by_whom, via) VALUES (?, ?, ?, ?, ?, ?)")
+		&& BindInt(St, 1, R->Time) && BindText(St, 2, R->Player, sizeof(Alfa))
+		&& BindRank(St, 3, R->Old, Where) && BindRank(St, 4, R->New, Where)
+		&& BindText(St, 5, R->By, sizeof(R->By))
+		&& sqlite3_bind_text(St, 6, R->Tool ? "dmadmin" : "game", -1,
+							 SQLITE_STATIC) == SQLITE_OK
+		&& Done(St, Where, "save");
+}
+
+/*
+ * The rank change after the one with id *After (0: the first) into *R and
+ * *After; *Found is FALSE after the last.
+ */
+int NextRankChange(long *After, RankChangeType *R, int *Found)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "rank changes";
+	long				V;
+	int					At = 0, Rc;
+	const char			*Via;
+
+	*Found = FALSE;
+	if (!DBPrepare(&St, "SELECT id, time, player, old_rank, new_rank, by_whom,"
+				   " via FROM rank_changes WHERE id > ? ORDER BY id LIMIT 1")
+	||	!BindInt(St, 1, *After))
+		return Failed(Where, "list");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+	{
+		Via = (const char *)sqlite3_column_text(St, 6);
+		*Found = Rc = GET(0, *After, 1, LONG_MAX)
+			&& GET(1, R->Time, LONG_MIN, LONG_MAX)
+			&& ColText(St, 2, R->Player, sizeof(Alfa), TRUE, Where)
+			&& ColRank(St, 3, &R->Old, Where) && ColRank(St, 4, &R->New, Where)
+			&& ColText(St, 5, R->By, sizeof(R->By), TRUE, Where);
+		R->Tool = Via && !strcmp(Via, "dmadmin");
+	}
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "list");
+	sqlite3_reset(St);
+	return Rc;
+}

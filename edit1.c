@@ -1,6 +1,6 @@
 #include "scepter.h"
 
-static void	ModPlayer(UserPoint Player, int OnLine);
+static void	ModPlayer(UserPoint Player, int OnLine, int Created);
 static void	EditPlayer(EdFunc EditCmd, char *Which);
 static void	EditFile(EdFunc EditCmd, char *Which);
 static void	EditRoom(EdFunc EditCmd, int Rm);
@@ -192,10 +192,18 @@ void Edit(void)
 	}
 }
 
-static void ModPlayer(UserPoint Player, int OnLine)
+/*
+ * Apply the rest of the line's changes to Player, who is playing if OnLine
+ * and was just made if Created.  A change of DM rank is recorded, and one
+ * that would leave the game without a master DM is undone (#139).
+ */
+static void ModPlayer(UserPoint Player, int OnLine, int Created)
 {
-	int		NP, WhichParm, Number, Flag;
-	Alfa	Word, OldName;
+	int			NP, WhichParm, Number, Flag;
+	Alfa		Word, OldName, Key;
+	RankType	Old = RankOf(Player);
+	int			OldSSJ = Player->SSJ, OldMaster = Player->Master;
+	short		OldAssoc = Player->Assoc;
 
 	memcpy(&Parms, &UsrParms, sizeof(UsrParms));
 	*OldName = '\0';
@@ -224,23 +232,20 @@ static void ModPlayer(UserPoint Player, int OnLine)
 				else
 					switch (Cap(*Word))
 					{
-						case 'A':	/* should be used along with AS=# */
+						case 'A':	/* AS=# sets the number shown */
+							SetRank(Player, RAssoc);
+							break;
+
 						case 'D':
-							Player->SSJ		= TRUE;
-							Player->Assoc	= 0;
-							Player->Master	= FALSE;
+							SetRank(Player, RDM);
 							break;
 
 						case 'M':
-							Player->SSJ		= TRUE;
-							Player->Assoc	= 0;
-							Player->Master	= TRUE;
+							SetRank(Player, RMaster);
 							break;
 
 						case 'N':
-							Player->SSJ		= FALSE;
-							Player->Assoc	= 0;
-							Player->Master	= FALSE;
+							SetRank(Player, RNone);
 							break;
 
 						default:
@@ -403,7 +408,11 @@ static void ModPlayer(UserPoint Player, int OnLine)
 
 			case 24:
 				if (User->Master)
+				{
 					Player->Assoc = Number;
+					if (Number)				/* an associate is not a master */
+						Player->Master = FALSE;
+				}
 				else
 					QOut(Term, "0Only master DMs may alter DM privileges.");
 				break;
@@ -487,6 +496,22 @@ static void ModPlayer(UserPoint Player, int OnLine)
 		/* a name another saved player has is refused: keep the old one */
 		if (*OldName && !ChangeUsrName(OldName, Player->Name))
 			strcpy(Player->Name, OldName);
+		strcpy(Key, Player->Name);
+		CapAlfa(Key);
+		if (RankOf(Player) != Old)
+		{
+			if (Old == RMaster && !MasterCount(Player, Key))
+			{
+				Player->SSJ = OldSSJ;
+				Player->Master = OldMaster;
+				Player->Assoc = OldAssoc;
+				snprintf(B1, sizeof(B1), "0%s is the last master DM, so stays one.",
+						Player->Name);
+				QOut(Term, B1);
+			}
+			else
+				RankChanged(Player->Name, Created ? -1 : (int)Old, RankOf(Player));
+		}
 		QOut(Term, "0Player modified.");
 	}
 }
@@ -499,7 +524,7 @@ static void EditPlayer(EdFunc EditCmd, char *Which)
 		switch (EditCmd)
 		{
 			case E_MODIFY:
-				ModPlayer(Player, TRUE);
+				ModPlayer(Player, TRUE, FALSE);
 				break;
 
 			case E_DELETE:
@@ -551,7 +576,7 @@ static void EditFile(EdFunc EditCmd, char *Which)
 		case E_MODIFY:
 			if (Exists)					/* not a new player (#40) */
 			{
-				ModPlayer(&Player, FALSE);
+				ModPlayer(&Player, FALSE, FALSE);
 				WritePlayer(&Player);
 			}
 			break;
@@ -559,8 +584,19 @@ static void EditFile(EdFunc EditCmd, char *Which)
 		case E_DELETE:
 			if (Exists)
 			{
-				ChangeUsrName(Player.Name, "");
-				QOut(Term, "0Player erased.");
+				Alfa	Key;
+
+				strcpy(Key, Player.Name);
+				CapAlfa(Key);
+				if (RankOf(&Player) == RMaster && !MasterCount(NULL, Key))
+					QOut(Term, "0That is the last master DM, who can't be erased.");
+				else
+				{
+					ChangeUsrName(Player.Name, "");
+					if (RankOf(&Player) != RNone)
+						RankChanged(Player.Name, RankOf(&Player), -1);
+					QOut(Term, "0Player erased.");
+				}
 			}
 			break;
 
@@ -576,7 +612,7 @@ static void EditFile(EdFunc EditCmd, char *Which)
 			{
 				Player.LastAccess = Today;
 				QOut(Term, "0Entry created.");
-				ModPlayer(&Player, FALSE);
+				ModPlayer(&Player, FALSE, TRUE);
 				WritePlayer(&Player);
 			}
 			break;

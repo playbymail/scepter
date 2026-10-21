@@ -367,6 +367,24 @@ static const char	Migration2[] =
 	"	fails			INTEGER NOT NULL CHECK (fails >= 0),\n"
 	"	last			INTEGER NOT NULL\n"
 	") STRICT, WITHOUT ROWID;\n";
+/*
+ * Migration 3: who changed which character's DM rank, and when (#139).  A
+ * NULL old_rank is a character made with that rank, a NULL new_rank one
+ * removed.  It names characters, not players rows, so the history outlives
+ * them.
+ */
+#define	Mig3Rank	"('none', 'associate', 'dm', 'master')"
+static const char	Migration3[] =
+	"CREATE TABLE rank_changes (\n"
+	"	id				INTEGER PRIMARY KEY,\n"
+	"	time			INTEGER NOT NULL,\n"
+	"	player			TEXT NOT NULL CHECK (player <> '' AND player = upper(player)),\n"
+	"	old_rank		TEXT CHECK (old_rank IN " Mig3Rank "),\n"
+	"	new_rank		TEXT CHECK (new_rank IN " Mig3Rank "),\n"
+	"	by_whom			TEXT NOT NULL CHECK (by_whom <> ''),\n"
+	"	via				TEXT NOT NULL CHECK (via IN ('game', 'dmadmin')),\n"
+	"	CHECK (old_rank IS NOT NULL OR new_rank IS NOT NULL)\n"
+	") STRICT;\n";
 
 #ifdef TestMigration
 /*
@@ -374,14 +392,15 @@ static const char	Migration2[] =
  * migration, to migrate a whole game as a real schema change would.
  */
 #undef	DBVersion
-#define	DBVersion	3
-static const char	Migration3[] =
+#define	DBVersion	4
+static const char	Migration4[] =
 	"CREATE TABLE test_migration (x INTEGER) STRICT;\n"
-	"INSERT INTO test_migration VALUES (3);\n";
+	"INSERT INTO test_migration VALUES (4);\n";
+static const char	*Migration[DBVersion + 1] =
+	{ NULL, Migration1, Migration2, Migration3, Migration4 };
+#else
 static const char	*Migration[DBVersion + 1] =
 	{ NULL, Migration1, Migration2, Migration3 };
-#else
-static const char	*Migration[DBVersion + 1] = { NULL, Migration1, Migration2 };
 #endif
 
 /* ---------- reporting ---------- */

@@ -87,6 +87,10 @@ UserPoint	FindUser(char *Word);
 UserPoint	FindPid(int FPid);
 int		SetPW(char *PWHash, char *PassWord);
 int		CheckPW(char *PWHash, char *PassWord);
+RankType	RankOf(UserPoint P);
+void	SetRank(UserPoint P, RankType Rank);
+int		MasterCount(UserPoint Except, const char *ExceptSaved);
+void	RankChanged(const char *Name, int Old, int New);
 long	Expr(int Lvl);
 void	PrintExp(UserPoint Plyr);
 void	Inventory(void);
@@ -286,3 +290,5 @@ int		PutLoginName(const char *Name, LoginNameType *N);
 int		PruneLogins(long HostUntil, long HostStart, long NameLast);
 int		NextLogin(int Hosts, char *Key, size_t Size, LoginHostType *H,
 				  LoginNameType *N, int *Found);
+int		PutRankChange(RankChangeType *R);
+int		NextRankChange(long *After, RankChangeType *R, int *Found);

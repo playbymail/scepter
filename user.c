@@ -274,6 +274,100 @@ int CheckPW(char *PWHash, char *PassWord)
 	return !Diff && !PWData.output[ILoop];
 }
 
+/*
+ * DM ranks (#139).  A character is a DM if SSJ is set: an associate if
+ * Assoc is also set, otherwise a master if Master is.  An associate's
+ * Assoc number only labels them ("Assoc DM 3"); any number restricts the
+ * same commands.
+ */
+RankType RankOf(UserPoint P)
+{
+	if (!P->SSJ)
+		return RNone;
+	if (P->Assoc)
+		return RAssoc;
+	return P->Master ? RMaster : RDM;
+}
+
+/* Give P rank Rank; an associate keeps an Assoc number they have */
+void SetRank(UserPoint P, RankType Rank)
+{
+	P->SSJ = Rank != RNone;
+	P->Master = Rank == RMaster;
+	if (Rank != RAssoc)
+		P->Assoc = 0;
+	else
+	if (!P->Assoc)
+		P->Assoc = 1;
+}
+
+/* Is a character named Name (in capitals) logged in and playing? */
+static int Playing(const char *Name)
+{
+	UserPoint	Usr;
+	Alfa		Key;
+
+	for (Usr = UserTail; Usr; Usr = Usr->NextUser)
+	{
+		SavedName(Usr->Name, Key);
+		if (Usr->Status == SNormal && !strcmp(Key, Name))
+			return TRUE;
+	}
+	return FALSE;
+}
+
+/*
+ * The master DMs other than the playing character Except and the character
+ * named ExceptSaved (in capitals), playing or saved; either may be NULL.
+ * A character who is playing counts as they are now, not as they were
+ * last saved.
+ */
+int MasterCount(UserPoint Except, const char *ExceptSaved)
+{
+	UserPoint	Usr;
+	UserType	P;
+	Alfa		Key;
+	long		After = 0;
+	int			Found, Count = 0;
+
+	for (Usr = UserTail; Usr; Usr = Usr->NextUser)
+	{
+		SavedName(Usr->Name, Key);
+		if (Usr != Except && (!ExceptSaved || strcmp(Key, ExceptSaved))
+		&&	Usr->Status == SNormal && RankOf(Usr) == RMaster)
+			Count++;
+	}
+	for (;;)
+	{
+		if (!NextPlayer(&After, &P, &Found))
+			Abort(" Sce203 - Cannot read the players.");
+		if (!Found)
+			return Count;
+		if ((!ExceptSaved || strcmp(P.Name, ExceptSaved)) && !Playing(P.Name)
+		&&	RankOf(&P) == RMaster)
+			Count++;
+	}
+}
+
+/*
+ * Record that User changed character Name's rank from Old to New, each a
+ * RankType or -1 for a character made or removed.
+ */
+void RankChanged(const char *Name, int Old, int New)
+{
+	RankChangeType	R;
+
+	R.Time = RealTime;
+	SavedName(Name, R.Player);
+	snprintf(R.By, sizeof(R.By), "%s", User->Name);
+	CapAlfa(R.By);
+	R.Old = Old;
+	R.New = New;
+	R.Tool = FALSE;
+	if (!PutRankChange(&R))
+		Abort(" Cannot save a rank change.");
+}
+
 long Expr(int Lvl)
 {
 	if (Lvl <= 1)

@@ -13,7 +13,7 @@ only serves the game's web site (see below).
 
 | What          | Where                                         |
 |---------------|-----------------------------------------------|
-| Binaries      | `/usr/local/bin/scepterd`, `mkgame`, `upgradegame` |
+| Binaries      | `/usr/local/bin/scepterd`, `mkgame`, `upgradegame`, `dmadmin` |
 | World file    | `/usr/local/share/scepter/havenford.world`    |
 | Game          | `/var/lib/scepter/havenford` (owned by `scepter`) |
 | Unit          | `/etc/systemd/system/scepter.service` (from `deploy/`) |
@@ -32,14 +32,14 @@ container run --rm --arch amd64 --dns 1.1.1.1 -v "$PWD":/src:ro -v "$PWD/out":/o
 	docker.io/library/ubuntu:26.04 sh -c '
 	apt-get update -qq && apt-get install -y -qq build-essential libcrypt-dev libsqlite3-dev python3 >/dev/null &&
 	cp -r /src /w && cd /w && make clean && make && make check-net &&
-	cp scepterd mkgame upgradegame /out/'
+	cp scepterd mkgame upgradegame dmadmin /out/'
 ```
 
 `scepterd` links the system's libcrypt (libxcrypt) for password hashing.
 Ubuntu always installs its runtime, `libcrypt1`, so the droplet needs no
 extra package; the build container needs `libcrypt-dev`.
 
-`scepterd`, `mkgame` and `upgradegame` also link the system's SQLite, for
+`scepterd`, `mkgame`, `upgradegame` and `dmadmin` also link the system's SQLite, for
 the game database.  The droplet has the runtime, `libsqlite3-0` 3.46.1
 (checked 2026-10-21), and the build container installs the same version's
 `libsqlite3-dev`, so the binaries are built against the SQLite they run
@@ -59,15 +59,16 @@ stopped (docs/data-files.md).
 ## Upgrade
 
 ```sh
-scp out/scepterd out/mkgame out/upgradegame tsogira:/tmp/
+scp out/scepterd out/mkgame out/upgradegame out/dmadmin tsogira:/tmp/
 ssh tsogira
 cp -p /usr/local/bin/scepterd /usr/local/bin/mkgame /usr/local/bin/upgradegame \
 	/usr/local/share/scepter/prev/    # for rolling back
+cp -p /usr/local/bin/dmadmin /usr/local/share/scepter/prev/    # once it is installed
 systemctl kill --kill-whom=main --signal=SIGUSR1 scepter    # restart warning
 sleep 120
 systemctl stop scepter
-install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /usr/local/bin/
-rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame
+install -m 0755 /tmp/scepterd /tmp/mkgame /tmp/upgradegame /tmp/dmadmin /usr/local/bin/
+rm /tmp/scepterd /tmp/mkgame /tmp/upgradegame /tmp/dmadmin
 runuser -u scepter -- upgradegame /var/lib/scepter/havenford
 systemctl start scepter
 ```
@@ -123,6 +124,26 @@ Upgrade history:
 | 2026-10-21 | `49498be` | 2, unchanged (#117, #49, #128, #41); game recreated with `mkgame -f` for the #128 room text, deleting every character | `/var/lib/scepter/havenford.backup-20261021-163121` |
 | 2026-10-21 | `1404c7e` | game database, schema version 1 (#71, #146–#153); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning) | `/var/lib/scepter/havenford.structs-20261021` (the old struct-file game, untouched) |
 | 2026-10-21 | `6e12f8e` | schema 1 → 2: the login limits in the database (#93); characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-201641` |
+
+## DMs
+
+`dmadmin` (docs/running.md) makes and manages the game's DMs.  Run it as
+`scepter`; it records the account you logged in as.  Stop the server for
+any change, with the restart warning if anyone is playing:
+
+```sh
+systemctl kill --kill-whom=main --signal=SIGUSR1 scepter    # restart warning
+sleep 120
+systemctl stop scepter
+runuser -u scepter -- dmadmin /var/lib/scepter/havenford create NAME master
+systemctl start scepter
+```
+
+`list` and `history` don't need the server stopped:
+
+```sh
+runuser -u scepter -- dmadmin /var/lib/scepter/havenford list
+```
 
 ## The move to the game database (#153)
 

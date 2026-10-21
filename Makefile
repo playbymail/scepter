@@ -34,7 +34,7 @@ OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	dbstore.o edit1.o edit2.o gamedb.o io.o ipc.o log.o main.o matt.o \
 	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o
 
-all: scepterd mkgame upgradegame
+all: scepterd mkgame upgradegame dmadmin
 
 scepterd: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
@@ -91,6 +91,16 @@ dmtest: $(DMOBJS)
 tools/dmtest.o: tools/dmtest.c main.c common.h scepter.h proto.h gamedb.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmtest.c -o $@
 
+# Manages a game's DMs from outside the game (tools/dmadmin.c, #139); links
+# the engine without main.o, like fightsim.
+ADMINOBJS = $(filter-out main.o,$(OBJS)) tools/dmadmin.o
+
+dmadmin: $(ADMINOBJS)
+	$(CC) $(CFLAGS) -o $@ $(ADMINOBJS) $(LIBS)
+
+tools/dmadmin.o: tools/dmadmin.c main.c common.h scepter.h proto.h gamedb.h
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmadmin.c -o $@
+
 # Prints a game's whole saved state (tools/dumpgame.c); links the engine
 # without main.o, like fightsim.
 DUMPOBJS = $(filter-out main.o,$(OBJS)) tools/dumpgame.o
@@ -127,6 +137,11 @@ check-tintin: scepterd mkgame
 check-data: scepterd mkgame upgradegame fightsim dmtest dumpgame dbtest dbtest2
 	python3 -I tools/datatest.py . var/alpha/alpha.world
 
+# dmadmin, and a DM it makes playing in the console harness
+# (tools/dmadmintest.py).
+check-dmadmin: scepterd mkgame dmadmin dmtest dumpgame
+	python3 -I tools/dmadmintest.py . var/alpha/alpha.world
+
 # Player-reachable security bugs (tools/securitytest.py).  Run it on a build
 # that makes memory errors visible:
 #   make CFLAGS='-g -O1 -fno-common -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
@@ -136,9 +151,9 @@ check-security: scepterd mkgame dmtest
 	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
 
 clean:
-	rm -f scepterd mkgame fightsim dmtest dumpgame dbtest dbtest2 upgradegame \
+	rm -f scepterd mkgame fightsim dmtest dumpgame dbtest dbtest2 upgradegame dmadmin \
 		$(OBJS) mkgame.o tools/fightsim.o tools/dmtest.o tools/dumpgame.o \
-		tools/dbtest.o tools/gamedb2.o tools/upgradegame.o
+		tools/dbtest.o tools/gamedb2.o tools/upgradegame.o tools/dmadmin.o
 
 # The web site for sceptish.pbbgaming.com (docs/deploy.md), built into
 # out/site.
@@ -149,4 +164,4 @@ site: site/index.html site/avatar.webp var/havenford/world-map.html
 	magick site/avatar.webp -resize 192x192 -strip -colors 128 out/site/icon.png
 
 .PHONY: all clean check-worlds site check-net check-tintin check-data check-security \
-	check-dump
+	check-dump check-dmadmin

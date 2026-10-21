@@ -117,6 +117,48 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 	./scepterd -c games/alpha
 ```
 
+## DMs
+
+A new game has no DMs, and the login prompts can't make one.  `dmadmin`
+manages them from outside the game (#139):
+
+```sh
+./dmadmin games/alpha create Boss master     # asks for the password twice
+./dmadmin games/alpha list
+./dmadmin games/alpha rank Boss dm           # master, dm, associate or none
+./dmadmin games/alpha password Boss          # a new password, for any character
+./dmadmin games/alpha remove Boss            # deletes a DM character
+./dmadmin games/alpha history
+```
+
+- **Stop the server first** for `create`, `rank`, `password` and `remove`:
+  the game saves a character who is playing over a change made here.
+  `list` and `history` only read, and may run at any time.
+- **Ranks:** a master DM may change ranks and passwords; a DM may use the
+  DM commands and editor; an associate DM may use fewer of them.  The
+  number after an associate (`Assoc DM 3`) is only a label.
+- **`create`** makes a 2nd-level character of the DM class in the start
+  room.  The name is 1 to 10 letters, and saved in capitals.
+- **Passwords** are read from the terminal, twice and not echoed, or else
+  from the first line of standard input, never from the command line.
+  They follow the game's rules: 8 to 72 characters, without the spaces at
+  either end.
+- **The last master DM** can't be demoted or removed, by `dmadmin` or in the
+  game, so there is always someone who can reset passwords.
+- **History:** every change of rank is recorded with the time and who made
+  it: the DM character, in the game's editor (`MODIFY PLAYER` or `MODIFY
+  FILE` with `ZZ=` or `AS=`, `DELETE FILE`), or the account that ran
+  `dmadmin` (`$SUDO_USER` under sudo, otherwise the login name).
+
+A DM made this way also logs in through the console harness, for testing
+the DM commands:
+
+```sh
+printf 'boss password\n' | ./dmadmin games/alpha create Boss master
+printf 'Boss\nboss password\n*edit\ndisplay player boss\nquit\n' |
+	./scepterd -c games/alpha
+```
+
 ## Tests
 
 | Command             | What it checks                                         |
@@ -125,6 +167,7 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy, and mkgame's checks on areas and coordinates |
 | `make check-data`   | `mkgame`'s game directory, the game database and `upgradegame` (docs/data-files.md)|
+| `make check-dmadmin` | `dmadmin`, and a DM it makes playing the editor in the console harness (`tools/dmadmintest.py`) |
 | `make check-dump`   | that whole games dump exactly as the golden dumps in `tools/dumps/` (docs/data-files.md) |
 | `make check-security` | that players can't crash, hang or corrupt the server, and that bad DM edits or data can't either (issues labelled `security`; `tools/securitytest.py`, `tools/dmtest.c`) |
 

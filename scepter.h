@@ -97,6 +97,8 @@ typedef enum
 	{DFlag, DNum, DWord, DOther} ParmType;
 typedef enum
 	{SInit, SLogin, SNormal} StatusType;
+typedef enum	/* a character's DM rank, from SSJ, Assoc and Master (#139) */
+	{RNone, RAssoc, RDM, RMaster} RankType;
 typedef enum
 	{Sharp, Thrust, Blunt, Long} SkillType;
 typedef enum
@@ -424,6 +426,16 @@ typedef struct
 	int			Fails;
 	long		Last;
 } LoginNameType;
+
+/* a row of rank_changes (#139) */
+typedef struct
+{
+	long		Time;
+	Alfa		Player;				/* in capitals */
+	int			Old, New;			/* a RankType; -1: made, or removed */
+	char		By[64];				/* a character, or an account on the host */
+	int			Tool;				/* by dmadmin, not in the game */
+} RankChangeType;
 
 typedef struct
 {
