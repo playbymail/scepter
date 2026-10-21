@@ -139,8 +139,10 @@ monsters appear about once every 100 seconds.
 
 ## Drawing the map
 
-There is no map generator in the repository.  To redraw the map, give this
-prompt to Claude Code in this repository:
+`world-map.html` is the interactive map: open it in a browser.  It is
+drawn from the world file and isn't updated when the world changes.  There
+is no map generator in the repository; to redraw the map, give this prompt
+to Claude Code in this repository:
 
 > Draw an interactive map of the Havenford world as a single HTML page.
 > Read every fact from `var/havenford/havenford.world` (format:
