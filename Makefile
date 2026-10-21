@@ -105,4 +105,19 @@ clean:
 	rm -f scepterd mkgame fightsim dmtest upgradegame $(OBJS) mkgame.o tools/fightsim.o \
 		tools/dmtest.o tools/upgradegame.o
 
-.PHONY: all clean check-worlds check-net check-tintin check-data check-security
+# The web site for sceptish.pbbgaming.com (docs/deploy.md), built into
+# out/site.  The avatar is too large to commit, so this needs a local copy
+# of var/havenford/avatar.png.
+AVATAR = var/havenford/avatar.png
+
+var/havenford/avatar-light.png: $(AVATAR)
+	magick $(AVATAR) -gamma 1.45 -modulate 108,110 $@
+
+site: site/index.html var/havenford/world-map.html var/havenford/avatar-light.png
+	mkdir -p out/site
+	cp site/index.html out/site/index.html
+	cp var/havenford/world-map.html out/site/map.html
+	magick var/havenford/avatar-light.png -resize 800x800 -quality 85 out/site/avatar.webp
+	magick var/havenford/avatar-light.png -resize 192x192 -strip -colors 128 out/site/icon.png
+
+.PHONY: all clean check-worlds site check-net check-tintin check-data check-security

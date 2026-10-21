@@ -1,0 +1,11 @@
+# Append to /etc/caddy/Caddyfile, after the dolpher and tsogira sites;
+# don't change those. Caddy gets the certificate itself, so ports 80 and
+# 443 must be open to the world. See docs/deploy.md.
+#
+# The game itself is telnet on port 4000, which doesn't go through Caddy.
+
+sceptish.pbbgaming.com {
+	root * /usr/local/share/scepter/www
+	encode zstd gzip
+	file_server
+}
