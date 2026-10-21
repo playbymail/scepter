@@ -17,7 +17,7 @@
       "record": 1,
       "lines": [
         "1/You are in Havenford Refuge. The square and guild signs are east./",
-        "1/You are in Havenford Square. Guild Street is north; shops are south./",
+        "1/You are in Havenford Square. Guilds north, shops south, North Gate east./",
         "1/You are on Guild Street. Training halls flank the cobbled street./",
         "1/You are in the Hall of Blades. Practice swords ring against shields./",
         "1/You are in the Scout Lodge. Maps and unstrung bows cover the walls./",
@@ -36,7 +36,7 @@
         "1/You are in the River Inn. Soup simmers in the common hearth./",
         "1/You are at the Notice Kiosk. Fresh notices hang under an awning./",
         "1/You are in the Exchange. A pawnbroker sorts simple trinkets./",
-        "1/You are in a public garden. Fruit trees shade a small fountain./",
+        "1/You are in a public garden. The North Gate and the north road lie north./",
         "1/You are at Havenford North Gate. Guards wave travellers through./",
         "1/You are on a calm road past the city walls. Farms lie north./",
         "1/You are at the orchard crossroads. The city is south./",
@@ -222,7 +222,7 @@
       "lines": [
         "1/A prismatic guardian stands between shards of colored glass./",
         "1/A wild aether warden crackles with unstable magic./",
-        "1/DANGER AHEAD! Arcane creatures roam north. Return south to train./",
+        "1/DANGER AHEAD! Arcane creatures roam north. Return east to train./",
         "1/A note reads: In the dark study, USE LANTERN. Magic fails in the null room./",
         "1/An old apprentice's scroll, neatly marked with the heal spell./",
         "1/A polished charm bearing the sigil of the observatory./",
@@ -319,7 +319,7 @@
       "id": 13,
       "exits": [10, 0, 14, 15, 0, 0],
       "desc": {"record": 2, "line": 3},
-      "greeting": "Innkeeper: The city is safe; danger lies past the north road.",
+      "greeting": "Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate.",
       "safe": true,
       "bar": true,
       "staggers": [1, 2, 10, 13]

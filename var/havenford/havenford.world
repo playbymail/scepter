@@ -19,7 +19,7 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 
 [description 1]
 1 = 1/You are in Havenford Refuge. The square and guild signs are east./
-2 = 1/You are in Havenford Square. Guild Street is north; shops are south./
+2 = 1/You are in Havenford Square. Guilds north, shops south, North Gate east./
 3 = 1/You are on Guild Street. Training halls flank the cobbled street./
 4 = 1/You are in the Hall of Blades. Practice swords ring against shields./
 5 = 1/You are in the Scout Lodge. Maps and unstrung bows cover the walls./
@@ -35,7 +35,7 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 3 = 1/You are in the River Inn. Soup simmers in the common hearth./
 4 = 1/You are at the Notice Kiosk. Fresh notices hang under an awning./
 5 = 1/You are in the Exchange. A pawnbroker sorts simple trinkets./
-6 = 1/You are in a public garden. Fruit trees shade a small fountain./
+6 = 1/You are in a public garden. The North Gate and the north road lie north./
 7 = 1/You are at Havenford North Gate. Guards wave travellers through./
 8 = 1/You are on a calm road past the city walls. Farms lie north./
 9 = 1/You are at the orchard crossroads. The city is south./
@@ -179,7 +179,7 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 [description 16]
 1 = 1/A prismatic guardian stands between shards of colored glass./
 2 = 1/A wild aether warden crackles with unstable magic./
-3 = 1/DANGER AHEAD! Arcane creatures roam north. Return south to train./
+3 = 1/DANGER AHEAD! Arcane creatures roam north. Return east to train./
 4 = 1/A note reads: In the dark study, USE LANTERN. Magic fails in the null room./
 5 = 1/An old apprentice's scroll, neatly marked with the heal spell./
 6 = 1/A polished charm bearing the sigil of the observatory./
@@ -868,7 +868,7 @@ north = 10
 east = 14
 west = 15
 desc = 2:3
-greeting = Innkeeper: The city is safe; danger lies past the north road.
+greeting = Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate.
 safe = yes
 role = bar
 staggers = 1 2 10 13
