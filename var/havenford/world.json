@@ -223,11 +223,12 @@
         "1/A prismatic guardian stands between shards of colored glass./",
         "1/A wild aether warden crackles with unstable magic./",
         "1/DANGER AHEAD! Arcane creatures roam north. Return south to train./",
-        "1/A note reads: Dark rooms test light. Magic will fail in the null room./",
+        "1/A note reads: In the dark study, USE LANTERN. Magic fails in the null room./",
         "1/An old apprentice's scroll, neatly marked with the heal spell./",
         "1/A polished charm bearing the sigil of the observatory./",
         "1/A blue crystal that pulses with stored energy./",
-        "1/A glass prism containing a faint sliver of starlight./"
+        "1/A glass prism containing a faint sliver of starlight./",
+        "1/A brass lantern on a hook. USE it to light the study for a moment./"
       ]
     }
   ],
@@ -1199,8 +1200,19 @@
       "id": 94,
       "exits": [91, 0, 0, 0, 0, 0],
       "desc": {"record": 15, "line": 4},
-      "safe": true,
-      "dark": true
+      "dark": true,
+      "objects": [
+        {
+          "name": "lantern,brass *",
+          "article": "a",
+          "kind": "device",
+          "weight": 3,
+          "desc": {"record": 16, "line": 9},
+          "magic": true,
+          "permanent": true,
+          "device": {"spell": "illuminate", "charges": 127}
+        }
+      ]
     }
   ],
   "monsters": [

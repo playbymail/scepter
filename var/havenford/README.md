@@ -99,7 +99,7 @@ means the first one listed.
 ## The Aether Observatory (rooms 79–94)
 
 The Observatory is for magic-users.  Go west from the Academy of Sparks
-(room 6).  Rooms 79–83 and 91–94 are safe; the warning sign is in room 83.
+(room 6).  Rooms 79–83 and 91–93 are safe; the warning sign is in room 83.
 
 | Rooms | Monsters | Levels |
 |---|---|---|
@@ -111,10 +111,18 @@ These side rooms show room flags and objects:
 
 | Room | Shows |
 |---|---|
-| 91 | spell library; the lessons sign |
+| 91 | spell library; the lessons sign points to the lantern |
 | 92 | anti-magic: every spell fails, even ones safe rooms allow |
 | 93 | workshop, with a heal scroll; the scroll is gone once someone takes it |
-| 94 | dark: `LOOK` shows nothing until the room is lit |
+| 94 | dark: `LOOK` shows nothing, but `USE LANTERN` shows the room once to everyone in it |
+
+The lantern in room 94 is a magic device that casts ILLUMINATE.  The
+spell fails in safe rooms, so room 94 is not safe: players can
+fight each other there and attack spells work, though no monsters
+ever appear.  A device used where it stands spends no charges, so
+the lantern never runs out, and it can't be carried off.  Players
+can't see it in the dark, so they have to be told its name; the lessons
+sign does that.
 
 ## Encounters
 
