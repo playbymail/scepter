@@ -289,6 +289,60 @@ void AddSeg(void)
 	NumRooms = NumSegs * 10 - 1;
 }
 
+/* A teleport can land in room Rm if it has a way out */
+static int TeleportOk(int Rm, int AntiMagicOk)
+{
+	int		T, ILoop;
+
+	T = S(Rm);
+	if (Room[T].AntiMagic && !AntiMagicOk)
+		return FALSE;
+	for (ILoop = 0; ILoop < 6; ILoop++)
+		if (Room[T].Adjoin[ILoop])
+			return TRUE;
+	return Room[T].Out != 0;
+}
+
+/*
+ * Pick a teleport destination for someone in slot Rm: a room in the same
+ * hundred below level 10, otherwise rooms 31-699, both cut to the dungeon.
+ * Returns a room number, or 0 if no room in range has an exit; the old
+ * loop retried forever then, and took the hundred from the slot (#9, #10).
+ */
+int TeleportRoom(RmCodeType Rm, int Level, int AntiMagicOk)
+{
+	int		Lo, Hi, Try, NewRm;
+
+	if (Level < 10)
+	{
+		Lo = W(Rm) / 100 * 100 + 1;
+		Hi = Lo + 98;
+	}
+	else
+	{
+		Lo = 31;
+		Hi = 699;
+	}
+	Hi = Min(Hi, NumRooms);
+	if (Lo > Hi)
+		Lo = 1;
+
+	/* random rooms first, then every room from a random start */
+	for (Try = 0; Try < 20; Try++)
+	{
+		NewRm = Lo + Rnd(Hi - Lo + 1) - 1;
+		if (TeleportOk(NewRm, AntiMagicOk))
+			return NewRm;
+	}
+	for (Try = 0; Try <= Hi - Lo; Try++)
+	{
+		NewRm = Lo + (NewRm - Lo + 1) % (Hi - Lo + 1);
+		if (TeleportOk(NewRm, AntiMagicOk))
+			return NewRm;
+	}
+	return 0;
+}
+
 static void StopPlyrAtk(MonsterPoint Monster, RmCodeType Rm)
 {
 	UserPoint	Plyer;

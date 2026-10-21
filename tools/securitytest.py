@@ -401,6 +401,111 @@ def test_92(port):
           and "address refused for 10 minutes" in log, "errlog records the failures")
 
 
+def teleport(c, device, times):
+    """Use device on c's player times; return how many teleported, or -1."""
+    n = 0
+    for _ in range(times):
+        c.line("use %s" % device)
+        got = c.expect(rb"\*\*Poof\*\* You find that you are elsewhere|Nothing happens\.", 10)
+        if got is None:
+            return -1
+        n += b"Poof" in got
+    return n
+
+
+def test_9(port):
+    """TELEPORT with no room in range must not hang (#9)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, *TO_WORKSHOP), "Alpha reaches the workshop"):
+        return
+    a.line("get staff")
+    a.line("get rod")
+    check(a.expect(rb"Ok\..*Ok\.", 5) is not None, "Alpha takes the staff and rod")
+    check(teleport(a, "staff", 3) == 0,
+          "the level 10 staff finds no room in 31-699: nothing happens")
+    check(teleport(a, "rod", 10) == 10, "the level 1 rod teleports Alpha every time")
+    alive(a, "Alpha", "teleporting")
+
+
+def test_9_far(port):
+    """Level 10 TELEPORT lands in rooms 31-699 when they exist (#9)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, *TO_WORKSHOP), "Alpha reaches the workshop"):
+        return
+    a.line("get staff")
+    check(a.expect(rb"Ok\.", 5) is not None, "Alpha takes the staff")
+    check(teleport(a, "staff", 5) == 5, "the level 10 staff teleports Alpha every time")
+    a.line("look")
+    check(a.expect(rb"You are on (the north|a rutted) road", 5) is not None,
+          "Alpha is in one of rooms 40-150")
+    alive(a, "Alpha", "teleporting far")
+
+
+def test_10(port):
+    """A parley teleport with no room in range must not hang (#10)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, *TO_WORKSHOP), "Alpha reaches the workshop"):
+        return
+    a.line("parley sage")
+    check(a.expect(rb"grey sage makes no apparent response", 10) is not None,
+          "the level 10 sage finds no room in 31-699")
+    a.line("parley imp")
+    check(a.expect(rb"green imp teleports you elsewhere!", 10) is not None,
+          "the level 1 imp teleports Alpha")
+    alive(a, "Alpha", "parley teleports")
+
+
+def teleporters(world):
+    """World with teleport devices and parley-10 monsters in the workshop."""
+    return world + """
+[room 27 / object 6]
+name = staff,ivory *
+article = an
+kind = device
+weight = 1
+carry = yes
+magic = yes
+permanent = yes
+spell = teleport
+charges = 50
+level = 10
+
+[room 27 / object 7]
+name = rod,iron *
+article = an
+kind = device
+weight = 1
+carry = yes
+magic = yes
+permanent = yes
+spell = teleport
+charges = 50
+level = 1
+
+[room 27 / monster 2]
+name = sage,grey *
+article = a
+level = 10
+hits = 10
+max-hits = 10
+ac = 9
+attack-speed = 0
+parley = 10
+permanent = yes
+
+[room 27 / monster 3]
+name = imp,green *
+article = a
+level = 1
+hits = 10
+max-hits = 10
+ac = 9
+attack-speed = 0
+parley = 10
+permanent = yes
+"""
+
+
 def legacy(dmtest, game):
     """Save Oldtimer, a 2nd-level character with the old password hash of "ac"."""
     subprocess.run([dmtest, game, "legacy", "Oldtimer", "ac"], check=True,
@@ -439,6 +544,9 @@ TESTS = {
     "14": (test_14, None, None),
     "15": (test_15, None, None),
     "12": (test_12, many_segments, None),
+    "9": (test_9, teleporters, None),
+    "9-far": (test_9_far, lambda w: teleporters(many_segments(w)), None),
+    "10": (test_10, teleporters, None),
     "82-new": (test_82_new, None, None),
     "82-legacy": (test_82_legacy, None, legacy),
     "82-change": (test_82_change, None, legacy),

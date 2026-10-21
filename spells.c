@@ -70,27 +70,14 @@ int SpellMon(int SpellCode, int Level, int Intel, UserPoint Plyr, MonsterPoint M
 
 		case SPELL_TELEPORT:		/* teleport, OnUsPlayer */
 		{
-			int		NewRm, Exit;
+			int		NewRm;
 
-			do
+			NewRm = TeleportRoom(Plyr->RmCode, Level, FALSE);
+			if (!NewRm)
 			{
-				int		T;
-
-				if (Level < 10)
-					NewRm = (Plyr->RmCode / 100) * 100 + Rnd(99);
-				else
-					NewRm = Rnd(669) + 30;
-				T = S(NewRm);
-				Exit = 0;
-				if (!Room[T].AntiMagic)
-				{
-					int		ILoop;
-
-					for (ILoop = 0; ILoop < 6; ILoop++)
-						Exit += Room[T].Adjoin[ILoop];
-					Exit += Room[T].Out;
-				}
-			} while (!Exit);
+				QOut(Term, NothingText);
+				break;
+			}
 			StopFollow(Plyr);
 			DeletePlayer(Plyr, Plyr->RmCode);
 			PlacePlayer(Plyr, NewRm);
