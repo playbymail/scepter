@@ -227,67 +227,42 @@ static int OpenGame(const char *Prog)
 	return !Bad;
 }
 
-/* One line of EFILE without its newline; the rest of a long line is skipped. */
-static void ReadELine(char *Str, int Size)
-{
-	int		Ch;
-	size_t	Len;
-
-	if (!fgets(Str, Size, EFile))
-		Abort(" EFILE is too short.");
-	Len = strcspn(Str, "\n");
-	if (Str[Len])
-		Str[Len] = '\0';
-	else
-		while ((Ch = getc(EFile)) != EOF && Ch != '\n')
-			;
-}
-
+/* The settings and tables, from the game database (dbstore.c) */
 static void Init_Scepter(void)
 {
-	int		ILoop;
+	SettingsType	Set;
+	int				ILoop, J, E[8];
 
-	if ((EFile = fopen(EFILE, "r")) == NULL)
-		Abort(" File open error on EFILE.");
-
-	ReadELine(Notice, sizeof(Notice));
-
+	if (!GetSettings(&Set))
+		Abort(" Cannot read the game's settings.");
+	strcpy(Notice, Set.Notice);
 	for (ILoop = 0; ILoop < 5; ILoop++)
-		ReadELine(NewsBuf[ILoop], sizeof(NewsBuf[ILoop]));
+		strcpy(NewsBuf[ILoop], Set.News[ILoop]);
 	for (ILoop = 0; ILoop < 3; ILoop++)
 	{
-		ReadELine(B1, sizeof(B1));
-		TName[ILoop][0] = TClass[ILoop][0] = '\0';
-		sscanf(B1, "%d%10s%12s", &TLvl[ILoop], TName[ILoop], TClass[ILoop]);
-		ReadELine(TBuf[ILoop], sizeof(TBuf[ILoop]));
+		TLvl[ILoop] = Set.ObitLvl[ILoop];
+		strcpy(TName[ILoop], Set.ObitName[ILoop]);
+		strcpy(TClass[ILoop], Set.ObitClass[ILoop]);
+		strcpy(TBuf[ILoop], Set.Obit[ILoop]);
 	}
-
-	if (fscanf(EFile, "%c%d%d", &TaskClosed, &NumRun, &MSpeed) != 3)
-		Abort(" Bad run counters in EFILE.");
+	TaskClosed = Set.TaskClosed;
+	NumRun = Set.Runs;
+	MSpeed = Set.MSpeed;
 
 	for (ILoop = 1; ILoop <= LEncounter; ILoop++)
 	{
-		int j, e[8];
-
-		if (fscanf(EFile, "%d%d%d%d%d%d%d%d",
-				  &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]) != 8)
-			Abort(" Bad encounter table in EFILE.");
-
-		for (j = 0; j < 8; j++)
-			PutEncIndex(ILoop, j, e[j]);
+		if (!GetTableRow(FALSE, ILoop, E))
+			Abort(" Cannot read the encounter table.");
+		for (J = 0; J < 8; J++)
+			PutEncIndex(ILoop, J, E[J]);
 	}
 	for (ILoop = 1; ILoop <= ObjListLen; ILoop++)
 	{
-		int		j, o[8];
-
-		if (fscanf(EFile, "%d%d%d%d%d%d%d%d",
-				  &o[0], &o[1], &o[2], &o[3], &o[4], &o[5], &o[6], &o[7]) != 8)
-			Abort(" Bad object table in EFILE.");
-		for (j = 0; j < 8; j++)
-			PutObjIndex(ILoop, j, o[j]);
+		if (!GetTableRow(TRUE, ILoop, E))
+			Abort(" Cannot read the treasure table.");
+		for (J = 0; J < 8; J++)
+			PutObjIndex(ILoop, J, E[J]);
 	}
-
-	fclose(EFile);
 
 	RealTime = time((long *) 0);
 	SetRandom((int) (RealTime & 0x7fff), getpid());

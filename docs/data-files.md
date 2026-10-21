@@ -9,13 +9,11 @@ replaced the raw struct files of the QNX version (#5).
 
 | File | Holds |
 |---|---|
-| `game.db` | the game database (see below): everything but the settings and special rooms so far |
-| `efile` | game settings, news and the encounter and treasure tables (text) |
-| `special` | special rooms (text) |
+| `game.db` | the game database (see below): the whole game |
 | `errlog` | the server's error log (text), made when something is first logged |
 
-The hourly update writes `efile.tmp` and renames it over `efile`, so a
-failed write leaves the old file (#17).
+While the server runs, SQLite keeps `game.db-wal` and `game.db-shm` beside
+the database; a clean stop removes them.
 
 ## The game database
 
@@ -23,11 +21,10 @@ failed write leaves the old file (#17).
 version is `PRAGMA user_version`; this build reads version `DBVersion`
 (`gamedb.h`), currently 1.
 
-- **`mkgame`** creates it with the whole schema, then fills the tables
-  moved so far (#148: `monster_templates`, `object_templates` and
-  `descriptions`; #149: `rooms`; #150: `room_objects`, `chest_objects`,
-  `room_monsters` and `monster_objects`; #151: `players`, empty).  The
-  game directory must already exist and be empty.
+- **`mkgame`** creates it with the whole schema and fills it from the
+  world: templates, descriptions, rooms and their contents, settings,
+  tables and special rooms; `players` starts empty.  The game directory
+  must already exist and be empty.
 - **Rooms:** `rooms` holds every room of every segment, 0 to
   `NumSegs * 10 - 1`, and the server counts the segments from it; a gap
   is refused at start-up.  A segment swap saves its ten rooms in one
@@ -45,6 +42,12 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
   first saved and never reused, even after a delete; `USERS` lists by it.
   A save is one transaction.  A rename keeps the id, and a name another
   character has is refused (#164).
+- **Settings:** the notice, news, obituaries, task state, run counter and
+  monster speed are saved whenever a DM or the game changes them, and an
+  `ELIST` or `TLIST` edit saves its row.  The hourly update (`UpdateF`)
+  saves every loaded segment of rooms, the settings and both tables in one
+  transaction, so a failure leaves the last whole update (#17).  The
+  special rooms are written only by `mkgame`.
 - **Rows:** `dbstore.c` turns each saved struct into a row and back.  The
   DM editor's changes to a template or a description are one transaction
   each.
@@ -85,7 +88,7 @@ Migration 1, with each column's struct field.  `<object columns>` and
 ```sql
 -- Migration 1: the whole game.  PRAGMA user_version = 1 afterwards.
 
--- ---------- settings (EFILE) and the start/revive/jail rooms (SPECIAL) ----------
+-- ---------- settings (once efile) and the start/revive/jail rooms (once special) ----------
 
 CREATE TABLE settings (
 	id				INTEGER PRIMARY KEY CHECK (id = 1),	-- one row
@@ -288,7 +291,7 @@ CREATE TABLE rooms (
 	dark			INTEGER NOT NULL CHECK (dark IN (0, 1))
 ) STRICT;
 
--- Each room's role and greeting (SPECIAL); a room with neither has no row.
+-- Each room's role and greeting (once special); a room with neither has no row.
 CREATE TABLE room_specials (
 	room			INTEGER PRIMARY KEY REFERENCES rooms (room),
 	role			TEXT NOT NULL CHECK (role IN ('none', 'bar', 'newsstand', 'pawnshop',

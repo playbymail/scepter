@@ -6,9 +6,9 @@
  * Every piece of persistent state comes out in a fixed order, one record
  * per line, each field named as it is in scepter.h:
  *
- *	notice, news, task, run		settings (EFILE)
+ *	notice, news, task, run		settings
  *	encounter, treasure			the encounter and treasure tables
- *	start, special				special rooms (SPECIAL)
+ *	start, special				special rooms
  *	desc						description lines that aren't empty
  *	mlist, olist				monster and object templates
  *	room						rooms that aren't empty, then their objects

@@ -879,6 +879,7 @@ void EditETList(EdFunc EditCmd, int WhatCode, int Index)
 					GetWord(Dummy, &e);
 					PutEncIndex(Index, ILoop, e);
 				}
+				SaveTableRow(0, Index);
 				QOut(Term, "0EList modified.");
 			}
 			else
@@ -908,6 +909,7 @@ void EditETList(EdFunc EditCmd, int WhatCode, int Index)
 					GetWord(Dummy, &o);
 					PutObjIndex(Index, ILoop, o);
 				}
+				SaveTableRow(1, Index);
 				QOut(Term, "0TList modified.");
 			}
 			else

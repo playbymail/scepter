@@ -1271,3 +1271,280 @@ int NextPlayer(long *After, UserPoint P, int *Found)
 	sqlite3_reset(St);
 	return Rc == SQLITE_DONE;
 }
+
+/* ---------- settings and tables ---------- */
+
+static const char	*TaskName[] = { "O", "C", "T", NULL };
+
+/* Read the settings, news and obituaries into *S */
+int GetSettings(SettingsType *S)
+{
+	static sqlite3_stmt	*St, *News, *Obit;
+	const char			*Where = "settings";
+	long				V, Line;
+	int					At = 0, Rc, Task;
+
+	memset(S, 0, sizeof(*S));
+	if (!DBPrepare(&St, "SELECT notice, task_closed, runs, monster_speed,"
+				   " start_room, revive_room, jail_room FROM settings WHERE id = 1"))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) != SQLITE_ROW)
+	{
+		sqlite3_reset(St);
+		if (Rc == SQLITE_DONE)
+		{
+			Bad(Where, "settings", "missing", 0);
+			return FALSE;
+		}
+		return Failed(Where, "read");
+	}
+	Rc = ColText(St, 0, S->Notice, sizeof(S->Notice), TRUE, Where)
+	  && ColEnum(St, 1, TaskName, &Task, Where)
+	  && GET(2, S->Runs, INT_MIN, INT_MAX)
+	  && GET(3, S->MSpeed, INT_MIN, INT_MAX)
+	  && GET(4, S->StartRoom, INT_MIN, INT_MAX)
+	  && GET(5, S->ReviveRoom, INT_MIN, INT_MAX)
+	  && GET(6, S->JailRoom, INT_MIN, INT_MAX);
+	sqlite3_reset(St);
+	if (!Rc)
+		return FALSE;
+	S->TaskClosed = *TaskName[Task];
+
+	if (!DBPrepare(&News, "SELECT line, text FROM news ORDER BY line"))
+		return Failed(Where, "read the news");
+	while ((Rc = sqlite3_step(News)) == SQLITE_ROW)
+		if (!ColInt(News, 0, 1, 5, &Line, Where)
+		||	!ColText(News, 1, S->News[Line - 1], sizeof(S->News[0]), TRUE, Where))
+		{
+			sqlite3_reset(News);
+			return FALSE;
+		}
+	sqlite3_reset(News);
+	if (Rc != SQLITE_DONE)
+		return Failed(Where, "read the news");
+
+	if (!DBPrepare(&Obit, "SELECT rank, lvl, name, class, text FROM obituaries"
+				   " ORDER BY rank"))
+		return Failed(Where, "read the obituaries");
+	while ((Rc = sqlite3_step(Obit)) == SQLITE_ROW)
+	{
+		int		I;
+
+		if (!ColInt(Obit, 0, 1, 3, &Line, Where))
+		{
+			sqlite3_reset(Obit);
+			return FALSE;
+		}
+		I = (int)Line - 1;
+		if (!ColInt(Obit, 1, INT_MIN, INT_MAX, &V, Where)
+		||	!ColText(Obit, 2, S->ObitName[I], sizeof(S->ObitName[I]), TRUE, Where)
+		||	!ColText(Obit, 3, S->ObitClass[I], sizeof(S->ObitClass[I]), TRUE, Where)
+		||	!ColText(Obit, 4, S->Obit[I], sizeof(S->Obit[I]), TRUE, Where))
+		{
+			sqlite3_reset(Obit);
+			return FALSE;
+		}
+		S->ObitLvl[I] = (int)V;
+	}
+	sqlite3_reset(Obit);
+	return Rc == SQLITE_DONE || Failed(Where, "read the obituaries");
+}
+
+/* Save *S: the settings row, the five news lines and the three obituaries */
+int PutSettings(SettingsType *S)
+{
+	static sqlite3_stmt	*St, *News, *Obit;
+	const char			*Where = "settings";
+	int					Own, Ok, I, Task;
+
+	for (Task = 0; TaskName[Task] && *TaskName[Task] != S->TaskClosed; Task++)
+		;
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = DBPrepare(&St, "INSERT OR REPLACE INTO settings (id, notice, task_closed,"
+				   " runs, monster_speed, start_room, revive_room, jail_room)"
+				   " VALUES (1, ?, ?, ?, ?, ?, ?, ?)")
+	  && BindText(St, 1, S->Notice, sizeof(S->Notice))
+	  && BindEnum(St, 2, TaskName[Task] ? Task : -(int)S->TaskClosed, TaskName,
+				  Where, "TaskClosed")
+	  && BindInt(St, 3, S->Runs) && BindInt(St, 4, S->MSpeed)
+	  && BindInt(St, 5, S->StartRoom) && BindInt(St, 6, S->ReviveRoom)
+	  && BindInt(St, 7, S->JailRoom) && Done(St, Where, "save");
+	for (I = 0; Ok && I < 5; I++)
+		Ok = DBPrepare(&News, "INSERT OR REPLACE INTO news (line, text) VALUES (?, ?)")
+		  && BindInt(News, 1, I + 1)
+		  && BindText(News, 2, S->News[I], sizeof(S->News[I]))
+		  && Done(News, Where, "save the news");
+	for (I = 0; Ok && I < 3; I++)
+		Ok = DBPrepare(&Obit, "INSERT OR REPLACE INTO obituaries (rank, lvl, name,"
+					   " class, text) VALUES (?, ?, ?, ?, ?)")
+		  && BindInt(Obit, 1, I + 1) && BindInt(Obit, 2, S->ObitLvl[I])
+		  && BindText(Obit, 3, S->ObitName[I], sizeof(S->ObitName[I]))
+		  && BindText(Obit, 4, S->ObitClass[I], sizeof(S->ObitClass[I]))
+		  && BindText(Obit, 5, S->Obit[I], sizeof(S->Obit[I]))
+		  && Done(Obit, Where, "save the obituaries");
+	return DBFinish(Own, Ok);
+}
+
+/*
+ * Row Row of the encounter table (Treasure FALSE) or the treasure table
+ * (TRUE) into Entry[0..7]; an entry with no row is 0.
+ */
+int GetTableRow(int Treasure, int Row, int Entry[8])
+{
+	static sqlite3_stmt	*Enc, *Tre;
+	sqlite3_stmt		**St = Treasure ? &Tre : &Enc;
+	const char			*Where = Treasure ? "treasure table" : "encounter table";
+	long				Slot, V;
+	int					Rc;
+
+	memset(Entry, 0, 8 * sizeof(int));
+	if (!DBPrepare(St, Treasure
+				   ? "SELECT slot, object FROM treasures WHERE treasure = ?"
+				   : "SELECT slot, monster FROM encounters WHERE encounter = ?")
+	||	!BindInt(*St, 1, Row))
+		return Failed(Where, "read");
+	while ((Rc = sqlite3_step(*St)) == SQLITE_ROW)
+		if (!ColInt(*St, 0, 1, 8, &Slot, Where)
+		||	!ColInt(*St, 1, SHRT_MIN, SHRT_MAX, &V, Where))
+		{
+			sqlite3_reset(*St);
+			return FALSE;
+		}
+		else
+			Entry[Slot - 1] = (int)V;
+	sqlite3_reset(*St);
+	return Rc == SQLITE_DONE || Failed(Where, "read");
+}
+
+/* Replace row Row of a table with Entry[0..7], storing the entries not 0 */
+int PutTableRow(int Treasure, int Row, int Entry[8])
+{
+	static sqlite3_stmt	*DelE, *DelT, *InsE, *InsT;
+	const char			*Where = Treasure ? "treasure table" : "encounter table";
+	sqlite3_stmt		**Del = Treasure ? &DelT : &DelE;
+	sqlite3_stmt		**Ins = Treasure ? &InsT : &InsE;
+	int					Own, Ok, Slot;
+
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = DBPrepare(Del, Treasure ? "DELETE FROM treasures WHERE treasure = ?"
+							   : "DELETE FROM encounters WHERE encounter = ?")
+	  && BindInt(*Del, 1, Row) && Done(*Del, Where, "save");
+	for (Slot = 1; Ok && Slot <= 8; Slot++)
+		if (Entry[Slot - 1])
+			Ok = DBPrepare(Ins, Treasure
+						   ? "INSERT INTO treasures (treasure, slot, object) VALUES (?, ?, ?)"
+						   : "INSERT INTO encounters (encounter, slot, monster)"
+							 " VALUES (?, ?, ?)")
+			  && BindInt(*Ins, 1, Row) && BindInt(*Ins, 2, Slot)
+			  && BindInt(*Ins, 3, Entry[Slot - 1]) && Done(*Ins, Where, "save");
+	return DBFinish(Own, Ok);
+}
+
+/* ---------- special rooms ---------- */
+
+/*
+ * Each room's role and greeting, then its stock, staggers and trained
+ * classes, in room order; Each is called for every row, with Kind 'r'
+ * (Role and Greeting set), 's' (stock: Value, an object template), 'g'
+ * (staggers: Value, a room) or 't' (trains: Value, a ChType).  Each
+ * returns FALSE to stop.
+ */
+int GetSpecials(int (*Each)(int Kind, int Room, int Value, RoleType Role,
+							const char *Greeting))
+{
+	static const char	*RoleName[] =
+	{
+		"none", "bar", "newsstand", "pawnshop", "store", "smith", NULL
+	};
+	static sqlite3_stmt	*Roles, *Stock, *Stag, *Trains;
+	const char			*Where = "special rooms";
+	long				Room, V;
+	int					Rc = SQLITE_DONE, N;
+
+	if (!DBPrepare(&Roles, "SELECT room, role, greeting FROM room_specials"
+				   " ORDER BY room"))
+		return Failed(Where, "read");
+	while ((Rc = sqlite3_step(Roles)) == SQLITE_ROW)
+	{
+		const char	*Greeting = (const char *)sqlite3_column_text(Roles, 2);
+
+		if (!ColInt(Roles, 0, 0, SHRT_MAX, &Room, Where)
+		||	!ColEnum(Roles, 1, RoleName, &N, Where)
+		||	!Each('r', (int)Room, 0, (RoleType)N, Greeting))
+			break;
+	}
+	sqlite3_reset(Roles);
+	if (Rc != SQLITE_DONE)
+		return Rc == SQLITE_ROW ? FALSE : Failed(Where, "read");
+
+	if (!DBPrepare(&Stock, "SELECT room, object FROM room_stock ORDER BY room, slot")
+	||	!DBPrepare(&Stag, "SELECT room, to_room FROM room_staggers ORDER BY room, slot"))
+		return Failed(Where, "read");
+	for (N = 0; N < 2; N++)
+	{
+		sqlite3_stmt	*St = N ? Stag : Stock;
+
+		while ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+			if (!ColInt(St, 0, 0, SHRT_MAX, &Room, Where)
+			||	!ColInt(St, 1, SHRT_MIN, SHRT_MAX, &V, Where)
+			||	!Each(N ? 'g' : 's', (int)Room, (int)V, RoleNone, NULL))
+				break;
+		sqlite3_reset(St);
+		if (Rc != SQLITE_DONE)
+			return Rc == SQLITE_ROW ? FALSE : Failed(Where, "read");
+	}
+
+	if (!DBPrepare(&Trains, "SELECT room, class FROM room_trains ORDER BY room, class"))
+		return Failed(Where, "read");
+	while ((Rc = sqlite3_step(Trains)) == SQLITE_ROW)
+		if (!ColInt(Trains, 0, 0, SHRT_MAX, &Room, Where)
+		||	!ColEnum(Trains, 1, ClassName, &N, Where)
+		||	!Each('t', (int)Room, N, RoleNone, NULL))
+			break;
+	sqlite3_reset(Trains);
+	return Rc == SQLITE_DONE || (Rc != SQLITE_ROW && Failed(Where, "read"));
+}
+
+/* Store room Room's special settings (mkgame); Role is RoleNone for none */
+int PutSpecial(int Room, RoleType Role, const char *Greeting, int NStock,
+			   const int *Stock, int NStagger, const int *Stagger, unsigned Trains)
+{
+	static const char	*RoleName[] =
+	{
+		"none", "bar", "newsstand", "pawnshop", "store", "smith", NULL
+	};
+	static sqlite3_stmt	*Spec, *Stk, *Stg, *Trn;
+	char				Where[32];
+	int					Own, Ok = TRUE, I;
+
+	snprintf(Where, sizeof(Where), "special room %d", Room);
+	if (!DBStart(&Own))
+		return FALSE;
+	if (Role != RoleNone || Greeting)
+		Ok = DBPrepare(&Spec, "INSERT INTO room_specials (room, role, greeting)"
+					   " VALUES (?, ?, ?)")
+		  && BindInt(Spec, 1, Room)
+		  && BindEnum(Spec, 2, Role, RoleName, Where, "Role")
+		  && (Greeting ? BindText(Spec, 3, Greeting, strlen(Greeting))
+					   : sqlite3_bind_null(Spec, 3) == SQLITE_OK)
+		  && Done(Spec, Where, "save");
+	for (I = 0; Ok && I < NStock; I++)
+		Ok = DBPrepare(&Stk, "INSERT INTO room_stock (room, slot, object)"
+					   " VALUES (?, ?, ?)")
+		  && BindInt(Stk, 1, Room) && BindInt(Stk, 2, I + 1)
+		  && BindInt(Stk, 3, Stock[I]) && Done(Stk, Where, "save");
+	for (I = 0; Ok && I < NStagger; I++)
+		Ok = DBPrepare(&Stg, "INSERT INTO room_staggers (room, slot, to_room)"
+					   " VALUES (?, ?, ?)")
+		  && BindInt(Stg, 1, Room) && BindInt(Stg, 2, I + 1)
+		  && BindInt(Stg, 3, Stagger[I]) && Done(Stg, Where, "save");
+	for (I = 0; Ok && ClassName[I]; I++)
+		if (Trains & 1u << I)
+			Ok = DBPrepare(&Trn, "INSERT INTO room_trains (room, class) VALUES (?, ?)")
+			  && BindInt(Trn, 1, Room)
+			  && BindEnum(Trn, 2, I, ClassName, Where, "trains")
+			  && Done(Trn, Where, "save");
+	return DBFinish(Own, Ok);
+}

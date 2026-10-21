@@ -3,7 +3,6 @@
 
 
 /* global variables */
-FILE		*EFile;
 
 RoomType	Room[RmLimit];
 int			SlotTbl[MaxPlusOne];
@@ -82,7 +81,5 @@ int					CurrentRec;
 #include "proto.h"
 
 /* data files */
-char	EFILE[]		= WORKDIR "/efile";
 char	ERRLOG[]	= WORKDIR "/errlog";
 char	PASSWD[]	= "/etc/passwd";
-char	SPECIAL[]	= WORKDIR "/special";

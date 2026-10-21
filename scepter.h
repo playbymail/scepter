@@ -396,6 +396,21 @@ typedef struct tUserSave
 	char		PWHash[PWHashLen];	/* bcrypt (#82); "*" or empty: locked */
 } UserSave;
 
+/* The game's settings, as saved (dbstore.c), and the start rooms */
+typedef struct
+{
+	char		Notice[256];
+	char		News[5][256];
+	int			ObitLvl[3];
+	Alfa		ObitName[3];
+	char		ObitClass[3][13];
+	char		Obit[3][256];
+	char		TaskClosed;			/* 'O' open, 'C' closed, 'T' testers only */
+	int			Runs;				/* the run counter of the next run */
+	int			MSpeed;
+	int			StartRoom, ReviveRoom, JailRoom;
+} SettingsType;
+
 typedef struct
 {
 	AdjoinType		Adjoin;
@@ -415,7 +430,6 @@ typedef struct
 
 
 /* global variables */
-extern FILE		*EFile;
 
 extern RoomType	Room[RmLimit];
 extern int		SlotTbl[MaxPlusOne];
@@ -488,10 +502,8 @@ extern int				CurrentRec;
 #include "proto.h"
 
 /* data files */
-extern char	EFILE[];
 extern char	ERRLOG[];
 extern char	PASSWD[];
-extern char	SPECIAL[];
 
 /* special.c */
 extern int	StartRoom, ReviveRoom, JailRoom;
