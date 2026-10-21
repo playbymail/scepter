@@ -308,25 +308,6 @@ def test_82_new(port):
           "a password with spaces is taken")
 
 
-def test_82_legacy(port):
-    """An old password works once, then only exactly as typed (#82)."""
-    # Oldtimer's old password is "ac"; the old hash took "CB" too
-    c, got = enter(port, "Oldtimer", "AC")
-    check(got and got.endswith(b"You are "), "Oldtimer logs in with the old password")
-    check(c.expect(rb"Passwords now tell capital letters from small ones", 5) is not None,
-          "Oldtimer is told the password now has case")
-    check(c.expect(rb"use CHANGEPW to choose one of at least 8", 5) is not None,
-          "and is asked for a longer one")
-    check(quit_game(c), "Oldtimer quits, saving the new hash")
-    c, got = enter(port, "Oldtimer", "CB")
-    check(got and b"Wrong password" in got, "a colliding password no longer works")
-    c, got = enter(port, "Oldtimer", "ac")
-    check(got and b"Wrong password" in got, "nor the old one in another case")
-    c, got = enter(port, "Oldtimer", "   AC   ")
-    check(got and got.endswith(b"You are "), "the password as typed works, spaces trimmed")
-    alive(c, "Oldtimer", "logging in")
-
-
 def test_82_change(port):
     """CHANGEPW asks for the old password and the new one twice (#82)."""
     c, got = enter(port, "Oldtimer", "ac")
@@ -548,9 +529,9 @@ permanent = yes
 """
 
 
-def legacy(dmtest, game):
-    """Save Oldtimer, a 2nd-level character with the old password hash of "ac"."""
-    subprocess.run([dmtest, game, "legacy", "Oldtimer", "ac"], check=True,
+def saved(dmtest, game):
+    """Save Oldtimer, a 2nd-level character whose password is "ac"."""
+    subprocess.run([dmtest, game, "player", "Oldtimer", "ac"], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -592,10 +573,9 @@ TESTS = {
     "9-far": (test_9_far, lambda w: teleporters(many_segments(w)), None),
     "10": (test_10, teleporters, None),
     "82-new": (test_82_new, None, None),
-    "82-legacy": (test_82_legacy, None, legacy),
-    "82-change": (test_82_change, None, legacy),
-    "82-limit": (test_82_limit, None, legacy),
-    "92": (test_92, None, legacy),
+    "82-change": (test_82_change, None, saved),
+    "82-limit": (test_82_limit, None, saved),
+    "92": (test_92, None, saved),
 }
 GAME = None
 
@@ -603,7 +583,7 @@ GAME = None
 # DM-only and bad-data tests, run by tools/dmtest.c
 DMTESTS = ["20", "23", "22", "24", "26", "82", "88", "42", "43", "44", "56", "64",
            "47", "48", "17", "27", "28", "29", "30", "32", "33", "38", "45",
-           "34", "35", "36", "40", "21", "103", "46", "16"]
+           "34", "35", "36", "40", "21", "103", "46", "16", "50"]
 
 
 def free_port():

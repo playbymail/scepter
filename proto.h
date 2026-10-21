@@ -82,7 +82,6 @@ void	Users(char *Word);
 UserPoint	FindPlayer(char *Word, UserPoint PlayerTail);
 UserPoint	FindUser(char *Word);
 UserPoint	FindPid(int FPid);
-int		Hash(char *Word);
 int		SetPW(char *PWHash, char *PassWord);
 int		CheckPW(char *PWHash, char *PassWord);
 long	Expr(int Lvl);

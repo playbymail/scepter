@@ -36,6 +36,7 @@
 #define	MinPWLen		8	/* shortest new password */
 #define	MaxPWLen		72	/* longest password: bcrypt ignores the rest */
 #define	PWHashLen		64	/* bcrypt hash (60 characters) and NUL */
+#define	LockedPW		"*"	/* a PWHash no password matches (#50) */
 #define	PWCost			4	/* bcrypt cost: the minimum, for a small server */
 
 #define	UpdatePeriod	3600	/* one hour */
@@ -298,7 +299,7 @@ struct tUserType
 	RmCodeType	RmCode;
 	short		Str, Int, Dex, Pty, Con;
 	short		LastAccess;		/* mmmmdddddd */
-	long		PW;
+	long		PW;					/* unused: the old hash, dropped (#50) */
 	long		Money;
 	SexType		Sex;
 	short		SSharp, SThrust, SBlunt, SLong;
@@ -323,7 +324,7 @@ struct tUserType
 	unsigned	MesBlock	: 1;
 	unsigned	Dead		: 1;
 	unsigned	Plague		: 1;
-	char		PWHash[PWHashLen];	/* bcrypt; empty: only the old PW (#82) */
+	char		PWHash[PWHashLen];	/* bcrypt (#82); "*" or empty: locked */
 
 	/* The rest is data which is only applicable during play. */
 	/* All these fields should be initialised at load time. */
@@ -367,7 +368,7 @@ typedef struct tUserSave
 	RmCodeType	RmCode;
 	short		Str, Int, Dex, Pty, Con;
 	short		LastAccess;		/* mmmmdddddd */
-	long		PW;
+	long		PW;					/* unused: the old hash, dropped (#50) */
 	long		Money;
 	SexType		Sex;
 	short		SSharp, SThrust, SBlunt, SLong;
@@ -392,7 +393,7 @@ typedef struct tUserSave
 	unsigned	MesBlock	: 1;
 	unsigned	Dead		: 1;
 	unsigned	Plague		: 1;
-	char		PWHash[PWHashLen];	/* bcrypt; empty: only the old PW (#82) */
+	char		PWHash[PWHashLen];	/* bcrypt (#82); "*" or empty: locked */
 } UserSave;
 
 extern struct tUserFRec
