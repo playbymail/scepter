@@ -61,15 +61,19 @@ def server_refuses(path, *words):
     return rc == 1 and "Enter your name?" not in out and all(w in err for w in words), err
 
 
-def test_missing_efile():
+def test_missing_settings():
     # #53: an error before the main loop is logged with the real time
-    g = game("noefile")
-    os.remove(os.path.join(g, "efile"))
-    ok, err = server_refuses(g, "File open error on EFILE")
-    check(ok, "scepterd reports a missing efile on stderr")
+    g = game("nosettings")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    db.execute("DELETE FROM settings")
+    db.commit()
+    db.close()
+    ok, err = server_refuses(g, "Cannot read the game's settings")
+    check(ok, "scepterd reports missing settings on stderr")
     with open(os.path.join(g, "errlog")) as f:
         log = f.read()
-    check(time.strftime("%Y") in log.split("\n")[0] and "File open error on EFILE" in log,
+    check(time.strftime("%Y") in log.split("\n")[0]
+          and "Cannot read the game's settings" in log,
           "errlog records it with today's date")
 
 
@@ -190,6 +194,15 @@ def test_database():
     check(rc == 1 and not os.path.lexists(os.path.join(TMP, "nogame")),
           "scepterd refuses a missing game directory and creates nothing")
 
+    g = game("db-stock")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    db.execute("UPDATE room_stock SET object = 999 WHERE (room, slot) ="
+               " (SELECT room, slot FROM room_stock LIMIT 1)")
+    db.commit()
+    db.close()
+    ok, err = server_refuses(g, "Bad stock in the special rooms")
+    check(ok, "scepterd refuses a shop selling a template that can't exist")
+
     g = game("db-fight")
     set_version(g, 0)
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
@@ -267,12 +280,12 @@ def test_dbfuncs():
     check(rc == 1 and "already exists" in err, "backup: never overwrites a file")
 
     db = sqlite3.connect(os.path.join(g, "game.db"))
-    db.execute("INSERT INTO news VALUES (1, 'after the backup')")
+    db.execute("UPDATE news SET text = 'after the backup' WHERE line = 1")
     db.commit()
     db.close()
     rc, _, err = dbtest("restore", backup, g)
     db = sqlite3.connect(os.path.join(g, "game.db"))
-    n = db.execute("SELECT count(*) FROM news").fetchone()[0]
+    n = db.execute("SELECT count(*) FROM news WHERE text = 'after the backup'").fetchone()[0]
     db.close()
     check(rc == 0 and n == 0 and not os.path.lexists(os.path.join(g, "game.db.restore")),
           "restore: puts the backup back, with nothing left over")
@@ -360,7 +373,7 @@ def test_fightsim():
 
 def main():
     try:
-        test_missing_efile()
+        test_missing_settings()
         test_gamedir()
         test_database()
         test_dbfuncs()

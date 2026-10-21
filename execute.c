@@ -186,16 +186,19 @@ void ExecuteCommand(void)
 
 		case 18:
 			TaskClosed = 'C';
+			SaveSettings();
 			QOut(Term, "0Scepter closed.");
 			break;
 
 		case 19:
 			TaskClosed = 'O';
+			SaveSettings();
 			QOut(Term, "0Scepter opened.");
 			break;
 
 		case 51:
 			TaskClosed = 'T';
+			SaveSettings();
 			QOut(Term, "0Scepter open for testing only.");
 			break;
 
@@ -278,6 +281,7 @@ void ExecuteCommand(void)
 			else
 			{
 				TLvl[Num - 1] = 0;
+				SaveSettings();
 				QOut(Term, "0Death entry purged.");
 			}
 			break;
@@ -293,12 +297,14 @@ void ExecuteCommand(void)
 			else
 			{
 				*NewsBuf[Num - 1] = '\0';
+				SaveSettings();
 				QOut(Term, "0News line deleted.");
 			}
 			break;
 
 		case 54:
 			MSpeed = Max(1, Min(10, Num));
+			SaveSettings();
 			snprintf(B1, sizeof(B1), "0Monspeed set to %d.", MSpeed);
 			QOut(Term, B1);
 			break;

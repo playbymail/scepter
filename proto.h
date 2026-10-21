@@ -197,6 +197,8 @@ void	HitMonster(int Damage);
 
 /* cmd3.c */
 void	Attack(char *Word, int Num, RmCodeType Rm);
+void	SaveSettings(void);
+void	SaveTableRow(int Treasure, int Row);
 void	UpdateF(void);
 void	Repair(char *Word, int Num);
 void	ChangeName(char *Word, int Num);
@@ -268,3 +270,12 @@ int		PutPlayer(const char *Name, UserPoint P);
 int		DropPlayer(const char *Name, int *Found);
 int		RenamePlayer(const char *Old, const char *New, int *Result);
 int		NextPlayer(long *After, UserPoint P, int *Found);
+int		GetSettings(SettingsType *S);
+int		PutSettings(SettingsType *S);
+int		GetTableRow(int Treasure, int Row, int Entry[8]);
+int		PutTableRow(int Treasure, int Row, int Entry[8]);
+int		GetSpecials(int (*Each)(int Kind, int Room, int Value, RoleType Role,
+							const char *Greeting));
+int		PutSpecial(int Room, RoleType Role, const char *Greeting, int NStock,
+				   const int *Stock, int NStagger, const int *Stagger,
+				   unsigned Trains);

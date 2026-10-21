@@ -7,7 +7,7 @@
  *	dmtest GAMEDIR player NAME PASSWORD
  *
  * TEST is an issue number: 20, 23, 22, 24, 26, 82, 50 or 88; for the command
- * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
+ * parser 45, 47 or 48; 17 for the hourly update; for play 27, 28, 29, 30, 32,
  * 33 or 38, which may use a second character on terminal 2; for the DM
  * editor 21, 34, 35, 36, 37, 40 or 103; 46 for the Assoc DM line; 16 for a
  * missing object template; or for saving rooms 42,
@@ -36,6 +36,7 @@
 
 static int	Failures;
 static char	Out[8192];				/* captured game output */
+static char	LastDBError[1024];		/* the last database error, see KeepDBError */
 
 static void Check(int Cond, const char *What)
 {
@@ -685,29 +686,37 @@ static void Test48(void)
 	Check(LenBuf == 0, "an empty message gives LenBuf 0");
 }
 
-/* #17: the hourly update must survive a read-only game directory */
+static void KeepDBError(const char *Msg);
+
+/*
+ * #17: the hourly update saves the settings, and a save that fails part
+ * way leaves the last whole one, rooms included (#152: one transaction)
+ */
 static void Test17(void)
 {
-	char	Old[8192];
+	SettingsType	Set;
+	RoomType		R;
+	int				Found, Safe;
 
-	strcpy(Old, ReadFile(EFILE));
 	strcpy(Notice, "A new notice");
-	if (geteuid() == 0)
-		fprintf(stderr, "skip a read-only game directory: root can write to it\n");
-	else
-	{
-		if (chmod(WORKDIR, 0555))
-			Abort(" dmtest: cannot chmod the game directory.");
-		UpdateF();
-		chmod(WORKDIR, 0755);
-		Check(*Old && !strcmp(ReadFile(EFILE), Old),
-			  "a read-only game directory leaves EFILE as it was");
-	}
-
 	UpdateF();
-	Check(!strncmp(ReadFile(EFILE), "A new notice\n", 13),
-		  "a writable game directory gets the new EFILE");
-	Check(access(WORKDIR "/efile.tmp", F_OK), "no efile.tmp is left behind");
+	Check(GetSettings(&Set) && !strcmp(Set.Notice, "A new notice")
+		  && Set.Runs == NumRun + 1, "UpdateF saves the notice and the next run");
+
+	Safe = Room[S(910)].Safe;
+	Room[S(910)].Safe = !Safe;
+	DBBegin();
+	WriteSeg(S(910) / 10, 91, FALSE);
+	Set.TaskClosed = 'X';
+	DBReport = KeepDBError;
+	Check(!PutSettings(&Set) && strstr(LastDBError, "TaskClosed"),
+		  "a settings save with TaskClosed X fails");
+	DBReport = DBLog;
+	DBRollback();
+	Check(GetRoom(910, &R, &Found) && Found && R.Safe == Safe,
+		  "and the rooms saved before it in the same update are rolled back");
+	Check(GetSettings(&Set) && Set.TaskClosed == 'O',
+		  "and so are the settings");
 }
 
 /* Act as Plyr: commands come from Plyr's terminal */
@@ -1168,8 +1177,6 @@ static void Test136(void)
 		  "a reset is announced twice, never suggesting SAVE");
 }
 
-static char	LastDBError[1024];
-
 static void KeepDBError(const char *Msg)
 {
 	snprintf(LastDBError, sizeof(LastDBError), "%s", Msg);
@@ -1412,6 +1419,40 @@ static void Test151(void)
 		  "a deleted character's objects go with it");
 }
 
+/* #152: a DM's change to a setting is saved at once, not hourly */
+static void Test152(void)
+{
+	SettingsType	Set;
+	int				E[8];
+
+	User->SSJ = User->Master = TRUE;
+	Say("*close");
+	Check(GetSettings(&Set) && Set.TaskClosed == 'C', "*CLOSE is saved");
+	Say("*monspeed 3");
+	Check(GetSettings(&Set) && Set.MSpeed == 3, "*MONSPEED is saved");
+	Say("*notice");
+	Say("Hear ye, hear ye");
+	Check(GetSettings(&Set) && !strcmp(Set.Notice, "Hear ye, hear ye"),
+		  "*NOTICE is saved");
+	Say("*deletenew 2");
+	Check(GetSettings(&Set) && !*Set.News[1] && *Set.News[0],
+		  "*DELETENEW is saved");
+	TLvl[0] = 9;
+	Say("*purgedeat 1");
+	Check(GetSettings(&Set) && !Set.ObitLvl[0], "*PURGEDEAT is saved");
+	EditLine("modify elist 6 9 8 0 0 0 0 0 0");
+	Check(GetTableRow(FALSE, 6, E) && E[0] == 9 && E[1] == 8 && !E[2],
+		  "an ELIST change is saved");
+	EditLine("modify tlist 7 0 0 5 0 0 0 0 0");
+	Check(GetTableRow(TRUE, 7, E) && !E[0] && E[2] == 5,
+		  "a TLIST change is saved");
+	Check(Number("SELECT count(*) FROM treasures WHERE treasure = 7") == 1,
+		  "and only the entries that aren't 0 are stored");
+	Check(sqlite3_exec(GameDB, "UPDATE room_specials SET role = 'tavern'",
+					   NULL, NULL, NULL) == SQLITE_CONSTRAINT,
+		  "the schema refuses an unknown role");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1560,6 +1601,7 @@ int main(int argc, char **argv)
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
 		{"149", Test149}, {"150", Test150}, {"151", Test151},
+		{"152", Test152},
 	};
 	int		I;
 

@@ -50,7 +50,7 @@ typedef struct
 	ONode	*Objs[SavedItems + 1];
 	MNode	*Mons[SavedItems + 1];
 
-	/* special-room settings, written to special (special.c) */
+	/* special-room settings (special.c) */
 	int		Role, RoleLine;
 	char	*Greeting;
 	int		NStock, Stock[20], StockLine;
@@ -1155,29 +1155,6 @@ static void Validate(void)
 
 static char		GameDir[1024];
 
-static FILE *Create(const char *Name)
-{
-	char	Path[1100];
-	FILE	*fp;
-
-	snprintf(Path, sizeof(Path), "%s/%s", GameDir, Name);
-	if (!(fp = fopen(Path, "wb")))
-	{
-		fprintf(stderr, "mkgame: %s: %s\n", Path, strerror(errno));
-		exit(1);
-	}
-	return fp;
-}
-
-static void Close(FILE *fp, const char *Name)
-{
-	if (ferror(fp) | fclose(fp))
-	{
-		fprintf(stderr, "mkgame: error writing %s/%s\n", GameDir, Name);
-		exit(1);
-	}
-}
-
 /* Each room's saved objects and monsters, linked through the nodes */
 static ObjectPoint	RoomObjs[MaxRoom + 1];
 static MonsterPoint	RoomMons[MaxRoom + 1];
@@ -1272,12 +1249,14 @@ static void BuildDB(void)
 /*
  * The game database's tables, in one transaction (dbstore.c).  Every
  * template slot is written, unused ones too, as the game has always had
- * them, every description record up to the highest, and every room of
- * every segment, room 0 and empty rooms included, with their contents.
+ * them, every description record up to the highest, every room of every
+ * segment (room 0 and empty rooms included) with its contents, the
+ * settings and tables, and the special rooms.
  */
 static void WriteTables(void)
 {
-	int		i, Ok;
+	SettingsType	Set;
+	int				i, Ok, Row[8];
 
 	if (!DBOpen(GameDir) || !DBBegin())
 	{
@@ -1296,6 +1275,44 @@ static void WriteTables(void)
 	for (i = 0; Ok && i <= MaxRoom; i++)
 		Ok = (!RoomObjs[i] || PutRoomObjs(i, RoomObjs[i]))
 		  && (!RoomMons[i] || PutRoomMons(i, RoomMons[i]));
+
+	/* a new game: no obituaries, open, on its first run */
+	memset(&Set, 0, sizeof(Set));
+	snprintf(Set.Notice, sizeof(Set.Notice), "%s", WNotice);
+	for (i = 0; i < 5; i++)
+		snprintf(Set.News[i], sizeof(Set.News[i]), "%s", WNews[i]);
+	Set.TaskClosed = 'O';
+	Set.Runs = 0;
+	Set.MSpeed = MonSpeed;
+	Set.StartRoom = StartRm;
+	Set.ReviveRoom = ReviveRm;
+	Set.JailRoom = JailRm;
+	Ok = Ok && PutSettings(&Set);
+	for (i = 1; Ok && i <= LEncounter; i++)
+	{
+		int		j;
+
+		for (j = 0; j < 8; j++)
+			Row[j] = Enc[i][j];
+		Ok = PutTableRow(FALSE, i, Row);
+	}
+	for (i = 1; Ok && i <= ObjListLen; i++)
+	{
+		int		j;
+
+		for (j = 0; j < 8; j++)
+			Row[j] = Tre[i][j];
+		Ok = PutTableRow(TRUE, i, Row);
+	}
+	for (i = 1; Ok && i <= MaxRoom; i++)
+	{
+		RoomDef	*R = &Rooms[i];
+
+		if (R->Defined && (R->Role || R->Greeting || R->NStock || R->NStagger
+						   || R->Trains))
+			Ok = PutSpecial(i, (RoleType)R->Role, R->Greeting, R->NStock,
+							R->Stock, R->NStagger, R->Stagger, R->Trains);
+	}
 	if (!Ok || !DBCommit())
 	{
 		DBRollback();
@@ -1303,71 +1320,6 @@ static void WriteTables(void)
 		exit(1);
 	}
 	DBClose();
-}
-
-static void WriteGame(void)
-{
-	FILE	*fp;
-	int		i, j;
-
-
-	WriteTables();
-
-	/* special rooms, read by LoadSpecial() (special.c) */
-	fp = Create("special");
-	fprintf(fp, "# special rooms for world %s, written by mkgame\n",
-			*WorldName ? WorldName : FileName);
-	fprintf(fp, "start %d\nrevive %d\njail %d\n", StartRm, ReviveRm, JailRm);
-	for (i = 1; i <= MaxRoom; i++)
-	{
-		RoomDef	*R = &Rooms[i];
-
-		if (!R->Defined)
-			continue;
-		if (R->Role)
-			fprintf(fp, "role %d %s\n", i, RoleNames[R->Role]);
-		if (R->Greeting)
-			fprintf(fp, "greeting %d %s\n", i, R->Greeting);
-		if (R->NStock)
-		{
-			fprintf(fp, "stock %d", i);
-			for (j = 0; j < R->NStock; j++)
-				fprintf(fp, " %d", R->Stock[j]);
-			fputc('\n', fp);
-		}
-		if (R->NStagger)
-		{
-			fprintf(fp, "staggers %d", i);
-			for (j = 0; j < R->NStagger; j++)
-				fprintf(fp, " %d", R->Stagger[j]);
-			fputc('\n', fp);
-		}
-		if (R->Trains)
-		{
-			fprintf(fp, "trains %d", i);
-			for (j = 0; ClassNames[j]; j++)
-				if (R->Trains & (1u << j))
-					fprintf(fp, " %s", ClassNames[j]);
-			fputc('\n', fp);
-		}
-	}
-	Close(fp, "special");
-
-	/* same layout UpdateF() (cmd3.c) writes */
-	fp = Create("efile");
-	fprintf(fp, "%s\n", WNotice);
-	for (i = 0; i < 5; i++)
-		fprintf(fp, "%s\n", WNews[i]);
-	for (i = 0; i < 3; i++)
-		fprintf(fp, "0  \n\n");
-	fprintf(fp, "O 0 %d\n", MonSpeed);
-	for (i = 1; i <= LEncounter; i++)
-		for (j = 0; j < 8; j++)
-			fprintf(fp, "%d%c", Enc[i][j], j == 7 ? '\n' : ' ');
-	for (i = 1; i <= ObjListLen; i++)
-		for (j = 0; j < 8; j++)
-			fprintf(fp, "%d%c", Tre[i][j], j == 7 ? '\n' : ' ');
-	Close(fp, "efile");
 }
 
 static void DBError(const char *Msg)
@@ -1464,7 +1416,7 @@ int main(int argc, char **argv)
 	}
 
 	BuildDB();
-	WriteGame();
+	WriteTables();
 
 	for (i = 1; i <= MaxRoom; i++)
 		NR += Rooms[i].Defined;

@@ -372,66 +372,73 @@ void Attack(char *Word, int Num, RmCodeType Rm)
 	User->LastAtk = RealTime + Max(3, Plus);
 }
 
+/*
+ * Save the settings, news and obituaries: the next run's counter, and the
+ * start rooms as they are.  Called wherever one of them changes (#152).
+ */
+void SaveSettings(void)
+{
+	SettingsType	Set;
+	int				ILoop;
+
+	memset(&Set, 0, sizeof(Set));
+	strcpy(Set.Notice, Notice);
+	for (ILoop = 0; ILoop < 5; ILoop++)
+		strcpy(Set.News[ILoop], NewsBuf[ILoop]);
+	for (ILoop = 0; ILoop < 3; ILoop++)
+	{
+		Set.ObitLvl[ILoop] = TLvl[ILoop];
+		strcpy(Set.ObitName[ILoop], TName[ILoop]);
+		strcpy(Set.ObitClass[ILoop], TClass[ILoop]);
+		strcpy(Set.Obit[ILoop], TBuf[ILoop]);
+	}
+	Set.TaskClosed = TaskClosed;
+	Set.Runs = NumRun + 1;
+	Set.MSpeed = MSpeed;
+	Set.StartRoom = StartRoom;
+	Set.ReviveRoom = ReviveRoom;
+	Set.JailRoom = JailRoom;
+	if (!PutSettings(&Set))
+		Abort(" Cannot save the game's settings.");
+}
+
+/* Save row Row of the encounter table, or of the treasure table */
+void SaveTableRow(int Treasure, int Row)
+{
+	int		J, E[8];
+
+	for (J = 0; J < 8; J++)
+		E[J] = GetETIndex(Treasure, Row, J);
+	if (!PutTableRow(Treasure, Row, E))
+		Abort(" Cannot save a table.");
+}
+
+/*
+ * Save everything held in memory: every loaded segment of rooms, the
+ * settings and the tables, in one transaction (#71).
+ */
 void UpdateF(void)
 {
-	int		ILoop, Failed;
-	char	NewEFile[FILENAME_MAX];
+	int		ILoop;
 
 	if (NUsers && User)
 		for (ILoop = MsgTerm(SysMsg); ILoop > 0;)
 			QOut(TermList[--ILoop], "0Files updating.  Please wait.");
 
-	/* every loaded segment, in one transaction (#71) */
 	if (!DBBegin())
-		Abort(" UpdateF: cannot save rooms.");
+		Abort(" UpdateF: cannot save the game.");
 	for (ILoop = 0; ILoop <= MaxUsers; ILoop++)
 		if (SlotTbl[ILoop] > -1)
 			WriteSeg(ILoop, SlotTbl[ILoop], FALSE);
+	SaveSettings();
+	for (ILoop = 1; ILoop <= LEncounter; ILoop++)
+		SaveTableRow(0, ILoop);
+	for (ILoop = 1; ILoop <= ObjListLen; ILoop++)
+		SaveTableRow(1, ILoop);
 	if (!DBCommit())
 	{
 		DBRollback();
-		Abort(" UpdateF: cannot save rooms.");
-	}
-
-	/*
-	 * Write a new copy and rename it over the old one, so that a full disk
-	 * or read-only directory leaves the old EFILE in place (#17).
-	 */
-	snprintf(NewEFile, sizeof(NewEFile), "%s.tmp", EFILE);
-	if (!(EFile = fopen(NewEFile, "w")))
-	{
-		ErrLog(" UpdateF: can't create EFILE.tmp.");
-		return;
-	}
-
-	fprintf(EFile, "%s\n", Notice);
-
-	for (ILoop = 0; ILoop < 5; ILoop++)
-		fprintf(EFile, "%s\n", NewsBuf[ILoop]);
-	for (ILoop = 0; ILoop < 3; ILoop++)
-	{
-		fprintf(EFile, "%d %s %s\n", TLvl[ILoop], TName[ILoop], TClass[ILoop]);
-		fprintf(EFile, "%s\n", TBuf[ILoop]);
-	}
-
-	fprintf(EFile, "%c %d %d\n", TaskClosed, NumRun + 1, MSpeed);
-
-	for (ILoop = 1; ILoop <= LEncounter; ILoop++)
-		fprintf(EFile, "%d %d %d %d %d %d %d %d\n",
-				EncIndex(ILoop, 0), EncIndex(ILoop, 1), EncIndex(ILoop, 2),
-				EncIndex(ILoop, 3), EncIndex(ILoop, 4), EncIndex(ILoop, 5),
-				EncIndex(ILoop, 6), EncIndex(ILoop, 7));
-	for (ILoop = 1; ILoop <= ObjListLen; ILoop++)
-		fprintf(EFile, "%d %d %d %d %d %d %d %d\n",
-				ObjIndex(ILoop, 0), ObjIndex(ILoop, 1), ObjIndex(ILoop, 2),
-				ObjIndex(ILoop, 3), ObjIndex(ILoop, 4), ObjIndex(ILoop, 5),
-				ObjIndex(ILoop, 6), ObjIndex(ILoop, 7));
-
-	Failed = ferror(EFile);
-	if (fclose(EFile) || Failed || rename(NewEFile, EFILE))
-	{
-		ErrLog(" UpdateF: can't write EFILE.");
-		remove(NewEFile);
+		Abort(" UpdateF: cannot save the game.");
 	}
 }
 
@@ -1067,6 +1074,7 @@ void EnterNotice(void)
 	for (JLoop = 0, ILoop = Loc; ILoop < Min(80, LenBuf);)
 		Notice[JLoop++] = Buf[ILoop++];
 	Notice[JLoop] = '\0';
+	SaveSettings();
 	Loc = LenBuf + 1;
 	User->Entry = XCmd;
 }
@@ -1090,6 +1098,7 @@ void EnterNews(void)
 		for (JLoop = Loc; JLoop < Min(79, LenBuf); JLoop++)
 			NewsBuf[ILoop][KLoop++] = Buf[JLoop];
 		NewsBuf[ILoop][KLoop] = '\0';
+		SaveSettings();
 
 		snprintf(B1, sizeof(B1), "0Entered as line %d.", ILoop + 1);
 		QOut(Term, B1);

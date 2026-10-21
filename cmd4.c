@@ -453,6 +453,7 @@ static void WhyDie(void)
 		TLvl[Indx] = User->Lvl;
 		strcpy(TName[Indx], User->Name);
 		strcpy(TClass[Indx], CName[(int)User->Class]);
+		SaveSettings();
 	}
 	else
 		Dead();
@@ -479,6 +480,7 @@ static void EnterWhyDie(void)
 		i = Min(77, LenBuf);
 		strncpy(TBuf[ILoop], Buf, i + 1);
 		TBuf[ILoop][i] = '\0';
+		SaveSettings();
 	}
 	Dead();
 }
