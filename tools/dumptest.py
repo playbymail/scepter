@@ -111,7 +111,7 @@ def structs():
                                        "tUserType"]:
         m = re.search(r"struct\s+%s\s*\{" % tag, h)
         out[tag] = fields(body(h, m.start()))
-    for name in ("RoomType", "LoginHostType", "LoginNameType"):
+    for name in ("RoomType", "LoginHostType", "LoginNameType", "RankChangeType"):
         m = re.search(r"typedef struct\s*\{(?:(?!typedef).)*?\}\s*%s;" % name, h, re.S)
         out[name] = fields(body(h, m.start()))
     m = re.search(r"typedef struct\s*\{(?:(?!typedef).)*?\}\s*SpecialType;", sp, re.S)
@@ -161,6 +161,8 @@ def test_coverage(dumps):
                 kind = "LoginHostType"
             elif line.startswith("login name "):
                 kind = "LoginNameType"
+            elif line.startswith("rank "):
+                kind = "RankChangeType"
             if kind:
                 seen[kind] |= k
                 found[kind] = True

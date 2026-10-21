@@ -26,8 +26,9 @@ to the original author, who didn't write Sceptish.
 - `qnx/` holds the QNX files exactly as they were received.  Nothing in it
   is ever changed; it is the reference for how those files behaved.
 - The top level is Sceptish, ported from them: `scepterd` (the server, with
-  its own telnet front end), `mkgame` (builds a game from a world file) and
-  `upgradegame` (brings a game's database up to a newer schema).
+  its own telnet front end), `mkgame` (builds a game from a world file),
+  `upgradegame` (brings a game's database up to a newer schema) and
+  `dmadmin` (makes and manages a game's DMs).
 
 ## Build
 
@@ -77,4 +78,5 @@ let many different passwords open the same character.  Sceptish instead:
   each character.
 
 The old hash is no longer accepted (#50): a locked character takes no
-password until a master DM sets a new one (docs/data-files.md).
+password until a master DM, or `dmadmin`, sets a new one
+(docs/data-files.md).

@@ -14,9 +14,10 @@
  * 43, 44, 56 or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
- * line into it, so use a scratch copy.  There is no DM login yet (#70), so
- * each test sets up the state the DM editor or a corrupt record would leave
- * and calls the engine directly.  The game's output for the console is
+ * line into it, so use a scratch copy.  Rather than log in as a DM (which
+ * tools/dmadmintest.py does, with a DM made by dmadmin), each test sets up
+ * the state the DM editor or a corrupt record would leave and calls the
+ * engine directly.  The game's output for the console is
  * captured and checked.  Prints "ok" or "FAIL" lines; exits 1 on failure.
  * Run it under a sanitizer, as tools/securitytest.py does, to catch the
  * memory errors themselves.
@@ -1634,6 +1635,10 @@ static void Test146(void)
 	/* a wrong password, at a fixed time (#93) */
 	RealTime = 1792540800;			/* 2026-10-21 00:00 UTC */
 	LoginFailed("2001:db8:1:2::77", "Bob");
+
+	/* the editor changes DM ranks, recorded at that time (#139) */
+	EditLine("modify file alice zz=m");
+	EditLine("modify file bob as=2 zz=a");
 
 	UpdateF();
 	Check(PlayerOnFile("Alice") && PlayerOnFile("Bob") && PlayerOnFile("Eve")

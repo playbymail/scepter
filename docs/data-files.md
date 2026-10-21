@@ -19,7 +19,7 @@ the database; a clean stop removes them.
 
 `game.db` is a SQLite database in WAL mode (`gamedb.c`).  Its schema
 version is `PRAGMA user_version`; this build reads version `DBVersion`
-(`gamedb.h`), currently 2.
+(`gamedb.h`), currently 3.
 
 - **`mkgame`** creates it with the whole schema and fills it from the
   world: templates, descriptions, rooms and their contents, settings,
@@ -40,6 +40,11 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
   once it can no longer matter: an address a day after its last refusal
   (and 10 minutes after its last failure), a character an hour after its
   last failure.
+- **DM ranks:** `rank_changes` records every change of a character's DM
+  rank (#139): when, by whom, and whether in the game's editor or with
+  `dmadmin` (docs/running.md).  A row names the character, so it outlives
+  a character that is removed.  The rank itself is the `ssj`, `assoc` and
+  `master` columns of `players` (see below).
 - **Characters:** `players` has one row per saved character, named in
   capitals as `CapAlfa()` folds it, and `player_objects` its first 10
   objects, in the order they were carried (#155), with what it wears.
@@ -442,6 +447,24 @@ CREATE TABLE login_names (
 ) STRICT, WITHOUT ROWID;
 ```
 
+Migration 3, the history of DM ranks (#139).  A rank is `none`, `associate`
+(`ssj` and a non-zero `assoc`), `dm` (`ssj` alone) or `master` (`ssj` and
+`master`).  The `assoc` number only labels an associate (`Assoc DM 3`);
+every associate is restricted in the same way.
+
+```sql
+CREATE TABLE rank_changes (
+	id				INTEGER PRIMARY KEY,	-- in the order the changes were made
+	time			INTEGER NOT NULL,	-- seconds since 1970
+	player			TEXT NOT NULL CHECK (player <> '' AND player = upper(player)),	-- the character, in capitals
+	old_rank		TEXT CHECK (old_rank IN ('none', 'associate', 'dm', 'master')),	-- NULL: a new character
+	new_rank		TEXT CHECK (new_rank IN ('none', 'associate', 'dm', 'master')),	-- NULL: removed
+	by_whom			TEXT NOT NULL CHECK (by_whom <> ''),	-- a DM character (in capitals), or an account on the host
+	via				TEXT NOT NULL CHECK (via IN ('game', 'dmadmin')),
+	CHECK (old_rank IS NOT NULL OR new_rank IS NOT NULL)
+) STRICT;
+```
+
 ## Schema versions and upgrading
 
 `DBVersion` in `gamedb.h` is the schema version this build reads, kept in
@@ -458,6 +481,7 @@ has already applied.
 |---|---|
 | 1 | The whole game (#147 to #152). |
 | 2 | The login limits, `login_hosts` and `login_names` (#93). |
+| 3 | The history of DM ranks, `rank_changes` (#139). |
 
 Stop the server, then run `upgradegame` as the user that owns the game:
 
@@ -479,7 +503,7 @@ restore the backup (`DBRestore`): copy it over `game.db` and remove any
 `game.db-wal` and `game.db-shm` left beside it.
 
 `make check-data` tests all of this, and migrates a whole game with
-`dbtest2`, a test build of `dbtest` with an extra migration 2.
+`dbtest2`, a test build of `dbtest` with one extra, test-only migration.
 
 A game directory from before the database, with `ram/`, `dat/` or struct
 files and no `game.db`, can't be converted (#71): `scepterd` refuses it and
@@ -492,14 +516,17 @@ it (#50).  A master DM unlocks one by giving it a temporary password:
 `*EDIT`, then `MODIFY PLAYER name PW=password`.  The password is the rest
 of the line, so `PW=` comes last; it may contain spaces, and it must be 8
 to 72 characters long, as at `CHANGEPW`.  The player then chooses a real
-one with `CHANGEPW`.
+one with `CHANGEPW`.  With the server stopped, `dmadmin GAMEDIR password
+NAME` does the same from outside the game, for any character, including a
+master DM locked out of their own (docs/running.md).
 
 ## Dumping a game
 
 `dumpgame GAMEDIR` (`make dumpgame`) prints everything a game has saved as
 text, one record per line with each field named as in `scepter.h`:
 settings, the encounter and treasure tables, special rooms, descriptions,
-templates, rooms and what is in them, and characters.  It reads the game
+templates, rooms and what is in them, characters, the login limits and
+the changes of DM rank.  It reads the game
 through the engine's own functions, as `scepterd` would, and changes
 nothing.  Fields that matter only during play are left out, and a
 password hash is shown only as `present`, `locked` or `empty`.

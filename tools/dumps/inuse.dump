@@ -986,12 +986,12 @@ room 1949 Adjoin=0,0,0,0,0,0 Out=0 DescRec=0 DescCode=0 WhichEncounter=0 Encount
 room 1949 obj 1 Name="gem" Article=A Weight=1 Price=0 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
 room 1949 mon 1 Name="owl" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=10 MaxHits=10 Lvl=0 Num=1 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
 rooms 2000 shown 47
-player Name="ALICE" Lvl=3 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 Magic=2 MaxMagic=2 Experience=1234 RmCode=1 Str=15 Int=7 Dex=9 Pty=10 Con=9 LastAccess=1301 PW=0 Money=567 Sex=Male SSharp=1 SThrust=0 SBlunt=0 SLong=0 Assoc=0 Spells=4660 SSJ=0 Master=0 PlayTester=0 AGuild=0 TGuild=0 Evil=0 Invisible=0 NonExistant=0 SkillNew=0 SpellNew=0 Poisoned=0 Hidden=0 It=1 Suck=0 Brief=1 Echo=0 MesBlock=0 Dead=0 Plague=0 PWHash=present
+player Name="ALICE" Lvl=3 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 Magic=2 MaxMagic=2 Experience=1234 RmCode=1 Str=15 Int=7 Dex=9 Pty=10 Con=9 LastAccess=1301 PW=0 Money=567 Sex=Male SSharp=1 SThrust=0 SBlunt=0 SLong=0 Assoc=0 Spells=4660 SSJ=1 Master=1 PlayTester=0 AGuild=0 TGuild=0 Evil=0 Invisible=0 NonExistant=0 SkillNew=0 SpellNew=0 Poisoned=0 Hidden=0 It=1 Suck=0 Brief=1 Echo=0 MesBlock=0 Dead=0 Plague=0 PWHash=present
 player ALICE obj 1 Worn=- Name="shield,wooden *" Article=A Weight=6 Price=10 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Shield ShPlus=2 ShHits=50
 player ALICE obj 2 Worn=ringl Name="ring,iron *" Article=An Weight=1 Price=50 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=1 ObClass=Ring RSpell=15 RLevel=1
 player ALICE obj 3 Worn=armor Name="armor,leather *" Article=Some Weight=15 Price=30 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Armor ArmPlus=1 ArmHits=50
 player ALICE obj 4 Worn=weapon Name="sword,short *" Article=A Weight=7 Price=99 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=1 ObClass=Weap MinHp=2 MaxHp=7 Strikes=100 WeaPlus=2 WeapType=0
-player Name="BOB" Lvl=1 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 Magic=2 MaxMagic=2 Experience=0 RmCode=1 Str=15 Int=7 Dex=9 Pty=10 Con=9 LastAccess=1301 PW=0 Money=200 Sex=Female SSharp=1 SThrust=0 SBlunt=0 SLong=0 Assoc=0 Spells=0 SSJ=0 Master=0 PlayTester=0 AGuild=0 TGuild=0 Evil=0 Invisible=0 NonExistant=0 SkillNew=0 SpellNew=0 Poisoned=0 Hidden=0 It=0 Suck=0 Brief=0 Echo=0 MesBlock=0 Dead=0 Plague=0 PWHash=present
+player Name="BOB" Lvl=1 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 Magic=2 MaxMagic=2 Experience=0 RmCode=1 Str=15 Int=7 Dex=9 Pty=10 Con=9 LastAccess=1301 PW=0 Money=200 Sex=Female SSharp=1 SThrust=0 SBlunt=0 SLong=0 Assoc=2 Spells=0 SSJ=1 Master=0 PlayTester=0 AGuild=0 TGuild=0 Evil=0 Invisible=0 NonExistant=0 SkillNew=0 SpellNew=0 Poisoned=0 Hidden=0 It=0 Suck=0 Brief=0 Echo=0 MesBlock=0 Dead=0 Plague=0 PWHash=present
 player BOB obj 1 Worn=shield Name="shield,wooden *" Article=A Weight=6 Price=10 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Shield ShPlus=2 ShHits=50
 player BOB obj 2 Worn=- Name="sword,short *" Article=A Weight=7 Price=99 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=1 ObClass=Weap MinHp=2 MaxHp=7 Strikes=100 WeaPlus=2 WeapType=0
 player BOB obj 3 Worn=- Name="dagger,*" Article=A Weight=2 Price=10 DescCode=5 DescRec=3 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=1 MaxHp=4 Strikes=100 WeaPlus=0 WeapType=1
@@ -1006,3 +1006,5 @@ player Name="EVE" Lvl=1 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 
 players 3
 login host 2001:db8:1:2::/64 Fails=1 Blocks=0 Start=1792540800 Until=0
 login name BOB Fails=1 Last=1792540800
+rank Time=1792540800 Player="ALICE" Old=RNone New=RMaster By="DUNGEON" Tool=0
+rank Time=1792540800 Player="BOB" Old=RNone New=RAssoc By="DUNGEON" Tool=0

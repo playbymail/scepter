@@ -16,6 +16,7 @@
  *								item), monsters and monsters' inventories
  *	player						saved characters, by name, then their objects
  *	login						the login limits on addresses and characters
+ *	rank						changes of DM rank, oldest first
  *
  * Everything is read through the engine's own functions (ReadMList,
  * ReadOList, ReadDesc, S and so ReadSeg, ReadUObj and ReadUMon, PlayerName
@@ -47,6 +48,7 @@ static const char	*ChName[] =
 	"Barbarian"
 };
 static const char	*SexName[] = { "Male", "Female" };
+static const char	*RankName[] = { "RNone", "RAssoc", "RDM", "RMaster" };
 static const char	*RoleName[] =
 {
 	"none", "bar", "newsstand", "pawnshop", "store", "smith"
@@ -546,6 +548,27 @@ static void DumpLogins(void)
 		}
 }
 
+/* The changes of DM rank (#139), oldest first; -1 is a character made or removed */
+static void DumpRanks(void)
+{
+	RankChangeType	R;
+	long			After = 0;
+	int				Found;
+
+	for (;;)
+	{
+		if (!NextRankChange(&After, &R, &Found))
+			Abort(" dumpgame: cannot read the rank changes.");
+		if (!Found)
+			break;
+		printf("rank Time=%ld", R.Time);
+		Text("Player", R.Player);
+		printf(" Old=%s New=%s", EnumName(RankName, R.Old), EnumName(RankName, R.New));
+		Text("By", R.By);
+		printf(" Tool=%d\n", R.Tool);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 2 || chdir(argv[1]))
@@ -569,6 +592,7 @@ int main(int argc, char **argv)
 	DumpRooms();
 	DumpPlayers();
 	DumpLogins();
+	DumpRanks();
 
 	DBClose();
 	return ferror(stdout) || fflush(stdout) ? 1 : 0;
