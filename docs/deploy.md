@@ -44,8 +44,17 @@ the game database.  The droplet has the runtime, `libsqlite3-0` 3.46.1
 (checked 2026-10-21), and the build container installs the same version's
 `libsqlite3-dev`, so the binaries are built against the SQLite they run
 with.  The macOS SDK's SQLite is newer, so the container build is what
-catches a SQLite function the droplet doesn't have.  The droplet has no
-`sqlite3` command; install the `sqlite3` package to look inside a game.
+catches a SQLite function the droplet doesn't have.
+
+The droplet also has the `sqlite3` command (package `sqlite3`, installed
+2026-10-21), to look inside a game.  Open it read-only, as `scepter`:
+
+```sh
+runuser -u scepter -- sqlite3 -readonly /var/lib/scepter/havenford/game.db
+```
+
+Change a running game only through the server; offline tools need it
+stopped (docs/data-files.md).
 
 ## Upgrade
 
