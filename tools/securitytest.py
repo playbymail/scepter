@@ -7,8 +7,7 @@ Each test builds a fresh game from WORLD (default var/alpha/alpha.world).
 Player tests run SCEPTERD on a free port of 127.0.0.1 and play the scenario
 from an issue over raw sockets.  DM and bad-data tests run tools/dmtest.c,
 the dmtest binary beside SCEPTERD, which drives the engine directly.  A test
-fails if the server crashes, stops answering, or prints a sanitizer report
-(apart from the known room.c Adjoin[6] read, #25).  Name tests (e.g. 55 8)
+fails if the server crashes, stops answering, or prints a sanitizer report.  Name tests (e.g. 55 8)
 to run only those.  `make check-security` runs this; use a sanitizer build.
 
 Most scenarios use the wizards' workshop, room 27 of the alpha world.
@@ -401,6 +400,39 @@ def test_92(port):
           and "address refused for 10 minutes" in log, "errlog records the failures")
 
 
+def test_18(port):
+    """GET from a missing, non-chest or closed container must not read garbage (#18, #91)."""
+    a = login(port, "Alpha")
+    if not check(a and walk(a, *TO_WORKSHOP), "Alpha reaches the workshop"):
+        return
+    a.line("get ring bucket")
+    check(a.expect(rb"That container isn't here\.", 5) is not None,
+          "GET from a missing container")
+    a.line("get ring ring")
+    check(a.expect(rb"That's not a container\.", 5) is not None,
+          "GET from something that isn't a chest")
+    a.line("get dust chest")
+    check(a.expect(rb"You can't\.  It's closed\.", 5) is not None,
+          "GET from a closed chest")
+    a.line("get dust")
+    check(a.expect(rb"That object isn't here\.", 5) is not None,
+          "GET of something that isn't here")
+    alive(a, "Alpha", "GET from missing containers")
+
+
+def test_47(port):
+    """A trailing # and long numbers must parse safely (#47, #48)."""
+    a = login(port, "Alpha")
+    if not a:
+        check(False, "Alpha logs in")
+        return
+    for line in ["get ring#77777777777777777777", "get ring #", "#",
+                 "drop 99999999999999999999", "get -99999999999999999999",
+                 "", " ", ","]:
+        a.line(line)
+    alive(a, "Alpha", "trailing #s, long numbers and empty lines")
+
+
 def teleport(c, device, times):
     """Use device on c's player up to times; return what each use did.
 
@@ -547,6 +579,8 @@ def drop_section(world, header):
 # test name -> (function, world transform, game setup)
 TESTS = {
     "55": (test_55, lambda w: drop_section(w, "monster 30"), None),
+    "18": (test_18, None, None),
+    "47-net": (test_47, None, None),
     "39": (test_39, None, None),
     "8": (test_8, None, None),
     "11": (test_11, None, None),
@@ -567,7 +601,8 @@ GAME = None
 
 
 # DM-only and bad-data tests, run by tools/dmtest.c
-DMTESTS = ["20", "23", "22", "24", "26", "82", "88", "42", "43", "44", "56", "64"]
+DMTESTS = ["20", "23", "22", "24", "26", "82", "88", "42", "43", "44", "56", "64",
+           "47", "48", "17"]
 
 
 def free_port():
@@ -580,8 +615,7 @@ def free_port():
 
 def sanitizer_ok(report):
     bad = [l for l in report.splitlines()
-           if re.search(r"runtime error|AddressSanitizer|LeakSanitizer", l)
-           and not re.search(r"room\.c:\d+:\d+: runtime error: index 6 out of bounds", l)]
+           if re.search(r"runtime error|AddressSanitizer|LeakSanitizer", l)]
     if not check(not bad, "no new sanitizer reports"):
         print(report)
 

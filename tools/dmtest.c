@@ -6,8 +6,9 @@
  *	dmtest GAMEDIR legacy NAME PASSWORD
  *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88, or for saving
- * rooms 42, 43, 44, 56 or 64, which save room objects and monsters and
+ * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88; for the command
+ * parser 47 or 48; 17 for saving EFILE; or for saving rooms 42, 43, 44, 56
+ * or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
@@ -26,6 +27,7 @@
  */
 #include <stdarg.h>
 #include <stddef.h>
+#include <sys/stat.h>
 
 #define main scepterd_main
 #include "main.c"
@@ -545,6 +547,65 @@ static void Test64(void)
 	Check(!Mon, "room 940 has no monsters");
 }
 
+/* Read Line as a player command; return the Num of its first word */
+static int ParseNum(const char *Line, char *Word)
+{
+	int		Num;
+
+	snprintf(C1, sizeof(C1), "1%s", Line);
+	DoInput();
+	GetWord(Word, &Num);
+	return Num;
+}
+
+/* #47: GetWord must not read past the line or overflow a number */
+static void Test47(void)
+{
+	Alfa	Word;
+
+	Check(ParseNum("#77", Word) == 77 && !*Word, "#77 is number 77");
+	Check(ParseNum("#", Word) == 0 && !*Word,
+		  "a trailing # doesn't read the 7 left from the line before");
+	Check(ParseNum("sword#2", Word) == 2 && !strcmp(Word, "sword"),
+		  "sword#2 is the second sword");
+	Check(ParseNum("sword#99999999999", Word) == 999999999,
+		  "a long #n saturates at 999999999");
+	Check(ParseNum("123", Word) == 123 && !*Word, "123 is a number");
+	Check(ParseNum("-45", Word) == -45, "-45 is a negative number");
+	Check(ParseNum("99999999999", Word) == 999999999,
+		  "a long number saturates at 999999999");
+	Check(ParseNum("-0000000000000012", Word) == -12,
+		  "leading zeros don't saturate");
+}
+
+/* #48: an empty message is an empty line */
+static void Test48(void)
+{
+	*C1 = '\0';
+	DoInput();
+	Check(LenBuf == 0, "an empty message gives LenBuf 0");
+}
+
+/* #17: the hourly update must survive a read-only data directory */
+static void Test17(void)
+{
+	char	Old[8192];
+
+	strcpy(Old, ReadFile(EFILE));
+	strcpy(Notice, "A new notice");
+	if (chmod(WORKDIR "/dat", 0555))
+		Abort(" dmtest: cannot chmod dat.");
+	UpdateF();
+	chmod(WORKDIR "/dat", 0755);
+	Check(*Old && !strcmp(ReadFile(EFILE), Old),
+		  "a read-only dat leaves EFILE as it was");
+
+	UpdateF();
+	Check(!strncmp(ReadFile(EFILE), "A new notice\n", 13),
+		  "a writable dat gets the new EFILE");
+	Check(access(WORKDIR "/dat/efile.tmp", F_OK), "no efile.tmp is left behind");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -565,6 +626,7 @@ int main(int argc, char **argv)
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
 		{"26", Test26}, {"82", Test82}, {"88", Test88}, {"42", Test42},
 		{"43", Test43}, {"44", Test44}, {"56", Test56}, {"64", Test64},
+		{"47", Test47}, {"48", Test48}, {"17", Test17},
 	};
 	int		I;
 

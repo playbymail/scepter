@@ -379,7 +379,8 @@ void Attack(char *Word, int Num, RmCodeType Rm)
 
 void UpdateF(void)
 {
-	int		ILoop;
+	int		ILoop, Failed;
+	char	NewEFile[FILENAME_MAX];
 
 	if (NUsers && User)
 		for (ILoop = MsgTerm(SysMsg); ILoop > 0;)
@@ -389,7 +390,16 @@ void UpdateF(void)
 		if (SlotTbl[ILoop] > -1)
 			WriteSeg(ILoop, SlotTbl[ILoop], FALSE);
 
-	EFile = fopen(EFILE, "w");
+	/*
+	 * Write a new copy and rename it over the old one, so that a full disk
+	 * or read-only directory leaves the old EFILE in place (#17).
+	 */
+	snprintf(NewEFile, sizeof(NewEFile), "%s.tmp", EFILE);
+	if (!(EFile = fopen(NewEFile, "w")))
+	{
+		ErrLog(" UpdateF: can't create EFILE.tmp.");
+		return;
+	}
 
 	fprintf(EFile, "%s\n", Notice);
 
@@ -414,7 +424,12 @@ void UpdateF(void)
 				ObjIndex(ILoop, 3), ObjIndex(ILoop, 4), ObjIndex(ILoop, 5),
 				ObjIndex(ILoop, 6), ObjIndex(ILoop, 7));
 
-	fclose(EFile);
+	Failed = ferror(EFile);
+	if (fclose(EFile) || Failed || rename(NewEFile, EFILE))
+	{
+		ErrLog(" UpdateF: can't write EFILE.");
+		remove(NewEFile);
+	}
 }
 
 void Repair(char *Word, int Num)
