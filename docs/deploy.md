@@ -8,8 +8,8 @@ both point at the droplet; the second is the Tsogira web app's site.
 The droplet also runs two Go web applications, `dolpher` (127.0.0.1:8080)
 and `tsogira` (127.0.0.1:8081), behind Caddy on ports 80 and 443.  The
 Scepter server doesn't share anything with them: it has its own user,
-directory and unit, and Caddy isn't involved.  Caddy proxies HTTP, and
-telnet isn't HTTP.
+directory and unit.  Caddy proxies HTTP, and telnet isn't HTTP, so Caddy
+only serves the game's web site (see below).
 
 | What          | Where                                         |
 |---------------|-----------------------------------------------|
@@ -18,6 +18,8 @@ telnet isn't HTTP.
 | Game          | `/var/lib/scepter/havenford` (owned by `scepter`) |
 | Unit          | `/etc/systemd/system/scepter.service` (from `deploy/`) |
 | Logs          | `journalctl -u scepter`                       |
+| Web site      | `/usr/local/share/scepter/www` (from `make site`) |
+| Caddy site    | in `/etc/caddy/Caddyfile` (from `deploy/Caddyfile.sceptish`) |
 
 ## Build
 
@@ -121,6 +123,43 @@ systemctl enable --now scepter
 
 `mkgame` creates the game directory with the default mode, 0755.  Run
 `chmod 0750` on the game directory afterwards, so only `scepter` can read it.
+
+## Web site
+
+`https://sceptish.pbbgaming.com/` is a static page for new players: how
+to connect with Mudlet, and the Havenford map at `/map.html`.  The page
+is `site/index.html`.  `make site` builds the site into `out/site`, with
+the map copied from `var/havenford/world-map.html`, and the avatar
+lightened, resized and converted from `var/havenford/avatar.png`.  It
+needs ImageMagick (`magick`).  The avatar is too large to commit and so
+are the images built from it, so build the site where you have a copy.
+
+To update the site:
+
+```sh
+make site
+scp -r out/site tsogira:/tmp/sceptish-site
+ssh tsogira
+install -d -m 0755 /usr/local/share/scepter/www
+install -m 0644 /tmp/sceptish-site/* /usr/local/share/scepter/www/
+rm -r /tmp/sceptish-site
+```
+
+Caddy serves those files.  Its site block was added once, on 2026-10-21,
+after the dolpher and tsogira sites, which stay unchanged:
+
+```sh
+scp deploy/Caddyfile.sceptish tsogira:/tmp/
+ssh tsogira
+cp -p /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak-$(date +%Y%m%d)
+{ echo; cat /tmp/Caddyfile.sceptish; } >> /etc/caddy/Caddyfile
+caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+systemctl reload caddy
+rm /tmp/Caddyfile.sceptish
+```
+
+Caddy gets the certificate for the name itself, over ports 80 and 443,
+which are already open for the other sites.
 
 ## Firewall
 
