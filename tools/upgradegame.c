@@ -55,7 +55,9 @@ typedef struct
 /* The record size of Kind in format Version */
 static size_t OldRecSize(int Kind, unsigned long Version)
 {
-	return Kind == DPerson && Version < 2 ? sizeof(UserFRec1) : DataKind[Kind].RecSize;
+	size_t	Size = DataKind[Kind].RecSize;
+
+	return Kind == DPerson && Version < 2 ? sizeof(UserFRec1) : Size;
 }
 
 static void Fail(const char *Fmt, const char *Arg)

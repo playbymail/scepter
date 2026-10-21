@@ -7,8 +7,8 @@ void	MonDisplay(MonsterPoint Mon);
 MonsterPoint	FindMonster(char *Word, int Num, MonsterPoint MonsterTail);
 
 /* db.c */
-void	ReadUObj(RmCodeType Rm, ObjectPoint *Object, int Type);
-void	WriteUObj(RmCodeType Rm, ObjectPoint Object, int Type);
+void	ReadUObj(RmCodeType Rm, ObjectPoint *Object);
+void	WriteUObj(RmCodeType Rm, ObjectPoint Object);
 void	DeleteUObj(RmCodeType Rm);
 void	ReadUMon(RmCodeType Rm, MonsterPoint *Monster);
 void	WriteUMon(RmCodeType Rm, MonsterPoint Monster);
@@ -267,3 +267,7 @@ int		PutDesc(int Rec, char Lines[StrPerSeg][80]);
 int		GetRoom(int Rm, RoomType *R, int *Found);
 int		PutRoom(int Rm, RoomType *R);
 int		CountSegs(int *NSegs);
+int		GetRoomObjs(int Rm, ObjectPoint *List);
+int		PutRoomObjs(int Rm, ObjectPoint List);
+int		GetRoomMons(int Rm, MonsterPoint *List);
+int		PutRoomMons(int Rm, MonsterPoint List);

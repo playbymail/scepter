@@ -13,6 +13,7 @@
  * This file uses no game state, so mkgame links it alone.
  */
 #include <limits.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "common.h"
@@ -665,4 +666,236 @@ int CountSegs(int *NSegs)
 	}
 	*NSegs = (int)(Count / 10);
 	return TRUE;
+}
+
+/* ---------- room contents ---------- */
+
+/* Free a list read here; chests take their contents with them */
+static void FreeObjs(ObjectPoint O)
+{
+	while (O)
+	{
+		ObjectPoint	Next = O->Next;
+
+		if (O->ObClass == Chest)
+			FreeObjs(O->Object.Chest.ObjectTail);
+		free(O);
+		O = Next;
+	}
+}
+
+static void FreeMons(MonsterPoint M)
+{
+	while (M)
+	{
+		MonsterPoint	Next = M->Next;
+
+		FreeObjs(M->ObjectTail);
+		free(M);
+		M = Next;
+	}
+}
+
+/*
+ * Read the objects St returns (its parameters bound), the object columns
+ * starting at column At, into *List: at most SavedItems, as they were
+ * saved.  Unless Keep, a chest comes back closed to its contents, which
+ * aren't saved at that depth (#44).
+ */
+static int ReadObjs(sqlite3_stmt *St, int At, ObjectPoint *List, int Keep,
+					const char *Where)
+{
+	ObjectPoint	*Tail = List;
+	int			N, Rc;
+
+	*List = NULL;
+	for (N = 0; N < SavedItems && (Rc = sqlite3_step(St)) == SQLITE_ROW; N++)
+	{
+		ObjectPoint	O;
+
+		if (!(O = malloc(sizeof(ObjectType))))
+		{
+			Bad(Where, "objects", "out of memory", 0);
+			Rc = SQLITE_NOMEM;
+			break;
+		}
+		if (!ColObj(St, At, O, Where))
+		{
+			free(O);
+			Rc = SQLITE_MISMATCH;
+			break;
+		}
+		if (O->ObClass == Chest && !Keep)
+			O->Object.Chest.NumInside = 0;
+		*Tail = O;
+		Tail = &O->Next;
+	}
+	if (N == SavedItems)
+		Rc = SQLITE_DONE;		/* any more aren't the game's */
+	if (Rc != SQLITE_DONE)
+	{
+		if (Rc != SQLITE_NOMEM && Rc != SQLITE_MISMATCH)
+			Failed(Where, "read");
+		sqlite3_reset(St);
+		FreeObjs(*List);
+		*List = NULL;
+		return FALSE;
+	}
+	sqlite3_reset(St);
+	return TRUE;
+}
+
+/*
+ * The objects of room Rm, with the contents of each chest among them, into
+ * *List (NULL if there are none).
+ */
+int GetRoomObjs(int Rm, ObjectPoint *List)
+{
+	static sqlite3_stmt	*St, *In;
+	char				Where[32];
+	ObjectPoint			O;
+	int					Slot;
+
+	snprintf(Where, sizeof(Where), "room %d's objects", Rm);
+	if (!DBPrepare(&St, "SELECT " ObjCols " FROM room_objects WHERE room = ?"
+				   " ORDER BY slot")
+	||	!BindInt(St, 1, Rm))
+		return Failed(Where, "read");
+	if (!ReadObjs(St, 0, List, TRUE, Where))
+		return FALSE;
+	for (O = *List, Slot = 1; O; O = O->Next, Slot++)
+		if (O->ObClass == Chest
+		&&	!(DBPrepare(&In, "SELECT " ObjCols " FROM chest_objects"
+						" WHERE room = ? AND chest = ? ORDER BY slot")
+			  && BindInt(In, 1, Rm) && BindInt(In, 2, Slot)
+			  && ReadObjs(In, 0, &O->Object.Chest.ObjectTail, FALSE, Where)))
+		{
+			FreeObjs(*List);
+			*List = NULL;
+			return FALSE;
+		}
+	return TRUE;
+}
+
+/*
+ * Replace room Rm's objects with the first SavedItems of List, and each
+ * chest among them with the first SavedItems of its contents.
+ */
+int PutRoomObjs(int Rm, ObjectPoint List)
+{
+	static sqlite3_stmt	*Del, *St, *In;
+	char				Where[32];
+	ObjectPoint			O, C;
+	int					Own, Ok, Slot, N;
+
+	snprintf(Where, sizeof(Where), "room %d's objects", Rm);
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = DBPrepare(&Del, "DELETE FROM room_objects WHERE room = ?")
+	  && BindInt(Del, 1, Rm) && Done(Del, Where, "save");
+	for (O = List, Slot = 1; Ok && O && Slot <= SavedItems; O = O->Next, Slot++)
+	{
+		Ok = DBPrepare(&St, "INSERT INTO room_objects (room, slot, " ObjCols ")"
+					   " VALUES (?, ?, " ObjVals ")")
+		  && BindInt(St, 1, Rm) && BindInt(St, 2, Slot)
+		  && BindObj(St, 3, O, Where) && Done(St, Where, "save");
+		if (O->ObClass != Chest)
+			continue;
+		for (C = O->Object.Chest.ObjectTail, N = 1; Ok && C && N <= SavedItems;
+			 C = C->Next, N++)
+			Ok = DBPrepare(&In, "INSERT INTO chest_objects (room, chest, slot, "
+						   ObjCols ") VALUES (?, ?, ?, " ObjVals ")")
+			  && BindInt(In, 1, Rm) && BindInt(In, 2, Slot) && BindInt(In, 3, N)
+			  && BindObj(In, 4, C, Where) && Done(In, Where, "save");
+	}
+	return DBFinish(Own, Ok);
+}
+
+/*
+ * The monsters of room Rm, each with its inventory, into *List (NULL if
+ * there are none).  Their pointers are NULL.
+ */
+int GetRoomMons(int Rm, MonsterPoint *List)
+{
+	static sqlite3_stmt	*St, *Inv;
+	char				Where[32];
+	MonsterPoint		*Tail = List, M;
+	int					N, Rc = SQLITE_DONE;
+
+	snprintf(Where, sizeof(Where), "room %d's monsters", Rm);
+	*List = NULL;
+	if (!DBPrepare(&St, "SELECT " MonCols " FROM room_monsters WHERE room = ?"
+				   " ORDER BY slot")
+	||	!BindInt(St, 1, Rm))
+		return Failed(Where, "read");
+	for (N = 0; N < SavedItems && (Rc = sqlite3_step(St)) == SQLITE_ROW; N++)
+	{
+		if (!(M = malloc(sizeof(MonsterType))))
+		{
+			Bad(Where, "monsters", "out of memory", 0);
+			break;
+		}
+		if (!ColMon(St, 0, M, Where))
+		{
+			free(M);
+			break;
+		}
+		*Tail = M;
+		Tail = &M->Next;
+	}
+	if (N == SavedItems)
+		Rc = SQLITE_DONE;
+	sqlite3_reset(St);
+	if (Rc != SQLITE_DONE && Rc != SQLITE_ROW)
+		Failed(Where, "read");
+	if (Rc != SQLITE_DONE)
+	{
+		FreeMons(*List);
+		*List = NULL;
+		return FALSE;
+	}
+
+	for (M = *List, N = 1; M; M = M->Next, N++)
+		if (!DBPrepare(&Inv, "SELECT " ObjCols " FROM monster_objects"
+					   " WHERE room = ? AND monster = ? ORDER BY slot")
+		||	!BindInt(Inv, 1, Rm) || !BindInt(Inv, 2, N)
+		||	!ReadObjs(Inv, 0, &M->ObjectTail, FALSE, Where))
+		{
+			FreeMons(*List);
+			*List = NULL;
+			return FALSE;
+		}
+	return TRUE;
+}
+
+/*
+ * Replace room Rm's monsters with the first SavedItems of List, each with
+ * the first SavedItems of its inventory.
+ */
+int PutRoomMons(int Rm, MonsterPoint List)
+{
+	static sqlite3_stmt	*Del, *St, *Inv;
+	char				Where[32];
+	MonsterPoint		M;
+	ObjectPoint			O;
+	int					Own, Ok, Slot, N;
+
+	snprintf(Where, sizeof(Where), "room %d's monsters", Rm);
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = DBPrepare(&Del, "DELETE FROM room_monsters WHERE room = ?")
+	  && BindInt(Del, 1, Rm) && Done(Del, Where, "save");
+	for (M = List, Slot = 1; Ok && M && Slot <= SavedItems; M = M->Next, Slot++)
+	{
+		Ok = DBPrepare(&St, "INSERT INTO room_monsters (room, slot, " MonCols ")"
+					   " VALUES (?, ?, " MonVals ")")
+		  && BindInt(St, 1, Rm) && BindInt(St, 2, Slot)
+		  && BindMon(St, 3, M, Where) && Done(St, Where, "save");
+		for (O = M->ObjectTail, N = 1; Ok && O && N <= SavedItems; O = O->Next, N++)
+			Ok = DBPrepare(&Inv, "INSERT INTO monster_objects (room, monster, slot, "
+						   ObjCols ") VALUES (?, ?, ?, " ObjVals ")")
+			  && BindInt(Inv, 1, Rm) && BindInt(Inv, 2, Slot) && BindInt(Inv, 3, N)
+			  && BindObj(Inv, 4, O, Where) && Done(Inv, Where, "save");
+	}
+	return DBFinish(Own, Ok);
 }

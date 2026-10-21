@@ -26,8 +26,7 @@ import tempfile
 HEAD = 32
 VERSION = 2
 FILES = {
-    "dbobj": b"SCEPDBOB",
-    "dbmon": b"SCEPDBMN", "eperson": b"SCEPPERS",
+    "eperson": b"SCEPPERS",
 }
 
 BIN = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else ".")
@@ -181,23 +180,21 @@ def test_fresh():
 
 def test_damaged():
     cases = [
-        ("wrong kind", "dbobj", lambda g: patch(g, "dbobj", 0, b"SCEPDBMN"),
-         ["dbobj", "wrong kind of file"]),
-        ("newer version", "dbmon",
-         lambda g: patch(g, "dbmon", 8, struct.pack("<I", VERSION + 1)),
-         ["dbmon", "format version %d" % (VERSION + 1), "newer scepterd"]),
-        ("record size", "dbobj",
-         lambda g: patch(g, "dbobj", 12, struct.pack("<I", 12345)),
-         ["dbobj", "12345 bytes"]),
+        ("newer version", "eperson",
+         lambda g: patch(g, "eperson", 8, struct.pack("<I", VERSION + 1)),
+         ["eperson", "format version %d" % (VERSION + 1), "newer scepterd"]),
+        ("record size", "eperson",
+         lambda g: patch(g, "eperson", 12, struct.pack("<I", 12345)),
+         ["eperson", "12345 bytes"]),
         ("truncated header", "eperson",
          lambda g: open(os.path.join(g, "eperson"), "wb").write(b"SCEPPERS\1\0"),
          ["eperson", "truncated"]),
-        ("foreign file", "dbmon",
-         lambda g: open(os.path.join(g, "dbmon"), "wb").write(b"hello, world\n"),
-         ["dbmon", "not a Scepter data file"]),
-        ("missing file", "dbmon",
-         lambda g: os.remove(os.path.join(g, "dbmon")),
-         ["dbmon", "No such file"]),
+        ("foreign file", "eperson",
+         lambda g: open(os.path.join(g, "eperson"), "wb").write(b"hello, world\n"),
+         ["eperson", "not a Scepter data file"]),
+        ("missing file", "eperson",
+         lambda g: os.remove(os.path.join(g, "eperson")),
+         ["eperson", "No such file"]),
     ]
     for i, (what, f, damage, words) in enumerate(cases):
         g = game("damaged%d" % i)
@@ -536,9 +533,9 @@ def test_upgrade1():
 def test_partial(fresh):
     # an upgrade that stopped part way: some files done, some not
     g = game("partial")
-    strip(g, ["dbobj", "eperson"])
+    strip(g, ["eperson"])
     rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and out.count("upgrading") == 2 and same_tree(g, fresh),
+    check(rc == 0 and out.count("upgrading") == 1 and same_tree(g, fresh),
           "upgradegame finishes a partly upgraded game")
 
 
@@ -553,9 +550,9 @@ def test_fightsim(fresh):
     b = run("fightsim", "-r", "1", g, "4", "9")
     check(a[0] == 0 and a == b and "won 199 (99.5%)" in a[2] and "average 2.74" in a[2],
           "fightsim gives the same results on a fresh and an upgraded game")
-    strip(g, ["dbmon"])
+    strip(g, ["eperson"])
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
-    check(rc == 1 and "dbmon" in err, "fightsim refuses a mismatched game")
+    check(rc == 1 and "eperson" in err, "fightsim refuses a mismatched game")
 
 
 def main():

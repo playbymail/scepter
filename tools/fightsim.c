@@ -123,8 +123,6 @@ int main(int argc, char **argv)
 	InitSpells();
 	FolCount = 0;
 	Init();
-	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
-		Abort(" fightsim: cannot open game files.");
 	InitEvents();
 	RealTime = time(NULL);
 	Today = GetDate(RealTime);

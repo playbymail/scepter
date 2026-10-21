@@ -481,8 +481,8 @@ static const char *Reload(RmCodeType Rm, ObjectPoint Obj)
 	ObjectPoint	Back;
 	const char	*Text;
 
-	WriteUObj(Rm, Obj, 0);
-	ReadUObj(Rm, &Back, 0);
+	WriteUObj(Rm, Obj);
+	ReadUObj(Rm, &Back);
 	Text = Show(Back);
 	FreeList(Obj);
 	FreeList(Back);
@@ -495,7 +495,7 @@ static const char *Load(RmCodeType Rm)
 	ObjectPoint	Back;
 	const char	*Text;
 
-	ReadUObj(Rm, &Back, 0);
+	ReadUObj(Rm, &Back);
 	Text = Show(Back);
 	FreeList(Back);
 	return Text;
@@ -566,41 +566,42 @@ static void Test56(void)
 		 "sign a[] b[sword]", "an empty chest, then a full one");
 }
 
-/* How many records in table fp (RecSize-byte records) belong to (Room, Type) */
-static int Copies(FILE *fp, size_t RecSize, int Room, int Type)
+/* How many rows Table (a fixed name, not game text) holds for room Room */
+static int Rows(const char *Table, int Room)
 {
-	ObjRec	Head;		/* only the leading Room and DataType are read */
-	int		Slot, N = 0;
+	sqlite3_stmt	*St;
+	char			Sql[128];
+	int				N = -1;
 
-	for (Slot = 0; Slot < 1009; Slot++)
-	{
-		SeekRec(fp, (long)Slot * RecSize);
-		if (fread((char *)&Head, 4, 1, fp) == 1
-		&&	Head.Room == Room && Head.DataType == Type)
-			N++;
-	}
+	snprintf(Sql, sizeof(Sql), "SELECT count(*) FROM %s WHERE room = ?", Table);
+	if (sqlite3_prepare_v2(GameDB, Sql, -1, &St, NULL) == SQLITE_OK
+	&&	sqlite3_bind_int(St, 1, Room) == SQLITE_OK
+	&&	sqlite3_step(St) == SQLITE_ROW)
+		N = sqlite3_column_int(St, 0);
+	sqlite3_finalize(St);
 	return N;
 }
 
-/* #64: deleting a record must not hide records that collided past it */
+/*
+ * #64: deleting one room's contents must not touch another's.  Rooms 940
+ * and 1949 shared a slot in the old hash table; the rows keep the test.
+ */
 static void Test64(void)
 {
 	MonsterPoint	Mon;
 	MonsterType		Proto = ProtoMonster;
 
-	/* 940 and 1949 = 940 + 1009 hash to the same slot */
 	Reload(940, NewObj("rock", Misc, NULL));
 	Reload(1949, NewObj("gem", Misc, NULL));
 	DeleteUObj(940);
 	Same(Load(1949), "gem", "room 1949's objects, after room 940's are deleted");
 	Reload(1949, NewObj("gem", Misc, NULL));
-	Check(Copies(EDBObj, sizeof(ObjRec), 1949, 0) == 1,
-		  "rewriting room 1949 doesn't add a second record");
+	Check(Rows("room_objects", 1949) == 1,
+		  "rewriting room 1949 doesn't add a second row");
 	Same(Reload(940, NewObj("rock", Misc, NULL)), "rock",
 		 "room 940's objects saved again");
-	Check(Copies(EDBObj, sizeof(ObjRec), 940, 0) == 1
-		  && Copies(EDBObj, sizeof(ObjRec), 1949, 0) == 1,
-		  "one record each");
+	Check(Rows("room_objects", 940) == 1 && Rows("room_objects", 1949) == 1,
+		  "one row each");
 
 	strcpy(Proto.Name, "rat");
 	WriteUMon(940, &Proto);
@@ -618,8 +619,8 @@ static void Test64(void)
 		Mon = Next;
 	}
 	WriteUMon(1949, &Proto);
-	Check(Copies(EDBMon, sizeof(MonRec), 1949, 0) == 1,
-		  "rewriting room 1949's monsters doesn't add a second record");
+	Check(Rows("room_monsters", 1949) == 1,
+		  "rewriting room 1949's monsters doesn't add a second row");
 	ReadUMon(940, &Mon);
 	Check(!Mon, "room 940 has no monsters");
 }
@@ -1261,6 +1262,69 @@ static void Test149(void)
 		  "and its rooms are empty");
 }
 
+/* A list of N misc objects called a, b, c, ... */
+static ObjectPoint Several(int N)
+{
+	ObjectPoint	First = NULL;
+	char		Name[2] = "a";
+
+	while (N-- > 0)
+	{
+		ObjectPoint	Obj;
+
+		Name[0] = (char)('a' + N);
+		Obj = NewObj(Name, Misc, NULL);
+		Obj->Next = First;
+		First = Obj;
+	}
+	return First;
+}
+
+/* #150: room contents are rows; the engine's limits still hold */
+static void Test150(void)
+{
+	MonsterPoint	Mon, Back;
+	ObjectPoint		Crate, Got;
+	int				NSegs;
+
+	Same(Reload(950, Several(10)), "a b c d e f g h",
+		 "only the first 8 of a room's 10 objects are saved");
+	Crate = Box("box", NULL);
+	Crate->Object.Chest.ObjectTail = Several(10);
+	Same(Reload(951, Crate), "box[a b c d e f g h]",
+		 "and only the first 8 things in a chest");
+	Reload(952, List(Box("a", "sword"), Box("b", "shield"), NULL));
+	Reload(952, NewObj("rock", Misc, NULL));
+	Check(Rows("chest_objects", 952) == 0,
+		  "a chest's contents go when the chest does");
+
+	Mon = NewMon("rat", 953);
+	Mon->ObjectTail = Box("pouch", "coin");
+	WriteSeg(S(953) / 10, 95, FALSE);
+	ReadUMon(953, &Back);
+	Got = Back ? Back->ObjectTail : NULL;
+	Check(Got && !strcmp(Got->Name, "pouch") && !Got->Object.Chest.ObjectTail
+		  && !Got->Object.Chest.NumInside,
+		  "a monster's chest is saved, but not what is in it");
+	while (Back)
+	{
+		Mon = Back->Next;
+		Destroy(Back);
+		Back = Mon;
+	}
+
+	/* #161: AddSeg() must leave room 0's contents alone */
+	Crate = NewObj("relic", Misc, NULL);
+	WriteUObj(0, Crate);
+	FreeList(Crate);
+	Sql("DELETE FROM rooms WHERE room >= 1990");
+	NumSegs = 199;
+	NumRooms = NumSegs * 10 - 1;
+	AddSeg();
+	Check(CountSegs(&NSegs) && NSegs == 200, "AddSeg() adds a segment");
+	Same(Load(0), "relic", "and room 0's objects are left alone");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1314,7 +1378,7 @@ static void Test146(void)
 		R->RmObjectTail = NewObj(Name, Misc, NULL);
 	}
 
-	/* 940 and 1949 = 940 + 1009 hash to the same slot */
+	/* rooms 940 and 1949 once shared a hash slot (#64) */
 	Room[S(940)].RmObjectTail = NewObj("rock", Misc, NULL);
 	NewMon("bat", 940);
 	Room[S(1949)].RmObjectTail = NewObj("gem", Misc, NULL);
@@ -1408,7 +1472,7 @@ int main(int argc, char **argv)
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
-		{"149", Test149},
+		{"149", Test149}, {"150", Test150},
 	};
 	int		I;
 
@@ -1438,8 +1502,6 @@ int main(int argc, char **argv)
 	InitSpells();
 	FolCount = 0;
 	Init();
-	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
-		Abort(" dmtest: cannot open game files.");
 	InitEvents();
 	RealTime = time(NULL);
 	Today = GetDate(RealTime);
