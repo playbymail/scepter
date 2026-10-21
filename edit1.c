@@ -309,6 +309,7 @@ static void ModPlayer(UserPoint Player, int OnLine)
 
 			case 10:
 				Player->Experience = MaxL(0L, MinL(999999999L, (long)Number));
+				break;
 
 			case 11:
 				Player->AC = Max(-32, Min(31, Number));
@@ -534,8 +535,11 @@ static void EditFile(EdFunc EditCmd, char *Which)
 	switch (EditCmd)
 	{
 		case E_MODIFY:
-			ModPlayer(&Player, FALSE);
-			WritePlayer(&Player);
+			if (Exists)					/* not a new player (#40) */
+			{
+				ModPlayer(&Player, FALSE);
+				WritePlayer(&Player);
+			}
 			break;
 
 		case E_DELETE:
@@ -562,6 +566,13 @@ static void EditFile(EdFunc EditCmd, char *Which)
 				WritePlayer(&Player);
 			}
 			break;
+	}
+	while (Player.ObjectTail)			/* ReadPlayer's objects (#21) */
+	{
+		ObjectPoint	Pt = Player.ObjectTail;
+
+		Player.ObjectTail = Pt->Next;
+		ODestroy(Pt);
 	}
 }
 
@@ -663,13 +674,16 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 				QOut(Term, "0Room number out of bounds.");
 			else
 			{
-				RoomType	Tmp;
+				RoomType	Tmp, *To;
 
+				/* copy the room, but not who and what is in it (#36) */
 				Tmp = Room[S(Rm)];
-				Tmp.RmMonsterTail = NULL;
-				Tmp.RmPlayerTail  = NULL;
-				Tmp.RmObjectTail  = NULL;
-				Room[S(Rm2)] = Tmp;
+				To = &Room[S(Rm2)];
+				Tmp.RmMonsterTail = To->RmMonsterTail;
+				Tmp.RmPlayerTail  = To->RmPlayerTail;
+				Tmp.RmObjectTail  = To->RmObjectTail;
+				*To = Tmp;
+				QOut(Term, "0Room copied.");
 			}
 			break;
 		}
@@ -782,7 +796,6 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 				if (Rm < 1 || Rm > RanMonLen)
 				{
 					QOut(Term, "0Bad MList number.");
-					free(Monster);
 					EditCmd = E_NULL;
 				}
 			}
@@ -981,8 +994,9 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 			fclose(hdMList);
 			QOut(Term, "0File modified.");
 		}
-		free(Monster);
 	}
+	if (WhatCode == 15)
+		free(Monster);					/* the MList copy, whatever the command (#21) */
 }
 
 int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
@@ -994,20 +1008,21 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 	*Word = '\0';
 	*Num = 0;
 	*Flag = FALSE;
-	if (Buf[Loc] == ',')
+	/* test Loc before each read of Buf: past LenBuf is an older line (#103) */
+	if (Loc < LenBuf && Buf[Loc] == ',')
 		Loc++;
-	while (Buf[Loc] == ' ' && Loc < LenBuf)
+	while (Loc < LenBuf && Buf[Loc] == ' ')
 		Loc++;
 
 	if (Loc >= LenBuf)
 		return 0;
 
 	Parm[0] = Cap(Buf[Loc++]);
-	if (Buf[Loc] != '=' && Loc < LenBuf)
+	if (Loc < LenBuf && Buf[Loc] != '=')
 		Parm[1] = Cap(Buf[Loc++]);
-	while (Cap(Buf[Loc]) >= 'A' && Cap(Buf[Loc]) <= 'Z')
+	while (Loc < LenBuf && Cap(Buf[Loc]) >= 'A' && Cap(Buf[Loc]) <= 'Z')
 		Loc++;
-	if (Buf[Loc] != '=' || Loc >= LenBuf - 1)
+	if (Loc >= LenBuf - 1 || Buf[Loc] != '=')
 	{
 		sprintf(B1, "0Bad parameter: %s", Parm);
 		QOut(Term, B1);
@@ -1050,7 +1065,7 @@ int GetEditParm(int LPList, char *Word, int *Num, int *Flag)
 				QOut(Term, B1);
 			}
 
-			while (Buf[Loc] != ' ' && Buf[Loc] != ',' && Loc < LenBuf)
+			while (Loc < LenBuf && Buf[Loc] != ' ' && Buf[Loc] != ',')
 				Loc++;
 			break;
 
