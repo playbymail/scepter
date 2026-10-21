@@ -507,7 +507,7 @@ extern int			Pid;
 
 extern char		B1[256], B2[256], B3[256], C1[256];
 
-extern char		*Event[MaxEvents], *NextEvent;
+extern char		*Event[MaxEvents];
 extern int			LenEvent;
 
 extern MonsterType	ProtoMonster;

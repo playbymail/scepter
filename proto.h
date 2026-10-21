@@ -103,7 +103,7 @@ void	MonStrike(RmCodeType Rm);
 void	EncounterMsg(MonsterPoint Mon, RmCodeType Rm, int NumMons, int NonDMs);
 void	AttackMsg(MonsterPoint Monster, UserPoint Plyr);
 void	InitEvents(void);
-void	TimeCheck(void);
+void	TimeCheck(char *Prev, char *Now);
 void	SystemMsg(char *s);
 
 /* room.c */

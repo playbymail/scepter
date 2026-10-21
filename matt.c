@@ -10,9 +10,13 @@ void MonAttack(void)
 	Str[8] = '\0';
 
 #ifdef TIMECHECK
-	if (!strcmp(NextEvent, "INITIALIZE") || strcmp(Str, NextEvent) >= 0)
-		if (NUsers)
-			TimeCheck();
+	{
+		static char	LastTime[9];		/* "HH:MM:SS" at the last call */
+
+		if (*LastTime && strcmp(Str, LastTime))
+			TimeCheck(LastTime, Str);
+		strcpy(LastTime, Str);
+	}
 #endif
 
 	if (RealTime < LastAtk + 1)
@@ -530,43 +534,15 @@ void InitEvents(void)
 	Event[17] = "20:59:00";
 	Event[18] = "22:40:00";
 	Event[19] = "23:55:00";
-	NextEvent = "INITIALIZE";
 	LenEvent = 20;
 }
 
-void TimeCheck(void)
+/* Announce or act on timed event *EventNum* */
+static void DoEvent(int EventNum)
 {
-	int		EventNum, Found;
-
-	User = UserTail;
-	Term = User->Trm;	/* select dummy term so MsgTerm doesn't blow up */
-
-	if (!strcmp(NextEvent, "INITIALIZE"))
-	{
-		char	*Str;
-		int		ILoop;
-
-		Str = (char *)ctime(&RealTime) + 11;
-		Str[8] = '\0';
-
-		for (ILoop = LenEvent - 1; ILoop >= 0; --ILoop)
-			if (strcmp(Str, Event[ILoop]) <= 0)
-				NextEvent = Event[ILoop];
-		if (!strcmp(NextEvent, "INITIALIZE"))
-			NextEvent = Event[1];
-		return;
-	}
-
-	Found = FALSE;
-	for (EventNum = LenEvent - 1; !Found && EventNum >= 0; --EventNum)
-		Found = (strcmp(NextEvent, Event[EventNum]) >= 0);
-	if (!Found)
-		Abort(" Sce943 - Timed event not found!");
-
 	switch (EventNum)
 	{
 		case 0:		/* 12:01 AM */
-			NextEvent = Event[2];
 			break;
 
 		case 1:		/* 12:05 AM */
@@ -641,9 +617,37 @@ void TimeCheck(void)
 			SystemMsg("0The town clock strikes the midnight hour.");
 			break;
 	}
+}
 
-	if (EventNum > 2)
-		NextEvent = Event[(EventNum + 1) % LenEvent];
+
+/* Run the events timed after *From* and up to *To* ("HH:MM:SS"). */
+static void TimedEvents(char *From, char *To)
+{
+	int		EventNum;
+
+	for (EventNum = 0; EventNum < LenEvent; EventNum++)
+		if (strcmp(Event[EventNum], From) > 0 && strcmp(Event[EventNum], To) <= 0)
+			DoEvent(EventNum);
+}
+
+/* Run the events timed after *Prev* and up to *Now*, the clock times of
+ * two calls.  *Now* is earlier than *Prev* once the clock passes midnight.
+ * Events pass unseen while nobody is on. */
+void TimeCheck(char *Prev, char *Now)
+{
+	if (!NUsers)
+		return;
+
+	User = UserTail;
+	Term = User->Trm;	/* select dummy term so MsgTerm doesn't blow up */
+
+	if (strcmp(Now, Prev) > 0)
+		TimedEvents(Prev, Now);
+	else
+	{
+		TimedEvents(Prev, "24:00:00");
+		TimedEvents("", Now);
+	}
 }
 
 void SystemMsg(char *s)
