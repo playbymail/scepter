@@ -12,7 +12,7 @@ User=scepter
 Group=scepter
 # Telnet on every address, port 4000. The game directory is made once
 # with mkgame (docs/deploy.md); the server only reads and writes it.
-ExecStart=/usr/local/bin/scepterd -l :4000 /var/lib/scepter/alpha
+ExecStart=/usr/local/bin/scepterd -l :4000 /var/lib/scepter/havenford
 Restart=on-failure
 RestartSec=5s
 # SIGTERM saves every player, tells them "End - aborted", and exits.
