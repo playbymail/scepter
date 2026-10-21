@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Havenford · Scepter of Goth</title>
-<meta name="description" content="Havenford, a world for Scepter of Goth, a multi-user role-playing game. Install Mudlet and connect to sceptish.pbbgaming.com port 4000.">
-<meta property="og:title" content="Havenford · Scepter of Goth">
+<title>Havenford · Sceptish</title>
+<meta name="description" content="Havenford, a world for Sceptish, a multi-user role-playing game inspired by Scepter of Goth. Install Mudlet and connect to sceptish.pbbgaming.com port 4000.">
+<meta property="og:title" content="Havenford · Sceptish">
 <meta property="og:description" content="A multi-user role-playing game you play in a MUD client. Install Mudlet and connect to sceptish.pbbgaming.com port 4000.">
 <meta property="og:image" content="https://sceptish.pbbgaming.com/avatar.webp">
 <link rel="icon" type="image/png" href="icon.png">
@@ -203,6 +203,11 @@ h2 {
 .map-card .btn:focus-visible { outline-color: var(--accent); }
 
 .notes { margin: 0; padding-left: 1.2em; color: var(--muted); max-width: 44em; }
+
+.history { max-width: 44em; }
+.history p { margin: 0; color: var(--muted); }
+.history p + p { margin-top: 12px; }
+.history strong { color: var(--ink); font-weight: 500; }
 .notes li + li { margin-top: 8px; }
 .notes strong { color: var(--ink); font-weight: 500; }
 
@@ -229,7 +234,7 @@ footer {
 		<img src="avatar.webp" width="800" height="800"
 			alt="A hooded figure with glowing green eyes stands in a moonlit forest, a gold clasp at the throat of a deep blue cloak.">
 		<div>
-			<p class="eyebrow">Scepter of Goth</p>
+			<p class="eyebrow">Sceptish</p>
 			<h1>Havenford</h1>
 			<p class="lede">A river city with four roads out of it: a graveyard, a keep of locks
 				and traps, a broken observatory and the wilds to the north.
@@ -293,11 +298,30 @@ footer {
 				<code>telnet sceptish.pbbgaming.com 4000</code>.</li>
 		</ul>
 	</section>
+
+	<section id="history" class="history" aria-labelledby="history-h">
+		<h2 id="history-h">History</h2>
+		<p>Sceptish is a modern implementation inspired by <cite>Scepter of Goth</cite>,
+			an early multi-user fantasy role-playing game. David Wheeler's
+			<a href="https://dwheeler.com/scepter-of-goth/scepter-of-goth.html">history
+			of Scepter of Goth</a> tells its story.</p>
+		<p>Sceptish grew from a set of QNX C files once circulated as Scepter of Goth's
+			source. The original author has
+			<a href="https://github.com/shelches/scepter/issues/4#issue-1581465382">stated</a>
+			that they are <strong>not the original game's source code</strong>, but a
+			partial reimplementation written without access to it. Sceptish is therefore
+			<strong>not the original Scepter of Goth</strong>, nor a restoration of it: it
+			is our own implementation.</p>
+		<p><strong>We maintain Sceptish, and we alone are responsible for its code,
+			changes, behaviour, bugs and other shortcomings.</strong> None of them should
+			be attributed to the original author, who didn't write Sceptish.</p>
+	</section>
 </main>
 
 <footer>
 	<div class="wrap">
-		Scepter of Goth, ported from QNX to macOS and Linux.
+		Sceptish, our implementation inspired by Scepter of Goth
+		(<a href="#history">history</a>).
 		<a href="https://github.com/playbymail/scepter">Source on GitHub</a>.
 	</div>
 </footer>
