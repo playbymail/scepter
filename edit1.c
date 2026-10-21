@@ -15,7 +15,7 @@ static PLType	UsrParms[] =
 /*  9 */	"MM", DNum,		"EX", DNum,		"AC", DNum,		"RO", DNum,
 /* 13 */	"BR", DFlag,	"ST", DNum,		"IN", DNum,		"DX", DNum,
 /* 17 */	"PT", DNum,		"EC", DFlag,	"CO", DNum,		"SE", DWord,
-/* 21 */	"SP", DNum,		"PW", DWord,	"MO", DNum,		"AS", DNum,
+/* 21 */	"SP", DNum,		"PW", DOther,	"MO", DNum,		"AS", DNum,
 /* 25 */	"IV", DFlag,	"FA", DNum,		"MF", DNum,		"PO", DFlag,
 /* 29 */	"PL", DFlag,	"HD", DFlag,	"TG", DFlag,	"MB", DFlag,
 /* 33 */	"AG", DFlag,	"EV", DFlag,	"SU", DFlag,	"PG", DFlag,
@@ -375,14 +375,27 @@ static void ModPlayer(UserPoint Player, int OnLine)
 				break;
 
 			case 22:
-				if (User->Master)
-				{
-					if (*Word)
-						SetPW(Player->PWHash, Word);
-				}
-				else
+			{
+				char	PassWord[MaxPWLen + 1], Hash[PWHashLen];
+				int		Len = GetPW(PassWord);	/* the rest of the line (#121) */
+
+				if (!User->Master)
 					QOut(Term, "0Only master DMs may alter passwords.");
+				else if (Len < MinPWLen)
+				{
+					sprintf(B1, "0Passwords must be %d to %d characters long.  Password not changed.",
+							MinPWLen, MaxPWLen);
+					QOut(Term, B1);
+				}
+				else if (!SetPW(Hash, PassWord))
+					QOut(Term, "0Password not changed.");
+				else
+				{
+					strcpy(Player->PWHash, Hash);
+					QOut(Term, "0Password set.");
+				}
 				break;
+			}
 
 			case 23:
 				Player->Money = MaxL(0L, MinL(999999999L, (long)Number));

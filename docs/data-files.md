@@ -89,8 +89,9 @@ Each file is converted straight to the current version.  From version 1
 to 2 only the player file's records change: each gets a locked `PWHash`
 (`*`), which no password matches, since the server no longer accepts the
 old hash (#50).  A master DM unlocks a character by giving it a temporary
-password: `*EDIT`, then `MODIFY PLAYER name PW=word` (one word of up to 10
-characters).  The player then chooses a real one with `CHANGEPW`.  The
+password: `*EDIT`, then `MODIFY PLAYER name PW=password`.  The password is
+the rest of the line, so `PW=` comes last; it may contain spaces, and it
+must be 8 to 72 characters long, as at `CHANGEPW`.  The player then chooses a real one with `CHANGEPW`.  The
 other files just get the new header.
 
 If it stops part way, run it again: files that are already current are left
