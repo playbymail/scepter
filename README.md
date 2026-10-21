@@ -36,6 +36,8 @@ Then connect a MUD client or `telnet` to `127.0.0.1` port 4000.
 - [docs/world-format.md](docs/world-format.md): writing world files
 - [docs/data-files.md](docs/data-files.md): game data files and upgrading
 - [docs/deploy.md](docs/deploy.md): the live game on the droplet
+- [var/havenford/README.md](var/havenford/README.md): Havenford, the beta
+  test and tutorial world
 
 ## Departures from the original
 

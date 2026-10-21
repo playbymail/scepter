@@ -30,7 +30,8 @@ Every world file has a JSON copy beside it, `var/NAME/world.json`. The
 world file is the source; `tools/worldjson.py` converts in both directions,
 and `make check-worlds` fails if the two copies differ. The tool writes the
 world file in a canonical form, so it doesn't keep comments you add by
-hand.
+hand.  Write design notes in a `README.md` beside the world instead, as
+`var/havenford/README.md` does.
 
 ```sh
 python3 tools/worldjson.py to-json var/alpha/alpha.world var/alpha/world.json
@@ -148,7 +149,8 @@ These keys apply to every kind:
 | `price` | 0–16000 |
 | `desc` | `R:L` |
 
-Flags: `carry`, `magic`, `permanent`, `invisible`, `cursed`.
+Flags: `carry`, `magic`, `permanent`, `invisible`, `cursed`.  `cursed`
+is stored but has no effect in the game, as in the original.
 
 | `kind` | Keys |
 |---|---|

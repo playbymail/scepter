@@ -1,0 +1,1788 @@
+{
+  "name": "Havenford",
+  "startRoom": 1,
+  "reviveRoom": 1,
+  "jailRoom": 1,
+  "monsterSpeed": 4,
+  "notice": "Welcome to Havenford. Guild Street is north of the square.",
+  "news": [
+    "Training halls stand north of Havenford Square.",
+    "Roads north of the city remain safe through the frontier post.",
+    "Beyond the warning sign, beasts wander in the meadow.",
+    "The northwest Aether Observatory welcomes apprentice magic-users.",
+    "The southwest keep offers locks, traps and ascending thief challenges."
+  ],
+  "descriptions": [
+    {
+      "record": 1,
+      "lines": [
+        "1/You are in Havenford Refuge. The square and guild signs are east./",
+        "1/You are in Havenford Square. Guild Street is north; shops are south./",
+        "1/You are on Guild Street. Training halls flank the cobbled street./",
+        "1/You are in the Hall of Blades. Practice swords ring against shields./",
+        "1/You are in the Scout Lodge. Maps and unstrung bows cover the walls./",
+        "1/You are in the Academy of Sparks. Apprentices study quiet spells./",
+        "1/You are in the Lantern Chapel. The Graveward path leaves west./",
+        "1/You are in the Shadow School. Chalk marks outline a practice lock./",
+        "1/You are in the Hall of Stewards. Instructors teach worldcraft./",
+        "1/You are on Market Lane. A store lies east and a smithy west./"
+      ]
+    },
+    {
+      "record": 2,
+      "lines": [
+        "1/You are in the Provisioner. Food and basic gear fill wooden shelves./",
+        "1/You are in the Smithy. A friendly smith tests a repaired blade./",
+        "1/You are in the River Inn. Soup simmers in the common hearth./",
+        "1/You are at the Notice Kiosk. Fresh notices hang under an awning./",
+        "1/You are in the Exchange. A pawnbroker sorts simple trinkets./",
+        "1/You are in a public garden. Fruit trees shade a small fountain./",
+        "1/You are at Havenford North Gate. Guards wave travellers through./",
+        "1/You are on a calm road past the city walls. Farms lie north./",
+        "1/You are at the orchard crossroads. The city is south./",
+        "1/You are beside a quiet orchard. No danger seems close./"
+      ]
+    },
+    {
+      "record": 3,
+      "lines": [
+        "1/You are on a sunlit farm track. A milestone points north./",
+        "1/You are at the Frontier Warning Post. Read the sign before north./",
+        "1/You are in the meadow margin. Small tracks cross the grass./",
+        "1/You are in the willow meadow. A stream divides the reeds./",
+        "1/You are on a ferny trail. Rustling comes from the undergrowth./",
+        "1/You are at a shallow ford. The far bank rises into wooded hills./",
+        "1/You are at the old charcoal kiln. Ash covers the clearing./",
+        "1/You are among the low pine hills. Broken stone walls emerge./",
+        "1/You are at an abandoned campsite. A cold pot rests by the fire./",
+        "1/You are beside the ruined mill. Its wheel creaks in the wind./"
+      ]
+    },
+    {
+      "record": 4,
+      "lines": [
+        "1/You are on the ridge path. The old watchtower is visible north./",
+        "1/You are in the bracken ravine. A narrow pass climbs east./",
+        "1/You are at the tower approach. Loose stones shift underfoot./",
+        "1/You are in the outer tower yard. A broken bell hangs overhead./",
+        "1/You are inside the watchtower. Stairs climb into shadow./",
+        "1/You are in the watchtower loft. Wind whistles through the roof./",
+        "1/You are at the hill shrine. Smooth stones line a dry spring./",
+        "1/You are on the western sheep path. The pasture is quiet./",
+        "1/You are in the sheep pasture. The farmer smiles from a distance./",
+        "1/You are in the guild library. Books explain the roads ahead./"
+      ]
+    },
+    {
+      "record": 5,
+      "lines": [
+        "1/You are on the eastern promenade. The chapel is west./",
+        "1/You are at the training yard. The academy is west./"
+      ]
+    },
+    {
+      "record": 6,
+      "lines": [
+        "1/DANGER AHEAD! Monsters roam north of this post. Turn back if unready./",
+        "1/A kindly old caretaker gestures toward the nearby training halls./",
+        "1/A small rat snuffles among the roots./",
+        "1/A nervous crow hops from branch to branch./",
+        "1/A lean stray dog watches the path warily./",
+        "1/A fox with rust-colored fur stands in the grass./",
+        "1/A rough-looking highway thief grips a dull knife./",
+        "1/A battered skeleton stumbles through the ruined stones./",
+        "1/A hungry grey wolf peers from the brush./",
+        "1/An armored raider guards a crumbling stone passage./"
+      ]
+    },
+    {
+      "record": 7,
+      "lines": [
+        "1/A restless tower sentinel drags a dented spear./",
+        "1/A scarred bandit captain wears a faded blue cloak./",
+        "1/A carved wooden sign points south to the safety of Havenford./"
+      ]
+    },
+    {
+      "record": 8,
+      "lines": [
+        "1/You are in the Chapel Cloister. Graveward signs point west./",
+        "1/You are on the west pilgrim road. Quiet fields surround the path./",
+        "1/You are at the memorial garden. Names are carved on low stones./",
+        "1/You are at the Graveward Watch Post. The cemetery is west./",
+        "1/You stand at the Graveward Warning Gate. Read the posted warning./",
+        "1/You are among neglected graves. Loose bones shift in the soil./",
+        "1/You are on the cemetery path. A thin mist hangs above the stones./",
+        "1/You are beside an open grave. Something scrapes beneath the earth./",
+        "1/You are before an old mausoleum. Stone steps lead down./",
+        "1/You are in the mausoleum hall. Pale figures drift in the dark./"
+      ]
+    },
+    {
+      "record": 9,
+      "lines": [
+        "1/You are in the ossuary passage. Bone piles line the walls./",
+        "1/You are in the bone guard chamber. Ancient armor gleams faintly./",
+        "1/You are in the deepest crypt. A cold throne dominates the vault./",
+        "1/You are in a sealed side chapel. A silver bell hangs over an altar./",
+        "1/You are on the graveyard overlook. Havenford lies to the east./",
+        "1/UNDEAD AHEAD! West of this gate is unsafe. Clerics: return east to heal./",
+        "1/A brittle skeleton lurches forward with empty eye sockets./",
+        "1/A dim spirit wanders silently between the grave markers./",
+        "1/A grave guardian in rotted mail rises from the shadows./",
+        "1/A bone knight stands motionless with a notched sword./"
+      ]
+    },
+    {
+      "record": 10,
+      "lines": [
+        "1/A cold crypt wight points one skeletal finger at the living./",
+        "1/A votive silver token engraved with the chapel's sun emblem./",
+        "1/A polished shard of pale moonstone, cool in the palm./",
+        "1/A silver reliquary bearing a faded protective blessing./"
+      ]
+    },
+    {
+      "record": 11,
+      "lines": [
+        "1/You are on the south-west lane. A ruined keep rises beyond the fields./",
+        "1/You are on the old causeway. The keep stands to the west./",
+        "1/You are at the keep's warning board. The gate is west./",
+        "1/You stand in Lockspire courtyard. Entry to the keep lies west./",
+        "1/You are in the ground-floor entry. Practice corridors lead west./",
+        "1/You are in the novice lock hall. Two doors lead to practice chambers./",
+        "1/You are in the brass-lock chamber. A low chest rests on a bench./",
+        "1/You are in the needle-lock chamber. A chest bears a tiny keyhole./",
+        "1/You are at the first stairwell. Steps climb to the second floor./",
+        "1/You are on the second landing. A corridor runs west./"
+      ]
+    },
+    {
+      "record": 12,
+      "lines": [
+        "1/You are in the warded corridor. Faint holes mark the stonework./",
+        "1/You are in the old records room. Shelves surround a heavy chest./",
+        "1/You are in the armory vault. A steel-bound strongbox waits here./",
+        "1/You are at the second stairwell. Steps climb to the third floor./",
+        "1/You are on the third landing. Fine locks adorn two dark doors./",
+        "1/You are in the master lock hall. Dust outlines hidden trigger plates./",
+        "1/You are in the jewel chamber. A carved chest stands under a lamp./",
+        "1/You are in the artificer's treasury. Complex mechanisms hum softly./",
+        "1/You are at the roof stair. The final flight rises above./",
+        "1/You are on the battlement. The city and Graveward lie below./"
+      ]
+    },
+    {
+      "record": 13,
+      "lines": [
+        "1/You are in the crowning vault. A final chest awaits a master thief./",
+        "1/THIEVES: This keep has locks and traps. Every staircase stays open./",
+        "1/Begin with the first floor. Locks and trap risk rise as you climb./",
+        "1/A battered practice chest with a simple latch and blunt trap pin./",
+        "1/A narrow strongbox with carefully fitted brass mechanisms./",
+        "1/A reinforced coffer with hidden spring needles./",
+        "1/A steel vault chest engraved with winding geometric lines./",
+        "1/A jewel casket with a subtle pressure-release catch./",
+        "1/A masterwork clockwork chest with intricate internal tumblers./",
+        "1/A crown-shaped iron chest surrounded by concealed trigger slots./"
+      ]
+    },
+    {
+      "record": 14,
+      "lines": [
+        "1/You are on Scholar's Walk. A sign points west to the observatory./",
+        "1/You are in the arcane garden. Quiet lanterns float above the path./",
+        "1/You are at the novice colonnade. Lecture rooms stand east and south./",
+        "1/You are on the crystal causeway. The observatory looms west./",
+        "1/You are at the Aether Warning Gate. Danger lies north./",
+        "1/You are in the spark meadow. Weak magical motes flicker around you./",
+        "1/You are in the mirror thicket. Strange lights dart through the trees./",
+        "1/You stand before a shattered arch. Arcane echoes pulse beyond it./",
+        "1/You are in the broken observatory. Stairs spiral upward./",
+        "1/You are in the stargazer's loft. A broken telescope points skyward./"
+      ]
+    },
+    {
+      "record": 15,
+      "lines": [
+        "1/You are in the upper prism hall. Light scatters from cracked glass./",
+        "1/You are in the high aether chamber. Reality seems thin here./",
+        "1/You are in the spell library. Manuals teach safe magical practice./",
+        "1/You are in the darkened study. A lantern sits beside the door./",
+        "1/You are in the null-magic room. Enchantments fall silent here./",
+        "1/You are in the apprentice workshop. Test equipment covers the tables./",
+        "1/A small flickering mote drifts just above the ground./",
+        "1/A translucent sprite hums around a cluster of flowers./",
+        "1/A crackling spark elemental glows like a burning ember./",
+        "1/A shimmering mirror shade distorts the air around it./"
+      ]
+    },
+    {
+      "record": 16,
+      "lines": [
+        "1/A prismatic guardian stands between shards of colored glass./",
+        "1/A wild aether warden crackles with unstable magic./",
+        "1/DANGER AHEAD! Arcane creatures roam north. Return south to train./",
+        "1/A note reads: Dark rooms test light. Magic will fail in the null room./",
+        "1/An old apprentice's scroll, neatly marked with the heal spell./",
+        "1/A polished charm bearing the sigil of the observatory./",
+        "1/A blue crystal that pulses with stored energy./",
+        "1/A glass prism containing a faint sliver of starlight./"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1,
+      "exits": [0, 0, 2, 0, 0, 0],
+      "desc": {"record": 1, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 2,
+      "exits": [3, 10, 16, 1, 0, 0],
+      "desc": {"record": 1, "line": 2},
+      "safe": true
+    },
+    {
+      "id": 3,
+      "exits": [6, 2, 5, 4, 0, 0],
+      "desc": {"record": 1, "line": 3},
+      "safe": true
+    },
+    {
+      "id": 4,
+      "exits": [7, 0, 3, 0, 0, 0],
+      "desc": {"record": 1, "line": 4},
+      "safe": true,
+      "trains": ["fighter", "barbarian"]
+    },
+    {
+      "id": 5,
+      "exits": [0, 0, 0, 3, 0, 0],
+      "desc": {"record": 1, "line": 5},
+      "safe": true,
+      "trains": ["ranger"]
+    },
+    {
+      "id": 6,
+      "exits": [0, 3, 9, 79, 0, 0],
+      "desc": {"record": 1, "line": 6},
+      "safe": true,
+      "trains": ["magic-user"]
+    },
+    {
+      "id": 7,
+      "exits": [8, 4, 0, 43, 0, 0],
+      "desc": {"record": 1, "line": 7},
+      "safe": true,
+      "trains": ["cleric", "paladin"]
+    },
+    {
+      "id": 8,
+      "exits": [40, 7, 0, 0, 0, 0],
+      "desc": {"record": 1, "line": 8},
+      "safe": true,
+      "trains": ["thief"]
+    },
+    {
+      "id": 9,
+      "exits": [0, 0, 0, 6, 0, 0],
+      "desc": {"record": 1, "line": 9},
+      "safe": true,
+      "trains": ["dm"]
+    },
+    {
+      "id": 10,
+      "exits": [2, 13, 11, 12, 0, 0],
+      "desc": {"record": 1, "line": 10},
+      "safe": true
+    },
+    {
+      "id": 11,
+      "exits": [0, 0, 0, 10, 0, 0],
+      "desc": {"record": 2, "line": 1},
+      "greeting": "Keeper: Basic supplies for careful travellers.",
+      "safe": true,
+      "stock": [1, 2, 3, 4, 5, 6]
+    },
+    {
+      "id": 12,
+      "exits": [0, 0, 10, 0, 0, 0],
+      "desc": {"record": 2, "line": 2},
+      "greeting": "Smith: I can repair your worn equipment.",
+      "safe": true,
+      "smith": true
+    },
+    {
+      "id": 13,
+      "exits": [10, 0, 14, 15, 0, 0],
+      "desc": {"record": 2, "line": 3},
+      "greeting": "Innkeeper: The city is safe; danger lies past the north road.",
+      "safe": true,
+      "bar": true,
+      "staggers": [1, 2, 10, 13]
+    },
+    {
+      "id": 14,
+      "exits": [0, 0, 0, 13, 0, 0],
+      "desc": {"record": 2, "line": 4},
+      "greeting": "Newskeeper: Read the road warnings before leaving town.",
+      "safe": true,
+      "newsstand": true
+    },
+    {
+      "id": 15,
+      "exits": [0, 58, 13, 0, 0, 0],
+      "desc": {"record": 2, "line": 5},
+      "greeting": "Broker: Bring me your unwanted finds.",
+      "safe": true,
+      "pawnshop": true
+    },
+    {
+      "id": 16,
+      "exits": [17, 0, 41, 2, 0, 0],
+      "desc": {"record": 2, "line": 6},
+      "safe": true
+    },
+    {
+      "id": 17,
+      "exits": [18, 16, 0, 0, 0, 0],
+      "desc": {"record": 2, "line": 7},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,direction *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 7, "line": 3},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "exits": [19, 17, 0, 0, 0, 0],
+      "desc": {"record": 2, "line": 8},
+      "safe": true
+    },
+    {
+      "id": 19,
+      "exits": [21, 18, 20, 38, 0, 0],
+      "desc": {"record": 2, "line": 9},
+      "safe": true
+    },
+    {
+      "id": 20,
+      "exits": [0, 0, 0, 19, 0, 0],
+      "desc": {"record": 2, "line": 10},
+      "safe": true
+    },
+    {
+      "id": 21,
+      "exits": [22, 19, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 22,
+      "exits": [23, 21, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 2},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,warning *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 6, "line": 1},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "exits": [24, 22, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 3},
+      "encounterTable": 1,
+      "encounterRate": 100
+    },
+    {
+      "id": 24,
+      "exits": [25, 23, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 4},
+      "encounterTable": 1,
+      "encounterRate": 85
+    },
+    {
+      "id": 25,
+      "exits": [26, 24, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 5},
+      "encounterTable": 1,
+      "encounterRate": 80
+    },
+    {
+      "id": 26,
+      "exits": [27, 25, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 6},
+      "encounterTable": 1,
+      "encounterRate": 75
+    },
+    {
+      "id": 27,
+      "exits": [28, 26, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 7},
+      "encounterTable": 1,
+      "encounterRate": 65
+    },
+    {
+      "id": 28,
+      "exits": [29, 27, 0, 32, 0, 0],
+      "desc": {"record": 3, "line": 8},
+      "encounterTable": 2,
+      "encounterRate": 65
+    },
+    {
+      "id": 29,
+      "exits": [30, 28, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 9},
+      "encounterTable": 2,
+      "encounterRate": 60
+    },
+    {
+      "id": 30,
+      "exits": [31, 29, 0, 0, 0, 0],
+      "desc": {"record": 3, "line": 10},
+      "encounterTable": 2,
+      "encounterRate": 55
+    },
+    {
+      "id": 31,
+      "exits": [33, 30, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 1},
+      "encounterTable": 2,
+      "encounterRate": 55
+    },
+    {
+      "id": 32,
+      "exits": [0, 0, 28, 37, 0, 0],
+      "desc": {"record": 4, "line": 2},
+      "encounterTable": 2,
+      "encounterRate": 50
+    },
+    {
+      "id": 33,
+      "exits": [34, 31, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 3},
+      "encounterTable": 3,
+      "encounterRate": 55
+    },
+    {
+      "id": 34,
+      "exits": [35, 33, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 4},
+      "encounterTable": 3,
+      "encounterRate": 45
+    },
+    {
+      "id": 35,
+      "exits": [0, 34, 0, 0, 36, 0],
+      "desc": {"record": 4, "line": 5},
+      "encounterTable": 3,
+      "encounterRate": 40
+    },
+    {
+      "id": 36,
+      "exits": [0, 0, 0, 0, 0, 35],
+      "desc": {"record": 4, "line": 6},
+      "encounterTable": 3,
+      "encounterRate": 40
+    },
+    {
+      "id": 37,
+      "exits": [0, 0, 32, 0, 0, 0],
+      "desc": {"record": 4, "line": 7},
+      "encounterTable": 2,
+      "encounterRate": 70
+    },
+    {
+      "id": 38,
+      "exits": [0, 0, 19, 39, 0, 0],
+      "desc": {"record": 4, "line": 8},
+      "safe": true
+    },
+    {
+      "id": 39,
+      "exits": [0, 0, 38, 0, 0, 0],
+      "desc": {"record": 4, "line": 9},
+      "safe": true
+    },
+    {
+      "id": 40,
+      "exits": [0, 8, 0, 0, 0, 0],
+      "desc": {"record": 4, "line": 10},
+      "safe": true
+    },
+    {
+      "id": 41,
+      "exits": [42, 0, 0, 16, 0, 0],
+      "desc": {"record": 5, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 42,
+      "exits": [0, 41, 0, 0, 0, 0],
+      "desc": {"record": 5, "line": 2},
+      "safe": true
+    },
+    {
+      "id": 43,
+      "exits": [0, 0, 7, 44, 0, 0],
+      "desc": {"record": 8, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 44,
+      "exits": [0, 0, 43, 45, 0, 0],
+      "desc": {"record": 8, "line": 2},
+      "safe": true
+    },
+    {
+      "id": 45,
+      "exits": [0, 0, 44, 46, 0, 0],
+      "desc": {"record": 8, "line": 3},
+      "safe": true
+    },
+    {
+      "id": 46,
+      "exits": [0, 0, 45, 47, 0, 0],
+      "desc": {"record": 8, "line": 4},
+      "safe": true
+    },
+    {
+      "id": 47,
+      "exits": [0, 0, 46, 48, 0, 0],
+      "desc": {"record": 8, "line": 5},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,graveward *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 9, "line": 6},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "exits": [0, 0, 47, 49, 0, 0],
+      "desc": {"record": 8, "line": 6},
+      "encounterTable": 4,
+      "encounterRate": 110
+    },
+    {
+      "id": 49,
+      "exits": [56, 0, 48, 50, 0, 0],
+      "desc": {"record": 8, "line": 7},
+      "encounterTable": 4,
+      "encounterRate": 95
+    },
+    {
+      "id": 50,
+      "exits": [0, 0, 49, 51, 0, 0],
+      "desc": {"record": 8, "line": 8},
+      "encounterTable": 4,
+      "encounterRate": 85
+    },
+    {
+      "id": 51,
+      "exits": [0, 0, 50, 0, 0, 52],
+      "desc": {"record": 8, "line": 9},
+      "encounterTable": 5,
+      "encounterRate": 75
+    },
+    {
+      "id": 52,
+      "exits": [0, 0, 0, 53, 51, 0],
+      "desc": {"record": 8, "line": 10},
+      "encounterTable": 5,
+      "encounterRate": 65
+    },
+    {
+      "id": 53,
+      "exits": [0, 55, 52, 54, 0, 0],
+      "desc": {"record": 9, "line": 1},
+      "encounterTable": 5,
+      "encounterRate": 60
+    },
+    {
+      "id": 54,
+      "exits": [0, 0, 53, 57, 0, 0],
+      "desc": {"record": 9, "line": 2},
+      "encounterTable": 6,
+      "encounterRate": 55
+    },
+    {
+      "id": 55,
+      "exits": [53, 0, 0, 0, 0, 0],
+      "desc": {"record": 9, "line": 4},
+      "encounterTable": 5,
+      "encounterRate": 70
+    },
+    {
+      "id": 56,
+      "exits": [0, 49, 0, 0, 0, 0],
+      "desc": {"record": 9, "line": 5},
+      "safe": true
+    },
+    {
+      "id": 57,
+      "exits": [0, 0, 54, 0, 0, 0],
+      "desc": {"record": 9, "line": 3},
+      "encounterTable": 6,
+      "encounterRate": 45
+    },
+    {
+      "id": 58,
+      "exits": [15, 0, 0, 59, 0, 0],
+      "desc": {"record": 11, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 59,
+      "exits": [0, 0, 58, 60, 0, 0],
+      "desc": {"record": 11, "line": 2},
+      "safe": true
+    },
+    {
+      "id": 60,
+      "exits": [0, 0, 59, 61, 0, 0],
+      "desc": {"record": 11, "line": 3},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,lockspire *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 13, "line": 2},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "exits": [0, 0, 60, 62, 0, 0],
+      "desc": {"record": 11, "line": 4},
+      "safe": true
+    },
+    {
+      "id": 62,
+      "exits": [0, 0, 61, 63, 0, 0],
+      "desc": {"record": 11, "line": 5},
+      "greeting": "A plaque reads: Practice locks first; then try the upper floors.",
+      "safe": true
+    },
+    {
+      "id": 63,
+      "exits": [0, 0, 62, 65, 0, 0],
+      "desc": {"record": 11, "line": 6},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,brass *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 64, "closed": true, "lock": 101}
+        },
+        {
+          "name": "door,needle *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 76, "closed": true, "lock": 102, "trap": 2}
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 11, "line": 7},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,brass *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 63, "closed": true, "lock": 101}
+        },
+        {
+          "name": "chest,practice *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 4},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 1,
+            "lock": 102,
+            "contents": [
+              {
+                "name": "token,copper *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 20,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "exits": [0, 0, 63, 0, 66, 0],
+      "desc": {"record": 11, "line": 9},
+      "safe": true
+    },
+    {
+      "id": 66,
+      "exits": [0, 0, 0, 67, 0, 65],
+      "desc": {"record": 11, "line": 10},
+      "safe": true
+    },
+    {
+      "id": 67,
+      "exits": [0, 0, 66, 69, 0, 0],
+      "desc": {"record": 12, "line": 1},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,records *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 68, "closed": true, "lock": 204, "trap": 5}
+        },
+        {
+          "name": "door,armory *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 77, "closed": true, "lock": 205, "trap": 8}
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 12, "line": 2},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,records *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 67, "closed": true, "lock": 204}
+        },
+        {
+          "name": "chest,records *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 5},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 8,
+            "lock": 205,
+            "contents": [
+              {
+                "name": "clasp,silver *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 75,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "exits": [0, 0, 67, 0, 70, 0],
+      "desc": {"record": 12, "line": 4},
+      "safe": true
+    },
+    {
+      "id": 70,
+      "exits": [0, 0, 0, 71, 0, 69],
+      "desc": {"record": 12, "line": 5},
+      "safe": true
+    },
+    {
+      "id": 71,
+      "exits": [0, 0, 70, 73, 0, 0],
+      "desc": {"record": 12, "line": 6},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,jewel *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 72, "closed": true, "lock": 307, "trap": 11}
+        },
+        {
+          "name": "door,artificer *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 78, "closed": true, "lock": 308, "trap": 12}
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 12, "line": 7},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,jewel *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 71, "closed": true, "lock": 307}
+        },
+        {
+          "name": "chest,jewel *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 8},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 16,
+            "lock": 308,
+            "contents": [
+              {
+                "name": "brooch,gold *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 180,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "exits": [0, 0, 71, 0, 74, 0],
+      "desc": {"record": 12, "line": 9},
+      "safe": true
+    },
+    {
+      "id": 74,
+      "exits": [0, 0, 0, 0, 0, 73],
+      "desc": {"record": 12, "line": 10},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,crowning *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 75, "closed": true, "lock": 409, "trap": 18}
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 13, "line": 1},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,crowning *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 74, "closed": true, "lock": 409}
+        },
+        {
+          "name": "chest,crown *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 10},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 19,
+            "lock": 409,
+            "contents": [
+              {
+                "name": "diadem,ancient *",
+                "article": "an",
+                "kind": "treasure",
+                "weight": 2,
+                "price": 650,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 11, "line": 8},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,needle *",
+          "article": "a",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 63, "closed": true, "lock": 102}
+        },
+        {
+          "name": "chest,needle *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 5},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 3,
+            "lock": 103,
+            "contents": [
+              {
+                "name": "token,copper *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 30,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 12, "line": 3},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,armory *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 67, "closed": true, "lock": 205}
+        },
+        {
+          "name": "chest,armory *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 6},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 12,
+            "lock": 206,
+            "contents": [
+              {
+                "name": "brooch,gold *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 180,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "exits": [0, 0, 0, 0, 0, 0],
+      "desc": {"record": 12, "line": 8},
+      "safe": true,
+      "objects": [
+        {
+          "name": "door,artificer *",
+          "article": "an",
+          "kind": "door",
+          "permanent": true,
+          "door": {"to": 71, "closed": true, "lock": 308}
+        },
+        {
+          "name": "chest,clockwork *",
+          "article": "a",
+          "kind": "chest",
+          "weight": 100,
+          "desc": {"record": 13, "line": 9},
+          "permanent": true,
+          "chest": {
+            "closed": true,
+            "trap": 17,
+            "lock": 309,
+            "contents": [
+              {
+                "name": "crystal,prismatic *",
+                "article": "a",
+                "kind": "treasure",
+                "weight": 1,
+                "price": 360,
+                "carry": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "exits": [0, 0, 6, 80, 0, 0],
+      "desc": {"record": 14, "line": 1},
+      "safe": true
+    },
+    {
+      "id": 80,
+      "exits": [81, 93, 79, 0, 0, 0],
+      "desc": {"record": 14, "line": 2},
+      "safe": true
+    },
+    {
+      "id": 81,
+      "exits": [0, 80, 91, 82, 0, 0],
+      "desc": {"record": 14, "line": 3},
+      "safe": true
+    },
+    {
+      "id": 82,
+      "exits": [0, 92, 81, 83, 0, 0],
+      "desc": {"record": 14, "line": 4},
+      "safe": true
+    },
+    {
+      "id": 83,
+      "exits": [84, 0, 82, 0, 0, 0],
+      "desc": {"record": 14, "line": 5},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,aether *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 16, "line": 3},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "exits": [85, 83, 0, 0, 0, 0],
+      "desc": {"record": 14, "line": 6},
+      "encounterTable": 7,
+      "encounterRate": 110
+    },
+    {
+      "id": 85,
+      "exits": [0, 84, 0, 86, 0, 0],
+      "desc": {"record": 14, "line": 7},
+      "encounterTable": 7,
+      "encounterRate": 90
+    },
+    {
+      "id": 86,
+      "exits": [87, 0, 85, 0, 0, 0],
+      "desc": {"record": 14, "line": 8},
+      "encounterTable": 8,
+      "encounterRate": 80
+    },
+    {
+      "id": 87,
+      "exits": [0, 86, 0, 0, 88, 0],
+      "desc": {"record": 14, "line": 9},
+      "encounterTable": 8,
+      "encounterRate": 70
+    },
+    {
+      "id": 88,
+      "exits": [0, 0, 0, 0, 89, 87],
+      "desc": {"record": 14, "line": 10},
+      "encounterTable": 8,
+      "encounterRate": 65
+    },
+    {
+      "id": 89,
+      "exits": [0, 0, 0, 0, 90, 88],
+      "desc": {"record": 15, "line": 1},
+      "encounterTable": 9,
+      "encounterRate": 55
+    },
+    {
+      "id": 90,
+      "exits": [0, 0, 0, 0, 0, 89],
+      "desc": {"record": 15, "line": 2},
+      "encounterTable": 9,
+      "encounterRate": 45
+    },
+    {
+      "id": 91,
+      "exits": [0, 94, 0, 81, 0, 0],
+      "desc": {"record": 15, "line": 3},
+      "safe": true,
+      "objects": [
+        {
+          "name": "sign,lessons *",
+          "article": "a",
+          "kind": "misc",
+          "weight": 100,
+          "desc": {"record": 16, "line": 4},
+          "permanent": true
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "exits": [82, 0, 0, 0, 0, 0],
+      "desc": {"record": 15, "line": 5},
+      "safe": true,
+      "antiMagic": true
+    },
+    {
+      "id": 93,
+      "exits": [80, 0, 0, 0, 0, 0],
+      "desc": {"record": 15, "line": 6},
+      "safe": true,
+      "objects": [
+        {
+          "name": "scroll,apprentice *",
+          "article": "a",
+          "kind": "scroll",
+          "weight": 1,
+          "price": 45,
+          "desc": {"record": 16, "line": 5},
+          "carry": true,
+          "magic": true,
+          "permanent": true,
+          "scroll": {"spell": "heal"}
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "exits": [91, 0, 0, 0, 0, 0],
+      "desc": {"record": 15, "line": 4},
+      "safe": true,
+      "dark": true
+    }
+  ],
+  "monsters": [
+    {
+      "id": 1,
+      "name": "rat,field *",
+      "article": "a",
+      "desc": {"record": 6, "line": 3},
+      "level": 1,
+      "hits": 4,
+      "maxHits": 4,
+      "ac": 9,
+      "attackSpeed": 0,
+      "treasureTable": 1,
+      "flee": true
+    },
+    {
+      "id": 2,
+      "name": "crow,restless *",
+      "article": "a",
+      "desc": {"record": 6, "line": 4},
+      "level": 1,
+      "hits": 5,
+      "maxHits": 5,
+      "ac": 9,
+      "attackSpeed": 0,
+      "treasureTable": 1,
+      "flee": true
+    },
+    {
+      "id": 3,
+      "name": "dog,stray *",
+      "article": "a",
+      "desc": {"record": 6, "line": 5},
+      "level": 1,
+      "hits": 7,
+      "maxHits": 7,
+      "ac": 8,
+      "attackSpeed": 1,
+      "treasureTable": 1,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 4,
+      "name": "fox,red *",
+      "article": "a",
+      "desc": {"record": 6, "line": 6},
+      "level": 2,
+      "hits": 10,
+      "maxHits": 10,
+      "ac": 8,
+      "attackSpeed": 1,
+      "treasureTable": 2,
+      "flee": true
+    },
+    {
+      "id": 5,
+      "name": "thief,highway *",
+      "article": "a",
+      "desc": {"record": 6, "line": 7},
+      "level": 2,
+      "hits": 14,
+      "maxHits": 14,
+      "ac": 7,
+      "attackSpeed": 2,
+      "treasureTable": 2,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 6,
+      "name": "skeleton,brittle *",
+      "article": "a",
+      "desc": {"record": 6, "line": 8},
+      "level": 3,
+      "hits": 16,
+      "maxHits": 16,
+      "ac": 6,
+      "attackSpeed": 2,
+      "treasureTable": 2,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 7,
+      "name": "wolf,grey *",
+      "article": "a",
+      "desc": {"record": 6, "line": 9},
+      "level": 3,
+      "hits": 18,
+      "maxHits": 18,
+      "ac": 6,
+      "attackSpeed": 2,
+      "treasureTable": 2,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 8,
+      "name": "raider,armored *",
+      "article": "a",
+      "desc": {"record": 6, "line": 10},
+      "level": 4,
+      "hits": 23,
+      "maxHits": 23,
+      "ac": 5,
+      "attackSpeed": 3,
+      "treasureTable": 3,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 9,
+      "name": "sentinel,tower *",
+      "article": "a",
+      "desc": {"record": 7, "line": 1},
+      "level": 4,
+      "hits": 26,
+      "maxHits": 26,
+      "ac": 5,
+      "attackSpeed": 3,
+      "treasureTable": 3,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 10,
+      "name": "captain,bandit *",
+      "article": "a",
+      "desc": {"record": 7, "line": 2},
+      "level": 5,
+      "hits": 32,
+      "maxHits": 32,
+      "ac": 4,
+      "attackSpeed": 3,
+      "treasureTable": 3,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 11,
+      "name": "skeleton,shambling *",
+      "article": "a",
+      "desc": {"record": 9, "line": 7},
+      "level": 1,
+      "hits": 7,
+      "maxHits": 7,
+      "ac": 8,
+      "attackSpeed": 1,
+      "treasureTable": 4,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 12,
+      "name": "spirit,restless *",
+      "article": "a",
+      "desc": {"record": 9, "line": 8},
+      "level": 2,
+      "hits": 11,
+      "maxHits": 11,
+      "ac": 7,
+      "attackSpeed": 1,
+      "treasureTable": 4,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 13,
+      "name": "guardian,grave *",
+      "article": "a",
+      "desc": {"record": 9, "line": 9},
+      "level": 3,
+      "hits": 17,
+      "maxHits": 17,
+      "ac": 6,
+      "attackSpeed": 2,
+      "treasureTable": 5,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 14,
+      "name": "knight,bone *",
+      "article": "a",
+      "desc": {"record": 9, "line": 10},
+      "level": 4,
+      "hits": 24,
+      "maxHits": 24,
+      "ac": 5,
+      "attackSpeed": 2,
+      "treasureTable": 6,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 15,
+      "name": "wight,crypt *",
+      "article": "a",
+      "desc": {"record": 10, "line": 1},
+      "level": 5,
+      "hits": 32,
+      "maxHits": 32,
+      "ac": 4,
+      "attackSpeed": 3,
+      "treasureTable": 6,
+      "defend": true,
+      "attackLast": true,
+      "undead": true
+    },
+    {
+      "id": 16,
+      "name": "mote,flickering *",
+      "article": "a",
+      "desc": {"record": 15, "line": 7},
+      "level": 1,
+      "hits": 5,
+      "maxHits": 5,
+      "ac": 9,
+      "attackSpeed": 0,
+      "treasureTable": 7,
+      "defend": true,
+      "attackLast": true,
+      "flee": true
+    },
+    {
+      "id": 17,
+      "name": "sprite,glass *",
+      "article": "a",
+      "desc": {"record": 15, "line": 8},
+      "level": 2,
+      "hits": 9,
+      "maxHits": 9,
+      "ac": 8,
+      "attackSpeed": 1,
+      "treasureTable": 7,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 18,
+      "name": "elemental,spark *",
+      "article": "an",
+      "desc": {"record": 15, "line": 9},
+      "level": 3,
+      "hits": 16,
+      "maxHits": 16,
+      "ac": 7,
+      "attackSpeed": 2,
+      "treasureTable": 8,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 19,
+      "name": "shade,mirror *",
+      "article": "a",
+      "desc": {"record": 15, "line": 10},
+      "level": 3,
+      "hits": 18,
+      "maxHits": 18,
+      "ac": 6,
+      "attackSpeed": 2,
+      "treasureTable": 8,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 20,
+      "name": "guardian,prismatic *",
+      "article": "a",
+      "desc": {"record": 16, "line": 1},
+      "level": 4,
+      "hits": 24,
+      "maxHits": 24,
+      "ac": 5,
+      "attackSpeed": 2,
+      "treasureTable": 9,
+      "defend": true,
+      "attackLast": true
+    },
+    {
+      "id": 21,
+      "name": "warden,aether *",
+      "article": "a",
+      "desc": {"record": 16, "line": 2},
+      "level": 5,
+      "hits": 30,
+      "maxHits": 30,
+      "ac": 4,
+      "attackSpeed": 3,
+      "treasureTable": 9,
+      "defend": true,
+      "attackLast": true
+    }
+  ],
+  "objects": [
+    {
+      "id": 1,
+      "name": "dagger,*",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 2,
+      "price": 12,
+      "carry": true,
+      "weapon": {"minDamage": 1, "maxDamage": 4, "strikes": 100, "skill": "thrust"}
+    },
+    {
+      "id": 2,
+      "name": "sword,practice *",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 4,
+      "price": 20,
+      "carry": true,
+      "weapon": {"minDamage": 1, "maxDamage": 5, "strikes": 110, "skill": "sharp"}
+    },
+    {
+      "id": 3,
+      "name": "armor,leather *",
+      "article": "a",
+      "kind": "armor",
+      "weight": 14,
+      "price": 30,
+      "carry": true,
+      "armor": {"plus": 1, "hits": 65}
+    },
+    {
+      "id": 4,
+      "name": "shield,wooden *",
+      "article": "a",
+      "kind": "shield",
+      "weight": 6,
+      "price": 15,
+      "carry": true,
+      "shield": {"plus": 1, "hits": 65}
+    },
+    {
+      "id": 5,
+      "name": "scroll,healing *",
+      "article": "a",
+      "kind": "scroll",
+      "weight": 1,
+      "price": 40,
+      "carry": true,
+      "magic": true,
+      "scroll": {"spell": "heal"}
+    },
+    {
+      "id": 6,
+      "name": "coins,copper *",
+      "article": "a",
+      "kind": "coins",
+      "weight": 1,
+      "price": 3,
+      "carry": true,
+      "coins": {"multiplier": 1}
+    },
+    {
+      "id": 7,
+      "name": "coins,silver *",
+      "article": "a",
+      "kind": "coins",
+      "weight": 1,
+      "price": 14,
+      "carry": true,
+      "coins": {"multiplier": 1}
+    },
+    {
+      "id": 8,
+      "name": "pouch,woven *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 28,
+      "carry": true
+    },
+    {
+      "id": 9,
+      "name": "gem,blue *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 65,
+      "carry": true
+    },
+    {
+      "id": 10,
+      "name": "blade,tempered *",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 5,
+      "price": 120,
+      "carry": true,
+      "weapon": {"minDamage": 3, "maxDamage": 8, "strikes": 130, "skill": "sharp", "plus": 1}
+    },
+    {
+      "id": 11,
+      "name": "ring,amber *",
+      "article": "a",
+      "kind": "ring",
+      "weight": 1,
+      "price": 175,
+      "carry": true,
+      "magic": true,
+      "ring": {"spell": "protection", "level": 2}
+    },
+    {
+      "id": 12,
+      "name": "relic,silver *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 2,
+      "price": 340,
+      "carry": true
+    },
+    {
+      "id": 13,
+      "name": "token,silver *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 18,
+      "desc": {"record": 10, "line": 2},
+      "carry": true
+    },
+    {
+      "id": 14,
+      "name": "shard,moonstone *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 75,
+      "desc": {"record": 10, "line": 3},
+      "carry": true
+    },
+    {
+      "id": 15,
+      "name": "mace,blessed *",
+      "article": "a",
+      "kind": "weapon",
+      "weight": 5,
+      "price": 170,
+      "carry": true,
+      "weapon": {"minDamage": 3, "maxDamage": 8, "strikes": 120, "skill": "blunt", "plus": 1}
+    },
+    {
+      "id": 16,
+      "name": "reliquary,silver *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 2,
+      "price": 300,
+      "desc": {"record": 10, "line": 4},
+      "carry": true
+    },
+    {
+      "id": 17,
+      "name": "token,copper *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 20,
+      "carry": true
+    },
+    {
+      "id": 18,
+      "name": "clasp,silver *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 75,
+      "carry": true
+    },
+    {
+      "id": 19,
+      "name": "brooch,gold *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 180,
+      "carry": true
+    },
+    {
+      "id": 20,
+      "name": "crystal,prismatic *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 360,
+      "carry": true
+    },
+    {
+      "id": 21,
+      "name": "diadem,ancient *",
+      "article": "an",
+      "kind": "treasure",
+      "weight": 2,
+      "price": 650,
+      "carry": true
+    },
+    {
+      "id": 22,
+      "name": "scroll,apprentice *",
+      "article": "a",
+      "kind": "scroll",
+      "weight": 1,
+      "price": 45,
+      "desc": {"record": 16, "line": 5},
+      "carry": true,
+      "magic": true,
+      "scroll": {"spell": "heal"}
+    },
+    {
+      "id": 23,
+      "name": "charm,etched *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 40,
+      "desc": {"record": 16, "line": 6},
+      "carry": true
+    },
+    {
+      "id": 24,
+      "name": "crystal,azure *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 120,
+      "desc": {"record": 16, "line": 7},
+      "carry": true
+    },
+    {
+      "id": 25,
+      "name": "prism,starlight *",
+      "article": "a",
+      "kind": "treasure",
+      "weight": 1,
+      "price": 300,
+      "desc": {"record": 16, "line": 8},
+      "carry": true
+    },
+    {
+      "id": 26,
+      "name": "wand,spark *",
+      "article": "a",
+      "kind": "device",
+      "weight": 1,
+      "price": 180,
+      "carry": true,
+      "magic": true,
+      "device": {"spell": "fireball", "charges": 3, "level": 2}
+    }
+  ],
+  "encounters": [
+    {"id": 1, "entries": [1, 1, 2, 3, 4]},
+    {"id": 2, "entries": [4, 5, 5, 6, 7]},
+    {"id": 3, "entries": [8, 8, 9, 9, 10]},
+    {"id": 4, "entries": [11, 11, 11, 12]},
+    {"id": 5, "entries": [12, 12, 13, 13]},
+    {"id": 6, "entries": [13, 14, 14, 15]},
+    {"id": 7, "entries": [16, 16, 16, 17]},
+    {"id": 8, "entries": [17, 18, 18, 19]},
+    {"id": 9, "entries": [19, 20, 20, 21]}
+  ],
+  "treasures": [
+    {"id": 1, "entries": [6, 6]},
+    {"id": 2, "entries": [6, 7, 7, 8]},
+    {"id": 3, "entries": [7, 8, 9, 10, 11, 12]},
+    {"id": 4, "entries": [6, 6, 13]},
+    {"id": 5, "entries": [7, 13, 13, 14]},
+    {"id": 6, "entries": [14, 14, 15, 16, 12]},
+    {"id": 7, "entries": [6, 6, 23]},
+    {"id": 8, "entries": [7, 23, 24, 24]},
+    {"id": 9, "entries": [24, 24, 25, 26]}
+  ]
+}
