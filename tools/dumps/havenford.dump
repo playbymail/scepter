@@ -1,0 +1,1096 @@
+notice Notice="Welcome to Havenford. Guild Street is north of the square."
+news 1 NewsBuf="Training halls stand north of Havenford Square."
+news 2 NewsBuf="Roads north of the city remain safe through the frontier post."
+news 3 NewsBuf="Beyond the warning sign, beasts wander in the meadow."
+news 4 NewsBuf="The northwest Aether Observatory welcomes apprentice magic-users."
+news 5 NewsBuf="The southwest keep offers locks, traps and ascending thief challenges."
+task 1 TLvl=0 TName="" TClass="" TBuf=""
+task 2 TLvl=0 TName="" TClass="" TBuf=""
+task 3 TLvl=0 TName="" TClass="" TBuf=""
+run TaskClosed="O" NumRun=0 MSpeed=4
+encounter 1 1 1 2 3 4 0 0 0
+encounter 2 4 5 5 6 7 0 0 0
+encounter 3 8 8 9 9 10 0 0 0
+encounter 4 11 11 11 12 0 0 0 0
+encounter 5 12 12 13 13 0 0 0 0
+encounter 6 13 14 14 15 0 0 0 0
+encounter 7 16 16 16 17 0 0 0 0
+encounter 8 17 18 18 19 0 0 0 0
+encounter 9 19 20 20 21 0 0 0 0
+encounter 10 0 0 0 0 0 0 0 0
+encounter 11 0 0 0 0 0 0 0 0
+encounter 12 0 0 0 0 0 0 0 0
+encounter 13 0 0 0 0 0 0 0 0
+encounter 14 0 0 0 0 0 0 0 0
+encounter 15 0 0 0 0 0 0 0 0
+encounter 16 0 0 0 0 0 0 0 0
+encounter 17 0 0 0 0 0 0 0 0
+encounter 18 0 0 0 0 0 0 0 0
+encounter 19 0 0 0 0 0 0 0 0
+encounter 20 0 0 0 0 0 0 0 0
+encounter 21 0 0 0 0 0 0 0 0
+encounter 22 0 0 0 0 0 0 0 0
+encounter 23 0 0 0 0 0 0 0 0
+encounter 24 0 0 0 0 0 0 0 0
+encounter 25 0 0 0 0 0 0 0 0
+encounter 26 0 0 0 0 0 0 0 0
+encounter 27 0 0 0 0 0 0 0 0
+encounter 28 0 0 0 0 0 0 0 0
+encounter 29 0 0 0 0 0 0 0 0
+encounter 30 0 0 0 0 0 0 0 0
+encounter 31 0 0 0 0 0 0 0 0
+encounter 32 0 0 0 0 0 0 0 0
+encounter 33 0 0 0 0 0 0 0 0
+encounter 34 0 0 0 0 0 0 0 0
+encounter 35 0 0 0 0 0 0 0 0
+encounter 36 0 0 0 0 0 0 0 0
+encounter 37 0 0 0 0 0 0 0 0
+encounter 38 0 0 0 0 0 0 0 0
+encounter 39 0 0 0 0 0 0 0 0
+encounter 40 0 0 0 0 0 0 0 0
+encounter 41 0 0 0 0 0 0 0 0
+encounter 42 0 0 0 0 0 0 0 0
+encounter 43 0 0 0 0 0 0 0 0
+encounter 44 0 0 0 0 0 0 0 0
+encounter 45 0 0 0 0 0 0 0 0
+encounter 46 0 0 0 0 0 0 0 0
+encounter 47 0 0 0 0 0 0 0 0
+encounter 48 0 0 0 0 0 0 0 0
+encounter 49 0 0 0 0 0 0 0 0
+encounter 50 0 0 0 0 0 0 0 0
+encounter 51 0 0 0 0 0 0 0 0
+encounter 52 0 0 0 0 0 0 0 0
+encounter 53 0 0 0 0 0 0 0 0
+encounter 54 0 0 0 0 0 0 0 0
+encounter 55 0 0 0 0 0 0 0 0
+encounter 56 0 0 0 0 0 0 0 0
+encounter 57 0 0 0 0 0 0 0 0
+encounter 58 0 0 0 0 0 0 0 0
+encounter 59 0 0 0 0 0 0 0 0
+encounter 60 0 0 0 0 0 0 0 0
+encounter 61 0 0 0 0 0 0 0 0
+encounter 62 0 0 0 0 0 0 0 0
+encounter 63 0 0 0 0 0 0 0 0
+encounter 64 0 0 0 0 0 0 0 0
+encounter 65 0 0 0 0 0 0 0 0
+encounter 66 0 0 0 0 0 0 0 0
+encounter 67 0 0 0 0 0 0 0 0
+encounter 68 0 0 0 0 0 0 0 0
+encounter 69 0 0 0 0 0 0 0 0
+encounter 70 0 0 0 0 0 0 0 0
+encounter 71 0 0 0 0 0 0 0 0
+encounter 72 0 0 0 0 0 0 0 0
+encounter 73 0 0 0 0 0 0 0 0
+encounter 74 0 0 0 0 0 0 0 0
+encounter 75 0 0 0 0 0 0 0 0
+encounter 76 0 0 0 0 0 0 0 0
+encounter 77 0 0 0 0 0 0 0 0
+encounter 78 0 0 0 0 0 0 0 0
+encounter 79 0 0 0 0 0 0 0 0
+encounter 80 0 0 0 0 0 0 0 0
+encounter 81 0 0 0 0 0 0 0 0
+encounter 82 0 0 0 0 0 0 0 0
+encounter 83 0 0 0 0 0 0 0 0
+encounter 84 0 0 0 0 0 0 0 0
+encounter 85 0 0 0 0 0 0 0 0
+encounter 86 0 0 0 0 0 0 0 0
+encounter 87 0 0 0 0 0 0 0 0
+encounter 88 0 0 0 0 0 0 0 0
+encounter 89 0 0 0 0 0 0 0 0
+encounter 90 0 0 0 0 0 0 0 0
+encounter 91 0 0 0 0 0 0 0 0
+encounter 92 0 0 0 0 0 0 0 0
+encounter 93 0 0 0 0 0 0 0 0
+encounter 94 0 0 0 0 0 0 0 0
+encounter 95 0 0 0 0 0 0 0 0
+encounter 96 0 0 0 0 0 0 0 0
+encounter 97 0 0 0 0 0 0 0 0
+encounter 98 0 0 0 0 0 0 0 0
+encounter 99 0 0 0 0 0 0 0 0
+encounter 100 0 0 0 0 0 0 0 0
+encounter 101 0 0 0 0 0 0 0 0
+encounter 102 0 0 0 0 0 0 0 0
+encounter 103 0 0 0 0 0 0 0 0
+encounter 104 0 0 0 0 0 0 0 0
+encounter 105 0 0 0 0 0 0 0 0
+encounter 106 0 0 0 0 0 0 0 0
+encounter 107 0 0 0 0 0 0 0 0
+encounter 108 0 0 0 0 0 0 0 0
+encounter 109 0 0 0 0 0 0 0 0
+encounter 110 0 0 0 0 0 0 0 0
+encounter 111 0 0 0 0 0 0 0 0
+encounter 112 0 0 0 0 0 0 0 0
+encounter 113 0 0 0 0 0 0 0 0
+encounter 114 0 0 0 0 0 0 0 0
+encounter 115 0 0 0 0 0 0 0 0
+encounter 116 0 0 0 0 0 0 0 0
+encounter 117 0 0 0 0 0 0 0 0
+encounter 118 0 0 0 0 0 0 0 0
+encounter 119 0 0 0 0 0 0 0 0
+encounter 120 0 0 0 0 0 0 0 0
+encounter 121 0 0 0 0 0 0 0 0
+encounter 122 0 0 0 0 0 0 0 0
+encounter 123 0 0 0 0 0 0 0 0
+encounter 124 0 0 0 0 0 0 0 0
+encounter 125 0 0 0 0 0 0 0 0
+encounter 126 0 0 0 0 0 0 0 0
+encounter 127 0 0 0 0 0 0 0 0
+encounter 128 0 0 0 0 0 0 0 0
+encounter 129 0 0 0 0 0 0 0 0
+encounter 130 0 0 0 0 0 0 0 0
+encounter 131 0 0 0 0 0 0 0 0
+encounter 132 0 0 0 0 0 0 0 0
+encounter 133 0 0 0 0 0 0 0 0
+encounter 134 0 0 0 0 0 0 0 0
+encounter 135 0 0 0 0 0 0 0 0
+encounter 136 0 0 0 0 0 0 0 0
+encounter 137 0 0 0 0 0 0 0 0
+encounter 138 0 0 0 0 0 0 0 0
+encounter 139 0 0 0 0 0 0 0 0
+encounter 140 0 0 0 0 0 0 0 0
+encounter 141 0 0 0 0 0 0 0 0
+encounter 142 0 0 0 0 0 0 0 0
+encounter 143 0 0 0 0 0 0 0 0
+encounter 144 0 0 0 0 0 0 0 0
+encounter 145 0 0 0 0 0 0 0 0
+encounter 146 0 0 0 0 0 0 0 0
+encounter 147 0 0 0 0 0 0 0 0
+encounter 148 0 0 0 0 0 0 0 0
+encounter 149 0 0 0 0 0 0 0 0
+encounter 150 0 0 0 0 0 0 0 0
+encounter 151 0 0 0 0 0 0 0 0
+encounter 152 0 0 0 0 0 0 0 0
+encounter 153 0 0 0 0 0 0 0 0
+encounter 154 0 0 0 0 0 0 0 0
+encounter 155 0 0 0 0 0 0 0 0
+encounter 156 0 0 0 0 0 0 0 0
+encounter 157 0 0 0 0 0 0 0 0
+encounter 158 0 0 0 0 0 0 0 0
+encounter 159 0 0 0 0 0 0 0 0
+encounter 160 0 0 0 0 0 0 0 0
+encounter 161 0 0 0 0 0 0 0 0
+encounter 162 0 0 0 0 0 0 0 0
+encounter 163 0 0 0 0 0 0 0 0
+encounter 164 0 0 0 0 0 0 0 0
+encounter 165 0 0 0 0 0 0 0 0
+encounter 166 0 0 0 0 0 0 0 0
+encounter 167 0 0 0 0 0 0 0 0
+encounter 168 0 0 0 0 0 0 0 0
+encounter 169 0 0 0 0 0 0 0 0
+encounter 170 0 0 0 0 0 0 0 0
+encounter 171 0 0 0 0 0 0 0 0
+encounter 172 0 0 0 0 0 0 0 0
+encounter 173 0 0 0 0 0 0 0 0
+encounter 174 0 0 0 0 0 0 0 0
+encounter 175 0 0 0 0 0 0 0 0
+encounter 176 0 0 0 0 0 0 0 0
+encounter 177 0 0 0 0 0 0 0 0
+encounter 178 0 0 0 0 0 0 0 0
+encounter 179 0 0 0 0 0 0 0 0
+encounter 180 0 0 0 0 0 0 0 0
+encounter 181 0 0 0 0 0 0 0 0
+encounter 182 0 0 0 0 0 0 0 0
+encounter 183 0 0 0 0 0 0 0 0
+encounter 184 0 0 0 0 0 0 0 0
+encounter 185 0 0 0 0 0 0 0 0
+encounter 186 0 0 0 0 0 0 0 0
+encounter 187 0 0 0 0 0 0 0 0
+encounter 188 0 0 0 0 0 0 0 0
+encounter 189 0 0 0 0 0 0 0 0
+encounter 190 0 0 0 0 0 0 0 0
+encounter 191 0 0 0 0 0 0 0 0
+encounter 192 0 0 0 0 0 0 0 0
+encounter 193 0 0 0 0 0 0 0 0
+encounter 194 0 0 0 0 0 0 0 0
+encounter 195 0 0 0 0 0 0 0 0
+encounter 196 0 0 0 0 0 0 0 0
+encounter 197 0 0 0 0 0 0 0 0
+encounter 198 0 0 0 0 0 0 0 0
+encounter 199 0 0 0 0 0 0 0 0
+encounter 200 0 0 0 0 0 0 0 0
+treasure 1 6 6 0 0 0 0 0 0
+treasure 2 6 7 7 8 0 0 0 0
+treasure 3 7 8 9 10 11 12 0 0
+treasure 4 6 6 13 0 0 0 0 0
+treasure 5 7 13 13 14 0 0 0 0
+treasure 6 14 14 15 16 12 0 0 0
+treasure 7 6 6 23 0 0 0 0 0
+treasure 8 7 23 24 24 0 0 0 0
+treasure 9 24 24 25 26 0 0 0 0
+treasure 10 0 0 0 0 0 0 0 0
+treasure 11 0 0 0 0 0 0 0 0
+treasure 12 0 0 0 0 0 0 0 0
+treasure 13 0 0 0 0 0 0 0 0
+treasure 14 0 0 0 0 0 0 0 0
+treasure 15 0 0 0 0 0 0 0 0
+treasure 16 0 0 0 0 0 0 0 0
+treasure 17 0 0 0 0 0 0 0 0
+treasure 18 0 0 0 0 0 0 0 0
+treasure 19 0 0 0 0 0 0 0 0
+treasure 20 0 0 0 0 0 0 0 0
+treasure 21 0 0 0 0 0 0 0 0
+treasure 22 0 0 0 0 0 0 0 0
+treasure 23 0 0 0 0 0 0 0 0
+treasure 24 0 0 0 0 0 0 0 0
+treasure 25 0 0 0 0 0 0 0 0
+treasure 26 0 0 0 0 0 0 0 0
+treasure 27 0 0 0 0 0 0 0 0
+treasure 28 0 0 0 0 0 0 0 0
+treasure 29 0 0 0 0 0 0 0 0
+treasure 30 0 0 0 0 0 0 0 0
+treasure 31 0 0 0 0 0 0 0 0
+treasure 32 0 0 0 0 0 0 0 0
+treasure 33 0 0 0 0 0 0 0 0
+treasure 34 0 0 0 0 0 0 0 0
+treasure 35 0 0 0 0 0 0 0 0
+treasure 36 0 0 0 0 0 0 0 0
+treasure 37 0 0 0 0 0 0 0 0
+treasure 38 0 0 0 0 0 0 0 0
+treasure 39 0 0 0 0 0 0 0 0
+treasure 40 0 0 0 0 0 0 0 0
+treasure 41 0 0 0 0 0 0 0 0
+treasure 42 0 0 0 0 0 0 0 0
+treasure 43 0 0 0 0 0 0 0 0
+treasure 44 0 0 0 0 0 0 0 0
+treasure 45 0 0 0 0 0 0 0 0
+treasure 46 0 0 0 0 0 0 0 0
+treasure 47 0 0 0 0 0 0 0 0
+treasure 48 0 0 0 0 0 0 0 0
+treasure 49 0 0 0 0 0 0 0 0
+treasure 50 0 0 0 0 0 0 0 0
+treasure 51 0 0 0 0 0 0 0 0
+treasure 52 0 0 0 0 0 0 0 0
+treasure 53 0 0 0 0 0 0 0 0
+treasure 54 0 0 0 0 0 0 0 0
+treasure 55 0 0 0 0 0 0 0 0
+treasure 56 0 0 0 0 0 0 0 0
+treasure 57 0 0 0 0 0 0 0 0
+treasure 58 0 0 0 0 0 0 0 0
+treasure 59 0 0 0 0 0 0 0 0
+treasure 60 0 0 0 0 0 0 0 0
+treasure 61 0 0 0 0 0 0 0 0
+treasure 62 0 0 0 0 0 0 0 0
+treasure 63 0 0 0 0 0 0 0 0
+treasure 64 0 0 0 0 0 0 0 0
+treasure 65 0 0 0 0 0 0 0 0
+treasure 66 0 0 0 0 0 0 0 0
+treasure 67 0 0 0 0 0 0 0 0
+treasure 68 0 0 0 0 0 0 0 0
+treasure 69 0 0 0 0 0 0 0 0
+treasure 70 0 0 0 0 0 0 0 0
+treasure 71 0 0 0 0 0 0 0 0
+treasure 72 0 0 0 0 0 0 0 0
+treasure 73 0 0 0 0 0 0 0 0
+treasure 74 0 0 0 0 0 0 0 0
+treasure 75 0 0 0 0 0 0 0 0
+treasure 76 0 0 0 0 0 0 0 0
+treasure 77 0 0 0 0 0 0 0 0
+treasure 78 0 0 0 0 0 0 0 0
+treasure 79 0 0 0 0 0 0 0 0
+treasure 80 0 0 0 0 0 0 0 0
+treasure 81 0 0 0 0 0 0 0 0
+treasure 82 0 0 0 0 0 0 0 0
+treasure 83 0 0 0 0 0 0 0 0
+treasure 84 0 0 0 0 0 0 0 0
+treasure 85 0 0 0 0 0 0 0 0
+treasure 86 0 0 0 0 0 0 0 0
+treasure 87 0 0 0 0 0 0 0 0
+treasure 88 0 0 0 0 0 0 0 0
+treasure 89 0 0 0 0 0 0 0 0
+treasure 90 0 0 0 0 0 0 0 0
+treasure 91 0 0 0 0 0 0 0 0
+treasure 92 0 0 0 0 0 0 0 0
+treasure 93 0 0 0 0 0 0 0 0
+treasure 94 0 0 0 0 0 0 0 0
+treasure 95 0 0 0 0 0 0 0 0
+treasure 96 0 0 0 0 0 0 0 0
+treasure 97 0 0 0 0 0 0 0 0
+treasure 98 0 0 0 0 0 0 0 0
+treasure 99 0 0 0 0 0 0 0 0
+treasure 100 0 0 0 0 0 0 0 0
+treasure 101 0 0 0 0 0 0 0 0
+treasure 102 0 0 0 0 0 0 0 0
+treasure 103 0 0 0 0 0 0 0 0
+treasure 104 0 0 0 0 0 0 0 0
+treasure 105 0 0 0 0 0 0 0 0
+treasure 106 0 0 0 0 0 0 0 0
+treasure 107 0 0 0 0 0 0 0 0
+treasure 108 0 0 0 0 0 0 0 0
+treasure 109 0 0 0 0 0 0 0 0
+treasure 110 0 0 0 0 0 0 0 0
+treasure 111 0 0 0 0 0 0 0 0
+treasure 112 0 0 0 0 0 0 0 0
+treasure 113 0 0 0 0 0 0 0 0
+treasure 114 0 0 0 0 0 0 0 0
+treasure 115 0 0 0 0 0 0 0 0
+treasure 116 0 0 0 0 0 0 0 0
+treasure 117 0 0 0 0 0 0 0 0
+treasure 118 0 0 0 0 0 0 0 0
+treasure 119 0 0 0 0 0 0 0 0
+treasure 120 0 0 0 0 0 0 0 0
+treasure 121 0 0 0 0 0 0 0 0
+treasure 122 0 0 0 0 0 0 0 0
+treasure 123 0 0 0 0 0 0 0 0
+treasure 124 0 0 0 0 0 0 0 0
+treasure 125 0 0 0 0 0 0 0 0
+treasure 126 0 0 0 0 0 0 0 0
+treasure 127 0 0 0 0 0 0 0 0
+treasure 128 0 0 0 0 0 0 0 0
+treasure 129 0 0 0 0 0 0 0 0
+treasure 130 0 0 0 0 0 0 0 0
+treasure 131 0 0 0 0 0 0 0 0
+treasure 132 0 0 0 0 0 0 0 0
+treasure 133 0 0 0 0 0 0 0 0
+treasure 134 0 0 0 0 0 0 0 0
+treasure 135 0 0 0 0 0 0 0 0
+treasure 136 0 0 0 0 0 0 0 0
+treasure 137 0 0 0 0 0 0 0 0
+treasure 138 0 0 0 0 0 0 0 0
+treasure 139 0 0 0 0 0 0 0 0
+treasure 140 0 0 0 0 0 0 0 0
+treasure 141 0 0 0 0 0 0 0 0
+treasure 142 0 0 0 0 0 0 0 0
+treasure 143 0 0 0 0 0 0 0 0
+treasure 144 0 0 0 0 0 0 0 0
+treasure 145 0 0 0 0 0 0 0 0
+treasure 146 0 0 0 0 0 0 0 0
+treasure 147 0 0 0 0 0 0 0 0
+treasure 148 0 0 0 0 0 0 0 0
+treasure 149 0 0 0 0 0 0 0 0
+treasure 150 0 0 0 0 0 0 0 0
+treasure 151 0 0 0 0 0 0 0 0
+treasure 152 0 0 0 0 0 0 0 0
+treasure 153 0 0 0 0 0 0 0 0
+treasure 154 0 0 0 0 0 0 0 0
+treasure 155 0 0 0 0 0 0 0 0
+treasure 156 0 0 0 0 0 0 0 0
+treasure 157 0 0 0 0 0 0 0 0
+treasure 158 0 0 0 0 0 0 0 0
+treasure 159 0 0 0 0 0 0 0 0
+treasure 160 0 0 0 0 0 0 0 0
+treasure 161 0 0 0 0 0 0 0 0
+treasure 162 0 0 0 0 0 0 0 0
+treasure 163 0 0 0 0 0 0 0 0
+treasure 164 0 0 0 0 0 0 0 0
+treasure 165 0 0 0 0 0 0 0 0
+treasure 166 0 0 0 0 0 0 0 0
+treasure 167 0 0 0 0 0 0 0 0
+treasure 168 0 0 0 0 0 0 0 0
+treasure 169 0 0 0 0 0 0 0 0
+treasure 170 0 0 0 0 0 0 0 0
+treasure 171 0 0 0 0 0 0 0 0
+treasure 172 0 0 0 0 0 0 0 0
+treasure 173 0 0 0 0 0 0 0 0
+treasure 174 0 0 0 0 0 0 0 0
+treasure 175 0 0 0 0 0 0 0 0
+treasure 176 0 0 0 0 0 0 0 0
+treasure 177 0 0 0 0 0 0 0 0
+treasure 178 0 0 0 0 0 0 0 0
+treasure 179 0 0 0 0 0 0 0 0
+treasure 180 0 0 0 0 0 0 0 0
+treasure 181 0 0 0 0 0 0 0 0
+treasure 182 0 0 0 0 0 0 0 0
+treasure 183 0 0 0 0 0 0 0 0
+treasure 184 0 0 0 0 0 0 0 0
+treasure 185 0 0 0 0 0 0 0 0
+treasure 186 0 0 0 0 0 0 0 0
+treasure 187 0 0 0 0 0 0 0 0
+treasure 188 0 0 0 0 0 0 0 0
+treasure 189 0 0 0 0 0 0 0 0
+treasure 190 0 0 0 0 0 0 0 0
+treasure 191 0 0 0 0 0 0 0 0
+treasure 192 0 0 0 0 0 0 0 0
+treasure 193 0 0 0 0 0 0 0 0
+treasure 194 0 0 0 0 0 0 0 0
+treasure 195 0 0 0 0 0 0 0 0
+treasure 196 0 0 0 0 0 0 0 0
+treasure 197 0 0 0 0 0 0 0 0
+treasure 198 0 0 0 0 0 0 0 0
+treasure 199 0 0 0 0 0 0 0 0
+treasure 200 0 0 0 0 0 0 0 0
+start StartRoom=1 ReviveRoom=1 JailRoom=1
+special 4 Role=none Greeting="" Stock= Stagger= Trains=Fighter,Barbarian
+special 5 Role=none Greeting="" Stock= Stagger= Trains=Ranger
+special 6 Role=none Greeting="" Stock= Stagger= Trains=MagicUser
+special 7 Role=none Greeting="" Stock= Stagger= Trains=Cleric,Paladin
+special 8 Role=none Greeting="" Stock= Stagger= Trains=Thief
+special 9 Role=none Greeting="" Stock= Stagger= Trains=DM
+special 11 Role=store Greeting="Keeper: Basic supplies for careful travellers." Stock=1,2,3,4,5,6 Stagger= Trains=
+special 12 Role=smith Greeting="Smith: I can repair your worn equipment." Stock= Stagger= Trains=
+special 13 Role=bar Greeting="Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate." Stock= Stagger=1,2,10,13 Trains=
+special 14 Role=newsstand Greeting="Newskeeper: Read the road warnings before leaving town." Stock= Stagger= Trains=
+special 15 Role=pawnshop Greeting="Broker: Bring me your unwanted finds." Stock= Stagger= Trains=
+special 62 Role=none Greeting="A plaque reads: Practice locks first; then try the upper floors." Stock= Stagger= Trains=
+desc 1 1 Text="1/You are in Havenford Refuge. The square and guild signs are east./"
+desc 1 2 Text="1/You are in Havenford Square. Guilds north, shops south, North Gate east./"
+desc 1 3 Text="1/You are on Guild Street. Training halls flank the cobbled street./"
+desc 1 4 Text="1/You are in the Hall of Blades. Practice swords ring against shields./"
+desc 1 5 Text="1/You are in the Scout Lodge. Maps and unstrung bows cover the walls./"
+desc 1 6 Text="1/You are in the Academy of Sparks. Apprentices study quiet spells./"
+desc 1 7 Text="1/You are in the Lantern Chapel. The Graveward path leaves west./"
+desc 1 8 Text="1/You are in the Shadow School. Chalk marks outline a practice lock./"
+desc 1 9 Text="1/You are in the Hall of Stewards. Instructors teach worldcraft./"
+desc 1 10 Text="1/You are on Market Lane. A store lies east and a smithy west./"
+desc 2 1 Text="1/You are in the Provisioner. Food and basic gear fill wooden shelves./"
+desc 2 2 Text="1/You are in the Smithy. A friendly smith tests a repaired blade./"
+desc 2 3 Text="1/You are in the River Inn. Soup simmers in the common hearth./"
+desc 2 4 Text="1/You are at the Notice Kiosk. Fresh notices hang under an awning./"
+desc 2 5 Text="1/You are in the Exchange. A pawnbroker sorts simple trinkets./"
+desc 2 6 Text="1/You are in a public garden. The North Gate and the north road lie north./"
+desc 2 7 Text="1/You are at Havenford North Gate. Guards wave travellers through./"
+desc 2 8 Text="1/You are on a calm road past the city walls. Farms lie north./"
+desc 2 9 Text="1/You are at the orchard crossroads. The city is south./"
+desc 2 10 Text="1/You are beside a quiet orchard. No danger seems close./"
+desc 3 1 Text="1/You are on a sunlit farm track. A milestone points north./"
+desc 3 2 Text="1/You are at the Frontier Warning Post. Read the sign before north./"
+desc 3 3 Text="1/You are in the meadow margin. Small tracks cross the grass./"
+desc 3 4 Text="1/You are in the willow meadow. A stream divides the reeds./"
+desc 3 5 Text="1/You are on a ferny trail. Rustling comes from the undergrowth./"
+desc 3 6 Text="1/You are at a shallow ford. The far bank rises into wooded hills./"
+desc 3 7 Text="1/You are at the old charcoal kiln. Ash covers the clearing./"
+desc 3 8 Text="1/You are among the low pine hills. Broken stone walls emerge./"
+desc 3 9 Text="1/You are at an abandoned campsite. A cold pot rests by the fire./"
+desc 3 10 Text="1/You are beside the ruined mill. Its wheel creaks in the wind./"
+desc 4 1 Text="1/You are on the ridge path. The old watchtower is visible north./"
+desc 4 2 Text="1/You are in the bracken ravine. A narrow pass climbs east./"
+desc 4 3 Text="1/You are at the tower approach. Loose stones shift underfoot./"
+desc 4 4 Text="1/You are in the outer tower yard. A broken bell hangs overhead./"
+desc 4 5 Text="1/You are inside the watchtower. Stairs climb into shadow./"
+desc 4 6 Text="1/You are in the watchtower loft. Wind whistles through the roof./"
+desc 4 7 Text="1/You are at the hill shrine. Smooth stones line a dry spring./"
+desc 4 8 Text="1/You are on the western sheep path. The pasture is quiet./"
+desc 4 9 Text="1/You are in the sheep pasture. The farmer smiles from a distance./"
+desc 4 10 Text="1/You are in the guild library. Books explain the roads ahead./"
+desc 5 1 Text="1/You are on the eastern promenade. The garden is west, a yard north./"
+desc 5 2 Text="1/You are at the training yard. Straw dummies stand in rows. Exit south./"
+desc 6 1 Text="1/DANGER AHEAD! Monsters roam north of this post. Turn back if unready./"
+desc 6 2 Text="1/A kindly old caretaker gestures toward the nearby training halls./"
+desc 6 3 Text="1/A small rat snuffles among the roots./"
+desc 6 4 Text="1/A nervous crow hops from branch to branch./"
+desc 6 5 Text="1/A lean stray dog watches the path warily./"
+desc 6 6 Text="1/A fox with rust-colored fur stands in the grass./"
+desc 6 7 Text="1/A rough-looking highway thief grips a dull knife./"
+desc 6 8 Text="1/A battered skeleton stumbles through the ruined stones./"
+desc 6 9 Text="1/A hungry grey wolf peers from the brush./"
+desc 6 10 Text="1/An armored raider guards a crumbling stone passage./"
+desc 7 1 Text="1/A restless tower sentinel drags a dented spear./"
+desc 7 2 Text="1/A scarred bandit captain wears a faded blue cloak./"
+desc 7 3 Text="1/A carved wooden sign points south to the safety of Havenford./"
+desc 8 1 Text="1/You are in the Chapel Cloister. Graveward signs point west./"
+desc 8 2 Text="1/You are on the west pilgrim road. Quiet fields surround the path./"
+desc 8 3 Text="1/You are at the memorial garden. Names are carved on low stones./"
+desc 8 4 Text="1/You are at the Graveward Watch Post. The cemetery is west./"
+desc 8 5 Text="1/You stand at the Graveward Warning Gate. Read the posted warning./"
+desc 8 6 Text="1/You are among neglected graves. Loose bones shift in the soil./"
+desc 8 7 Text="1/You are on the cemetery path. A thin mist hangs above the stones./"
+desc 8 8 Text="1/You are beside an open grave. Something scrapes beneath the earth./"
+desc 8 9 Text="1/You are before an old mausoleum. Stone steps lead down./"
+desc 8 10 Text="1/You are in the mausoleum hall. Pale figures drift in the dark./"
+desc 9 1 Text="1/You are in the ossuary passage. Bone piles line the walls./"
+desc 9 2 Text="1/You are in the bone guard chamber. Ancient armor gleams faintly./"
+desc 9 3 Text="1/You are in the deepest crypt. A cold throne dominates the vault./"
+desc 9 4 Text="1/You are in a sealed side chapel. A silver bell hangs over an altar./"
+desc 9 5 Text="1/You are on the graveyard overlook. Havenford lies to the east./"
+desc 9 6 Text="1/UNDEAD AHEAD! West of this gate is unsafe. Clerics: return east to heal./"
+desc 9 7 Text="1/A brittle skeleton lurches forward with empty eye sockets./"
+desc 9 8 Text="1/A dim spirit wanders silently between the grave markers./"
+desc 9 9 Text="1/A grave guardian in rotted mail rises from the shadows./"
+desc 9 10 Text="1/A bone knight stands motionless with a notched sword./"
+desc 10 1 Text="1/A cold crypt wight points one skeletal finger at the living./"
+desc 10 2 Text="1/A votive silver token engraved with the chapel's sun emblem./"
+desc 10 3 Text="1/A polished shard of pale moonstone, cool in the palm./"
+desc 10 4 Text="1/A silver reliquary bearing a faded protective blessing./"
+desc 11 1 Text="1/You are on the south-west lane. A ruined keep rises beyond the fields./"
+desc 11 2 Text="1/You are on the old causeway. The keep stands to the west./"
+desc 11 3 Text="1/You are at the keep's warning board. The gate is west./"
+desc 11 4 Text="1/You stand in Lockspire courtyard. Entry to the keep lies west./"
+desc 11 5 Text="1/You are in the ground-floor entry. Practice corridors lead west./"
+desc 11 6 Text="1/You are in the novice lock hall. Two doors lead to practice chambers./"
+desc 11 7 Text="1/You are in the brass-lock chamber. A low chest rests on a bench./"
+desc 11 8 Text="1/You are in the needle-lock chamber. A chest bears a tiny keyhole./"
+desc 11 9 Text="1/You are at the first stairwell. Steps climb to the second floor./"
+desc 11 10 Text="1/You are on the second landing. A corridor runs west./"
+desc 12 1 Text="1/You are in the warded corridor. Faint holes mark the stonework./"
+desc 12 2 Text="1/You are in the old records room. Shelves surround a heavy chest./"
+desc 12 3 Text="1/You are in the armory vault. A steel-bound strongbox waits here./"
+desc 12 4 Text="1/You are at the second stairwell. Steps climb to the third floor./"
+desc 12 5 Text="1/You are on the third landing. Fine locks adorn two dark doors./"
+desc 12 6 Text="1/You are in the master lock hall. Dust outlines hidden trigger plates./"
+desc 12 7 Text="1/You are in the jewel chamber. A carved chest stands under a lamp./"
+desc 12 8 Text="1/You are in the artificer's treasury. Complex mechanisms hum softly./"
+desc 12 9 Text="1/You are at the roof stair. The final flight rises above./"
+desc 12 10 Text="1/You are on the battlement. The city and Graveward lie below./"
+desc 13 1 Text="1/You are in the crowning vault. A final chest awaits a master thief./"
+desc 13 2 Text="1/THIEVES: This keep has locks and traps. Every staircase stays open./"
+desc 13 3 Text="1/Begin with the first floor. Locks and trap risk rise as you climb./"
+desc 13 4 Text="1/A battered practice chest with a simple latch and blunt trap pin./"
+desc 13 5 Text="1/A narrow strongbox with carefully fitted brass mechanisms./"
+desc 13 6 Text="1/A reinforced coffer with hidden spring needles./"
+desc 13 7 Text="1/A steel vault chest engraved with winding geometric lines./"
+desc 13 8 Text="1/A jewel casket with a subtle pressure-release catch./"
+desc 13 9 Text="1/A masterwork clockwork chest with intricate internal tumblers./"
+desc 13 10 Text="1/A crown-shaped iron chest surrounded by concealed trigger slots./"
+desc 14 1 Text="1/You are on Scholar's Walk. A sign points west to the observatory./"
+desc 14 2 Text="1/You are in the arcane garden. Quiet lanterns float above the path./"
+desc 14 3 Text="1/You are at the novice colonnade. Lecture rooms stand east and south./"
+desc 14 4 Text="1/You are on the crystal causeway. The observatory looms west./"
+desc 14 5 Text="1/You are at the Aether Warning Gate. Danger lies north./"
+desc 14 6 Text="1/You are in the spark meadow. Weak magical motes flicker around you./"
+desc 14 7 Text="1/You are in the mirror thicket. Strange lights dart through the trees./"
+desc 14 8 Text="1/You stand before a shattered arch. Arcane echoes pulse beyond it./"
+desc 14 9 Text="1/You are in the broken observatory. Stairs spiral upward./"
+desc 14 10 Text="1/You are in the stargazer's loft. A broken telescope points skyward./"
+desc 15 1 Text="1/You are in the upper prism hall. Light scatters from cracked glass./"
+desc 15 2 Text="1/You are in the high aether chamber. Reality seems thin here./"
+desc 15 3 Text="1/You are in the spell library. Manuals teach safe magical practice./"
+desc 15 4 Text="1/You are in the darkened study. A lantern sits beside the door./"
+desc 15 5 Text="1/You are in the null-magic room. Enchantments fall silent here./"
+desc 15 6 Text="1/You are in the apprentice workshop. Test equipment covers the tables./"
+desc 15 7 Text="1/A small flickering mote drifts just above the ground./"
+desc 15 8 Text="1/A translucent sprite hums around a cluster of flowers./"
+desc 15 9 Text="1/A crackling spark elemental glows like a burning ember./"
+desc 15 10 Text="1/A shimmering mirror shade distorts the air around it./"
+desc 16 1 Text="1/A prismatic guardian stands between shards of colored glass./"
+desc 16 2 Text="1/A wild aether warden crackles with unstable magic./"
+desc 16 3 Text="1/DANGER AHEAD! Arcane creatures roam north. Return east to train./"
+desc 16 4 Text="1/A note reads: In the dark study, USE LANTERN. Magic fails in the null room./"
+desc 16 5 Text="1/An old apprentice's scroll, neatly marked with the heal spell./"
+desc 16 6 Text="1/A polished charm bearing the sigil of the observatory./"
+desc 16 7 Text="1/A blue crystal that pulses with stored energy./"
+desc 16 8 Text="1/A glass prism containing a faint sliver of starlight./"
+desc 16 9 Text="1/A brass lantern on a hook. USE it to light the study for a moment./"
+descs 17
+mlist 0 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 1 Name="rat,field *" Article=A DescRec=6 DescCode=3 AtkSpeed=0 AC=9 Hits=4 MaxHits=4 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=1 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=1 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 2 Name="crow,restless *" Article=A DescRec=6 DescCode=4 AtkSpeed=0 AC=9 Hits=5 MaxHits=5 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=1 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=1 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 3 Name="dog,stray *" Article=A DescRec=6 DescCode=5 AtkSpeed=1 AC=8 Hits=7 MaxHits=7 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=1 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 4 Name="fox,red *" Article=A DescRec=6 DescCode=6 AtkSpeed=1 AC=8 Hits=10 MaxHits=10 Lvl=2 Num=1 MReact=0 MParley=0 WhichObj=2 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=1 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 5 Name="thief,highway *" Article=A DescRec=6 DescCode=7 AtkSpeed=2 AC=7 Hits=14 MaxHits=14 Lvl=2 Num=1 MReact=0 MParley=0 WhichObj=2 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 6 Name="skeleton,brittle *" Article=A DescRec=6 DescCode=8 AtkSpeed=2 AC=6 Hits=16 MaxHits=16 Lvl=3 Num=1 MReact=0 MParley=0 WhichObj=2 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 7 Name="wolf,grey *" Article=A DescRec=6 DescCode=9 AtkSpeed=2 AC=6 Hits=18 MaxHits=18 Lvl=3 Num=1 MReact=0 MParley=0 WhichObj=2 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 8 Name="raider,armored *" Article=A DescRec=6 DescCode=10 AtkSpeed=3 AC=5 Hits=23 MaxHits=23 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=3 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 9 Name="sentinel,tower *" Article=A DescRec=7 DescCode=1 AtkSpeed=3 AC=5 Hits=26 MaxHits=26 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=3 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 10 Name="captain,bandit *" Article=A DescRec=7 DescCode=2 AtkSpeed=3 AC=4 Hits=32 MaxHits=32 Lvl=5 Num=1 MReact=0 MParley=0 WhichObj=3 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 11 Name="skeleton,shambling *" Article=A DescRec=9 DescCode=7 AtkSpeed=1 AC=8 Hits=7 MaxHits=7 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=4 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 12 Name="spirit,restless *" Article=A DescRec=9 DescCode=8 AtkSpeed=1 AC=7 Hits=11 MaxHits=11 Lvl=2 Num=1 MReact=0 MParley=0 WhichObj=4 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 13 Name="guardian,grave *" Article=A DescRec=9 DescCode=9 AtkSpeed=2 AC=6 Hits=17 MaxHits=17 Lvl=3 Num=1 MReact=0 MParley=0 WhichObj=5 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 14 Name="knight,bone *" Article=A DescRec=9 DescCode=10 AtkSpeed=2 AC=5 Hits=24 MaxHits=24 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=6 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 15 Name="wight,crypt *" Article=A DescRec=10 DescCode=1 AtkSpeed=3 AC=4 Hits=32 MaxHits=32 Lvl=5 Num=1 MReact=0 MParley=0 WhichObj=6 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 16 Name="mote,flickering *" Article=A DescRec=15 DescCode=7 AtkSpeed=0 AC=9 Hits=5 MaxHits=5 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=7 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=1 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 17 Name="sprite,glass *" Article=A DescRec=15 DescCode=8 AtkSpeed=1 AC=8 Hits=9 MaxHits=9 Lvl=2 Num=1 MReact=0 MParley=0 WhichObj=7 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 18 Name="elemental,spark *" Article=An DescRec=15 DescCode=9 AtkSpeed=2 AC=7 Hits=16 MaxHits=16 Lvl=3 Num=1 MReact=0 MParley=0 WhichObj=8 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 19 Name="shade,mirror *" Article=A DescRec=15 DescCode=10 AtkSpeed=2 AC=6 Hits=18 MaxHits=18 Lvl=3 Num=1 MReact=0 MParley=0 WhichObj=8 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 20 Name="guardian,prismatic *" Article=A DescRec=16 DescCode=1 AtkSpeed=2 AC=5 Hits=24 MaxHits=24 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=9 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 21 Name="warden,aether *" Article=A DescRec=16 DescCode=2 AtkSpeed=3 AC=4 Hits=30 MaxHits=30 Lvl=5 Num=1 MReact=0 MParley=0 WhichObj=9 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 22 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 23 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 24 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 25 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 26 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 27 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 28 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 29 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 30 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 31 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 32 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 33 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 34 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 35 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 36 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 37 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 38 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 39 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 40 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 41 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 42 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 43 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 44 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 45 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 46 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 47 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 48 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 49 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 50 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 51 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 52 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 53 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 54 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 55 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 56 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 57 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 58 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 59 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 60 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 61 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 62 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 63 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 64 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 65 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 66 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 67 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 68 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 69 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 70 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 71 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 72 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 73 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 74 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 75 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 76 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 77 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 78 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 79 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 80 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 81 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 82 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 83 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 84 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 85 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 86 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 87 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 88 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 89 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 90 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 91 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 92 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 93 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 94 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 95 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 96 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 97 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 98 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 99 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 100 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 101 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 102 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 103 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 104 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 105 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 106 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 107 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 108 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 109 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 110 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 111 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 112 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 113 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 114 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 115 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 116 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 117 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 118 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 119 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 120 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 121 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 122 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 123 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 124 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 125 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 126 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 127 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 128 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 129 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 130 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 131 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 132 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 133 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 134 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 135 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 136 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 137 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 138 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 139 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 140 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 141 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 142 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 143 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 144 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 145 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 146 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 147 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 148 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 149 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 150 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 151 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 152 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 153 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 154 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 155 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 156 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 157 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 158 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 159 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 160 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 161 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 162 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 163 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 164 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 165 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 166 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 167 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 168 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 169 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 170 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 171 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 172 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 173 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 174 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 175 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 176 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 177 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 178 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 179 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 180 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 181 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 182 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 183 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 184 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 185 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 186 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 187 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 188 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 189 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 190 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 191 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 192 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 193 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 194 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 195 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 196 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 197 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 198 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 199 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+mlist 200 Name="" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=0 Hits=0 MaxHits=0 Lvl=0 Num=0 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=0 Permanent=0 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
+olist 0 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 1 Name="dagger,*" Article=A Weight=2 Price=12 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=1 MaxHp=4 Strikes=100 WeaPlus=0 WeapType=1
+olist 2 Name="sword,practice *" Article=A Weight=4 Price=20 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=1 MaxHp=5 Strikes=110 WeaPlus=0 WeapType=0
+olist 3 Name="armor,leather *" Article=A Weight=14 Price=30 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Armor ArmPlus=1 ArmHits=65
+olist 4 Name="shield,wooden *" Article=A Weight=6 Price=15 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Shield ShPlus=1 ShHits=65
+olist 5 Name="scroll,healing *" Article=A Weight=1 Price=40 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=0 ObClass=Scroll Spell=2
+olist 6 Name="coins,copper *" Article=A Weight=1 Price=3 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Coins Multiplier=1
+olist 7 Name="coins,silver *" Article=A Weight=1 Price=14 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Coins Multiplier=1
+olist 8 Name="pouch,woven *" Article=A Weight=1 Price=28 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 9 Name="gem,blue *" Article=A Weight=1 Price=65 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 10 Name="blade,tempered *" Article=A Weight=5 Price=120 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=3 MaxHp=8 Strikes=130 WeaPlus=1 WeapType=0
+olist 11 Name="ring,amber *" Article=A Weight=1 Price=175 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=0 ObClass=Ring RSpell=14 RLevel=2
+olist 12 Name="relic,silver *" Article=A Weight=2 Price=340 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 13 Name="token,silver *" Article=A Weight=1 Price=18 DescCode=2 DescRec=10 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 14 Name="shard,moonstone *" Article=A Weight=1 Price=75 DescCode=3 DescRec=10 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 15 Name="mace,blessed *" Article=A Weight=5 Price=170 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=3 MaxHp=8 Strikes=120 WeaPlus=1 WeapType=2
+olist 16 Name="reliquary,silver *" Article=A Weight=2 Price=300 DescCode=4 DescRec=10 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 17 Name="token,copper *" Article=A Weight=1 Price=20 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 18 Name="clasp,silver *" Article=A Weight=1 Price=75 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 19 Name="brooch,gold *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 20 Name="crystal,prismatic *" Article=A Weight=1 Price=360 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 21 Name="diadem,ancient *" Article=An Weight=2 Price=650 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 22 Name="scroll,apprentice *" Article=A Weight=1 Price=45 DescCode=5 DescRec=16 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=0 ObClass=Scroll Spell=2
+olist 23 Name="charm,etched *" Article=A Weight=1 Price=40 DescCode=6 DescRec=16 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 24 Name="crystal,azure *" Article=A Weight=1 Price=120 DescCode=7 DescRec=16 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 25 Name="prism,starlight *" Article=A Weight=1 Price=300 DescCode=8 DescRec=16 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+olist 26 Name="wand,spark *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=3 NumCharges=3 MLevel=2
+olist 27 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 28 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 29 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 30 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 31 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 32 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 33 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 34 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 35 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 36 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 37 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 38 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 39 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 40 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 41 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 42 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 43 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 44 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 45 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 46 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 47 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 48 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 49 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 50 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 51 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 52 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 53 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 54 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 55 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 56 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 57 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 58 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 59 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 60 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 61 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 62 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 63 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 64 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 65 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 66 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 67 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 68 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 69 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 70 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 71 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 72 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 73 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 74 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 75 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 76 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 77 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 78 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 79 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 80 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 81 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 82 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 83 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 84 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 85 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 86 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 87 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 88 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 89 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 90 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 91 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 92 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 93 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 94 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 95 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 96 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 97 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 98 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 99 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 100 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 101 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 102 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 103 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 104 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 105 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 106 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 107 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 108 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 109 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 110 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 111 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 112 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 113 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 114 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 115 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 116 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 117 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 118 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 119 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 120 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 121 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 122 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 123 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 124 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 125 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 126 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 127 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 128 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 129 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 130 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 131 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 132 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 133 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 134 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 135 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 136 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 137 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 138 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 139 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 140 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 141 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 142 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 143 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 144 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 145 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 146 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 147 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 148 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 149 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 150 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 151 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 152 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 153 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 154 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 155 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 156 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 157 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 158 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 159 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 160 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 161 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 162 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 163 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 164 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 165 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 166 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 167 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 168 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 169 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 170 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 171 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 172 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 173 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 174 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 175 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 176 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 177 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 178 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 179 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 180 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 181 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 182 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 183 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 184 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 185 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 186 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 187 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 188 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 189 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 190 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 191 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 192 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 193 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 194 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 195 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 196 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 197 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 198 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 199 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+olist 200 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
+room 1 Adjoin=0,0,2,0,0,0 Out=0 DescRec=1 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 2 Adjoin=3,10,16,1,0,0 Out=0 DescRec=1 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 3 Adjoin=6,2,5,4,0,0 Out=0 DescRec=1 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 4 Adjoin=7,0,3,0,0,0 Out=0 DescRec=1 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 5 Adjoin=0,0,0,3,0,0 Out=0 DescRec=1 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 6 Adjoin=0,3,9,79,0,0 Out=0 DescRec=1 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 7 Adjoin=8,4,0,43,0,0 Out=0 DescRec=1 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 8 Adjoin=40,7,0,0,0,0 Out=0 DescRec=1 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 9 Adjoin=0,0,0,6,0,0 Out=0 DescRec=1 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 10 Adjoin=2,13,11,12,0,0 Out=0 DescRec=1 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 11 Adjoin=0,0,0,10,0,0 Out=0 DescRec=2 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 12 Adjoin=0,0,10,0,0,0 Out=0 DescRec=2 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 13 Adjoin=10,0,14,15,0,0 Out=0 DescRec=2 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 14 Adjoin=0,0,0,13,0,0 Out=0 DescRec=2 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 15 Adjoin=0,58,13,0,0,0 Out=0 DescRec=2 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 16 Adjoin=17,0,41,2,0,0 Out=0 DescRec=2 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 17 Adjoin=18,16,0,0,0,0 Out=0 DescRec=2 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 17 obj 1 Name="sign,direction *" Article=A Weight=100 Price=0 DescCode=3 DescRec=7 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 18 Adjoin=19,17,0,0,0,0 Out=0 DescRec=2 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 19 Adjoin=21,18,20,38,0,0 Out=0 DescRec=2 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 20 Adjoin=0,0,0,19,0,0 Out=0 DescRec=2 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 21 Adjoin=22,19,0,0,0,0 Out=0 DescRec=3 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 22 Adjoin=23,21,0,0,0,0 Out=0 DescRec=3 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 22 obj 1 Name="sign,warning *" Article=A Weight=100 Price=0 DescCode=1 DescRec=6 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 23 Adjoin=24,22,0,0,0,0 Out=0 DescRec=3 DescCode=3 WhichEncounter=1 EncounterTime=100 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 24 Adjoin=25,23,0,0,0,0 Out=0 DescRec=3 DescCode=4 WhichEncounter=1 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 25 Adjoin=26,24,0,0,0,0 Out=0 DescRec=3 DescCode=5 WhichEncounter=1 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 26 Adjoin=27,25,0,0,0,0 Out=0 DescRec=3 DescCode=6 WhichEncounter=1 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 27 Adjoin=28,26,0,0,0,0 Out=0 DescRec=3 DescCode=7 WhichEncounter=1 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 28 Adjoin=29,27,0,32,0,0 Out=0 DescRec=3 DescCode=8 WhichEncounter=2 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 29 Adjoin=30,28,0,0,0,0 Out=0 DescRec=3 DescCode=9 WhichEncounter=2 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 30 Adjoin=31,29,0,0,0,0 Out=0 DescRec=3 DescCode=10 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 31 Adjoin=33,30,0,0,0,0 Out=0 DescRec=4 DescCode=1 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 32 Adjoin=0,0,28,37,0,0 Out=0 DescRec=4 DescCode=2 WhichEncounter=2 EncounterTime=50 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 33 Adjoin=34,31,0,0,0,0 Out=0 DescRec=4 DescCode=3 WhichEncounter=3 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 34 Adjoin=35,33,0,0,0,0 Out=0 DescRec=4 DescCode=4 WhichEncounter=3 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 35 Adjoin=0,34,0,0,36,0 Out=0 DescRec=4 DescCode=5 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 36 Adjoin=0,0,0,0,0,35 Out=0 DescRec=4 DescCode=6 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 37 Adjoin=0,0,32,0,0,0 Out=0 DescRec=4 DescCode=7 WhichEncounter=2 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 38 Adjoin=0,0,19,39,0,0 Out=0 DescRec=4 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 39 Adjoin=0,0,38,0,0,0 Out=0 DescRec=4 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 40 Adjoin=0,8,0,0,0,0 Out=0 DescRec=4 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 41 Adjoin=42,0,0,16,0,0 Out=0 DescRec=5 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 42 Adjoin=0,41,0,0,0,0 Out=0 DescRec=5 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 43 Adjoin=0,0,7,44,0,0 Out=0 DescRec=8 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 44 Adjoin=0,0,43,45,0,0 Out=0 DescRec=8 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 45 Adjoin=0,0,44,46,0,0 Out=0 DescRec=8 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 46 Adjoin=0,0,45,47,0,0 Out=0 DescRec=8 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 47 Adjoin=0,0,46,48,0,0 Out=0 DescRec=8 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 47 obj 1 Name="sign,graveward *" Article=A Weight=100 Price=0 DescCode=6 DescRec=9 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 48 Adjoin=0,0,47,49,0,0 Out=0 DescRec=8 DescCode=6 WhichEncounter=4 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 49 Adjoin=56,0,48,50,0,0 Out=0 DescRec=8 DescCode=7 WhichEncounter=4 EncounterTime=95 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 50 Adjoin=0,0,49,51,0,0 Out=0 DescRec=8 DescCode=8 WhichEncounter=4 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 51 Adjoin=0,0,50,0,0,52 Out=0 DescRec=8 DescCode=9 WhichEncounter=5 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 52 Adjoin=0,0,0,53,51,0 Out=0 DescRec=8 DescCode=10 WhichEncounter=5 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 53 Adjoin=0,55,52,54,0,0 Out=0 DescRec=9 DescCode=1 WhichEncounter=5 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 54 Adjoin=0,0,53,57,0,0 Out=0 DescRec=9 DescCode=2 WhichEncounter=6 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 55 Adjoin=53,0,0,0,0,0 Out=0 DescRec=9 DescCode=4 WhichEncounter=5 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 56 Adjoin=0,49,0,0,0,0 Out=0 DescRec=9 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 57 Adjoin=0,0,54,0,0,0 Out=0 DescRec=9 DescCode=3 WhichEncounter=6 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 58 Adjoin=15,0,0,59,0,0 Out=0 DescRec=11 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 59 Adjoin=0,0,58,60,0,0 Out=0 DescRec=11 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 60 Adjoin=0,0,59,61,0,0 Out=0 DescRec=11 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 60 obj 1 Name="sign,lockspire *" Article=A Weight=100 Price=0 DescCode=2 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 61 Adjoin=0,0,60,62,0,0 Out=0 DescRec=11 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 62 Adjoin=0,0,61,63,0,0 Out=0 DescRec=11 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 63 Adjoin=0,0,62,65,0,0 Out=0 DescRec=11 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 63 obj 1 Name="door,brass *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=64 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=101
+room 63 obj 2 Name="door,needle *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=76 DClosed=1 DSpring=0 DToll=0 DTrap=2 DLocked=102
+room 64 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 64 obj 1 Name="door,brass *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=63 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=101
+room 64 obj 2 Name="chest,practice *" Article=A Weight=100 Price=0 DescCode=4 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=1 Locked=102 NumInside=1
+room 64 obj 2.1 Name="token,copper *" Article=A Weight=1 Price=20 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 65 Adjoin=0,0,63,0,66,0 Out=0 DescRec=11 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 66 Adjoin=0,0,0,67,0,65 Out=0 DescRec=11 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 67 Adjoin=0,0,66,69,0,0 Out=0 DescRec=12 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 67 obj 1 Name="door,records *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=68 DClosed=1 DSpring=0 DToll=0 DTrap=5 DLocked=204
+room 67 obj 2 Name="door,armory *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=77 DClosed=1 DSpring=0 DToll=0 DTrap=8 DLocked=205
+room 68 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 68 obj 1 Name="door,records *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=67 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=204
+room 68 obj 2 Name="chest,records *" Article=A Weight=100 Price=0 DescCode=5 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=8 Locked=205 NumInside=1
+room 68 obj 2.1 Name="clasp,silver *" Article=A Weight=1 Price=75 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 69 Adjoin=0,0,67,0,70,0 Out=0 DescRec=12 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 70 Adjoin=0,0,0,71,0,69 Out=0 DescRec=12 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 71 Adjoin=0,0,70,73,0,0 Out=0 DescRec=12 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 71 obj 1 Name="door,jewel *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=72 DClosed=1 DSpring=0 DToll=0 DTrap=11 DLocked=307
+room 71 obj 2 Name="door,artificer *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=78 DClosed=1 DSpring=0 DToll=0 DTrap=12 DLocked=308
+room 72 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 72 obj 1 Name="door,jewel *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=71 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=307
+room 72 obj 2 Name="chest,jewel *" Article=A Weight=100 Price=0 DescCode=8 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=16 Locked=308 NumInside=1
+room 72 obj 2.1 Name="brooch,gold *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 73 Adjoin=0,0,71,0,74,0 Out=0 DescRec=12 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 74 Adjoin=0,0,0,0,0,73 Out=0 DescRec=12 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 74 obj 1 Name="door,crowning *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=75 DClosed=1 DSpring=0 DToll=0 DTrap=18 DLocked=409
+room 75 Adjoin=0,0,0,0,0,0 Out=0 DescRec=13 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 75 obj 1 Name="door,crowning *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=74 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=409
+room 75 obj 2 Name="chest,crown *" Article=A Weight=100 Price=0 DescCode=10 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=19 Locked=409 NumInside=1
+room 75 obj 2.1 Name="diadem,ancient *" Article=An Weight=2 Price=650 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 76 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 76 obj 1 Name="door,needle *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=63 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=102
+room 76 obj 2 Name="chest,needle *" Article=A Weight=100 Price=0 DescCode=5 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=3 Locked=103 NumInside=1
+room 76 obj 2.1 Name="token,copper *" Article=A Weight=1 Price=30 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 77 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 77 obj 1 Name="door,armory *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=67 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=205
+room 77 obj 2 Name="chest,armory *" Article=A Weight=100 Price=0 DescCode=6 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=12 Locked=206 NumInside=1
+room 77 obj 2.1 Name="brooch,gold *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 78 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 78 obj 1 Name="door,artificer *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=71 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=308
+room 78 obj 2 Name="chest,clockwork *" Article=A Weight=100 Price=0 DescCode=9 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=17 Locked=309 NumInside=1
+room 78 obj 2.1 Name="crystal,prismatic *" Article=A Weight=1 Price=360 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
+room 79 Adjoin=0,0,6,80,0,0 Out=0 DescRec=14 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 80 Adjoin=81,93,79,0,0,0 Out=0 DescRec=14 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 81 Adjoin=0,80,91,82,0,0 Out=0 DescRec=14 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 82 Adjoin=0,92,81,83,0,0 Out=0 DescRec=14 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 83 Adjoin=84,0,82,0,0,0 Out=0 DescRec=14 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 83 obj 1 Name="sign,aether *" Article=A Weight=100 Price=0 DescCode=3 DescRec=16 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 84 Adjoin=85,83,0,0,0,0 Out=0 DescRec=14 DescCode=6 WhichEncounter=7 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 85 Adjoin=0,84,0,86,0,0 Out=0 DescRec=14 DescCode=7 WhichEncounter=7 EncounterTime=90 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 86 Adjoin=87,0,85,0,0,0 Out=0 DescRec=14 DescCode=8 WhichEncounter=8 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 87 Adjoin=0,86,0,0,88,0 Out=0 DescRec=14 DescCode=9 WhichEncounter=8 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 88 Adjoin=0,0,0,0,89,87 Out=0 DescRec=14 DescCode=10 WhichEncounter=8 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 89 Adjoin=0,0,0,0,90,88 Out=0 DescRec=15 DescCode=1 WhichEncounter=9 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 90 Adjoin=0,0,0,0,0,89 Out=0 DescRec=15 DescCode=2 WhichEncounter=9 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 91 Adjoin=0,94,0,81,0,0 Out=0 DescRec=15 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 91 obj 1 Name="sign,lessons *" Article=A Weight=100 Price=0 DescCode=4 DescRec=16 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
+room 92 Adjoin=82,0,0,0,0,0 Out=0 DescRec=15 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=1 Dark=0
+room 93 Adjoin=80,0,0,0,0,0 Out=0 DescRec=15 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 93 obj 1 Name="scroll,apprentice *" Article=A Weight=1 Price=45 DescCode=5 DescRec=16 Carry=1 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=Scroll Spell=2
+room 94 Adjoin=91,0,0,0,0,0 Out=0 DescRec=15 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=1
+room 94 obj 1 Name="lantern,brass *" Article=A Weight=3 Price=0 DescCode=9 DescRec=16 Carry=0 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=23 NumCharges=127 MLevel=0
+rooms 2000 shown 94
+players 0

@@ -199,6 +199,21 @@ int StaggerRoom(int WRm)
 	return p && p->NStagger ? p->Stagger[Rnd(p->NStagger) - 1] : StartRoom;
 }
 
+/* Room *Item* (1-based) of the rooms a drunk staggers to from *WRm*. */
+int StaggerItem(int WRm, int Item)
+{
+	SpecialType	*p = Find(WRm);
+
+	return p && Item >= 1 && Item <= p->NStagger ? p->Stagger[Item - 1] : 0;
+}
+
+int StaggerCount(int WRm)
+{
+	SpecialType	*p = Find(WRm);
+
+	return p ? p->NStagger : 0;
+}
+
 int TrainsClass(int WRm, ChType Class)
 {
 	SpecialType	*p = Find(WRm);

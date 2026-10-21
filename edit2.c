@@ -754,9 +754,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 
 	GetWord(Dummy, &Line);
 
-	SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-	Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
-	CurrentRec = Found ? Rec : 0;
+	Found = ReadDesc(Rec);
 
 	switch (EditCmd)
 	{

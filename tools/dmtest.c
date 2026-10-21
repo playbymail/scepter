@@ -1131,6 +1131,129 @@ static void Test120(void)
 	Check(User->Entry != XParley, "and doesn't wait for an answer");
 }
 
+/* Template Index from OList, put at the front of List */
+static ObjectPoint Add(int Index, ObjectPoint List)
+{
+	ObjectPoint	Obj = NewOList(Index);
+
+	if (!Obj)
+		Abort(" dmtest: no such object template.");
+	Obj->Next = List;
+	return Obj;
+}
+
+/*
+ * #146: a game in use, for the golden dump (tools/dumptest.py).  Rooms in
+ * more segments than the cache holds get objects, chests and monsters, so
+ * some are saved by a segment swap and the rest by UpdateF().  Room 940's
+ * records are deleted after room 1949's collided past them.  Characters
+ * are saved, renamed and deleted, and templates, a description, the
+ * tables and the settings are edited.  The clock and the dice are fixed,
+ * so the result is the same every time.
+ */
+static void Test146(void)
+{
+	UserPoint		Alice, Bob, Carol, Dave;
+	Alfa			Eve = "Eve";		/* ChangeUsrName() capitalises it */
+	MonsterPoint	Mon;
+	RoomType		*R;
+	int				Rm, I;
+
+	SetRandom(146, 146);
+	Today = 10 << 7 | 21;		/* 21 October */
+
+	/* rooms: a swap writes some segments, UpdateF() the rest */
+	R = &Room[S(900)];
+	R->RmObjectTail = List(NewObj("rock", Misc, NULL),
+						   Box("a", "sword"), Box("b", NULL), NULL);
+	R->RmObjectTail->Next->Object.Chest.ObjectTail =
+		Add(3, Add(6, R->RmObjectTail->Next->Object.Chest.ObjectTail));
+	R->RmObjectTail->Next->Next->Next = Add(7, Add(10, NULL));
+	Mon = NewMon("rat", 901);
+	Mon->ObjectTail = Add(2, Add(11, NULL));
+	if (!(Mon = NewMList(1)))
+		Abort(" dmtest: no MList 1.");
+	InsertMonster(Mon, S(901));
+	Mon->ObjectTail = Add(12, NULL);
+	for (Rm = 1000; Rm <= 1150; Rm += 10)
+	{
+		char	Name[21];
+
+		snprintf(Name, sizeof(Name), "pebble %d", Rm);
+		R = &Room[S(Rm)];
+		R->RmObjectTail = NewObj(Name, Misc, NULL);
+	}
+
+	/* 940 and 1949 = 940 + 1009 hash to the same slot */
+	Room[S(940)].RmObjectTail = NewObj("rock", Misc, NULL);
+	NewMon("bat", 940);
+	Room[S(1949)].RmObjectTail = NewObj("gem", Misc, NULL);
+	NewMon("owl", 1949);
+	UpdateF();
+	R = &Room[S(940)];
+	FreeList(R->RmObjectTail);
+	R->RmObjectTail = NULL;
+	Destroy(R->RmMonsterTail);
+	R->RmMonsterTail = NULL;
+
+	/* the DM editor */
+	Capture();
+	EditLine("modify room 902 n=903 ou=7 dr=2 di=1 en=3 et=40 sa=t da=t");
+	EditLine("modify mlist 1 hi=30 mh=31 lv=3 fl=t");
+	EditLine("modify olist 2 we=7 va=99 wp=2 cu=t");
+	EditLine("create description 7");
+	EditLine("modify elist 4 1 2 3 0 0 0 0 0");
+	EditLine("modify tlist 5 4 5 6 0 0 0 0 0");
+	EnterLine(2, 1, "1/You are somewhere new./");
+	EnterLine(7, 3, "2/A first phrase./A second phrase./");
+	Check(strstr(Captured(), "MList modified.") != NULL
+		  || strstr(Captured(), "EDesc record created.") != NULL,
+		  "the editor takes the changes");
+
+	/* settings */
+	strcpy(Notice, "The dump test was here.");
+	strcpy(NewsBuf[2], "Extra! \"Quoted\" news.");
+	TLvl[1] = 5;
+	strcpy(TName[1], "Alice");
+	strcpy(TClass[1], "Fighter");
+	strcpy(TBuf[1], "Alice slew the wolf.");
+	MSpeed = 6;
+
+	/* characters */
+	Alice = Another("Alice", 2);
+	Alice->USWeap = Alice->ObjectTail = Add(2, Alice->ObjectTail);
+	Alice->USArm = Alice->ObjectTail = Add(3, Alice->ObjectTail);
+	Alice->USRingL = Alice->ObjectTail = Add(9, Alice->ObjectTail);
+	Alice->ObjectTail = Add(6, Alice->ObjectTail);
+	Alice->Experience = 1234;
+	Alice->Money = 567;
+	Alice->Lvl = 3;
+	Alice->It = Alice->Brief = TRUE;
+	Alice->Spells = 0x1234;
+	WritePlayer(Alice);
+
+	Bob = Another("Bob", 3);
+	Bob->Sex = Female;
+	Bob->ObjectTail = Box("box,small *", "jewel");
+	for (I = 0; I < 11; I++)			/* only the first ten are saved */
+		Bob->ObjectTail = Add(1 + I % 3, Bob->ObjectTail);
+	Bob->USShield = Bob->ObjectTail = Add(6, Bob->ObjectTail);
+	WritePlayer(Bob);
+
+	Carol = Another("Carol", 4);
+	WritePlayer(Carol);
+	DeleteUsr("Carol");
+	Dave = Another("Dave", 5);
+	strcpy(Dave->PWHash, LockedPW);
+	WritePlayer(Dave);
+	ChangeUsrName("Dave", Eve);
+
+	UpdateF();
+	Check(PlayerOnFile("Alice") && PlayerOnFile("Bob") && PlayerOnFile("Eve")
+		  && !PlayerOnFile("Carol") && !PlayerOnFile("Dave"),
+		  "Alice, Bob and Eve are saved");
+}
+
 /* Save a 2nd-level character Name with password PassWord */
 static void Player(char *Name, char *PassWord)
 {
@@ -1153,7 +1276,7 @@ int main(int argc, char **argv)
 		{"38", Test38}, {"27", Test27}, {"45", Test45}, {"34", Test34},
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
-		{"50", Test50}, {"121", Test121},
+		{"50", Test50}, {"121", Test121}, {"146", Test146},
 	};
 	int		I;
 

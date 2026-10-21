@@ -45,6 +45,22 @@ int PlayerOnFile(char *Name)
 	return Found;
 }
 
+/* Copy the name of the Nth (from 0) saved player to Name; FALSE if none */
+int PlayerName(int N, char *Name)
+{
+	int		Found = FALSE;
+
+	OpenPer();
+	while (!Found && fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
+		if (*UserFRec.User.Name && N-- == 0)
+		{
+			strcpy(Name, UserFRec.User.Name);
+			Found = TRUE;
+		}
+	ClosePer();
+	return Found;
+}
+
 void ReadPlayer(UserPoint Player, char *Name)
 {
 	if (SearchPlFile(Name))

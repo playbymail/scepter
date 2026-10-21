@@ -99,3 +99,22 @@ alone.  To undo an upgrade, stop the server and put the backup back in place
 of the game directory.
 
 `make check-data` tests all of this.
+
+## Dumping a game
+
+`dumpgame GAMEDIR` (`make dumpgame`) prints everything a game has saved as
+text, one record per line with each field named as in `scepter.h`:
+settings, the encounter and treasure tables, special rooms, descriptions,
+templates, rooms and what is in them, and characters.  It reads the game
+through the engine's own functions, as `scepterd` would, and changes
+nothing.  Fields that matter only during play are left out, and a
+password hash is shown only as `present`, `locked` or `empty`.
+
+`make check-dump` (`tools/dumptest.py`) dumps three games and compares
+them with `tools/dumps/` byte for byte: fresh games of `alpha` and
+`havenford`, and an `alpha` game in use, which `dmtest GAMEDIR 146` fills
+with objects, chests, monsters, characters and editor changes.  It also
+fails if a saved struct field is missing from the dumps.  The move to
+SQLite (#71) must keep these dumps exactly as they are.  After a change to
+a world file, or a deliberate change to what is saved, rewrite them with
+`python3 -I tools/dumptest.py --update` and say why in the pull request.
