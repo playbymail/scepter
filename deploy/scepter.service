@@ -1,7 +1,7 @@
 # Install as /etc/systemd/system/scepter.service. See docs/deploy.md.
 
 [Unit]
-Description=Scepter of Goth, the QNX server ported to Linux, for telnet and MUD clients
+Description=Sceptish, a multi-user role-playing game for telnet and MUD clients
 Documentation=https://github.com/playbymail/scepter
 After=network-online.target
 Wants=network-online.target

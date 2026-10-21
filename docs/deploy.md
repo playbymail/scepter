@@ -7,7 +7,7 @@ both point at the droplet; the second is the Tsogira web app's site.
 
 The droplet also runs two Go web applications, `dolpher` (127.0.0.1:8080)
 and `tsogira` (127.0.0.1:8081), behind Caddy on ports 80 and 443.  The
-Scepter server doesn't share anything with them: it has its own user,
+Sceptish server doesn't share anything with them: it has its own user,
 directory and unit.  Caddy proxies HTTP, and telnet isn't HTTP, so Caddy
 only serves the game's web site (see below).
 

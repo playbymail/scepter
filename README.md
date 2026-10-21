@@ -1,16 +1,33 @@
-# Scepter of Goth
+# Sceptish
 
-Scepter of Goth (also known as Milieu) is a multi-user role-playing game
-written in C.  This version was ported from Pascal to C in the mid-1980s to
-run on QNX.  Thanks to Shawn P. Stanley for supplying the source.
+Sceptish is a multi-user role-playing game for macOS and Linux, played with a
+MUD client or `telnet`.  It is a modern implementation inspired by *Scepter
+of Goth* (also known as *Milieu*), an early multi-user fantasy role-playing
+game; David Wheeler's [history of Scepter of
+Goth](https://dwheeler.com/scepter-of-goth/scepter-of-goth.html) tells its
+story.
 
-This repository ports that game to macOS and Linux:
+## History
 
-- `qnx/` holds the QNX sources exactly as they were received.  Nothing in it
-  is ever changed; it is the reference for how the game behaved.
-- The top level is the port: `scepterd` (the server, with its own telnet
-  front end), `mkgame` (builds a game from a world file) and `upgradegame`
-  (brings a game's database up to a newer schema).
+Sceptish grew from a set of QNX C files once circulated as Scepter of Goth's
+source.  Thanks to Shawn P. Stanley for supplying them.  The original author
+has [stated](https://github.com/shelches/scepter/issues/4#issue-1581465382)
+that they are not the original 1984 QNX source of the game, but a partial
+reimplementation written without access to it.  Sceptish is therefore not
+the original Scepter of Goth, nor a restoration of it: it is our own
+implementation.
+
+**We maintain Sceptish, and we alone are responsible for its code, changes,
+behaviour, bugs and other shortcomings.**  None of them should be attributed
+to the original author, who didn't write Sceptish.
+
+## This repository
+
+- `qnx/` holds the QNX files exactly as they were received.  Nothing in it
+  is ever changed; it is the reference for how those files behaved.
+- The top level is Sceptish, ported from them: `scepterd` (the server, with
+  its own telnet front end), `mkgame` (builds a game from a world file) and
+  `upgradegame` (brings a game's database up to a newer schema).
 
 ## Build
 
@@ -40,16 +57,15 @@ Then connect a MUD client or `telnet` to `127.0.0.1` port 4000.
 - [var/havenford/README.md](var/havenford/README.md): Havenford, the beta
   test and tutorial world
 
-## Departures from the original
+## Departures from the QNX files
 
-The port tries to play like the QNX game.  Bug fixes, tracked as GitHub
-issues, change behaviour only where the original crashed, corrupted memory
+Sceptish tries to play like the QNX files.  Bug fixes, tracked as GitHub
+issues, change behaviour only where the QNX code crashed, corrupted memory
 or could be abused.
 
-**Passwords are the first deliberate break with the original source**
-(#82).  The original stored a weighted sum of a password's capitalised
-letters.  It ignored case, allowed only one word of up to 10 letters, and
-let many different passwords open the same character.  The port instead:
+**Passwords are the first deliberate break with the QNX files** (#82).
+They stored a weighted sum of a password's capitalised letters.  It ignored case, allowed only one word of up to 10 letters, and
+let many different passwords open the same character.  Sceptish instead:
 
 - stores a bcrypt hash made by the system's libxcrypt, the game's first
   dependency beyond the C library;

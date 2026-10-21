@@ -1,6 +1,6 @@
 # World file format
 
-A world file is the text source for a Scepter world. `mkgame` compiles it
+A world file is the text source for a Sceptish world. `mkgame` compiles it
 into the data files for a new game:
 
 ```sh
@@ -62,7 +62,7 @@ key = value
 | `news-1` … `news-5` | lines in the newspaper |
 | `start-room` | where new characters start (default 1) |
 | `revive-room` | where dead characters revive (default: the start room) |
-| `jail-room` | where guards take a player who attacks a monster with `assistance` (default: the start room). This is disabled in the original source (`USEJAIL` in `cmd2.c`/`cmd3.c`), so it currently has no effect. |
+| `jail-room` | where guards take a player who attacks a monster with `assistance` (default: the start room). This is disabled in the QNX files (`USEJAIL` in `cmd2.c`/`cmd3.c`), so it currently has no effect. |
 
 ## `[area N]`, N = 1…255
 
@@ -168,7 +168,7 @@ These keys apply to every kind:
 | `desc` | `R:L` |
 
 Flags: `carry`, `magic`, `permanent`, `invisible`, `cursed`.  `cursed`
-is stored but has no effect in the game, as in the original.
+is stored but has no effect in the game, as in the QNX files.
 
 | `kind` | Keys |
 |---|---|
