@@ -73,11 +73,13 @@ dmtest: $(DMOBJS)
 tools/dmtest.o: tools/dmtest.c main.c common.h scepter.h proto.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmtest.c -o $@
 
-# Each world file must match its JSON copy (tools/worldjson.py).
-check-worlds:
+# Each world file must match its JSON copy (tools/worldjson.py), and mkgame
+# must check areas and coordinates (tools/worldtest.py).
+check-worlds: mkgame
 	@for w in var/*/*.world; do \
 		python3 tools/worldjson.py check $$w $$(dirname $$w)/world.json || exit 1; \
 	done
+	python3 -I tools/worldtest.py ./mkgame var/alpha/alpha.world
 
 # Telnet front end tests over raw sockets (tools/nettest.py).
 check-net: scepterd mkgame

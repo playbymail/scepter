@@ -23,6 +23,9 @@
 #define	MaxRoom		(NumSegsInit * 10 - 1)
 #define	MaxDesc		255					/* DescRec is a uchar */
 #define	DBSize		1009				/* db.c: hash table size */
+#define	MaxArea		255
+#define	AreaNameLen	60
+#define	MaxCoord	999
 
 typedef struct ONode
 {
@@ -51,6 +54,10 @@ typedef struct
 	int		NStock, Stock[20], StockLine;
 	int		NStagger, Stagger[20], StaggerLine;
 	unsigned	Trains;
+
+	/* map position (#141): checked, but not yet stored in the game */
+	int		Area, AreaLine;
+	int		HasXYZ, XYZLine, X, Y, Z;
 } RoomDef;
 
 static const char	*RoleNames[] =
@@ -68,6 +75,10 @@ static char		WNews[5][256];
 static char		Desc[MaxDesc + 1][StrPerSeg][80];
 static int		DescDefined[MaxDesc + 1];
 static int		MaxDescRec;
+
+static char		AreaName[MaxArea + 1][AreaNameLen + 1];
+static int		AreaDefined[MaxArea + 1], AreaLine[MaxArea + 1];
+static int		AreaNamed[MaxArea + 1];
 
 static RoomDef	Rooms[MaxRoom + 1];
 static int		MaxRoomDefined;
@@ -87,7 +98,7 @@ static int			LineNo;
 static int			Errors, Warnings;
 
 /* the block currently being filled */
-static enum { BNone, BWorld, BDesc, BRoom, BMon, BObj, BEnc, BTre, BSkip } Block;
+static enum { BNone, BWorld, BDesc, BArea, BRoom, BMon, BObj, BEnc, BTre, BSkip } Block;
 static int			BlockId;
 static RoomType		*CurRoom;
 static MonsterType	*CurMon;
@@ -284,6 +295,26 @@ static void DescKey(char *k, char *v)
 		strcpy(Desc[BlockId][Line - 1], v);
 }
 
+static void AreaKey(char *k, char *v)
+{
+	const char	*p;
+
+	if (strcmp(k, "name"))
+	{
+		Err("unknown area key '%s'", k);
+		return;
+	}
+	AreaNamed[BlockId] = TRUE;
+	for (p = v; *p && isprint((unsigned char)*p); p++)
+		;
+	if (*p)
+		Err("area name must be printable ASCII");
+	else if (strlen(v) > AreaNameLen)
+		Err("area name is longer than %d characters", AreaNameLen);
+	else
+		strcpy(AreaName[BlockId], v);
+}
+
 static void RoomKey(char *k, char *v)
 {
 	static const char	*Dirs[] =
@@ -320,6 +351,20 @@ static void RoomKey(char *k, char *v)
 	else if (!strcmp(k, "anti-magic"))	CurRoom->AntiMagic = ParseBool(v);
 	else if (!strcmp(k, "dark"))		CurRoom->Dark = ParseBool(v);
 	else if (!strcmp(k, "notify-dm"))	CurRoom->NotifyDM = ParseBool(v);
+	else if (!strcmp(k, "area"))
+	{
+		if (ParseInt(v, 1, MaxArea, &n))
+			R->Area = n, R->AreaLine = LineNo;
+	}
+	else if (!strcmp(k, "x") || !strcmp(k, "y") || !strcmp(k, "z"))
+	{
+		if (ParseInt(v, -MaxCoord, MaxCoord, &n))
+		{
+			*(*k == 'x' ? &R->X : *k == 'y' ? &R->Y : &R->Z) = n;
+			R->HasXYZ = TRUE;
+			R->XYZLine = LineNo;
+		}
+	}
 	else if (!strcmp(k, "greeting"))
 	{
 		if (strlen(v) > 250)
@@ -678,6 +723,7 @@ static void Header(char *h)
 	}
 
 	Hi = !strcmp(Tok[0], "description") ? MaxDesc
+	   : !strcmp(Tok[0], "area") ? MaxArea
 	   : !strcmp(Tok[0], "room") ? MaxRoom
 	   : !strcmp(Tok[0], "monster") ? RanMonLen
 	   : !strcmp(Tok[0], "object") ? RanObjLen
@@ -705,6 +751,13 @@ static void Header(char *h)
 		if (Id > MaxDescRec)
 			MaxDescRec = Id;
 		Block = BDesc;
+	}
+	else if (!strcmp(Tok[0], "area"))
+	{
+		if (AreaDefined[Id]++)
+			Err("area %d defined twice", Id);
+		AreaLine[Id] = LineNo;
+		Block = BArea;
 	}
 	else if (!strcmp(Tok[0], "encounter"))
 	{
@@ -887,6 +940,7 @@ static void ParseWorld(FILE *fp)
 				case BSkip:		break;
 				case BWorld:	WorldKey(k, v);							break;
 				case BDesc:		DescKey(k, v);							break;
+				case BArea:		AreaKey(k, v);							break;
 				case BRoom:		RoomKey(k, v);							break;
 				case BMon:		MonKey(k, v);							break;
 				case BObj:		ObjKey(k, v);							break;
@@ -967,6 +1021,12 @@ static void Validate(void)
 		for (j = 0; TreDefined[i] && j < 8; j++)
 			if (Tre[i][j] && !ODefined[Tre[i][j]])
 				Warn(0, "treasure %d uses undefined object %d", i, Tre[i][j]);
+	for (i = 1; i <= MaxArea; i++)
+		if (AreaDefined[i] && !AreaNamed[i])
+		{
+			LineNo = AreaLine[i];
+			Err("area %d has no name", i);
+		}
 
 	for (i = 1; i <= MaxRoom; i++)
 	{
@@ -980,6 +1040,21 @@ static void Validate(void)
 			CheckRoomRef(R->Line, What, R->Rm.Adjoin[j]);
 		CheckRoomRef(R->Line, What, R->Rm.Out);
 		CheckDesc(R->Line, What, R->Rm.DescRec, R->Rm.DescCode);
+		if (R->Area && !AreaDefined[R->Area])
+		{
+			LineNo = R->AreaLine;
+			Err("room %d is in undefined area %d", i, R->Area);
+		}
+		if (R->HasXYZ && !R->Area)
+		{
+			LineNo = R->XYZLine;
+			Err("room %d has coordinates but no area", i);
+		}
+		for (j = 1; R->Area && j < i; j++)
+			if (Rooms[j].Defined && Rooms[j].Area == R->Area
+			&&	Rooms[j].X == R->X && Rooms[j].Y == R->Y && Rooms[j].Z == R->Z)
+				Warn(R->Line, "room %d is at the same place as room %d",
+					 i, j);
 		if (R->Rm.WhichEncounter && !EncDefined[R->Rm.WhichEncounter])
 		{
 			LineNo = R->Line;

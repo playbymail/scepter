@@ -232,28 +232,47 @@
       ]
     }
   ],
+  "areas": [
+    {"id": 1, "name": "Havenford"},
+    {"id": 2, "name": "The north road"},
+    {"id": 3, "name": "The Graveward"},
+    {"id": 4, "name": "Lockspire Keep"},
+    {"id": 5, "name": "Aether Observatory"}
+  ],
   "rooms": [
     {
       "id": 1,
       "exits": [0, 0, 2, 0, 0, 0],
+      "area": 1,
+      "x": 0,
+      "y": 0,
       "desc": {"record": 1, "line": 1},
       "safe": true
     },
     {
       "id": 2,
       "exits": [3, 10, 16, 1, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": 0,
       "desc": {"record": 1, "line": 2},
       "safe": true
     },
     {
       "id": 3,
       "exits": [6, 2, 5, 4, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": 1,
       "desc": {"record": 1, "line": 3},
       "safe": true
     },
     {
       "id": 4,
       "exits": [7, 0, 3, 0, 0, 0],
+      "area": 1,
+      "x": -1,
+      "y": 1,
       "desc": {"record": 1, "line": 4},
       "safe": true,
       "trains": ["fighter", "barbarian"]
@@ -261,6 +280,9 @@
     {
       "id": 5,
       "exits": [0, 0, 0, 3, 0, 0],
+      "area": 1,
+      "x": 2,
+      "y": 1,
       "desc": {"record": 1, "line": 5},
       "safe": true,
       "trains": ["ranger"]
@@ -268,6 +290,9 @@
     {
       "id": 6,
       "exits": [0, 3, 9, 79, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": 2,
       "desc": {"record": 1, "line": 6},
       "safe": true,
       "trains": ["magic-user"]
@@ -275,6 +300,9 @@
     {
       "id": 7,
       "exits": [8, 4, 0, 43, 0, 0],
+      "area": 1,
+      "x": -1,
+      "y": 2,
       "desc": {"record": 1, "line": 7},
       "safe": true,
       "trains": ["cleric", "paladin"]
@@ -282,6 +310,9 @@
     {
       "id": 8,
       "exits": [40, 7, 0, 0, 0, 0],
+      "area": 1,
+      "x": -1,
+      "y": 3,
       "desc": {"record": 1, "line": 8},
       "safe": true,
       "trains": ["thief"]
@@ -289,6 +320,9 @@
     {
       "id": 9,
       "exits": [0, 0, 0, 6, 0, 0],
+      "area": 1,
+      "x": 2,
+      "y": 2,
       "desc": {"record": 1, "line": 9},
       "safe": true,
       "trains": ["dm"]
@@ -296,12 +330,18 @@
     {
       "id": 10,
       "exits": [2, 13, 11, 12, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": -1,
       "desc": {"record": 1, "line": 10},
       "safe": true
     },
     {
       "id": 11,
       "exits": [0, 0, 0, 10, 0, 0],
+      "area": 1,
+      "x": 2,
+      "y": -1,
       "desc": {"record": 2, "line": 1},
       "greeting": "Keeper: Basic supplies for careful travellers.",
       "safe": true,
@@ -310,6 +350,9 @@
     {
       "id": 12,
       "exits": [0, 0, 10, 0, 0, 0],
+      "area": 1,
+      "x": 0,
+      "y": -1,
       "desc": {"record": 2, "line": 2},
       "greeting": "Smith: I can repair your worn equipment.",
       "safe": true,
@@ -318,6 +361,9 @@
     {
       "id": 13,
       "exits": [10, 0, 14, 15, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": -2,
       "desc": {"record": 2, "line": 3},
       "greeting": "Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate.",
       "safe": true,
@@ -327,6 +373,9 @@
     {
       "id": 14,
       "exits": [0, 0, 0, 13, 0, 0],
+      "area": 1,
+      "x": 2,
+      "y": -2,
       "desc": {"record": 2, "line": 4},
       "greeting": "Newskeeper: Read the road warnings before leaving town.",
       "safe": true,
@@ -335,6 +384,9 @@
     {
       "id": 15,
       "exits": [0, 58, 13, 0, 0, 0],
+      "area": 1,
+      "x": 0,
+      "y": -2,
       "desc": {"record": 2, "line": 5},
       "greeting": "Broker: Bring me your unwanted finds.",
       "safe": true,
@@ -343,12 +395,18 @@
     {
       "id": 16,
       "exits": [17, 0, 41, 2, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 0,
       "desc": {"record": 2, "line": 6},
       "safe": true
     },
     {
       "id": 17,
       "exits": [18, 16, 0, 0, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 1,
       "desc": {"record": 2, "line": 7},
       "safe": true,
       "objects": [
@@ -365,30 +423,45 @@
     {
       "id": 18,
       "exits": [19, 17, 0, 0, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 2,
       "desc": {"record": 2, "line": 8},
       "safe": true
     },
     {
       "id": 19,
       "exits": [21, 18, 20, 38, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 3,
       "desc": {"record": 2, "line": 9},
       "safe": true
     },
     {
       "id": 20,
       "exits": [0, 0, 0, 19, 0, 0],
+      "area": 1,
+      "x": 4,
+      "y": 3,
       "desc": {"record": 2, "line": 10},
       "safe": true
     },
     {
       "id": 21,
       "exits": [22, 19, 0, 0, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 4,
       "desc": {"record": 3, "line": 1},
       "safe": true
     },
     {
       "id": 22,
       "exits": [23, 21, 0, 0, 0, 0],
+      "area": 1,
+      "x": 3,
+      "y": 5,
       "desc": {"record": 3, "line": 2},
       "safe": true,
       "objects": [
@@ -405,6 +478,9 @@
     {
       "id": 23,
       "exits": [24, 22, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 6,
       "desc": {"record": 3, "line": 3},
       "encounterTable": 1,
       "encounterRate": 100
@@ -412,6 +488,9 @@
     {
       "id": 24,
       "exits": [25, 23, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 7,
       "desc": {"record": 3, "line": 4},
       "encounterTable": 1,
       "encounterRate": 85
@@ -419,6 +498,9 @@
     {
       "id": 25,
       "exits": [26, 24, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 8,
       "desc": {"record": 3, "line": 5},
       "encounterTable": 1,
       "encounterRate": 80
@@ -426,6 +508,9 @@
     {
       "id": 26,
       "exits": [27, 25, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 9,
       "desc": {"record": 3, "line": 6},
       "encounterTable": 1,
       "encounterRate": 75
@@ -433,6 +518,9 @@
     {
       "id": 27,
       "exits": [28, 26, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 10,
       "desc": {"record": 3, "line": 7},
       "encounterTable": 1,
       "encounterRate": 65
@@ -440,6 +528,9 @@
     {
       "id": 28,
       "exits": [29, 27, 0, 32, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 11,
       "desc": {"record": 3, "line": 8},
       "encounterTable": 2,
       "encounterRate": 65
@@ -447,6 +538,9 @@
     {
       "id": 29,
       "exits": [30, 28, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 12,
       "desc": {"record": 3, "line": 9},
       "encounterTable": 2,
       "encounterRate": 60
@@ -454,6 +548,9 @@
     {
       "id": 30,
       "exits": [31, 29, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 13,
       "desc": {"record": 3, "line": 10},
       "encounterTable": 2,
       "encounterRate": 55
@@ -461,6 +558,9 @@
     {
       "id": 31,
       "exits": [33, 30, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 14,
       "desc": {"record": 4, "line": 1},
       "encounterTable": 2,
       "encounterRate": 55
@@ -468,6 +568,9 @@
     {
       "id": 32,
       "exits": [0, 0, 28, 37, 0, 0],
+      "area": 2,
+      "x": 2,
+      "y": 11,
       "desc": {"record": 4, "line": 2},
       "encounterTable": 2,
       "encounterRate": 50
@@ -475,6 +578,9 @@
     {
       "id": 33,
       "exits": [34, 31, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 15,
       "desc": {"record": 4, "line": 3},
       "encounterTable": 3,
       "encounterRate": 55
@@ -482,6 +588,9 @@
     {
       "id": 34,
       "exits": [35, 33, 0, 0, 0, 0],
+      "area": 2,
+      "x": 3,
+      "y": 16,
       "desc": {"record": 4, "line": 4},
       "encounterTable": 3,
       "encounterRate": 45
@@ -489,6 +598,9 @@
     {
       "id": 35,
       "exits": [0, 34, 0, 0, 36, 0],
+      "area": 2,
+      "x": 3,
+      "y": 17,
       "desc": {"record": 4, "line": 5},
       "encounterTable": 3,
       "encounterRate": 40
@@ -496,6 +608,10 @@
     {
       "id": 36,
       "exits": [0, 0, 0, 0, 0, 35],
+      "area": 2,
+      "x": 3,
+      "y": 17,
+      "z": 1,
       "desc": {"record": 4, "line": 6},
       "encounterTable": 3,
       "encounterRate": 40
@@ -503,6 +619,9 @@
     {
       "id": 37,
       "exits": [0, 0, 32, 0, 0, 0],
+      "area": 2,
+      "x": 1,
+      "y": 11,
       "desc": {"record": 4, "line": 7},
       "encounterTable": 2,
       "encounterRate": 70
@@ -510,60 +629,90 @@
     {
       "id": 38,
       "exits": [0, 0, 19, 39, 0, 0],
+      "area": 1,
+      "x": 2,
+      "y": 3,
       "desc": {"record": 4, "line": 8},
       "safe": true
     },
     {
       "id": 39,
       "exits": [0, 0, 38, 0, 0, 0],
+      "area": 1,
+      "x": 1,
+      "y": 3,
       "desc": {"record": 4, "line": 9},
       "safe": true
     },
     {
       "id": 40,
       "exits": [0, 8, 0, 0, 0, 0],
+      "area": 1,
+      "x": -1,
+      "y": 4,
       "desc": {"record": 4, "line": 10},
       "safe": true
     },
     {
       "id": 41,
       "exits": [42, 0, 0, 16, 0, 0],
+      "area": 1,
+      "x": 4,
+      "y": 0,
       "desc": {"record": 5, "line": 1},
       "safe": true
     },
     {
       "id": 42,
       "exits": [0, 41, 0, 0, 0, 0],
+      "area": 1,
+      "x": 4,
+      "y": 1,
       "desc": {"record": 5, "line": 2},
       "safe": true
     },
     {
       "id": 43,
       "exits": [0, 0, 7, 44, 0, 0],
+      "area": 3,
+      "x": -2,
+      "y": 2,
       "desc": {"record": 8, "line": 1},
       "safe": true
     },
     {
       "id": 44,
       "exits": [0, 0, 43, 45, 0, 0],
+      "area": 3,
+      "x": -3,
+      "y": 2,
       "desc": {"record": 8, "line": 2},
       "safe": true
     },
     {
       "id": 45,
       "exits": [0, 0, 44, 46, 0, 0],
+      "area": 3,
+      "x": -4,
+      "y": 2,
       "desc": {"record": 8, "line": 3},
       "safe": true
     },
     {
       "id": 46,
       "exits": [0, 0, 45, 47, 0, 0],
+      "area": 3,
+      "x": -5,
+      "y": 2,
       "desc": {"record": 8, "line": 4},
       "safe": true
     },
     {
       "id": 47,
       "exits": [0, 0, 46, 48, 0, 0],
+      "area": 3,
+      "x": -6,
+      "y": 2,
       "desc": {"record": 8, "line": 5},
       "safe": true,
       "objects": [
@@ -580,6 +729,9 @@
     {
       "id": 48,
       "exits": [0, 0, 47, 49, 0, 0],
+      "area": 3,
+      "x": -7,
+      "y": 2,
       "desc": {"record": 8, "line": 6},
       "encounterTable": 4,
       "encounterRate": 110
@@ -587,6 +739,9 @@
     {
       "id": 49,
       "exits": [56, 0, 48, 50, 0, 0],
+      "area": 3,
+      "x": -8,
+      "y": 2,
       "desc": {"record": 8, "line": 7},
       "encounterTable": 4,
       "encounterRate": 95
@@ -594,6 +749,9 @@
     {
       "id": 50,
       "exits": [0, 0, 49, 51, 0, 0],
+      "area": 3,
+      "x": -9,
+      "y": 2,
       "desc": {"record": 8, "line": 8},
       "encounterTable": 4,
       "encounterRate": 85
@@ -601,6 +759,9 @@
     {
       "id": 51,
       "exits": [0, 0, 50, 0, 0, 52],
+      "area": 3,
+      "x": -10,
+      "y": 2,
       "desc": {"record": 8, "line": 9},
       "encounterTable": 5,
       "encounterRate": 75
@@ -608,6 +769,10 @@
     {
       "id": 52,
       "exits": [0, 0, 0, 53, 51, 0],
+      "area": 3,
+      "x": -10,
+      "y": 2,
+      "z": -1,
       "desc": {"record": 8, "line": 10},
       "encounterTable": 5,
       "encounterRate": 65
@@ -615,6 +780,10 @@
     {
       "id": 53,
       "exits": [0, 55, 52, 54, 0, 0],
+      "area": 3,
+      "x": -11,
+      "y": 2,
+      "z": -1,
       "desc": {"record": 9, "line": 1},
       "encounterTable": 5,
       "encounterRate": 60
@@ -622,6 +791,10 @@
     {
       "id": 54,
       "exits": [0, 0, 53, 57, 0, 0],
+      "area": 3,
+      "x": -12,
+      "y": 2,
+      "z": -1,
       "desc": {"record": 9, "line": 2},
       "encounterTable": 6,
       "encounterRate": 55
@@ -629,6 +802,10 @@
     {
       "id": 55,
       "exits": [53, 0, 0, 0, 0, 0],
+      "area": 3,
+      "x": -11,
+      "y": 1,
+      "z": -1,
       "desc": {"record": 9, "line": 4},
       "encounterTable": 5,
       "encounterRate": 70
@@ -636,12 +813,19 @@
     {
       "id": 56,
       "exits": [0, 49, 0, 0, 0, 0],
+      "area": 3,
+      "x": -8,
+      "y": 3,
       "desc": {"record": 9, "line": 5},
       "safe": true
     },
     {
       "id": 57,
       "exits": [0, 0, 54, 0, 0, 0],
+      "area": 3,
+      "x": -13,
+      "y": 2,
+      "z": -1,
       "desc": {"record": 9, "line": 3},
       "encounterTable": 6,
       "encounterRate": 45
@@ -649,18 +833,27 @@
     {
       "id": 58,
       "exits": [15, 0, 0, 59, 0, 0],
+      "area": 4,
+      "x": 0,
+      "y": -3,
       "desc": {"record": 11, "line": 1},
       "safe": true
     },
     {
       "id": 59,
       "exits": [0, 0, 58, 60, 0, 0],
+      "area": 4,
+      "x": -1,
+      "y": -3,
       "desc": {"record": 11, "line": 2},
       "safe": true
     },
     {
       "id": 60,
       "exits": [0, 0, 59, 61, 0, 0],
+      "area": 4,
+      "x": -2,
+      "y": -3,
       "desc": {"record": 11, "line": 3},
       "safe": true,
       "objects": [
@@ -677,12 +870,18 @@
     {
       "id": 61,
       "exits": [0, 0, 60, 62, 0, 0],
+      "area": 4,
+      "x": -3,
+      "y": -3,
       "desc": {"record": 11, "line": 4},
       "safe": true
     },
     {
       "id": 62,
       "exits": [0, 0, 61, 63, 0, 0],
+      "area": 4,
+      "x": -4,
+      "y": -3,
       "desc": {"record": 11, "line": 5},
       "greeting": "A plaque reads: Practice locks first; then try the upper floors.",
       "safe": true
@@ -690,6 +889,9 @@
     {
       "id": 63,
       "exits": [0, 0, 62, 65, 0, 0],
+      "area": 4,
+      "x": -5,
+      "y": -3,
       "desc": {"record": 11, "line": 6},
       "safe": true,
       "objects": [
@@ -712,6 +914,9 @@
     {
       "id": 64,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -5,
+      "y": -4,
       "desc": {"record": 11, "line": 7},
       "safe": true,
       "objects": [
@@ -750,18 +955,29 @@
     {
       "id": 65,
       "exits": [0, 0, 63, 0, 66, 0],
+      "area": 4,
+      "x": -6,
+      "y": -3,
       "desc": {"record": 11, "line": 9},
       "safe": true
     },
     {
       "id": 66,
       "exits": [0, 0, 0, 67, 0, 65],
+      "area": 4,
+      "x": -6,
+      "y": -3,
+      "z": 1,
       "desc": {"record": 11, "line": 10},
       "safe": true
     },
     {
       "id": 67,
       "exits": [0, 0, 66, 69, 0, 0],
+      "area": 4,
+      "x": -7,
+      "y": -3,
+      "z": 1,
       "desc": {"record": 12, "line": 1},
       "safe": true,
       "objects": [
@@ -784,6 +1000,10 @@
     {
       "id": 68,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -7,
+      "y": -4,
+      "z": 1,
       "desc": {"record": 12, "line": 2},
       "safe": true,
       "objects": [
@@ -822,18 +1042,30 @@
     {
       "id": 69,
       "exits": [0, 0, 67, 0, 70, 0],
+      "area": 4,
+      "x": -8,
+      "y": -3,
+      "z": 1,
       "desc": {"record": 12, "line": 4},
       "safe": true
     },
     {
       "id": 70,
       "exits": [0, 0, 0, 71, 0, 69],
+      "area": 4,
+      "x": -8,
+      "y": -3,
+      "z": 2,
       "desc": {"record": 12, "line": 5},
       "safe": true
     },
     {
       "id": 71,
       "exits": [0, 0, 70, 73, 0, 0],
+      "area": 4,
+      "x": -9,
+      "y": -3,
+      "z": 2,
       "desc": {"record": 12, "line": 6},
       "safe": true,
       "objects": [
@@ -856,6 +1088,10 @@
     {
       "id": 72,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -9,
+      "y": -4,
+      "z": 2,
       "desc": {"record": 12, "line": 7},
       "safe": true,
       "objects": [
@@ -894,12 +1130,20 @@
     {
       "id": 73,
       "exits": [0, 0, 71, 0, 74, 0],
+      "area": 4,
+      "x": -10,
+      "y": -3,
+      "z": 2,
       "desc": {"record": 12, "line": 9},
       "safe": true
     },
     {
       "id": 74,
       "exits": [0, 0, 0, 0, 0, 73],
+      "area": 4,
+      "x": -10,
+      "y": -3,
+      "z": 3,
       "desc": {"record": 12, "line": 10},
       "safe": true,
       "objects": [
@@ -915,6 +1159,10 @@
     {
       "id": 75,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -11,
+      "y": -3,
+      "z": 3,
       "desc": {"record": 13, "line": 1},
       "safe": true,
       "objects": [
@@ -953,6 +1201,9 @@
     {
       "id": 76,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -5,
+      "y": -2,
       "desc": {"record": 11, "line": 8},
       "safe": true,
       "objects": [
@@ -991,6 +1242,10 @@
     {
       "id": 77,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -7,
+      "y": -2,
+      "z": 1,
       "desc": {"record": 12, "line": 3},
       "safe": true,
       "objects": [
@@ -1029,6 +1284,10 @@
     {
       "id": 78,
       "exits": [0, 0, 0, 0, 0, 0],
+      "area": 4,
+      "x": -9,
+      "y": -2,
+      "z": 2,
       "desc": {"record": 12, "line": 8},
       "safe": true,
       "objects": [
@@ -1067,30 +1326,45 @@
     {
       "id": 79,
       "exits": [0, 0, 6, 80, 0, 0],
+      "area": 5,
+      "x": 0,
+      "y": 6,
       "desc": {"record": 14, "line": 1},
       "safe": true
     },
     {
       "id": 80,
       "exits": [81, 93, 79, 0, 0, 0],
+      "area": 5,
+      "x": -1,
+      "y": 6,
       "desc": {"record": 14, "line": 2},
       "safe": true
     },
     {
       "id": 81,
       "exits": [0, 80, 91, 82, 0, 0],
+      "area": 5,
+      "x": -1,
+      "y": 7,
       "desc": {"record": 14, "line": 3},
       "safe": true
     },
     {
       "id": 82,
       "exits": [0, 92, 81, 83, 0, 0],
+      "area": 5,
+      "x": -2,
+      "y": 7,
       "desc": {"record": 14, "line": 4},
       "safe": true
     },
     {
       "id": 83,
       "exits": [84, 0, 82, 0, 0, 0],
+      "area": 5,
+      "x": -3,
+      "y": 7,
       "desc": {"record": 14, "line": 5},
       "safe": true,
       "objects": [
@@ -1107,6 +1381,9 @@
     {
       "id": 84,
       "exits": [85, 83, 0, 0, 0, 0],
+      "area": 5,
+      "x": -3,
+      "y": 8,
       "desc": {"record": 14, "line": 6},
       "encounterTable": 7,
       "encounterRate": 110
@@ -1114,6 +1391,9 @@
     {
       "id": 85,
       "exits": [0, 84, 0, 86, 0, 0],
+      "area": 5,
+      "x": -3,
+      "y": 9,
       "desc": {"record": 14, "line": 7},
       "encounterTable": 7,
       "encounterRate": 90
@@ -1121,6 +1401,9 @@
     {
       "id": 86,
       "exits": [87, 0, 85, 0, 0, 0],
+      "area": 5,
+      "x": -4,
+      "y": 9,
       "desc": {"record": 14, "line": 8},
       "encounterTable": 8,
       "encounterRate": 80
@@ -1128,6 +1411,9 @@
     {
       "id": 87,
       "exits": [0, 86, 0, 0, 88, 0],
+      "area": 5,
+      "x": -4,
+      "y": 10,
       "desc": {"record": 14, "line": 9},
       "encounterTable": 8,
       "encounterRate": 70
@@ -1135,6 +1421,10 @@
     {
       "id": 88,
       "exits": [0, 0, 0, 0, 89, 87],
+      "area": 5,
+      "x": -4,
+      "y": 10,
+      "z": 1,
       "desc": {"record": 14, "line": 10},
       "encounterTable": 8,
       "encounterRate": 65
@@ -1142,6 +1432,10 @@
     {
       "id": 89,
       "exits": [0, 0, 0, 0, 90, 88],
+      "area": 5,
+      "x": -4,
+      "y": 10,
+      "z": 2,
       "desc": {"record": 15, "line": 1},
       "encounterTable": 9,
       "encounterRate": 55
@@ -1149,6 +1443,10 @@
     {
       "id": 90,
       "exits": [0, 0, 0, 0, 0, 89],
+      "area": 5,
+      "x": -4,
+      "y": 10,
+      "z": 3,
       "desc": {"record": 15, "line": 2},
       "encounterTable": 9,
       "encounterRate": 45
@@ -1156,6 +1454,9 @@
     {
       "id": 91,
       "exits": [0, 94, 0, 81, 0, 0],
+      "area": 5,
+      "x": 0,
+      "y": 7,
       "desc": {"record": 15, "line": 3},
       "safe": true,
       "objects": [
@@ -1172,6 +1473,9 @@
     {
       "id": 92,
       "exits": [82, 0, 0, 0, 0, 0],
+      "area": 5,
+      "x": -2,
+      "y": 6,
       "desc": {"record": 15, "line": 5},
       "safe": true,
       "antiMagic": true
@@ -1179,6 +1483,9 @@
     {
       "id": 93,
       "exits": [80, 0, 0, 0, 0, 0],
+      "area": 5,
+      "x": -1,
+      "y": 5,
       "desc": {"record": 15, "line": 6},
       "safe": true,
       "objects": [
@@ -1199,6 +1506,9 @@
     {
       "id": 94,
       "exits": [91, 0, 0, 0, 0, 0],
+      "area": 5,
+      "x": 1,
+      "y": 7,
       "desc": {"record": 15, "line": 4},
       "dark": true,
       "objects": [

@@ -15,6 +15,11 @@ news-3 = The watch patrols Guild Street day and night.
 news-4 = A white stone circle hums in the glade.
 news-5 = Mind your manners: the village lockup has room.
 
+# ---- areas: rooms are placed at x y z within an area ----
+
+[area 1]
+name = The village
+
 # ---- descriptions: RECORD:LINE is referenced by desc = ----
 
 [description 1]
@@ -405,6 +410,9 @@ north = 2
 south = 4
 east = 3
 west = 5
+area = 1
+x = 0
+y = 0
 desc = 1:1
 safe = yes
 
@@ -431,6 +439,9 @@ skill = sharp
 [room 2]
 north = 6
 south = 1
+area = 1
+x = 0
+y = 1
 desc = 1:3
 
 [room 2 / monster 1]
@@ -451,6 +462,9 @@ permanent = yes
 north = 24
 west = 1
 up = 7
+area = 1
+x = 1
+y = 0
 desc = 1:4
 greeting = Bartender says, "Buy a drink, mac?"
 role = bar
@@ -461,6 +475,9 @@ north = 1
 south = 13
 east = 23
 west = 22
+area = 1
+x = 0
+y = -1
 desc = 1:5
 greeting = Merchant asks, "What would you like to buy?"
 role = store
@@ -470,6 +487,9 @@ stock = 1 2 3 6 10 7
 north = 21
 east = 1
 west = 20
+area = 1
+x = -1
+y = 0
 desc = 1:6
 safe = yes
 
@@ -487,6 +507,9 @@ unlocks = 21
 north = 8
 south = 2
 east = 9
+area = 1
+x = 0
+y = 2
 desc = 1:7
 
 [room 6 / object 1]
@@ -501,6 +524,10 @@ toll = yes
 
 [room 7]
 down = 3
+area = 1
+x = 1
+y = 0
+z = 1
 desc = 1:8
 
 [room 7 / object 1]
