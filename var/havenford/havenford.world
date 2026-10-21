@@ -180,11 +180,12 @@ news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 1 = 1/A prismatic guardian stands between shards of colored glass./
 2 = 1/A wild aether warden crackles with unstable magic./
 3 = 1/DANGER AHEAD! Arcane creatures roam north. Return south to train./
-4 = 1/A note reads: Dark rooms test light. Magic will fail in the null room./
+4 = 1/A note reads: In the dark study, USE LANTERN. Magic fails in the null room./
 5 = 1/An old apprentice's scroll, neatly marked with the heal spell./
 6 = 1/A polished charm bearing the sigil of the observatory./
 7 = 1/A blue crystal that pulses with stored energy./
 8 = 1/A glass prism containing a faint sliver of starlight./
+9 = 1/A brass lantern on a hook. USE it to light the study for a moment./
 
 # ---- object templates (OList) ----
 
@@ -1698,5 +1699,15 @@ spell = heal
 [room 94]
 north = 91
 desc = 15:4
-safe = yes
 dark = yes
+
+[room 94 / object 1]
+name = lantern,brass *
+article = a
+kind = device
+weight = 3
+desc = 16:9
+magic = yes
+permanent = yes
+spell = illuminate
+charges = 127
