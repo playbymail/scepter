@@ -398,6 +398,17 @@ void Punctuate(int Num, int Total, char *Str)
 	}
 }
 
+/* Load description record Rec into DescBuf; FALSE if there is none */
+int ReadDesc(int Rec)
+{
+	int		Found;
+
+	SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
+	Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc) == 1;
+	CurrentRec = Found ? Rec : 0;
+	return Found;
+}
+
 void Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V)
 {
 	int		NumPhrases, ILoop, LinePos, BrMark, VSub, Found;
@@ -424,11 +435,7 @@ void Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V)
 	}
 
 	if (Rec != CurrentRec)
-	{
-		SeekRec(EDesc, (long)Rec * sizeof(DescBuf));
-		Found = fread((char *)DescBuf, sizeof(DescBuf), 1, EDesc);
-		CurrentRec = Found ? Rec : 0;
-	}
+		Found = ReadDesc(Rec);
 
 	if (Found)		/* a row may fill all 80 bytes, with no NUL */
 		sprintf(S, "%.80s", DescBuf[Line - 1]);

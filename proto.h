@@ -58,6 +58,7 @@ void	DoInput(void);
 int		BinaryMatch(char *Word, int Count, CmdListType NameList);
 int		WordMatch(char *Word, int Count, NameTList NameList);
 void	Punctuate(int Num, int Total, char *Str);
+int		ReadDesc(int Rec);
 void	Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V);
 void	PrintDesc(int Rec, int Line, int PhraseNum, int Brief, char *Str1, char *Str2);
 
@@ -73,6 +74,7 @@ ObjectPoint	FindObject(char *Word, int Num, ObjectPoint ObjectTail);
 
 /* user.c */
 int		PlayerOnFile(char *Name);
+int		PlayerName(int N, char *Name);
 void	ReadPlayer(UserPoint Player, char *Name);
 void	FreePlayer(UserPoint Player);
 void	WritePlayer(UserPoint Player);
@@ -244,6 +246,8 @@ char	*RoomGreeting(int WRm);
 int		StockItem(int WRm, int Item);
 int		StockCount(int WRm);
 int		StaggerRoom(int WRm);
+int		StaggerItem(int WRm, int Item);
+int		StaggerCount(int WRm);
 int		TrainsClass(int WRm, ChType Class);
 
 /* rand.c */

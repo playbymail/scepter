@@ -73,6 +73,21 @@ dmtest: $(DMOBJS)
 tools/dmtest.o: tools/dmtest.c main.c common.h scepter.h proto.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dmtest.c -o $@
 
+# Prints a game's whole saved state (tools/dumpgame.c); links the engine
+# without main.o, like fightsim.
+DUMPOBJS = $(filter-out main.o,$(OBJS)) tools/dumpgame.o
+
+dumpgame: $(DUMPOBJS)
+	$(CC) $(CFLAGS) -o $@ $(DUMPOBJS) $(CRYPTLIB)
+
+tools/dumpgame.o: tools/dumpgame.c main.c common.h scepter.h proto.h
+	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/dumpgame.c -o $@
+
+# Golden dumps of whole games (tools/dumptest.py); the move to SQLite (#71)
+# must keep them byte for byte.
+check-dump: mkgame dmtest dumpgame
+	python3 -I tools/dumptest.py .
+
 # Each world file must match its JSON copy (tools/worldjson.py), and mkgame
 # must check areas and coordinates (tools/worldtest.py).
 check-worlds: mkgame
@@ -102,8 +117,8 @@ check-security: scepterd mkgame dmtest
 	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
 
 clean:
-	rm -f scepterd mkgame fightsim dmtest upgradegame $(OBJS) mkgame.o tools/fightsim.o \
-		tools/dmtest.o tools/upgradegame.o
+	rm -f scepterd mkgame fightsim dmtest dumpgame upgradegame $(OBJS) mkgame.o \
+		tools/fightsim.o tools/dmtest.o tools/dumpgame.o tools/upgradegame.o
 
 # The web site for sceptish.pbbgaming.com (docs/deploy.md), built into
 # out/site.
@@ -113,4 +128,5 @@ site: site/index.html site/avatar.webp var/havenford/world-map.html
 	cp var/havenford/world-map.html out/site/map.html
 	magick site/avatar.webp -resize 192x192 -strip -colors 128 out/site/icon.png
 
-.PHONY: all clean check-worlds site check-net check-tintin check-data check-security
+.PHONY: all clean check-worlds site check-net check-tintin check-data check-security \
+	check-dump
