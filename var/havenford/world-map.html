@@ -1,0 +1,402 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Havenford Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a surveyor's sheet. The map fills the left; a sticky room panel and
+   route finder sit on the right; the room index runs underneath. */
+:root {
+  --bg: #e9eeea;
+  --sheet: #f7f9f6;
+  --ink: #1a2422;
+  --muted: #586763;
+  --rule: #c9d3ce;
+  --path: #8e9d98;
+  --door: #7d5aa6;
+  --accent: #0b6f7b;
+  --accent-soft: #0b6f7b22;
+  --safe: #fbfcfa;
+  --t1: #efd58a;
+  --t2: #e0965c;
+  --t3: #b9443a;
+  --t3-ink: #ffffff;
+  --city: #9cc2a3;
+  --road: #d8c98f;
+  --grave: #9fb0cc;
+  --keep: #c6a9cf;
+  --obs: #8fc8c8;
+  --font-display: "Alegreya SC", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101614; --sheet: #172220; --ink: #e2eae6; --muted: #93a49f;
+    --rule: #2c3a36; --path: #56665f; --door: #b08ad8; --accent: #5cc0c9;
+    --accent-soft: #5cc0c933; --safe: #22302c; --t1: #a88a35; --t2: #b5652f;
+    --t3: #c0463c; --t3-ink: #ffffff; --city: #3d6b48; --road: #6b5f30;
+    --grave: #3e4e6e; --keep: #5e4569; --obs: #2f6466; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101614; --sheet: #172220; --ink: #e2eae6; --muted: #93a49f;
+  --rule: #2c3a36; --path: #56665f; --door: #b08ad8; --accent: #5cc0c9;
+  --accent-soft: #5cc0c933; --safe: #22302c; --t1: #a88a35; --t2: #b5652f;
+  --t3: #c0463c; --t3-ink: #ffffff; --city: #3d6b48; --road: #6b5f30;
+  --grave: #3e4e6e; --keep: #5e4569; --obs: #2f6466; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+.wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 24px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 5vw, 52px); line-height: 1; margin: 0; text-wrap: balance; }
+.lede { margin: 0; max-width: 68ch; color: var(--muted); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; }
+.mapbox { overflow: auto; max-height: min(1400px, 88vh); padding: 8px; }
+.mapbox svg { display: block; width: 100%; min-width: 640px; height: auto; }
+
+.side { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+@media (max-width: 900px) { .side { position: static; } }
+.panel { padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.panel h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin: 0; line-height: 1.15; text-wrap: balance; }
+.panel h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 4px 0 0; font-weight: 500; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink); background: var(--bg); }
+.chip.t1 { background: var(--t1); border-color: transparent; }
+.chip.t2 { background: var(--t2); border-color: transparent; }
+.chip.t3 { background: var(--t3); color: var(--t3-ink); border-color: transparent; }
+.desc { margin: 0; font-style: italic; }
+.quote { margin: 0; padding-left: 10px; border-left: 2px solid var(--rule); }
+ul.plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.exit { all: unset; cursor: pointer; display: grid; grid-template-columns: 52px 30px minmax(0, 1fr); gap: 6px; padding: 3px 6px; border-radius: 4px; width: 100%; box-sizing: border-box; }
+.exit:hover, .exit:focus-visible { background: var(--accent-soft); }
+.exit:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.exit .dir { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 2px; }
+.small { font-size: 14px; color: var(--muted); margin: 0; }
+
+.route { padding: 16px 18px; display: grid; gap: 10px; }
+.route h2 { font-family: var(--font-display); font-size: 20px; margin: 0; }
+.pick { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 6px; align-items: end; }
+.pick label { display: grid; gap: 2px; font-size: 12px; color: var(--muted); font-family: var(--font-mono); min-width: 0; }
+select, button.swap { font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 5px 6px; min-width: 0; width: 100%; }
+button.swap { width: auto; cursor: pointer; font-family: var(--font-mono); }
+select:focus-visible, button.swap:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.moves { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--accent); word-break: break-word; }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 1px; font-size: 14px; max-height: 260px; overflow: auto; }
+
+.legend { padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; font-size: 14px; }
+.legend .item { display: inline-flex; align-items: center; gap: 8px; }
+.legend svg { flex: none; }
+
+.index { padding: 18px; display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.index section { min-width: 0; }
+.index h2 { font-family: var(--font-display); font-size: 19px; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.index button { all: unset; cursor: pointer; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 6px; font-size: 14px; padding: 1px 4px; border-radius: 3px; width: 100%; box-sizing: border-box; }
+.index button:hover, .index button:focus-visible { background: var(--accent-soft); }
+.index button:focus-visible { outline: 2px solid var(--accent); }
+.index .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 2px; }
+.index .note { color: var(--muted); }
+
+/* map */
+.cell { opacity: .38; }
+.region-label { font-family: var(--font-display); font-weight: 700; font-size: 19px; fill: var(--ink); opacity: .78; }
+.floor-label { font-family: var(--font-mono); font-size: 10px; fill: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.link { stroke: var(--path); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.link.stairs { stroke-dasharray: 2 5; stroke-width: 3.2; }
+.link.door { stroke: var(--door); stroke-dasharray: 7 4; stroke-width: 2.4; }
+.link.hot { stroke: var(--accent); stroke-width: 5; }
+.link.route { stroke: var(--accent); stroke-width: 6; stroke-dasharray: none; opacity: .9; }
+.room { cursor: pointer; }
+.room rect.body { stroke: var(--ink); stroke-width: 1.4; }
+.room text { font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.room.sel rect.body { stroke: var(--accent); stroke-width: 3.5; }
+.room.onroute rect.body { stroke: var(--accent); stroke-width: 2.6; }
+.room:focus-visible { outline: none; }
+.room:focus-visible rect.body { stroke: var(--accent); stroke-width: 3.5; }
+.halo { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; }
+.room.sel .halo { opacity: .5; }
+.mark-trainer { fill: var(--ink); }
+.mark-shop { fill: var(--accent); }
+.mark-sign { fill: var(--door); }
+.mark-start { fill: none; stroke: var(--ink); stroke-width: 1.2; }
+@media (prefers-reduced-motion: no-preference) { .link, .room rect.body { transition: stroke .15s, stroke-width .15s; } }
+
+footer { font-size: 13px; color: var(--muted); }
+code { font-family: var(--font-mono); font-size: .9em; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Scepter of Goth · beta world · 94 rooms</span>
+    <h1>Havenford</h1>
+    <p class="lede">A safe city with four regions around it. Select a room to see its exits, signs and monsters, or ask the route finder for the moves between two rooms.</p>
+  </header>
+
+  <div class="main">
+    <div class="sheet mapbox" id="mapbox"><svg id="map" role="img" aria-label="Map of Havenford's 94 rooms and the paths between them"></svg></div>
+
+    <aside class="side">
+      <div class="sheet panel" id="panel" aria-live="polite"></div>
+      <div class="sheet route">
+        <h2>Route finder</h2>
+        <div class="pick">
+          <label for="from">From<select id="from"></select></label>
+          <button class="swap" id="swap" type="button" aria-label="Swap start and destination">⇄</button>
+          <label for="to">To<select id="to"></select></label>
+        </div>
+        <div id="routeOut"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="sheet legend" id="legend"></div>
+  <div class="sheet index" id="index"></div>
+
+  <footer>Drawn from <code>var/havenford/havenford.world</code>. The world isn't a perfect grid, so a few links are bent to fit: the Academy's west exit to Scholar's Walk, the keep's stairs (its floors are drawn one below another), and a few side rooms. The room panel always gives the true directions.</footer>
+</div>
+
+<script>
+const DATA = {"rooms":{"1":{"id":1,"name":"Havenford Refuge","desc":"You are in Havenford Refuge. The square and guild signs are east.","region":"city","x":0,"y":0,"exits":{"east":2},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"2":{"id":2,"name":"Havenford Square","desc":"You are in Havenford Square. Guilds north, shops south, North Gate east.","region":"city","x":1,"y":0,"exits":{"north":3,"south":10,"east":16,"west":1},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"3":{"id":3,"name":"Guild Street","desc":"You are on Guild Street. Training halls flank the cobbled street.","region":"city","x":1,"y":-1,"exits":{"north":6,"south":2,"east":5,"west":4},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"4":{"id":4,"name":"Hall of Blades","desc":"You are in the Hall of Blades. Practice swords ring against shields.","region":"city","x":-1,"y":-1,"exits":{"north":7,"east":3},"safe":true,"dark":false,"antimagic":false,"trains":"fighter barbarian","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"5":{"id":5,"name":"Scout Lodge","desc":"You are in the Scout Lodge. Maps and unstrung bows cover the walls.","region":"city","x":2,"y":-1,"exits":{"west":3},"safe":true,"dark":false,"antimagic":false,"trains":"ranger","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"6":{"id":6,"name":"Academy of Sparks","desc":"You are in the Academy of Sparks. Apprentices study quiet spells.","region":"city","x":1,"y":-2,"exits":{"south":3,"east":9,"west":79},"safe":true,"dark":false,"antimagic":false,"trains":"magic-user","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"7":{"id":7,"name":"Lantern Chapel","desc":"You are in the Lantern Chapel. The Graveward path leaves west.","region":"city","x":-1,"y":-2,"exits":{"north":8,"south":4,"west":43},"safe":true,"dark":false,"antimagic":false,"trains":"cleric paladin","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"8":{"id":8,"name":"Shadow School","desc":"You are in the Shadow School. Chalk marks outline a practice lock.","region":"city","x":-1,"y":-3,"exits":{"north":40,"south":7},"safe":true,"dark":false,"antimagic":false,"trains":"thief","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"9":{"id":9,"name":"Hall of Stewards","desc":"You are in the Hall of Stewards. Instructors teach worldcraft.","region":"city","x":2,"y":-2,"exits":{"west":6},"safe":true,"dark":false,"antimagic":false,"trains":"dm","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"10":{"id":10,"name":"Market Lane","desc":"You are on Market Lane. A store lies east and a smithy west.","region":"city","x":1,"y":1,"exits":{"north":2,"south":13,"east":11,"west":12},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"11":{"id":11,"name":"Provisioner","desc":"You are in the Provisioner. Food and basic gear fill wooden shelves.","region":"city","x":2,"y":1,"exits":{"west":10},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"store","greeting":"Keeper: Basic supplies for careful travellers.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"12":{"id":12,"name":"Smithy","desc":"You are in the Smithy. A friendly smith tests a repaired blade.","region":"city","x":0,"y":1,"exits":{"east":10},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"smith","greeting":"Smith: I can repair your worn equipment.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"13":{"id":13,"name":"River Inn","desc":"You are in the River Inn. Soup simmers in the common hearth.","region":"city","x":1,"y":2,"exits":{"north":10,"east":14,"west":15},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"bar","greeting":"Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"14":{"id":14,"name":"Notice Kiosk","desc":"You are at the Notice Kiosk. Fresh notices hang under an awning.","region":"city","x":2,"y":2,"exits":{"west":13},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"newsstand","greeting":"Newskeeper: Read the road warnings before leaving town.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"15":{"id":15,"name":"Exchange","desc":"You are in the Exchange. A pawnbroker sorts simple trinkets.","region":"city","x":0,"y":2,"exits":{"south":58,"east":13},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"pawnshop","greeting":"Broker: Bring me your unwanted finds.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"16":{"id":16,"name":"Public garden","desc":"You are in a public garden. The North Gate and the north road lie north.","region":"city","x":3,"y":0,"exits":{"north":17,"east":41,"west":2},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"17":{"id":17,"name":"Havenford North Gate","desc":"You are at Havenford North Gate. Guards wave travellers through.","region":"city","x":3,"y":-1,"exits":{"north":18,"south":16},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"direction sign","kind":"misc","text":"A carved wooden sign points south to the safety of Havenford."}],"tier":0,"rate":0,"monsters":[]},"18":{"id":18,"name":"Calm road past the city walls","desc":"You are on a calm road past the city walls. Farms lie north.","region":"city","x":3,"y":-2,"exits":{"north":19,"south":17},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"19":{"id":19,"name":"Orchard crossroads","desc":"You are at the orchard crossroads. The city is south.","region":"city","x":3,"y":-3,"exits":{"north":21,"south":18,"east":20,"west":38},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"20":{"id":20,"name":"Quiet orchard","desc":"You are beside a quiet orchard. No danger seems close.","region":"city","x":4,"y":-3,"exits":{"west":19},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"21":{"id":21,"name":"Sunlit farm track","desc":"You are on a sunlit farm track. A milestone points north.","region":"city","x":3,"y":-4,"exits":{"north":22,"south":19},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"22":{"id":22,"name":"Frontier Warning Post","desc":"You are at the Frontier Warning Post. Read the sign before north.","region":"city","x":3,"y":-5,"exits":{"north":23,"south":21},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"warning sign","kind":"misc","text":"DANGER AHEAD! Monsters roam north of this post. Turn back if unready."}],"tier":0,"rate":0,"monsters":[]},"23":{"id":23,"name":"Meadow margin","desc":"You are in the meadow margin. Small tracks cross the grass.","region":"road","x":3,"y":-6,"exits":{"north":24,"south":22},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":100,"monsters":["field rat (level 1)","restless crow (level 1)","stray dog (level 1)","red fox (level 2)"]},"24":{"id":24,"name":"Willow meadow","desc":"You are in the willow meadow. A stream divides the reeds.","region":"road","x":3,"y":-7,"exits":{"north":25,"south":23},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":85,"monsters":["field rat (level 1)","restless crow (level 1)","stray dog (level 1)","red fox (level 2)"]},"25":{"id":25,"name":"Ferny trail","desc":"You are on a ferny trail. Rustling comes from the undergrowth.","region":"road","x":3,"y":-8,"exits":{"north":26,"south":24},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":80,"monsters":["field rat (level 1)","restless crow (level 1)","stray dog (level 1)","red fox (level 2)"]},"26":{"id":26,"name":"Shallow ford","desc":"You are at a shallow ford. The far bank rises into wooded hills.","region":"road","x":3,"y":-9,"exits":{"north":27,"south":25},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":75,"monsters":["field rat (level 1)","restless crow (level 1)","stray dog (level 1)","red fox (level 2)"]},"27":{"id":27,"name":"Old charcoal kiln","desc":"You are at the old charcoal kiln. Ash covers the clearing.","region":"road","x":3,"y":-10,"exits":{"north":28,"south":26},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":65,"monsters":["field rat (level 1)","restless crow (level 1)","stray dog (level 1)","red fox (level 2)"]},"28":{"id":28,"name":"Low pine hills","desc":"You are among the low pine hills. Broken stone walls emerge.","region":"road","x":3,"y":-11,"exits":{"north":29,"south":27,"west":32},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":65,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"29":{"id":29,"name":"Abandoned campsite","desc":"You are at an abandoned campsite. A cold pot rests by the fire.","region":"road","x":3,"y":-12,"exits":{"north":30,"south":28},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":60,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"30":{"id":30,"name":"Ruined mill","desc":"You are beside the ruined mill. Its wheel creaks in the wind.","region":"road","x":3,"y":-13,"exits":{"north":31,"south":29},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":55,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"31":{"id":31,"name":"Ridge path","desc":"You are on the ridge path. The old watchtower is visible north.","region":"road","x":3,"y":-14,"exits":{"north":33,"south":30},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":55,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"32":{"id":32,"name":"Bracken ravine","desc":"You are in the bracken ravine. A narrow pass climbs east.","region":"road","x":2,"y":-11,"exits":{"east":28,"west":37},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":50,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"33":{"id":33,"name":"Tower approach","desc":"You are at the tower approach. Loose stones shift underfoot.","region":"road","x":3,"y":-15,"exits":{"north":34,"south":31},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":55,"monsters":["armored raider (level 4)","tower sentinel (level 4)","bandit captain (level 5)"]},"34":{"id":34,"name":"Outer tower yard","desc":"You are in the outer tower yard. A broken bell hangs overhead.","region":"road","x":3,"y":-16,"exits":{"north":35,"south":33},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":45,"monsters":["armored raider (level 4)","tower sentinel (level 4)","bandit captain (level 5)"]},"35":{"id":35,"name":"Side the watchtower","desc":"You are inside the watchtower. Stairs climb into shadow.","region":"road","x":3,"y":-17,"exits":{"south":34,"up":36},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":40,"monsters":["armored raider (level 4)","tower sentinel (level 4)","bandit captain (level 5)"]},"36":{"id":36,"name":"Watchtower loft","desc":"You are in the watchtower loft. Wind whistles through the roof.","region":"road","x":4,"y":-17,"exits":{"down":35},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":40,"monsters":["armored raider (level 4)","tower sentinel (level 4)","bandit captain (level 5)"]},"37":{"id":37,"name":"Hill shrine","desc":"You are at the hill shrine. Smooth stones line a dry spring.","region":"road","x":1,"y":-11,"exits":{"east":32},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":70,"monsters":["red fox (level 2)","highway thief (level 2)","brittle skeleton (level 3)","grey wolf (level 3)"]},"38":{"id":38,"name":"Western sheep path","desc":"You are on the western sheep path. The pasture is quiet.","region":"city","x":2,"y":-3,"exits":{"east":19,"west":39},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"39":{"id":39,"name":"Sheep pasture","desc":"You are in the sheep pasture. The farmer smiles from a distance.","region":"city","x":1,"y":-3,"exits":{"east":38},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"40":{"id":40,"name":"Guild library","desc":"You are in the guild library. Books explain the roads ahead.","region":"city","x":-1,"y":-4,"exits":{"south":8},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"41":{"id":41,"name":"Eastern promenade","desc":"You are on the eastern promenade. The chapel is west.","region":"city","x":4,"y":0,"exits":{"north":42,"west":16},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"42":{"id":42,"name":"Training yard","desc":"You are at the training yard. The academy is west.","region":"city","x":4,"y":-1,"exits":{"south":41},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"43":{"id":43,"name":"Chapel Cloister","desc":"You are in the Chapel Cloister. Graveward signs point west.","region":"grave","x":-2,"y":-2,"exits":{"east":7,"west":44},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"44":{"id":44,"name":"West pilgrim road","desc":"You are on the west pilgrim road. Quiet fields surround the path.","region":"grave","x":-3,"y":-2,"exits":{"east":43,"west":45},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"45":{"id":45,"name":"Memorial garden","desc":"You are at the memorial garden. Names are carved on low stones.","region":"grave","x":-4,"y":-2,"exits":{"east":44,"west":46},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"46":{"id":46,"name":"Graveward Watch Post","desc":"You are at the Graveward Watch Post. The cemetery is west.","region":"grave","x":-5,"y":-2,"exits":{"east":45,"west":47},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"47":{"id":47,"name":"Graveward Warning Gate","desc":"You stand at the Graveward Warning Gate. Read the posted warning.","region":"grave","x":-6,"y":-2,"exits":{"east":46,"west":48},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"graveward sign","kind":"misc","text":"UNDEAD AHEAD! West of this gate is unsafe. Clerics: return east to heal."}],"tier":0,"rate":0,"monsters":[]},"48":{"id":48,"name":"Neglected graves","desc":"You are among neglected graves. Loose bones shift in the soil.","region":"grave","x":-7,"y":-2,"exits":{"east":47,"west":49},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":110,"monsters":["shambling skeleton (level 1)","restless spirit (level 2)"]},"49":{"id":49,"name":"Cemetery path","desc":"You are on the cemetery path. A thin mist hangs above the stones.","region":"grave","x":-8,"y":-2,"exits":{"north":56,"east":48,"west":50},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":95,"monsters":["shambling skeleton (level 1)","restless spirit (level 2)"]},"50":{"id":50,"name":"Open grave","desc":"You are beside an open grave. Something scrapes beneath the earth.","region":"grave","x":-9,"y":-2,"exits":{"east":49,"west":51},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":85,"monsters":["shambling skeleton (level 1)","restless spirit (level 2)"]},"51":{"id":51,"name":"Old mausoleum","desc":"You are before an old mausoleum. Stone steps lead down.","region":"grave","x":-10,"y":-2,"exits":{"east":50,"down":52},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":75,"monsters":["restless spirit (level 2)","grave guardian (level 3)"]},"52":{"id":52,"name":"Mausoleum hall","desc":"You are in the mausoleum hall. Pale figures drift in the dark.","region":"grave","x":-10,"y":-1,"exits":{"west":53,"up":51},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":65,"monsters":["restless spirit (level 2)","grave guardian (level 3)"]},"53":{"id":53,"name":"Ossuary passage","desc":"You are in the ossuary passage. Bone piles line the walls.","region":"grave","x":-11,"y":-1,"exits":{"south":55,"east":52,"west":54},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":60,"monsters":["restless spirit (level 2)","grave guardian (level 3)"]},"54":{"id":54,"name":"Bone guard chamber","desc":"You are in the bone guard chamber. Ancient armor gleams faintly.","region":"grave","x":-12,"y":-1,"exits":{"east":53,"west":57},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":55,"monsters":["grave guardian (level 3)","bone knight (level 4)","crypt wight (level 5)"]},"55":{"id":55,"name":"Sealed side chapel","desc":"You are in a sealed side chapel. A silver bell hangs over an altar.","region":"grave","x":-11,"y":0,"exits":{"north":53},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":70,"monsters":["restless spirit (level 2)","grave guardian (level 3)"]},"56":{"id":56,"name":"Graveyard overlook","desc":"You are on the graveyard overlook. Havenford lies to the east.","region":"grave","x":-8,"y":-3,"exits":{"south":49},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"57":{"id":57,"name":"Deepest crypt","desc":"You are in the deepest crypt. A cold throne dominates the vault.","region":"grave","x":-13,"y":-1,"exits":{"east":54},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":45,"monsters":["grave guardian (level 3)","bone knight (level 4)","crypt wight (level 5)"]},"58":{"id":58,"name":"South-west lane","desc":"You are on the south-west lane. A ruined keep rises beyond the fields.","region":"keep","x":0,"y":3,"exits":{"north":15,"west":59},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"59":{"id":59,"name":"Old causeway","desc":"You are on the old causeway. The keep stands to the west.","region":"keep","x":-1,"y":3,"exits":{"east":58,"west":60},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"60":{"id":60,"name":"Keep's warning board","desc":"You are at the keep's warning board. The gate is west.","region":"keep","x":-2,"y":3,"exits":{"east":59,"west":61},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"lockspire sign","kind":"misc","text":"THIEVES: This keep has locks and traps. Every staircase stays open."}],"tier":0,"rate":0,"monsters":[]},"61":{"id":61,"name":"Lockspire courtyard","desc":"You stand in Lockspire courtyard. Entry to the keep lies west.","region":"keep","x":-3,"y":3,"exits":{"east":60,"west":62},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"62":{"id":62,"name":"Ground-floor entry","desc":"You are in the ground-floor entry. Practice corridors lead west.","region":"keep","x":-4,"y":3,"exits":{"east":61,"west":63},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"A plaque reads: Practice locks first; then try the upper floors.","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"63":{"id":63,"name":"Novice lock hall","desc":"You are in the novice lock hall. Two doors lead to practice chambers.","region":"keep","x":-5,"y":3,"exits":{"east":62,"west":65},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":64,"name":"brass door","locked":true},{"to":76,"name":"needle door","locked":true}],"objects":[],"tier":0,"rate":0,"monsters":[]},"64":{"id":64,"name":"Brass-lock chamber","desc":"You are in the brass-lock chamber. A low chest rests on a bench.","region":"keep","x":-5,"y":4,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":63,"name":"brass door","locked":true}],"objects":[{"name":"practice chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"65":{"id":65,"name":"First stairwell","desc":"You are at the first stairwell. Steps climb to the second floor.","region":"keep","x":-6,"y":3,"exits":{"east":63,"up":66},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"66":{"id":66,"name":"Second landing","desc":"You are on the second landing. A corridor runs west.","region":"keep","x":-6,"y":5,"exits":{"west":67,"down":65},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"67":{"id":67,"name":"Warded corridor","desc":"You are in the warded corridor. Faint holes mark the stonework.","region":"keep","x":-7,"y":5,"exits":{"east":66,"west":69},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":68,"name":"records door","locked":true},{"to":77,"name":"armory door","locked":true}],"objects":[],"tier":0,"rate":0,"monsters":[]},"68":{"id":68,"name":"Old records room","desc":"You are in the old records room. Shelves surround a heavy chest.","region":"keep","x":-7,"y":6,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":67,"name":"records door","locked":true}],"objects":[{"name":"records chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"69":{"id":69,"name":"Second stairwell","desc":"You are at the second stairwell. Steps climb to the third floor.","region":"keep","x":-8,"y":5,"exits":{"east":67,"up":70},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"70":{"id":70,"name":"Third landing","desc":"You are on the third landing. Fine locks adorn two dark doors.","region":"keep","x":-8,"y":7,"exits":{"west":71,"down":69},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"71":{"id":71,"name":"Master lock hall","desc":"You are in the master lock hall. Dust outlines hidden trigger plates.","region":"keep","x":-9,"y":7,"exits":{"east":70,"west":73},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":72,"name":"jewel door","locked":true},{"to":78,"name":"artificer door","locked":true}],"objects":[],"tier":0,"rate":0,"monsters":[]},"72":{"id":72,"name":"Jewel chamber","desc":"You are in the jewel chamber. A carved chest stands under a lamp.","region":"keep","x":-9,"y":8,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":71,"name":"jewel door","locked":true}],"objects":[{"name":"jewel chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"73":{"id":73,"name":"Roof stair","desc":"You are at the roof stair. The final flight rises above.","region":"keep","x":-10,"y":7,"exits":{"east":71,"up":74},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"74":{"id":74,"name":"Battlement","desc":"You are on the battlement. The city and Graveward lie below.","region":"keep","x":-10,"y":9,"exits":{"down":73},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":75,"name":"crowning door","locked":true}],"objects":[],"tier":0,"rate":0,"monsters":[]},"75":{"id":75,"name":"Crowning vault","desc":"You are in the crowning vault. A final chest awaits a master thief.","region":"keep","x":-11,"y":9,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":74,"name":"crowning door","locked":true}],"objects":[{"name":"crown chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"76":{"id":76,"name":"Needle-lock chamber","desc":"You are in the needle-lock chamber. A chest bears a tiny keyhole.","region":"keep","x":-5,"y":2,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":63,"name":"needle door","locked":true}],"objects":[{"name":"needle chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"77":{"id":77,"name":"Armory vault","desc":"You are in the armory vault. A steel-bound strongbox waits here.","region":"keep","x":-7,"y":4,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":67,"name":"armory door","locked":true}],"objects":[{"name":"armory chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"78":{"id":78,"name":"Artificer's treasury","desc":"You are in the artificer's treasury. Complex mechanisms hum softly.","region":"keep","x":-9,"y":6,"exits":{},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[{"to":71,"name":"artificer door","locked":true}],"objects":[{"name":"clockwork chest","kind":"chest"}],"tier":0,"rate":0,"monsters":[]},"79":{"id":79,"name":"Scholar's Walk","desc":"You are on Scholar's Walk. A sign points west to the observatory.","region":"obs","x":0,"y":-6,"exits":{"east":6,"west":80},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"80":{"id":80,"name":"Arcane garden","desc":"You are in the arcane garden. Quiet lanterns float above the path.","region":"obs","x":-1,"y":-6,"exits":{"north":81,"south":93,"east":79},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"81":{"id":81,"name":"Novice colonnade","desc":"You are at the novice colonnade. Lecture rooms stand east and south.","region":"obs","x":-1,"y":-7,"exits":{"south":80,"east":91,"west":82},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"82":{"id":82,"name":"Crystal causeway","desc":"You are on the crystal causeway. The observatory looms west.","region":"obs","x":-2,"y":-7,"exits":{"south":92,"east":81,"west":83},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"83":{"id":83,"name":"Aether Warning Gate","desc":"You are at the Aether Warning Gate. Danger lies north.","region":"obs","x":-3,"y":-7,"exits":{"north":84,"east":82},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"aether sign","kind":"misc","text":"DANGER AHEAD! Arcane creatures roam north. Return east to train."}],"tier":0,"rate":0,"monsters":[]},"84":{"id":84,"name":"Spark meadow","desc":"You are in the spark meadow. Weak magical motes flicker around you.","region":"obs","x":-3,"y":-8,"exits":{"north":85,"south":83},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":110,"monsters":["flickering mote (level 1)","glass sprite (level 2)"]},"85":{"id":85,"name":"Mirror thicket","desc":"You are in the mirror thicket. Strange lights dart through the trees.","region":"obs","x":-3,"y":-9,"exits":{"south":84,"west":86},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":1,"rate":90,"monsters":["flickering mote (level 1)","glass sprite (level 2)"]},"86":{"id":86,"name":"Shattered arch","desc":"You stand before a shattered arch. Arcane echoes pulse beyond it.","region":"obs","x":-4,"y":-9,"exits":{"north":87,"east":85},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":80,"monsters":["glass sprite (level 2)","spark elemental (level 3)","mirror shade (level 3)"]},"87":{"id":87,"name":"Broken observatory","desc":"You are in the broken observatory. Stairs spiral upward.","region":"obs","x":-4,"y":-10,"exits":{"south":86,"up":88},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":70,"monsters":["glass sprite (level 2)","spark elemental (level 3)","mirror shade (level 3)"]},"88":{"id":88,"name":"Stargazer's loft","desc":"You are in the stargazer's loft. A broken telescope points skyward.","region":"obs","x":-4,"y":-11,"exits":{"up":89,"down":87},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":2,"rate":65,"monsters":["glass sprite (level 2)","spark elemental (level 3)","mirror shade (level 3)"]},"89":{"id":89,"name":"Upper prism hall","desc":"You are in the upper prism hall. Light scatters from cracked glass.","region":"obs","x":-4,"y":-12,"exits":{"up":90,"down":88},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":55,"monsters":["mirror shade (level 3)","prismatic guardian (level 4)","aether warden (level 5)"]},"90":{"id":90,"name":"High aether chamber","desc":"You are in the high aether chamber. Reality seems thin here.","region":"obs","x":-4,"y":-13,"exits":{"down":89},"safe":false,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":3,"rate":45,"monsters":["mirror shade (level 3)","prismatic guardian (level 4)","aether warden (level 5)"]},"91":{"id":91,"name":"Spell library","desc":"You are in the spell library. Manuals teach safe magical practice.","region":"obs","x":0,"y":-7,"exits":{"south":94,"west":81},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"lessons sign","kind":"misc","text":"A note reads: In the dark study, USE LANTERN. Magic fails in the null room."}],"tier":0,"rate":0,"monsters":[]},"92":{"id":92,"name":"Null-magic room","desc":"You are in the null-magic room. Enchantments fall silent here.","region":"obs","x":-2,"y":-6,"exits":{"north":82},"safe":true,"dark":false,"antimagic":true,"trains":"","role":"","greeting":"","doors":[],"objects":[],"tier":0,"rate":0,"monsters":[]},"93":{"id":93,"name":"Apprentice workshop","desc":"You are in the apprentice workshop. Test equipment covers the tables.","region":"obs","x":-1,"y":-5,"exits":{"north":80},"safe":true,"dark":false,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"apprentice scroll","kind":"scroll"}],"tier":0,"rate":0,"monsters":[]},"94":{"id":94,"name":"Darkened study","desc":"You are in the darkened study. A lantern sits beside the door.","region":"obs","x":1,"y":-7,"exits":{"north":91},"safe":false,"dark":true,"antimagic":false,"trains":"","role":"","greeting":"","doors":[],"objects":[{"name":"brass lantern","kind":"device"}],"tier":0,"rate":0,"monsters":[]}},"links":[{"a":1,"b":2,"kind":"path","oneway":false,"via":[],"flip":false},{"a":2,"b":3,"kind":"path","oneway":false,"via":[],"flip":false},{"a":2,"b":10,"kind":"path","oneway":false,"via":[],"flip":false},{"a":2,"b":16,"kind":"path","oneway":false,"via":[],"flip":false},{"a":3,"b":6,"kind":"path","oneway":false,"via":[],"flip":false},{"a":3,"b":5,"kind":"path","oneway":false,"via":[],"flip":false},{"a":3,"b":4,"kind":"path","oneway":false,"via":[],"flip":false},{"a":4,"b":7,"kind":"path","oneway":false,"via":[],"flip":false},{"a":6,"b":9,"kind":"path","oneway":false,"via":[],"flip":false},{"a":6,"b":79,"kind":"path","oneway":false,"via":[[0,-3]],"flip":false},{"a":7,"b":8,"kind":"path","oneway":false,"via":[],"flip":false},{"a":7,"b":43,"kind":"path","oneway":false,"via":[],"flip":false},{"a":8,"b":40,"kind":"path","oneway":false,"via":[],"flip":false},{"a":10,"b":13,"kind":"path","oneway":false,"via":[],"flip":false},{"a":10,"b":11,"kind":"path","oneway":false,"via":[],"flip":false},{"a":10,"b":12,"kind":"path","oneway":false,"via":[],"flip":false},{"a":13,"b":14,"kind":"path","oneway":false,"via":[],"flip":false},{"a":13,"b":15,"kind":"path","oneway":false,"via":[],"flip":false},{"a":15,"b":58,"kind":"path","oneway":false,"via":[],"flip":false},{"a":16,"b":17,"kind":"path","oneway":false,"via":[],"flip":false},{"a":16,"b":41,"kind":"path","oneway":false,"via":[],"flip":false},{"a":17,"b":18,"kind":"path","oneway":false,"via":[],"flip":false},{"a":18,"b":19,"kind":"path","oneway":false,"via":[],"flip":false},{"a":19,"b":21,"kind":"path","oneway":false,"via":[],"flip":false},{"a":19,"b":20,"kind":"path","oneway":false,"via":[],"flip":false},{"a":19,"b":38,"kind":"path","oneway":false,"via":[],"flip":false},{"a":21,"b":22,"kind":"path","oneway":false,"via":[],"flip":false},{"a":22,"b":23,"kind":"path","oneway":false,"via":[],"flip":false},{"a":23,"b":24,"kind":"path","oneway":false,"via":[],"flip":false},{"a":24,"b":25,"kind":"path","oneway":false,"via":[],"flip":false},{"a":25,"b":26,"kind":"path","oneway":false,"via":[],"flip":false},{"a":26,"b":27,"kind":"path","oneway":false,"via":[],"flip":false},{"a":27,"b":28,"kind":"path","oneway":false,"via":[],"flip":false},{"a":28,"b":29,"kind":"path","oneway":false,"via":[],"flip":false},{"a":28,"b":32,"kind":"path","oneway":false,"via":[],"flip":false},{"a":29,"b":30,"kind":"path","oneway":false,"via":[],"flip":false},{"a":30,"b":31,"kind":"path","oneway":false,"via":[],"flip":false},{"a":31,"b":33,"kind":"path","oneway":false,"via":[],"flip":false},{"a":32,"b":37,"kind":"path","oneway":false,"via":[],"flip":false},{"a":33,"b":34,"kind":"path","oneway":false,"via":[],"flip":false},{"a":34,"b":35,"kind":"path","oneway":false,"via":[],"flip":false},{"a":35,"b":36,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":38,"b":39,"kind":"path","oneway":false,"via":[],"flip":false},{"a":41,"b":42,"kind":"path","oneway":false,"via":[],"flip":false},{"a":43,"b":44,"kind":"path","oneway":false,"via":[],"flip":false},{"a":44,"b":45,"kind":"path","oneway":false,"via":[],"flip":false},{"a":45,"b":46,"kind":"path","oneway":false,"via":[],"flip":false},{"a":46,"b":47,"kind":"path","oneway":false,"via":[],"flip":false},{"a":47,"b":48,"kind":"path","oneway":false,"via":[],"flip":false},{"a":48,"b":49,"kind":"path","oneway":false,"via":[],"flip":false},{"a":49,"b":56,"kind":"path","oneway":false,"via":[],"flip":false},{"a":49,"b":50,"kind":"path","oneway":false,"via":[],"flip":false},{"a":50,"b":51,"kind":"path","oneway":false,"via":[],"flip":false},{"a":51,"b":52,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":52,"b":53,"kind":"path","oneway":false,"via":[],"flip":false},{"a":53,"b":55,"kind":"path","oneway":false,"via":[],"flip":false},{"a":53,"b":54,"kind":"path","oneway":false,"via":[],"flip":false},{"a":54,"b":57,"kind":"path","oneway":false,"via":[],"flip":false},{"a":58,"b":59,"kind":"path","oneway":false,"via":[],"flip":false},{"a":59,"b":60,"kind":"path","oneway":false,"via":[],"flip":false},{"a":60,"b":61,"kind":"path","oneway":false,"via":[],"flip":false},{"a":61,"b":62,"kind":"path","oneway":false,"via":[],"flip":false},{"a":62,"b":63,"kind":"path","oneway":false,"via":[],"flip":false},{"a":63,"b":65,"kind":"path","oneway":false,"via":[],"flip":false},{"a":63,"b":64,"kind":"door","oneway":false,"via":[],"flip":false},{"a":63,"b":76,"kind":"door","oneway":false,"via":[],"flip":false},{"a":65,"b":66,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":66,"b":67,"kind":"path","oneway":false,"via":[],"flip":false},{"a":67,"b":69,"kind":"path","oneway":false,"via":[],"flip":false},{"a":67,"b":68,"kind":"door","oneway":false,"via":[],"flip":false},{"a":67,"b":77,"kind":"door","oneway":false,"via":[],"flip":false},{"a":69,"b":70,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":70,"b":71,"kind":"path","oneway":false,"via":[],"flip":false},{"a":71,"b":73,"kind":"path","oneway":false,"via":[],"flip":false},{"a":71,"b":72,"kind":"door","oneway":false,"via":[],"flip":false},{"a":71,"b":78,"kind":"door","oneway":false,"via":[],"flip":false},{"a":73,"b":74,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":74,"b":75,"kind":"door","oneway":false,"via":[],"flip":false},{"a":79,"b":80,"kind":"path","oneway":false,"via":[],"flip":false},{"a":80,"b":81,"kind":"path","oneway":false,"via":[],"flip":false},{"a":80,"b":93,"kind":"path","oneway":false,"via":[],"flip":false},{"a":81,"b":91,"kind":"path","oneway":false,"via":[],"flip":false},{"a":81,"b":82,"kind":"path","oneway":false,"via":[],"flip":false},{"a":82,"b":92,"kind":"path","oneway":false,"via":[],"flip":false},{"a":82,"b":83,"kind":"path","oneway":false,"via":[],"flip":false},{"a":83,"b":84,"kind":"path","oneway":false,"via":[],"flip":false},{"a":84,"b":85,"kind":"path","oneway":false,"via":[],"flip":false},{"a":85,"b":86,"kind":"path","oneway":false,"via":[],"flip":false},{"a":86,"b":87,"kind":"path","oneway":false,"via":[],"flip":false},{"a":87,"b":88,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":88,"b":89,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":89,"b":90,"kind":"stairs","oneway":false,"via":[],"flip":false},{"a":91,"b":94,"kind":"path","oneway":false,"via":[],"flip":false}],"regions":[{"key":"city","name":"Havenford"},{"key":"road","name":"The north road"},{"key":"grave","name":"The Graveward"},{"key":"keep","name":"Lockspire Keep"},{"key":"obs","name":"Aether Observatory"}]};
+const U = 54, R = 15, PAD = 40;
+const NS = "http://www.w3.org/2000/svg";
+const rooms = DATA.rooms;
+const ids = Object.keys(rooms).map(Number).sort((a, b) => a - b);
+const regionName = Object.fromEntries(DATA.regions.map(r => [r.key, r.name]));
+const ABBR = { north: "n", south: "s", east: "e", west: "w", up: "u", down: "d" };
+const ROLE = { store: "store", smith: "smith", bar: "bar", pawnshop: "pawnshop", newsstand: "newsstand" };
+
+const xs = ids.map(i => rooms[i].x), ys = ids.map(i => rooms[i].y);
+const minX = Math.min(...xs), minY = Math.min(...ys);
+const W = (Math.max(...xs) - minX) * U + PAD * 2, H = (Math.max(...ys) - minY) * U + PAD * 2;
+const px = r => PAD + (r.x - minX) * U, py = r => PAD + (r.y - minY) * U;
+const gx = x => PAD + (x - minX) * U, gy = y => PAD + (y - minY) * U;
+
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function h(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+const fill = r => r.dark ? "var(--ink)" : r.tier ? `var(--t${r.tier})` : "var(--safe)";
+const inkOn = r => r.dark || r.tier === 3 ? "var(--t3-ink)" : "var(--ink)";
+
+/* ---- draw ---- */
+const svg = document.getElementById("map");
+svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+const gCells = el("g", {}, svg), gLabels = el("g", {}, svg), gLinks = el("g", {}, svg), gRooms = el("g", {}, svg);
+
+for (const i of ids) {
+  const r = rooms[i];
+  el("rect", { class: "cell", x: px(r) - U / 2, y: py(r) - U / 2, width: U, height: U, fill: `var(--${r.region})` }, gCells);
+}
+const LABELS = [
+  ["Havenford", 2.5, 3.0, "middle"], ["The north road", 4.6, -12.6, "start"],
+  ["The Graveward", -7.2, -3.95, "middle"], ["Lockspire Keep", -2.6, 5.6, "middle"],
+  ["Aether Observatory", -1.5, -14.1, "middle"],
+];
+for (const [t, x, y, a] of LABELS) {
+  const e = el("text", { class: "region-label", x: gx(x), y: gy(y), "text-anchor": a }, gLabels); e.textContent = t;
+}
+for (const [t, y] of [["ground", 3], ["2nd floor", 5], ["3rd floor", 7], ["roof", 9]]) {
+  const e = el("text", { class: "floor-label", x: gx(-11.55), y: gy(y) + 4, "text-anchor": "end" }, gLabels); e.textContent = t;
+}
+
+const linkEls = [];
+for (const L of DATA.links) {
+  const a = rooms[L.a], b = rooms[L.b];
+  const via = L.flip ? [...L.via].reverse() : L.via;
+  const pts = [[px(a), py(a)], ...via.map(([x, y]) => [gx(x), gy(y)]), [px(b), py(b)]];
+  const p = el("polyline", { class: `link ${L.kind}`, points: pts.map(q => q.join(",")).join(" ") }, gLinks);
+  if (L.oneway) p.setAttribute("marker-end", "url(#arrow)");
+  linkEls.push({ L, p });
+}
+
+const roomEls = {};
+for (const i of ids) {
+  const r = rooms[i];
+  const g = el("g", { class: "room", tabindex: 0, role: "button", "aria-label": `Room ${i}, ${r.name}` }, gRooms);
+  const x = px(r), y = py(r);
+  el("rect", { class: "halo", x: x - R - 5, y: y - R - 5, width: 2 * R + 10, height: 2 * R + 10, rx: 9 }, g);
+  if (i === 1) el("rect", { class: "mark-start", x: x - R - 3.5, y: y - R - 3.5, width: 2 * R + 7, height: 2 * R + 7, rx: 8 }, g);
+  el("rect", { class: "body", x: x - R, y: y - R, width: 2 * R, height: 2 * R, rx: 6, fill: fill(r),
+               "stroke-dasharray": r.antimagic ? "3 2.5" : "none" }, g);
+  const t = el("text", { x, y, fill: inkOn(r) }, g); t.textContent = i;
+  if (r.trains) el("circle", { class: "mark-trainer", cx: x - R + 1, cy: y - R + 1, r: 4.2 }, g);
+  if (r.role) el("rect", { class: "mark-shop", x: x + R - 5, y: y - R - 3, width: 8, height: 8, transform: `rotate(45 ${x + R - 1} ${y - R + 1})` }, g);
+  if (r.objects.some(o => o.text)) el("path", { class: "mark-sign", d: `M${x + R - 6} ${y + R + 4} l6 -10 l6 10 z` }, g);
+  const tip = el("title", {}, g); tip.textContent = `${i} · ${r.name}`;
+  g.addEventListener("click", () => select(i));
+  g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i); } });
+  roomEls[i] = g;
+}
+
+const defs = el("defs", {}, svg);
+const mk = el("marker", { id: "arrow", viewBox: "0 0 10 10", refX: 22, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto-start-reverse" }, defs);
+el("path", { d: "M0 0 L10 5 L0 10 z", fill: "var(--path)" }, mk);
+
+/* ---- graph ---- */
+function edges(i) {
+  const r = rooms[i], out = [];
+  for (const [d, t] of Object.entries(r.exits)) out.push({ to: t, how: ABBR[d], dir: d });
+  for (const d of r.doors) out.push({ to: d.to, how: `open ${d.name}, go`, dir: "door", door: d });
+  return out;
+}
+function route(a, b) {
+  const prev = { [a]: null }, q = [a];
+  while (q.length) {
+    const i = q.shift();
+    if (i === b) break;
+    for (const e of edges(i)) if (!(e.to in prev)) { prev[e.to] = { from: i, e }; q.push(e.to); }
+  }
+  if (!(b in prev)) return null;
+  const steps = [];
+  for (let i = b; prev[i]; i = prev[i].from) steps.unshift({ from: prev[i].from, ...prev[i].e });
+  return steps;
+}
+
+/* ---- panel ---- */
+let selected = null;
+function chipFor(r) {
+  if (r.dark) return ["Dark · not safe", ""];
+  if (r.tier) return [`Danger ${r.tier} of 3 · monsters 1 in ${r.rate} per second`, `t${r.tier}`];
+  return [r.safe ? "Safe" : "No monsters", ""];
+}
+function select(i, scroll) {
+  selected = i;
+  for (const [k, g] of Object.entries(roomEls)) g.classList.toggle("sel", +k === i);
+  for (const { L, p } of linkEls) p.classList.toggle("hot", L.a === i || L.b === i);
+  const r = rooms[i], P = document.getElementById("panel");
+  P.replaceChildren();
+  const top = h("div", "eyebrow", `Room ${i} · ${regionName[r.region]}`);
+  P.append(top, h("h2", null, r.name));
+  const chips = h("div", "chips");
+  const [label, cls] = chipFor(r); chips.append(h("span", `chip ${cls}`, label));
+  if (r.trains) chips.append(h("span", "chip", `trains ${r.trains.replace(/ /g, ", ")}`));
+  if (r.role) chips.append(h("span", "chip", ROLE[r.role] || r.role));
+  if (r.antimagic) chips.append(h("span", "chip", "anti-magic"));
+  if (i === 1) chips.append(h("span", "chip", "start · revive"));
+  P.append(chips, h("p", "desc", r.desc));
+  if (r.greeting) { P.append(h("h3", null, "On entering")); P.append(h("p", "quote", r.greeting)); }
+
+  P.append(h("h3", null, "Exits"));
+  const ul = h("ul", "plain");
+  for (const e of edges(i)) {
+    const li = h("li"), b = h("button", "exit");
+    b.type = "button";
+    b.append(h("span", "dir", e.door ? "door" : e.dir), h("span", "num", e.to), h("span", null, e.door ? `${rooms[e.to].name} (${e.door.name}${e.door.locked ? ", locked" : ""})` : rooms[e.to].name));
+    b.addEventListener("click", () => select(e.to, true));
+    li.append(b); ul.append(li);
+  }
+  if (!ul.children.length) ul.append(h("li", "small", "None."));
+  P.append(ul);
+
+  const signs = r.objects.filter(o => o.text);
+  for (const s of signs) { P.append(h("h3", null, s.name)); P.append(h("p", "quote", s.text)); }
+  const things = r.objects.filter(o => !o.text).map(o => o.name);
+  if (things.length) { P.append(h("h3", null, "Objects")); P.append(h("p", "small", things.join(", "))); }
+  if (r.monsters.length) { P.append(h("h3", null, "Monsters")); P.append(h("p", "small", r.monsters.join(", "))); }
+  if (scroll) {
+    const box = document.getElementById("mapbox"), g = roomEls[i].getBoundingClientRect(), bb = box.getBoundingClientRect();
+    if (g.top < bb.top || g.bottom > bb.bottom || g.left < bb.left || g.right > bb.right)
+      box.scrollBy({ top: g.top - bb.top - bb.height / 2, left: g.left - bb.left - bb.width / 2, behavior: "smooth" });
+  }
+}
+
+/* ---- route finder ---- */
+const fromSel = document.getElementById("from"), toSel = document.getElementById("to");
+for (const s of [fromSel, toSel]) for (const i of ids) {
+  const o = document.createElement("option"); o.value = i; o.textContent = `${i} · ${rooms[i].name}`; s.append(o);
+}
+fromSel.value = 13; toSel.value = 22;
+function showRoute() {
+  const a = +fromSel.value, b = +toSel.value, out = document.getElementById("routeOut");
+  const steps = route(a, b);
+  for (const { p } of linkEls) p.classList.remove("route");
+  for (const g of Object.values(roomEls)) g.classList.remove("onroute");
+  out.replaceChildren();
+  if (!steps) { out.append(h("p", "small", "No way through: the rooms aren't connected.")); return; }
+  if (!steps.length) { out.append(h("p", "small", "You're already there.")); return; }
+  const moves = steps.map(s => s.door ? `[${s.door.name}]` : s.how).join(" ");
+  out.append(h("div", "moves", moves));
+  out.append(h("p", "small", `${steps.length} move${steps.length === 1 ? "" : "s"}${steps.some(s => s.door) ? "; doors must be opened first" : ""}.`));
+  const ol = h("ol", "steps");
+  for (const s of steps) {
+    const li = h("li", null, `${s.door ? `through the ${s.door.name}` : s.dir} to ${s.to} · ${rooms[s.to].name}`);
+    ol.append(li);
+    roomEls[s.to].classList.add("onroute");
+    for (const { L, p } of linkEls) if ((L.a === s.from && L.b === s.to) || (L.b === s.from && L.a === s.to)) p.classList.add("route");
+  }
+  roomEls[a].classList.add("onroute");
+  out.append(ol);
+}
+fromSel.addEventListener("change", showRoute);
+toSel.addEventListener("change", showRoute);
+document.getElementById("swap").addEventListener("click", () => { [fromSel.value, toSel.value] = [toSel.value, fromSel.value]; showRoute(); });
+
+/* ---- legend ---- */
+function swatchSvg(draw) { const s = el("svg", { width: 30, height: 22, viewBox: "0 0 30 22", "aria-hidden": "true" }); draw(s); return s; }
+const LEG = [
+  ["Safe room", s => el("rect", { x: 5, y: 2, width: 18, height: 18, rx: 4, fill: "var(--safe)", stroke: "var(--ink)", "stroke-width": 1.2 }, s)],
+  ["Danger 1 · 2 · 3", s => { [1, 2, 3].forEach((t, k) => el("rect", { x: 1 + k * 10, y: 6, width: 8, height: 10, rx: 2, fill: `var(--t${t})` }, s)); }],
+  ["Trainer", s => el("circle", { cx: 15, cy: 11, r: 5, class: "mark-trainer" }, s)],
+  ["Shop or service", s => el("rect", { x: 11, y: 7, width: 8, height: 8, class: "mark-shop", transform: "rotate(45 15 11)" }, s)],
+  ["Sign", s => el("path", { d: "M9 17 l6 -11 l6 11 z", class: "mark-sign" }, s)],
+  ["Path", s => el("line", { x1: 2, y1: 11, x2: 28, y2: 11, class: "link" }, s)],
+  ["Stairs", s => el("line", { x1: 2, y1: 11, x2: 28, y2: 11, class: "link stairs" }, s)],
+  ["Door", s => el("line", { x1: 2, y1: 11, x2: 28, y2: 11, class: "link door" }, s)],
+  ["Route", s => el("line", { x1: 2, y1: 11, x2: 28, y2: 11, class: "link route" }, s)],
+];
+const leg = document.getElementById("legend");
+for (const [t, d] of LEG) { const it = h("span", "item"); it.append(swatchSvg(d), h("span", null, t)); leg.append(it); }
+
+/* ---- index ---- */
+const idx = document.getElementById("index");
+for (const reg of DATA.regions) {
+  const sec = h("section"), hd = h("h2");
+  const sw = h("span", "swatch"); sw.style.background = `var(--${reg.key})`;
+  hd.append(sw, document.createTextNode(reg.name));
+  sec.append(hd);
+  const ul = h("ul", "plain");
+  for (const i of ids.filter(i => rooms[i].region === reg.key)) {
+    const r = rooms[i], b = h("button"), note = [];
+    if (r.trains) note.push(`trains ${r.trains.split(" ")[0]}${r.trains.includes(" ") ? " +" : ""}`);
+    if (r.role) note.push(r.role);
+    if (r.objects.some(o => o.text)) note.push("sign");
+    const name = h("span"); name.append(document.createTextNode(r.name));
+    if (note.length) name.append(h("span", "note", ` · ${note.join(", ")}`));
+    b.type = "button";
+    b.append(h("span", "n", i), name);
+    b.addEventListener("click", () => { select(i, true); document.getElementById("mapbox").scrollIntoView({ behavior: "smooth", block: "nearest" }); });
+    const li = h("li"); li.append(b); ul.append(li);
+  }
+  sec.append(ul); idx.append(sec);
+}
+
+select(13);
+showRoute();
+</script>
+
+</body></html>
