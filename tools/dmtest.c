@@ -417,23 +417,42 @@ static const char *Show(ObjectPoint Obj)
 	return Text;
 }
 
+/* Free a list of objects and what their chests hold */
+static void FreeList(ObjectPoint Obj)
+{
+	ObjectPoint	Next;
+
+	for (; Obj; Obj = Next)
+	{
+		Next = Obj->Next;
+		ODestroy(Obj);
+	}
+}
+
 /* Save Obj as room Rm's objects, as WriteSeg() does, and read them back */
 static const char *Reload(RmCodeType Rm, ObjectPoint Obj)
 {
 	ObjectPoint	Back;
+	const char	*Text;
 
 	WriteUObj(Rm, Obj, 0);
 	ReadUObj(Rm, &Back, 0);
-	return Show(Back);
+	Text = Show(Back);
+	FreeList(Obj);
+	FreeList(Back);
+	return Text;
 }
 
 /* Room Rm's saved objects */
 static const char *Load(RmCodeType Rm)
 {
 	ObjectPoint	Back;
+	const char	*Text;
 
 	ReadUObj(Rm, &Back, 0);
-	return Show(Back);
+	Text = Show(Back);
+	FreeList(Back);
+	return Text;
 }
 
 static void Same(const char *Got, const char *Want, const char *What)
@@ -469,7 +488,7 @@ static void Test43(void)
 /* #44: eight chests are all saved; a chest can't go into a chest */
 static void Test44(void)
 {
-	ObjectPoint	Crate;
+	ObjectPoint	Crate, Small;
 
 	Same(Reload(920, List(Box("a", "1"), Box("b", "2"), Box("c", "3"),
 						  Box("d", "4"), Box("e", "5"), Box("f", "6"),
@@ -481,7 +500,9 @@ static void Test44(void)
 	Crate = Box("crate,oak *", NULL);
 	Crate->Next = Room[User->RmCode].RmObjectTail;
 	Room[User->RmCode].RmObjectTail = Crate;
-	Carry(Box("box,small *", NULL));
+	Small = Box("box,small *", NULL);
+	Carry(Small);		/* Carry() takes a copy */
+	ODestroy(Small);
 	Capture();
 	Say("put box crate");
 	Check(strstr(Captured(), "A chest won't fit inside another chest!") != NULL,
@@ -543,6 +564,13 @@ static void Test64(void)
 	ReadUMon(1949, &Mon);
 	Check(Mon && !strcmp(Mon->Name, "bat"),
 		  "room 1949's monsters, after room 940's are deleted");
+	while (Mon)
+	{
+		MonsterPoint	Next = Mon->Next;
+
+		Destroy(Mon);
+		Mon = Next;
+	}
 	WriteUMon(1949, &Proto);
 	Check(Copies(EDBMon, sizeof(MonRec), 1949, 0) == 1,
 		  "rewriting room 1949's monsters doesn't add a second record");
