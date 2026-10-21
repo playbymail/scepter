@@ -28,7 +28,9 @@
  *
  * NetRea() returns "1" with channel 0 when nothing happens for a second
  * (FindPid(0) is NULL, so main() runs MonAttack() and prompts nobody), and
- * "9" after SIGINT or SIGTERM, which shuts the server down.
+ * "9" after SIGINT or SIGTERM, which shuts the server down.  SIGUSR1 and
+ * SIGUSR2 give "7R" and "7X", the warnings of a coming restart or reset
+ * (#136).
  */
 #include <errno.h>
 #include <fcntl.h>
@@ -84,6 +86,7 @@ static int		Listener = -1;
 static int		LastPick;
 static long		LastTick;
 static volatile sig_atomic_t Stop;
+static volatile sig_atomic_t Warn;		/* 'R' or 'X', for NetRea() */
 
 static long Now(void)
 {
@@ -97,6 +100,11 @@ static void OnStop(int sig)
 {
 	UNUSED(sig);
 	Stop = TRUE;
+}
+
+static void OnWarn(int sig)
+{
+	Warn = sig == SIGUSR2 ? 'X' : 'R';
 }
 
 static void Drop(ConnType *C)
@@ -348,6 +356,8 @@ void NetListen(char *Addr)
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, OnStop);
 	signal(SIGTERM, OnStop);
+	signal(SIGUSR1, OnWarn);
+	signal(SIGUSR2, OnWarn);
 	atexit(Finish);
 	LastTick = Now();
 }
@@ -458,6 +468,15 @@ void NetRea(char *Str, int *Chn)
 		{
 			*Chn = 0;
 			strcpy(Str, "9");
+			return;
+		}
+		if (Warn)
+		{
+			*Chn = 0;
+			Str[0] = '7';
+			Str[1] = (char)Warn;
+			Str[2] = '\0';
+			Warn = 0;
 			return;
 		}
 		if (Pick(Str, Chn, now))

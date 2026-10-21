@@ -1131,6 +1131,36 @@ static void Test120(void)
 	Check(User->Entry != XParley, "and doesn't wait for an answer");
 }
 
+/* #136: the final deploy warning comes WarnFinal seconds after the first */
+static void Test136(void)
+{
+	TimeType	Start = RealTime;
+
+	Capture();
+	DeployWarning(FALSE);
+	RealTime = Start + WarnFinal - 1;
+	DeployCountdown();
+	Check(strstr(Captured(), "The server restarts in 2 minutes. Type SAVE now")
+		  && !strstr(Captured(), "30 seconds"),
+		  "a restart is announced, with no final warning yet");
+	RealTime = Start + WarnFinal;
+	DeployCountdown();
+	Check(strstr(Captured(), "*** Restarting in 30 seconds. Type SAVE now. ***")
+		  != NULL, "the final warning comes WarnFinal seconds later");
+	RealTime += 60;
+	Capture();
+	DeployCountdown();
+	Check(!*Captured(), "and only once");
+
+	DeployWarning(TRUE);
+	RealTime += WarnFinal;
+	DeployCountdown();
+	Check(strstr(Captured(), "The game will be RESET in 2 minutes.")
+		  && strstr(Captured(), "*** Reset in 30 seconds. ***")
+		  && !strstr(Captured(), "SAVE"),
+		  "a reset is announced twice, never suggesting SAVE");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1277,6 +1307,7 @@ int main(int argc, char **argv)
 		{"35", Test35}, {"36", Test36}, {"40", Test40}, {"21", Test21},
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
+		{"136", Test136},
 	};
 	int		I;
 
