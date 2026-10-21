@@ -1,6 +1,6 @@
 # Deploying to the droplet
 
-The game runs on the DigitalOcean droplet (`ssh tsogira`) as
+The game runs on the DigitalOcean droplet (`ssh sceptish`) as
 `scepter.service`.  Players connect with a MUD client or telnet to
 `sceptish.pbbgaming.com` port 4000.  That name and `tsogira.pbbgaming.com`
 both point at the droplet; the second is the Tsogira web app's site.
@@ -59,11 +59,10 @@ stopped (docs/data-files.md).
 ## Upgrade
 
 ```sh
-scp out/scepterd out/mkgame out/upgradegame out/dmadmin tsogira:/tmp/
-ssh tsogira
+scp out/scepterd out/mkgame out/upgradegame out/dmadmin sceptish:/tmp/
+ssh sceptish
 cp -p /usr/local/bin/scepterd /usr/local/bin/mkgame /usr/local/bin/upgradegame \
-	/usr/local/share/scepter/prev/    # for rolling back
-cp -p /usr/local/bin/dmadmin /usr/local/share/scepter/prev/    # once it is installed
+	/usr/local/bin/dmadmin /usr/local/share/scepter/prev/    # for rolling back
 systemctl kill --kill-whom=main --signal=SIGUSR1 scepter    # restart warning
 sleep 120
 systemctl stop scepter
@@ -124,6 +123,7 @@ Upgrade history:
 | 2026-10-21 | `49498be` | 2, unchanged (#117, #49, #128, #41); game recreated with `mkgame -f` for the #128 room text, deleting every character | `/var/lib/scepter/havenford.backup-20261021-163121` |
 | 2026-10-21 | `1404c7e` | game database, schema version 1 (#71, #146–#153); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning) | `/var/lib/scepter/havenford.structs-20261021` (the old struct-file game, untouched) |
 | 2026-10-21 | `6e12f8e` | schema 1 → 2: the login limits in the database (#93); characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-201641` |
+| 2026-10-21 | `9e957fc` | schema 2 → 3: the history of DM ranks (#139); `dmadmin` installed, and the first master DM, `MOTHELLO`, made with it; characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-224954` |
 
 ## DMs
 
@@ -152,8 +152,8 @@ a new one, so every character is deleted (#71: reset, not converted).  The
 old game directory is kept aside, untouched.  Build as above, then:
 
 ```sh
-scp out/scepterd out/mkgame out/upgradegame var/havenford/havenford.world tsogira:/tmp/
-ssh tsogira
+scp out/scepterd out/mkgame out/upgradegame var/havenford/havenford.world sceptish:/tmp/
+ssh sceptish
 systemctl kill --kill-whom=main --signal=SIGUSR2 scepter    # reset warning
 sleep 120
 systemctl stop scepter
@@ -184,8 +184,8 @@ The old game, and every character in it, is left untouched, but the
 players start again, so warn them with the reset warning:
 
 ```sh
-scp var/havenford/havenford.world deploy/scepter.service tsogira:/tmp/
-ssh tsogira
+scp var/havenford/havenford.world deploy/scepter.service sceptish:/tmp/
+ssh sceptish
 install -m 0644 /tmp/havenford.world /usr/local/share/scepter/
 install -d -m 0750 -o scepter -g scepter /var/lib/scepter/havenford
 runuser -u scepter -- /usr/local/bin/mkgame \
@@ -203,8 +203,8 @@ systemctl start scepter
 These steps were done once, on 2026-10-20, with the alpha world:
 
 ```sh
-scp out/scepterd out/mkgame var/alpha/alpha.world deploy/scepter.service tsogira:/tmp/
-ssh tsogira
+scp out/scepterd out/mkgame var/alpha/alpha.world deploy/scepter.service sceptish:/tmp/
+ssh sceptish
 install -m 0755 /tmp/scepterd /tmp/mkgame /usr/local/bin/
 install -d /usr/local/share/scepter
 install -m 0644 /tmp/alpha.world /usr/local/share/scepter/
@@ -239,8 +239,8 @@ To update the site:
 
 ```sh
 make site
-scp -r out/site tsogira:/tmp/sceptish-site
-ssh tsogira
+scp -r out/site sceptish:/tmp/sceptish-site
+ssh sceptish
 install -d -m 0755 /usr/local/share/scepter/www
 install -m 0644 /tmp/sceptish-site/* /usr/local/share/scepter/www/
 rm -r /tmp/sceptish-site
@@ -250,8 +250,8 @@ Caddy serves those files.  Its site block was added once, on 2026-10-21,
 after the dolpher and tsogira sites, which stay unchanged:
 
 ```sh
-scp deploy/Caddyfile.sceptish tsogira:/tmp/
-ssh tsogira
+scp deploy/Caddyfile.sceptish sceptish:/tmp/
+ssh sceptish
 cp -p /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak-$(date +%Y%m%d)
 { echo; cat /tmp/Caddyfile.sceptish; } >> /etc/caddy/Caddyfile
 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
