@@ -1,14 +1,14 @@
 /*
  * dmtest -- regression tests for security bugs that only a DM or bad data
- * can reach, and for saving chests, run against the real engine code.
+ * can reach, and for saving rooms, run against the real engine code.
  *
  *	dmtest GAMEDIR TEST
  *	dmtest GAMEDIR legacy NAME PASSWORD
  *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88, or for chests
- * 42, 43, 44 or 56, which save room objects and read them back as a
- * segment swap would; they use rooms 900-930.  The game directory (made
+ * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88, or for saving
+ * rooms 42, 43, 44, 56 or 64, which save room objects and monsters and
+ * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
  * each test sets up the state the DM editor or a corrupt record would leave
@@ -422,6 +422,15 @@ static const char *Reload(RmCodeType Rm, ObjectPoint Obj)
 	return Show(Back);
 }
 
+/* Room Rm's saved objects */
+static const char *Load(RmCodeType Rm)
+{
+	ObjectPoint	Back;
+
+	ReadUObj(Rm, &Back, 0);
+	return Show(Back);
+}
+
 static void Same(const char *Got, const char *Want, const char *What)
 {
 	char	Msg[1200];
@@ -485,6 +494,57 @@ static void Test56(void)
 		 "sign a[] b[sword]", "an empty chest, then a full one");
 }
 
+/* How many records in table fp (RecSize-byte records) belong to (Room, Type) */
+static int Copies(FILE *fp, size_t RecSize, int Room, int Type)
+{
+	ObjRec	Head;		/* only the leading Room and DataType are read */
+	int		Slot, N = 0;
+
+	for (Slot = 0; Slot < 1009; Slot++)
+	{
+		SeekRec(fp, (long)Slot * RecSize);
+		if (fread((char *)&Head, 4, 1, fp) == 1
+		&&	Head.Room == Room && Head.DataType == Type)
+			N++;
+	}
+	return N;
+}
+
+/* #64: deleting a record must not hide records that collided past it */
+static void Test64(void)
+{
+	MonsterPoint	Mon;
+	MonsterType		Proto = ProtoMonster;
+
+	/* 940 and 1949 = 940 + 1009 hash to the same slot */
+	Reload(940, NewObj("rock", Misc, NULL));
+	Reload(1949, NewObj("gem", Misc, NULL));
+	DeleteUObj(940);
+	Same(Load(1949), "gem", "room 1949's objects, after room 940's are deleted");
+	Reload(1949, NewObj("gem", Misc, NULL));
+	Check(Copies(EDBObj, sizeof(ObjRec), 1949, 0) == 1,
+		  "rewriting room 1949 doesn't add a second record");
+	Same(Reload(940, NewObj("rock", Misc, NULL)), "rock",
+		 "room 940's objects saved again");
+	Check(Copies(EDBObj, sizeof(ObjRec), 940, 0) == 1
+		  && Copies(EDBObj, sizeof(ObjRec), 1949, 0) == 1,
+		  "one record each");
+
+	strcpy(Proto.Name, "rat");
+	WriteUMon(940, &Proto);
+	strcpy(Proto.Name, "bat");
+	WriteUMon(1949, &Proto);
+	DeleteMon(940);
+	ReadUMon(1949, &Mon);
+	Check(Mon && !strcmp(Mon->Name, "bat"),
+		  "room 1949's monsters, after room 940's are deleted");
+	WriteUMon(1949, &Proto);
+	Check(Copies(EDBMon, sizeof(MonRec), 1949, 0) == 1,
+		  "rewriting room 1949's monsters doesn't add a second record");
+	ReadUMon(940, &Mon);
+	Check(!Mon, "room 940 has no monsters");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -504,7 +564,7 @@ int main(int argc, char **argv)
 	{
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
 		{"26", Test26}, {"82", Test82}, {"88", Test88}, {"42", Test42},
-		{"43", Test43}, {"44", Test44}, {"56", Test56},
+		{"43", Test43}, {"44", Test44}, {"56", Test56}, {"64", Test64},
 	};
 	int		I;
 

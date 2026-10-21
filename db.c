@@ -2,7 +2,9 @@
 
 static int	ReadObj(ObjRec *Rec, int Room, int Type);
 static void	WriteObj(ObjRec *Rec, int Room, int Type);
-static int	HashObj(int Room, int Type);
+static int	FindRec(FILE *fp, size_t RecSize, int Room, int Type, int *Free);
+static void	PutRec(FILE *fp, size_t RecSize, void *Rec, int Room, int Type);
+static void	DeleteRec(FILE *fp, size_t RecSize, int Room, int Type);
 static int	ReadMon(MonRec *Rec, int Room, int Type);
 static void	DeleteObjType(RmCodeType Rm, int Type);
 static void	ReadMonInv(RmCodeType Rm, MonsterPoint Monster);
@@ -91,34 +93,7 @@ void DeleteUObj(RmCodeType Rm)
 
 static void DeleteObjType(RmCodeType Rm, int Type)
 {
-	ObjRec	Tmp;
-	int		RecNum, First;
-
-	First = RecNum = HashObj(Rm, Type);
-	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
-	while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
-	{
-		if (Tmp.Room == Rm && Tmp.DataType == Type)
-		{
-			Tmp.Room = 0;
-			fseek(EDBObj, (long) -sizeof(ObjRec), 1);
-			fwrite((char *)&Tmp, sizeof(ObjRec), 1, EDBObj);
-			fflush(EDBObj);
-			break;
-		}
-
-		if (!Tmp.Room)
-			break;
-
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBObj, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-			Abort(" Object DB full on delete!");
-	}
+	DeleteRec(EDBObj, sizeof(ObjRec), Rm, Type);
 }
 
 /* Load the inventory of each monster in the list read for room *Rm*. */
@@ -183,61 +158,96 @@ static void WriteMonInv(RmCodeType Rm, MonsterPoint Monster)
 
 static int ReadObj(ObjRec *Rec, int Room, int Type)
 {
-	int		RecNum, First;
+	int		Slot;
 
-	First = RecNum = HashObj(Room, Type);
-	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
-	while (fread((char *)Rec, sizeof(ObjRec), 1, EDBObj))
-	{
-		if (!Rec->Room)
-			return 0;
-		if (Rec->Room == Room && Rec->DataType == Type)
-			return 1;
-
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBObj, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-			Abort(" Object DB full on read!");
-	}
-
-	return 0;
+	if ((Slot = FindRec(EDBObj, sizeof(ObjRec), Room, Type, NULL)) < 0)
+		return 0;
+	SeekRec(EDBObj, (long)Slot * sizeof(ObjRec));
+	return fread((char *)Rec, sizeof(ObjRec), 1, EDBObj) == 1;
 }
 
 static void WriteObj(ObjRec *Rec, int Room, int Type)
 {
-	ObjRec	Tmp;
-	int		RecNum, First;
-
-	First = RecNum = HashObj(Room, Type);
-	SeekRec(EDBObj, (long)RecNum * sizeof(ObjRec));
-	while (fread((char *)&Tmp, sizeof(ObjRec), 1, EDBObj))
-	{
-		if (Tmp.Room == Room && Tmp.DataType == Type || !Tmp.Room)
-		{
-			fseek(EDBObj, (long) -sizeof(ObjRec), 1);
-			fwrite((char *)Rec, sizeof(ObjRec), 1, EDBObj);
-			fflush(EDBObj);
-			break;
-		}
-		
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBObj, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-			Abort(" Object DB full on write!");
-	}
+	PutRec(EDBObj, sizeof(ObjRec), Rec, Room, Type);
 }
+
+/*
+ * dbobj and dbmon are hash tables of DBSlots records, probed linearly from
+ * HashObj().  Every record starts with a RecHead.  A Room of 0 marks a slot
+ * never used, which ends a probe; a deleted record gets Room Deleted, which
+ * doesn't, so records stored past it stay reachable (#64).
+ */
+#define	DBSlots		1009
+#define	Deleted		(-1)
+
+typedef struct
+{
+	RmCodeType	Room;
+	char		DataType;
+	char		Num;
+} RecHead;
 
 static int HashObj(int Room, int Type)
 {
-	return (int)(((long)Room * 73 + Type) % 1009);
+	return (int)(((long)Room * 73 + Type) % DBSlots);
+}
+
+/*
+ * The slot holding (Room, Type) in table fp, or -1.  If Free isn't NULL,
+ * *Free is set to the first deleted or unused slot on the way, where a new
+ * record would go, or -1 if there is none.
+ */
+static int FindRec(FILE *fp, size_t RecSize, int Room, int Type, int *Free)
+{
+	RecHead	Head;
+	int		Slot, N;
+
+	if (Free)
+		*Free = -1;
+	Slot = HashObj(Room, Type);
+	for (N = 0; N < DBSlots; N++, Slot = (Slot + 1) % DBSlots)
+	{
+		SeekRec(fp, (long)Slot * RecSize);
+		if (fread((char *)&Head, sizeof(Head), 1, fp) != 1)
+			break;
+		if (Head.Room == 0 || Head.Room == Deleted)
+		{
+			if (Free && *Free < 0)
+				*Free = Slot;
+			if (Head.Room == 0)
+				break;
+		}
+		else
+		if (Head.Room == Room && Head.DataType == Type)
+			return Slot;
+	}
+	return -1;
+}
+
+/* Store Rec as the record for (Room, Type), replacing any old one */
+static void PutRec(FILE *fp, size_t RecSize, void *Rec, int Room, int Type)
+{
+	int		Slot, Free;
+
+	if ((Slot = FindRec(fp, RecSize, Room, Type, &Free)) < 0
+	&&	(Slot = Free) < 0)
+		Abort(fp == EDBObj ? " Object DB full on write!"
+						   : " Monster DB full on write!");
+	SeekRec(fp, (long)Slot * RecSize);
+	fwrite((char *)Rec, RecSize, 1, fp);
+	fflush(fp);
+}
+
+static void DeleteRec(FILE *fp, size_t RecSize, int Room, int Type)
+{
+	RmCodeType	Mark = Deleted;
+	int			Slot;
+
+	if ((Slot = FindRec(fp, RecSize, Room, Type, NULL)) < 0)
+		return;
+	SeekRec(fp, (long)Slot * RecSize);
+	fwrite((char *)&Mark, sizeof(Mark), 1, fp);
+	fflush(fp);
 }
 
 void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
@@ -282,35 +292,19 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 
 static int ReadMon(MonRec *Rec, int Room, int Type)
 {
-	int		RecNum, First;
+	int		Slot;
 
-	First = RecNum = HashObj(Room, Type);
-	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
-	while (fread((char *)Rec, sizeof(MonRec), 1, EDBMon))
-	{
-		if (!Rec->Room)
-			return 0;
-		if (Rec->Room == Room && Rec->DataType == Type)
-			return 1;
-
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBMon, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-			Abort(" Monster DB full on read!");
-	}
-
-	return 0;
+	if ((Slot = FindRec(EDBMon, sizeof(MonRec), Room, Type, NULL)) < 0)
+		return 0;
+	SeekRec(EDBMon, (long)Slot * sizeof(MonRec));
+	return fread((char *)Rec, sizeof(MonRec), 1, EDBMon) == 1;
 }
 
 void WriteUMon(RmCodeType Rm, MonsterPoint Monster)
 {
 	MonsterPoint	Pt;
-	MonRec			MRec, Tmp;
-	int				N, RecNum, First;
+	MonRec			MRec;
+	int				N;
 
 	WriteMonInv(Rm, Monster);
 	for (Pt = Monster, N = 0; Pt && N < SavedItems; Pt = Pt->Next, N++)
@@ -319,61 +313,13 @@ void WriteUMon(RmCodeType Rm, MonsterPoint Monster)
 	MRec.Room = Rm;
 	MRec.DataType = 0;
 	MRec.Num = N;
-
-	First = RecNum = HashObj(Rm, 0);
-	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
-	while (fread((char *)&Tmp, sizeof(MonRec), 1, EDBMon))
-	{
-		if (Tmp.Room == 0 || Tmp.Room == Rm && Tmp.DataType == 0)
-		{
-			fseek(EDBMon, (long) -sizeof(MonRec), 1);
-			fwrite((char *)&MRec, sizeof(MonRec), 1, EDBMon);
-			fflush(EDBMon);
-			return;
-		}
-		
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBMon, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-			Abort(" Monster DB full on write!");
-	}
+	PutRec(EDBMon, sizeof(MonRec), &MRec, Rm, 0);
 }
 
 void DeleteMon(RmCodeType Rm)
 {
-	MonRec	MRec;
-	int		RecNum, First;
-
 	WriteMonInv(Rm, NULL);		/* deletes every monster's inventory */
-	First = RecNum = HashObj(Rm, 0);
-	SeekRec(EDBMon, (long)RecNum * sizeof(MonRec));
-	while (fread((char *)&MRec, sizeof(MonRec), 1, EDBMon))
-	{
-		if (MRec.Room == Rm && MRec.DataType == 0)
-		{
-			MRec.Room = 0;
-			fseek(EDBMon, (long) -sizeof(MonRec), 1);
-			fwrite((char *)&MRec, sizeof(MonRec), 1, EDBMon);
-			fflush(EDBMon);
-			return;
-		}
-		
-		if (!MRec.Room)
-			return;
-
-		if (++RecNum >= 1009)
-		{
-			SeekRec(EDBMon, 0L);
-			RecNum = 0;
-		}
-
-		if (RecNum == First)
-		 	Abort(" Monster DB full on delete!");
-	}
+	DeleteRec(EDBMon, sizeof(MonRec), Rm, 0);
 }
 
 /* Read template *Index* from the MList file.  Pointer fields hold

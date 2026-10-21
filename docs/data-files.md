@@ -20,6 +20,14 @@ The DM editor updates both the `ram/` and `dat/` copies.  `dat/efile`
 (game settings and news), `dat/special` (special rooms) and `dat/errlog`
 are text files without headers.
 
+`dbobj.new` and `dbmon.new` always hold 1009 records.  A record's slot is
+`(room × 73 + type) mod 1009`, or the next slot along that isn't taken.
+In `dbobj.new`, type 0 is a room's objects, 1–8 the contents of its first to
+eighth chest, and 9–16 the inventory of its first to eighth monster.
+`dbmon.new` uses type 0 only.  The first field, `Room`, is 0 for a slot
+never used, which ends a search, and -1 for a deleted record, which doesn't,
+so records stored past it can still be found (#64).
+
 ## Header
 
 Each binary file starts with 32 bytes, written byte by byte so they read the
