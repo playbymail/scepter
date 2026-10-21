@@ -406,6 +406,13 @@ void Spell(int SpellCode)
 	else
 		MagType = Scrl;
 
+	/* Scroll and device spell numbers come from object data (#88). */
+	if (SpellCode > Spellen)
+	{
+		QOut(Term, "0Nothing happens.");
+		return;
+	}
+
 	GoodSpl = TRUE;
 	strcpy(Target, User->WData);
 	CapAlfa(Target);
