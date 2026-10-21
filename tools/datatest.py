@@ -4,8 +4,8 @@ tools/upgradegame, its schema migrator.
 
     python3 -I tools/datatest.py [BINDIR [WORLD]]
 
-BINDIR holds scepterd, mkgame, upgradegame, fightsim, dmtest and dbtest
-(default: .).  Each case builds a game from WORLD (default
+BINDIR holds scepterd, mkgame, upgradegame, fightsim, dmtest, dumpgame,
+dbtest and dbtest2 (default: .).  Each case builds a game from WORLD (default
 var/alpha/alpha.world) in a temporary directory, damages or downgrades it,
 and checks what scepterd, the database functions and upgradegame make of it.  Refusals must leave
 everything as it was: nothing created, nothing changed.
@@ -194,6 +194,17 @@ def test_database():
     check(rc == 1 and not os.path.lexists(os.path.join(TMP, "nogame")),
           "scepterd refuses a missing game directory and creates nothing")
 
+    # a game from before the database: dat/ and ram/ full of struct files
+    old = os.path.join(TMP, "oldgame")
+    for d in ("", "dat", "ram"):
+        os.mkdir(os.path.join(old, d))
+    with open(os.path.join(old, "ram", "eperson.new"), "wb") as f:
+        f.write(b"SCEPPERS" + bytes(24))
+    before = tree(old)
+    rc, out, err = run("scepterd", "-c", old, stdin="")
+    check(rc == 1 and "make a new game with mkgame" in err and tree(old) == before,
+          "scepterd tells an old struct-file game to make a new one, and leaves it alone")
+
     g = game("db-stock")
     db = sqlite3.connect(os.path.join(g, "game.db"))
     db.execute("UPDATE room_stock SET object = 999 WHERE (room, slot) ="
@@ -364,6 +375,32 @@ def test_upgradegame():
           and ver.strip() == "1", "upgradegame migrates a version 0 database")
 
 
+def test_migration():
+    """A real migration, on a whole game: dbtest2 has a test-only migration 2."""
+    g = game("migrate")
+    rc, _, _ = run("dmtest", g, "player", "Oldtimer", "ac secret")
+    files = sorted(os.listdir(g))
+    _, state, _ = run("dumpgame", g)
+    rc, out, err = run("dbtest2", "migrate", g)
+    backups = [f for f in os.listdir(g) if f.startswith("game.db.backup-")]
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    got = db.execute("SELECT x FROM test_migration").fetchall()
+    who = db.execute("SELECT name FROM players").fetchall()
+    db.close()
+    check(rc == 0 and "migrated from schema version 1 to 2" in out
+          and len(backups) == 1 and got == [(2,)] and who == [("OLDTIMER",)],
+          "a game is migrated, keeping its character, beside a backup")
+    ok, _ = server_refuses(g, "schema version 2", "newer scepterd")
+    check(ok, "this build's scepterd refuses the migrated game")
+    rc, _, _ = dbtest("restore", os.path.join(g, backups[0]), g)
+    os.remove(os.path.join(g, backups[0]))
+    _, again, _ = run("dumpgame", g)
+    check(rc == 0 and sorted(os.listdir(g)) == files and again == state,
+          "restoring the backup gives the game back, as dumpgame sees it")
+    ok, _ = server_ok(g)
+    check(ok, "and scepterd plays it again")
+
+
 def test_fightsim():
     g = game("fight")
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
@@ -379,6 +416,7 @@ def main():
         test_dbfuncs()
         test_columns()
         test_upgradegame()
+        test_migration()
         test_fightsim()
     finally:
         shutil.rmtree(TMP)

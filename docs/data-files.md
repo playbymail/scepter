@@ -454,7 +454,12 @@ current database is left alone.  To undo an upgrade, stop the server and
 restore the backup (`DBRestore`): copy it over `game.db` and remove any
 `game.db-wal` and `game.db-shm` left beside it.
 
-`make check-data` tests all of this.
+`make check-data` tests all of this, and migrates a whole game with
+`dbtest2`, a test build of `dbtest` with an extra migration 2.
+
+A game directory from before the database, with `ram/`, `dat/` or struct
+files and no `game.db`, can't be converted (#71): `scepterd` refuses it and
+says to make a new game with `mkgame`.
 
 ## Locked characters
 

@@ -216,6 +216,14 @@ static int OpenGame(const char *Prog)
 {
 	int		Bad;
 
+	/* a game from before the move to SQLite (#71) can't be converted */
+	if (access(WORKDIR "/" DBName, F_OK)
+	&&	(!access(WORKDIR "/ram", F_OK) || !access(WORKDIR "/eperson", F_OK)))
+	{
+		fprintf(stderr, "%s: this game is from before the game database (#71) and"
+				" can't be converted; make a new game with mkgame\n", Prog);
+		return FALSE;
+	}
 	Bad = !DBOpen(WORKDIR);
 	if (!Bad && !CountSegs(&NumSegs))
 		Bad++;
