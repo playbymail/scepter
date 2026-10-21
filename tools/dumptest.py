@@ -48,10 +48,6 @@ NOT_DUMPED = {
     "RoomType": {"RmMonsterTail": "the monsters are dumped as mon lines",
                  "RmPlayerTail": "pointer, play only",
                  "RmObjectTail": "the objects are dumped as obj lines"},
-    "tUserFRec": {"User": "the player line",
-                  "NObj": "the player's obj lines", "Objs": "the player's obj lines",
-                  "NWeap": "Worn=", "NArm": "Worn=", "NShield": "Worn=",
-                  "NRingL": "Worn=", "NRingR": "Worn="},
     "SpecialType": {"Room": "the special line's room number",
                     "NStock": "Stock=", "NStagger": "Stagger="},
 }
@@ -112,7 +108,7 @@ def structs():
         sp = f.read()
     out = {}
     for tag in list(KINDS.values()) + ["tObjectType", "tMonsterType", "tUserSave",
-                                       "tUserType", "tUserFRec"]:
+                                       "tUserType"]:
         m = re.search(r"struct\s+%s\s*\{" % tag, h)
         out[tag] = fields(body(h, m.start()))
     m = re.search(r"typedef struct\s*\{(?:(?!typedef).)*?\}\s*RoomType;", h, re.S)
@@ -136,6 +132,7 @@ def test_coverage(dumps):
 
     seen = {name: set() for name in s}
     found = {name: False for name in s}
+    worn = False
     for text in dumps.values():
         for line in text.splitlines():
             k = keys(line)
@@ -149,8 +146,7 @@ def test_coverage(dumps):
                     found[KINDS[cls]] = True
                 k = k - set(s.get(KINDS.get(cls), []))
                 if line.startswith("player "):
-                    seen["tUserFRec"] |= {"Worn"} & k
-                    found["tUserFRec"] = True
+                    worn |= "Worn" in k
                     k.discard("Worn")
             elif line.startswith("mlist ") or re.match(r"room \d+ mon \d+ Name=", line):
                 kind = "tMonsterType"
@@ -169,7 +165,7 @@ def test_coverage(dumps):
                           % (kind, sorted(extra), line[:60]))
 
     for name, want in s.items():
-        if name in ("tUserType", "tUserFRec"):
+        if name == "tUserType":
             continue
         skip = NOT_DUMPED.get(name, {})
         missing = [f for f in want if f not in skip and f not in seen[name]]
@@ -180,8 +176,7 @@ def test_coverage(dumps):
         stale = [f for f in skip if f not in s[name]]
         check(not stale, "the fields left out of %s exist%s" % (name, ": not "
               + ", ".join(stale) if stale else ""))
-    check(found["tUserFRec"] and "Worn" in seen["tUserFRec"],
-          "a player's worn objects are dumped")
+    check(worn, "a player's worn objects are dumped")
 
 
 def run(bindir, prog, *args):

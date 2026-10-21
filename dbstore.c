@@ -899,3 +899,375 @@ int PutRoomMons(int Rm, MonsterPoint List)
 	}
 	return DBFinish(Own, Ok);
 }
+
+/* ---------- players ---------- */
+
+static const char	*ClassName[] =
+{
+	"fighter", "thief", "magic-user", "dm", "cleric", "paladin", "ranger",
+	"barbarian", NULL
+};
+static const char	*SexName[] = { "male", "female", NULL };
+static const char	*WornName[] =
+{
+	"weapon", "armor", "shield", "ring-left", "ring-right", NULL
+};
+
+/* The saved fields of a player, in this order (players) */
+#define	PlayerCols	"name, lvl, class, hits, max_hits, fatigue, max_fatigue, magic," \
+	" max_magic, experience, room, str, int, dex, pty, con, last_access, money," \
+	" sex, s_sharp, s_thrust, s_blunt, s_long, assoc, spells, ssj, master," \
+	" play_tester, a_guild, t_guild, evil, invisible, non_existant, skill_new," \
+	" spell_new, poisoned, hidden, it, suck, brief, echo, mes_block, dead," \
+	" plague, pw_hash"
+#define	PlayerSets	"name = ?2, lvl = ?3, class = ?4, hits = ?5, max_hits = ?6," \
+	" fatigue = ?7, max_fatigue = ?8, magic = ?9, max_magic = ?10," \
+	" experience = ?11, room = ?12, str = ?13, int = ?14, dex = ?15, pty = ?16," \
+	" con = ?17, last_access = ?18, money = ?19, sex = ?20, s_sharp = ?21," \
+	" s_thrust = ?22, s_blunt = ?23, s_long = ?24, assoc = ?25, spells = ?26," \
+	" ssj = ?27, master = ?28, play_tester = ?29, a_guild = ?30, t_guild = ?31," \
+	" evil = ?32, invisible = ?33, non_existant = ?34, skill_new = ?35," \
+	" spell_new = ?36, poisoned = ?37, hidden = ?38, it = ?39, suck = ?40," \
+	" brief = ?41, echo = ?42, mes_block = ?43, dead = ?44, plague = ?45," \
+	" pw_hash = ?46"
+
+/* Bind the saved fields of P, named Name, to parameters At to At + 44 */
+static int BindPlayer(sqlite3_stmt *St, int At, UserPoint P, const char *Name,
+					  const char *Where)
+{
+	return BindText(St, At, Name, sizeof(Alfa))
+		&& BindInt(St, At + 1, P->Lvl)
+		&& BindEnum(St, At + 2, P->Class, ClassName, Where, "Class")
+		&& BindInt(St, At + 3, P->Hits)
+		&& BindInt(St, At + 4, P->MaxHits)
+		&& BindInt(St, At + 5, P->Fatigue)
+		&& BindInt(St, At + 6, P->MaxFatigue)
+		&& BindInt(St, At + 7, P->Magic)
+		&& BindInt(St, At + 8, P->MaxMagic)
+		&& BindInt(St, At + 9, P->Experience)
+		&& BindInt(St, At + 10, P->RmCode)
+		&& BindInt(St, At + 11, P->Str)
+		&& BindInt(St, At + 12, P->Int)
+		&& BindInt(St, At + 13, P->Dex)
+		&& BindInt(St, At + 14, P->Pty)
+		&& BindInt(St, At + 15, P->Con)
+		&& BindInt(St, At + 16, P->LastAccess)
+		&& BindInt(St, At + 17, P->Money)
+		&& BindEnum(St, At + 18, P->Sex, SexName, Where, "Sex")
+		&& BindInt(St, At + 19, P->SSharp)
+		&& BindInt(St, At + 20, P->SThrust)
+		&& BindInt(St, At + 21, P->SBlunt)
+		&& BindInt(St, At + 22, P->SLong)
+		&& BindInt(St, At + 23, P->Assoc)
+		&& BindInt(St, At + 24, P->Spells)
+		&& BindInt(St, At + 25, P->SSJ)
+		&& BindInt(St, At + 26, P->Master)
+		&& BindInt(St, At + 27, P->PlayTester)
+		&& BindInt(St, At + 28, P->AGuild)
+		&& BindInt(St, At + 29, P->TGuild)
+		&& BindInt(St, At + 30, P->Evil)
+		&& BindInt(St, At + 31, P->Invisible)
+		&& BindInt(St, At + 32, P->NonExistant)
+		&& BindInt(St, At + 33, P->SkillNew)
+		&& BindInt(St, At + 34, P->SpellNew)
+		&& BindInt(St, At + 35, P->Poisoned)
+		&& BindInt(St, At + 36, P->Hidden)
+		&& BindInt(St, At + 37, P->It)
+		&& BindInt(St, At + 38, P->Suck)
+		&& BindInt(St, At + 39, P->Brief)
+		&& BindInt(St, At + 40, P->Echo)
+		&& BindInt(St, At + 41, P->MesBlock)
+		&& BindInt(St, At + 42, P->Dead)
+		&& BindInt(St, At + 43, P->Plague)
+		&& BindText(St, At + 44, P->PWHash, sizeof(P->PWHash));
+}
+
+/*
+ * Read the saved fields of a player from columns At to At + 44 into P,
+ * leaving its other fields alone.  The old hash PW isn't stored (#151).
+ */
+static int ColPlayer(sqlite3_stmt *St, int At, UserPoint P, const char *Where)
+{
+	long	V;
+	int		Class, Sex;
+
+	if (!ColText(St, At, P->Name, sizeof(P->Name), TRUE, Where)
+	||	!ColEnum(St, At + 2, ClassName, &Class, Where)
+	||	!ColEnum(St, At + 18, SexName, &Sex, Where)
+	||	!ColText(St, At + 44, P->PWHash, sizeof(P->PWHash), TRUE, Where))
+		return FALSE;
+	P->Class = (ChType)Class;
+	P->Sex = (SexType)Sex;
+	P->PW = 0;
+	return GET(1, P->Lvl, SHRT_MIN, SHRT_MAX)
+		&& GET(3, P->Hits, SHRT_MIN, SHRT_MAX)
+		&& GET(4, P->MaxHits, SHRT_MIN, SHRT_MAX)
+		&& GET(5, P->Fatigue, SHRT_MIN, SHRT_MAX)
+		&& GET(6, P->MaxFatigue, SHRT_MIN, SHRT_MAX)
+		&& GET(7, P->Magic, SHRT_MIN, SHRT_MAX)
+		&& GET(8, P->MaxMagic, SHRT_MIN, SHRT_MAX)
+		&& GET(9, P->Experience, LONG_MIN, LONG_MAX)
+		&& GET(10, P->RmCode, SHRT_MIN, SHRT_MAX)
+		&& GET(11, P->Str, SHRT_MIN, SHRT_MAX)
+		&& GET(12, P->Int, SHRT_MIN, SHRT_MAX)
+		&& GET(13, P->Dex, SHRT_MIN, SHRT_MAX)
+		&& GET(14, P->Pty, SHRT_MIN, SHRT_MAX)
+		&& GET(15, P->Con, SHRT_MIN, SHRT_MAX)
+		&& GET(16, P->LastAccess, SHRT_MIN, SHRT_MAX)
+		&& GET(17, P->Money, LONG_MIN, LONG_MAX)
+		&& GET(19, P->SSharp, SHRT_MIN, SHRT_MAX)
+		&& GET(20, P->SThrust, SHRT_MIN, SHRT_MAX)
+		&& GET(21, P->SBlunt, SHRT_MIN, SHRT_MAX)
+		&& GET(22, P->SLong, SHRT_MIN, SHRT_MAX)
+		&& GET(23, P->Assoc, SHRT_MIN, SHRT_MAX)
+		&& GET(24, P->Spells, LONG_MIN, LONG_MAX)
+		&& GETFLAG(25, P->SSJ)
+		&& GETFLAG(26, P->Master)
+		&& GETFLAG(27, P->PlayTester)
+		&& GETFLAG(28, P->AGuild)
+		&& GETFLAG(29, P->TGuild)
+		&& GETFLAG(30, P->Evil)
+		&& GETFLAG(31, P->Invisible)
+		&& GETFLAG(32, P->NonExistant)
+		&& GETFLAG(33, P->SkillNew)
+		&& GETFLAG(34, P->SpellNew)
+		&& GETFLAG(35, P->Poisoned)
+		&& GETFLAG(36, P->Hidden)
+		&& GETFLAG(37, P->It)
+		&& GETFLAG(38, P->Suck)
+		&& GETFLAG(39, P->Brief)
+		&& GETFLAG(40, P->Echo)
+		&& GETFLAG(41, P->MesBlock)
+		&& GETFLAG(42, P->Dead)
+		&& GETFLAG(43, P->Plague);
+}
+
+/* The id of the saved player Name (in capitals), or 0 if there is none */
+static int PlayerId(const char *Name, sqlite3_int64 *Id)
+{
+	static sqlite3_stmt	*St;
+	int					Rc;
+
+	*Id = 0;
+	if (!DBPrepare(&St, "SELECT id FROM players WHERE name = ?")
+	||	!BindText(St, 1, Name, sizeof(Alfa)))
+		return Failed(Name, "look up the player");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		*Id = sqlite3_column_int64(St, 0);
+	sqlite3_reset(St);
+	return Rc == SQLITE_ROW || Rc == SQLITE_DONE || Failed(Name, "look up the player");
+}
+
+/* Is there a saved player Name (in capitals)?  -1 on an error */
+int HavePlayer(const char *Name)
+{
+	sqlite3_int64	Id;
+
+	return PlayerId(Name, &Id) ? Id != 0 : -1;
+}
+
+/*
+ * Read saved player Name (in capitals) into P: its saved fields, and its
+ * objects, in the order they were saved, as P->ObjectTail, with the
+ * USWeap, USArm, USShield, USRingL and USRingR it wears.  *Found is FALSE,
+ * and P untouched, if there is no such player.
+ */
+int GetPlayer(const char *Name, UserPoint P, int *Found)
+{
+	static sqlite3_stmt	*St, *Objs;
+	char				Where[48];
+	ObjectPoint			O, *Tail;
+	int					Rc, N;
+
+	snprintf(Where, sizeof(Where), "player %s", Name);
+	*Found = FALSE;
+	if (!DBPrepare(&St, "SELECT id, " PlayerCols " FROM players WHERE name = ?")
+	||	!BindText(St, 1, Name, sizeof(Alfa)))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_DONE)
+	{
+		sqlite3_reset(St);
+		return TRUE;
+	}
+	if (Rc != SQLITE_ROW)
+	{
+		sqlite3_reset(St);
+		return Failed(Where, "read");
+	}
+	if (!ColPlayer(St, 1, P, Where)
+	||	!DBPrepare(&Objs, "SELECT worn, " ObjCols " FROM player_objects"
+				   " WHERE player = ? ORDER BY slot")
+	||	!BindInt(Objs, 1, (long)sqlite3_column_int64(St, 0)))
+	{
+		sqlite3_reset(St);
+		return FALSE;
+	}
+	sqlite3_reset(St);
+
+	P->ObjectTail = NULL;
+	P->USWeap = P->USArm = P->USShield = P->USRingL = P->USRingR = NULL;
+	Tail = &P->ObjectTail;
+	for (N = 0; N < MaxObjs && (Rc = sqlite3_step(Objs)) == SQLITE_ROW; N++)
+	{
+		int		Worn = -1;
+
+		if (!(O = malloc(sizeof(ObjectType))))
+		{
+			Bad(Where, "objects", "out of memory", 0);
+			break;
+		}
+		if (!ColObj(Objs, 1, O, Where)
+		||	sqlite3_column_type(Objs, 0) != SQLITE_NULL
+		&&	!ColEnum(Objs, 0, WornName, &Worn, Where))
+		{
+			free(O);
+			break;
+		}
+		if (O->ObClass == Chest)		/* a carried chest keeps nothing */
+			O->Object.Chest.NumInside = 0;
+		switch (Worn)
+		{
+			case 0:	P->USWeap = O;		break;
+			case 1:	P->USArm = O;		break;
+			case 2:	P->USShield = O;	break;
+			case 3:	P->USRingL = O;		break;
+			case 4:	P->USRingR = O;		break;
+		}
+		*Tail = O;
+		Tail = &O->Next;
+	}
+	if (N == MaxObjs)
+		Rc = SQLITE_DONE;
+	sqlite3_reset(Objs);
+	if (Rc != SQLITE_DONE)
+	{
+		if (Rc != SQLITE_ROW)
+			Failed(Where, "read");
+		FreeObjs(P->ObjectTail);
+		P->ObjectTail = NULL;
+		P->USWeap = P->USArm = P->USShield = P->USRingL = P->USRingR = NULL;
+		return FALSE;
+	}
+	*Found = TRUE;
+	return TRUE;
+}
+
+/*
+ * Save player P as Name (in capitals), with its first MaxObjs objects
+ * and what it wears among them, in one transaction.  A player saved for
+ * the first time gets the next id, which no one else will ever have.
+ */
+int PutPlayer(const char *Name, UserPoint P)
+{
+	static sqlite3_stmt	*Ins, *Upd, *Del, *Objs;
+	char				Where[48];
+	sqlite3_int64		Id;
+	ObjectPoint			O;
+	int					Own, Ok, N;
+
+	snprintf(Where, sizeof(Where), "player %s", Name);
+	if (!DBStart(&Own))
+		return FALSE;
+	Ok = PlayerId(Name, &Id);
+	if (Ok && Id)
+		Ok = DBPrepare(&Upd, "UPDATE players SET " PlayerSets " WHERE id = ?1")
+		  && BindInt(Upd, 1, (long)Id) && BindPlayer(Upd, 2, P, Name, Where)
+		  && Done(Upd, Where, "save")
+		  && DBPrepare(&Del, "DELETE FROM player_objects WHERE player = ?")
+		  && BindInt(Del, 1, (long)Id) && Done(Del, Where, "save");
+	else
+	if (Ok)
+	{
+		Ok = DBPrepare(&Ins, "INSERT INTO players (" PlayerCols ") VALUES (?, ?,"
+					   " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+					   " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+					   " ?, ?, ?, ?, ?)")
+		  && BindPlayer(Ins, 1, P, Name, Where) && Done(Ins, Where, "save");
+		Id = sqlite3_last_insert_rowid(GameDB);
+	}
+
+	for (O = P->ObjectTail, N = 1; Ok && O && N <= MaxObjs; O = O->Next, N++)
+	{
+		int		Worn = O == P->USWeap ? 0 : O == P->USArm ? 1
+					 : O == P->USShield ? 2 : O == P->USRingL ? 3
+					 : O == P->USRingR ? 4 : -1;
+
+		Ok = DBPrepare(&Objs, "INSERT INTO player_objects (player, slot, worn, "
+					   ObjCols ") VALUES (?, ?, ?, " ObjVals ")")
+		  && BindInt(Objs, 1, (long)Id) && BindInt(Objs, 2, N)
+		  && (Worn < 0 || BindEnum(Objs, 3, Worn, WornName, Where, "worn"))
+		  && BindObj(Objs, 4, O, Where) && Done(Objs, Where, "save");
+	}
+	return DBFinish(Own, Ok);
+}
+
+/* Delete saved player Name (in capitals) and its objects; *Found says if */
+int DropPlayer(const char *Name, int *Found)
+{
+	static sqlite3_stmt	*St;
+	int					Own;
+
+	if (!DBStart(&Own))
+		return FALSE;
+	if (!DBPrepare(&St, "DELETE FROM players WHERE name = ?")
+	||	!BindText(St, 1, Name, sizeof(Alfa))
+	||	!Done(St, Name, "delete the player"))
+		return DBFinish(Own, FALSE);
+	*Found = sqlite3_changes(GameDB) > 0;
+	return DBFinish(Own, TRUE);
+}
+
+/*
+ * Rename saved player Old to New (both in capitals), keeping its id and so
+ * its seniority.  *Result is 1 when renamed, 0 if there is no player Old,
+ * and -1 if New is already taken, which is refused.
+ */
+int RenamePlayer(const char *Old, const char *New, int *Result)
+{
+	static sqlite3_stmt	*St;
+	sqlite3_int64		Id, Taken;
+	int					Own, Ok;
+
+	if (!DBStart(&Own))
+		return FALSE;
+	*Result = 0;
+	Ok = PlayerId(Old, &Id) && PlayerId(New, &Taken);
+	if (Ok && Id && Taken && Taken != Id)
+		*Result = -1;
+	else
+	if (Ok && Id)
+	{
+		Ok = DBPrepare(&St, "UPDATE players SET name = ? WHERE id = ?")
+		  && BindText(St, 1, New, sizeof(Alfa)) && BindInt(St, 2, (long)Id)
+		  && Done(St, Old, "rename the player");
+		*Result = Ok;
+	}
+	return DBFinish(Own, Ok);
+}
+
+/*
+ * The saved player after the one with id *After (0: the most senior) into
+ * P's saved fields and *After; *Found is FALSE after the last.
+ */
+int NextPlayer(long *After, UserPoint P, int *Found)
+{
+	static sqlite3_stmt	*St;
+	int					Rc;
+
+	*Found = FALSE;
+	if (!DBPrepare(&St, "SELECT id, " PlayerCols " FROM players WHERE id > ?"
+				   " ORDER BY id LIMIT 1")
+	||	!BindInt(St, 1, *After))
+		return Failed("players", "list");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+	{
+		*After = (long)sqlite3_column_int64(St, 0);
+		Rc = ColPlayer(St, 1, P, "players") ? SQLITE_DONE : SQLITE_ERROR;
+		*Found = Rc == SQLITE_DONE;
+	}
+	else
+	if (Rc != SQLITE_DONE)
+		Failed("players", "list");
+	sqlite3_reset(St);
+	return Rc == SQLITE_DONE;
+}

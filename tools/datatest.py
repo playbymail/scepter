@@ -1,33 +1,26 @@
 #!/usr/bin/env python3
-"""Tests of the game data file headers (datafile.c), tools/upgradegame,
-mkgame's game directory and the game database (gamedb.c).
+"""Tests of mkgame's game directory, the game database (gamedb.c) and
+tools/upgradegame, its schema migrator.
 
     python3 -I tools/datatest.py [BINDIR [WORLD]]
 
 BINDIR holds scepterd, mkgame, upgradegame, fightsim, dmtest and dbtest
 (default: .).  Each case builds a game from WORLD (default
 var/alpha/alpha.world) in a temporary directory, damages or downgrades it,
-and checks what scepterd and upgradegame make of it.  Refusals must leave
+and checks what scepterd, the database functions and upgradegame make of it.  Refusals must leave
 everything as it was: nothing created, nothing changed.
 `make check-data` runs this.
 """
 
-import filecmp
 import os
-import sqlite3
-import time
+import re
 import shutil
-import stat
-import struct
+import sqlite3
 import subprocess
 import sys
 import tempfile
+import time
 
-HEAD = 32
-VERSION = 2
-FILES = {
-    "eperson": b"SCEPPERS",
-}
 
 BIN = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else ".")
 WORLD = os.path.abspath(sys.argv[2] if len(sys.argv) > 2 else "var/alpha/alpha.world")
@@ -66,148 +59,6 @@ def server_ok(path):
 def server_refuses(path, *words):
     rc, out, err = run("scepterd", "-c", path, stdin="")
     return rc == 1 and "Enter your name?" not in out and all(w in err for w in words), err
-
-
-def strip(path, names=FILES):
-    """Turn files back into version 0: drop their headers."""
-    for f in names:
-        p = os.path.join(path, f)
-        with open(p, "rb") as fp:
-            data = fp.read()
-        with open(p, "wb") as fp:
-            fp.write(data[HEAD:])
-
-
-def layout():
-    """Where the password fields are in a player record, from dmtest."""
-    rc, out, err = run("dmtest", "-", "layout")
-    assert rc == 0, err
-    w = out.split()
-    return {"pwhash": int(w[3]), "pwhashlen": int(w[4]), "usersave": int(w[6]),
-            "record": int(w[8])}
-
-
-def clear_padding(path):
-    """Zero the padding after PWHash in each player record.  WritePlayer()
-    saves whatever UserType holds there; upgradegame writes zeros."""
-    lay = layout()
-    p = os.path.join(path, "eperson")
-    with open(p, "rb") as fp:
-        data = bytearray(fp.read())
-    pad = lay["pwhash"] + lay["pwhashlen"]
-    for i in range(HEAD, len(data), lay["record"]):
-        data[i + pad:i + lay["usersave"]] = bytes(lay["usersave"] - pad)
-    with open(p, "wb") as fp:
-        fp.write(data)
-
-
-def lock(path):
-    """Give each player record the locked hash that upgradegame writes (#50)."""
-    lay = layout()
-    p = os.path.join(path, "eperson")
-    with open(p, "rb") as fp:
-        data = bytearray(fp.read())
-    at = lay["pwhash"]
-    for i in range(HEAD, len(data), lay["record"]):
-        data[i + at:i + at + lay["pwhashlen"]] = b"*".ljust(lay["pwhashlen"], b"\0")
-    with open(p, "wb") as fp:
-        fp.write(data)
-
-
-def downgrade(path, names=FILES):
-    """Turn version 2 files into version 1: player records lose PWHash."""
-    lay = layout()
-    for f in names:
-        p = os.path.join(path, f)
-        with open(p, "rb") as fp:
-            head, data = bytearray(fp.read(HEAD)), fp.read()
-        head[8:12] = struct.pack("<I", 1)
-        if f == "eperson":
-            size, at, cut = lay["record"], lay["pwhash"], lay["pwhashlen"]
-            head[12:16] = struct.pack("<I", size - cut)
-            data = b"".join(data[i:i + at] + data[i + at + cut:i + size]
-                            for i in range(0, len(data), size))
-        with open(p, "wb") as fp:
-            fp.write(head + data)
-
-
-def patch(path, f, offset, data):
-    with open(os.path.join(path, f), "r+b") as fp:
-        fp.seek(offset)
-        fp.write(data)
-
-
-def snapshot(path):
-    copy = path + ".snap"
-    shutil.copytree(path, copy)
-    return copy
-
-
-def same_tree(a, b):
-    c = filecmp.dircmp(a, b)
-    def walk(c):
-        if c.left_only or c.right_only or c.diff_files or c.funny_files:
-            return False
-        return all(walk(s) for s in c.subdirs.values())
-    # dircmp compares shallowly by stat; force content comparison
-    for root, _, files in os.walk(a):
-        for f in files:
-            pa = os.path.join(root, f)
-            pb = os.path.join(b, os.path.relpath(pa, a))
-            if not os.path.exists(pb) or not filecmp.cmp(pa, pb, shallow=False):
-                return False
-    return walk(c)
-
-
-def test_fresh():
-    g = game("fresh")
-    good = True
-    for f, magic in FILES.items():
-        with open(os.path.join(g, f), "rb") as fp:
-            head = fp.read(HEAD)
-        good &= (len(head) == HEAD and head[:8] == magic
-                 and struct.unpack("<I", head[8:12])[0] == VERSION
-                 and head[16:] == bytes(16))
-    check(good, "mkgame writes a magic, version %d and zero padding to every file"
-          % VERSION)
-    ok, err = server_ok(g)
-    check(ok, "scepterd starts on a fresh game")
-    rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and "already at format version %d" % VERSION in out,
-          "upgradegame leaves a fresh game alone")
-    return game("pristine")		# never run, for comparisons
-
-
-def test_damaged():
-    cases = [
-        ("newer version", "eperson",
-         lambda g: patch(g, "eperson", 8, struct.pack("<I", VERSION + 1)),
-         ["eperson", "format version %d" % (VERSION + 1), "newer scepterd"]),
-        ("record size", "eperson",
-         lambda g: patch(g, "eperson", 12, struct.pack("<I", 12345)),
-         ["eperson", "12345 bytes"]),
-        ("truncated header", "eperson",
-         lambda g: open(os.path.join(g, "eperson"), "wb").write(b"SCEPPERS\1\0"),
-         ["eperson", "truncated"]),
-        ("foreign file", "eperson",
-         lambda g: open(os.path.join(g, "eperson"), "wb").write(b"hello, world\n"),
-         ["eperson", "not a Scepter data file"]),
-        ("missing file", "eperson",
-         lambda g: os.remove(os.path.join(g, "eperson")),
-         ["eperson", "No such file"]),
-    ]
-    for i, (what, f, damage, words) in enumerate(cases):
-        g = game("damaged%d" % i)
-        damage(g)
-        ok, err = server_refuses(g, *words)
-        check(ok, "scepterd refuses a game with a %s (%s)" % (what, f))
-        if not ok:
-            print(err)
-        snap = snapshot(g)
-        rc, _, err = run("upgradegame", g)
-        check(rc == 1 and "nothing changed" in err and same_tree(g, snap)
-              and not [d for d in os.listdir(TMP) if d.startswith("damaged%d.backup" % i)],
-              "upgradegame refuses it too and changes nothing")
 
 
 def test_missing_efile():
@@ -349,7 +200,6 @@ def column_list(name):
     """ObjCols or MonCols from gamedb.h, as a list of column names."""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gamedb.h")) as f:
         h = f.read()
-    import re
     m = re.search(r"#define\t%s\t(.*?)\n(?=\n|#define)" % name, h, re.S)
     text = "".join(re.findall(r'"([^"]*)"', m.group(1)))
     return [c.strip() for c in text.split(",")]
@@ -455,119 +305,68 @@ def test_dbfuncs():
     os.chmod(ro, 0o755)
 
 
-def test_upgrade(fresh):
-    g = game("v0")
-    strip(g)
-    os.chmod(os.path.join(g, "eperson"), 0o640)
-    v0 = snapshot(g)
-
-    ok, err = server_refuses(g, "no header", "upgradegame")
-    check(ok and all(f in err for f in FILES),
-          "scepterd refuses a version 0 game, naming every file")
-
-    rc, out, _ = run("upgradegame", "-n", g)
-    check(rc == 0 and out.count("would upgrade") == len(FILES) and same_tree(g, v0),
-          "upgradegame -n reports every file and changes nothing")
-
-    rc, out, err = run("upgradegame", g)
-    check(rc == 0 and "now at format version %d" % VERSION in out,
-          "upgradegame upgrades a version 0 game")
-    backups = [d for d in os.listdir(TMP) if d.startswith("v0.backup-")]
-    check(len(backups) == 1 and same_tree(os.path.join(TMP, backups[0]), v0),
-          "the backup is an exact copy of the version 0 game")
-    check(same_tree(g, fresh), "the upgraded game is identical to a fresh one")
-    mode = stat.S_IMODE(os.stat(os.path.join(g, "eperson")).st_mode)
-    check(mode == 0o640, "upgraded files keep their mode")
-    ok, _ = server_ok(g)
-    check(ok, "scepterd starts on the upgraded game")
+def test_upgradegame():
+    """upgradegame migrates the database, and changes nothing it can't."""
+    g = game("current")
+    before = tree(g)
     rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and "already" in out, "a second upgradegame changes nothing")
+    check(rc == 0 and "already at schema version 1" in out and tree(g) == before,
+          "upgradegame leaves a current game alone")
 
-
-def test_upgrade1():
-    # a version 1 game with a saved character
-    g = game("v1")
-    rc, _, err = run("dmtest", g, "player", "Oldtimer", "ac secret")
-    check(rc == 0, "dmtest saves a character")
-    want = snapshot(g)
-    clear_padding(want)
-    lock(want)
-    downgrade(g)
-    ok, err = server_refuses(g, "format version 1", "upgradegame")
-    check(ok and all(f in err for f in FILES),
-          "scepterd refuses a version 1 game, naming every file")
-    rc, out, _ = run("upgradegame", "-n", g)
-    check(rc == 0 and out.count("version 1, would upgrade") == len(FILES),
-          "upgradegame -n reports every version 1 file")
-    rc, out, err = run("upgradegame", g)
-    check(rc == 0 and "now at format version %d" % VERSION in out,
-          "upgradegame upgrades a version 1 game")
-    check(same_tree(g, want), "the character is kept, with a locked password hash")
-    ok, _ = server_ok(g)
-    check(ok, "scepterd starts on the upgraded game")
-    rc, out, _ = run("scepterd", "-c", g, stdin="Oldtimer\nac secret\n")
-    check("Wrong password, sorry." in out, "the locked character refuses its old password")
-
-    # the same character in a version 0 game
-    g = game("v0person")
-    run("dmtest", g, "player", "Oldtimer", "ac secret")
-    want = snapshot(g)
-    clear_padding(want)
-    lock(want)
-    downgrade(g)
-    strip(g)
-    rc, out, err = run("upgradegame", g)
-    check(rc == 0 and out.count("version 0, upgrading") == len(FILES)
-          and same_tree(g, want), "upgradegame upgrades a version 0 player file")
-
-    # a version 1 player file whose records are the wrong size
-    g = game("v1bad")
-    downgrade(g)
-    patch(g, "eperson", 12, struct.pack("<I", 12345))
-    snap = snapshot(g)
+    g = game("newer")
+    set_version(g, 2)
+    before = tree(g)
     rc, _, err = run("upgradegame", g)
-    check(rc == 1 and "12345 bytes" in err and same_tree(g, snap),
-          "upgradegame refuses a version 1 file with the wrong record size")
+    check(rc == 1 and "newer than this build" in err and tree(g) == before,
+          "upgradegame refuses a newer database and changes nothing")
 
+    # a game whose version says 0, but that already has the tables:
+    # migration 1 fails, and the database stays as it was
+    g = game("failing")
+    set_version(g, 0)
+    before = tree(g)
+    rc, out, err = run("upgradegame", "-n", g)
+    check(rc == 0 and "would migrate to 1" in out and tree(g) == before,
+          "upgradegame -n says what it would do and changes nothing")
+    rc, out, err = run("upgradegame", g)
+    after = tree(g)
+    backups = [f for f in after if f.startswith("game.db.backup-")]
+    for f in backups:
+        del after[f]
+    check(rc == 1 and "migration 1 failed" in err and "not upgraded" in err
+          and len(backups) == 1 and after == before,
+          "a failed migration leaves the database as it was, beside its backup")
+    ok, _ = server_refuses(g, "schema version 0")
+    check(ok, "and scepterd still refuses it")
 
-def test_partial(fresh):
-    # an upgrade that stopped part way: some files done, some not
-    g = game("partial")
-    strip(g, ["eperson"])
+    # an empty version 0 database: migration 1 makes the whole schema
+    g = os.path.join(TMP, "empty")
+    os.mkdir(g)
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    db.execute("PRAGMA journal_mode = WAL")
+    db.close()
     rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and out.count("upgrading") == 1 and same_tree(g, fresh),
-          "upgradegame finishes a partly upgraded game")
+    rc2, ver, _ = dbtest("version", g)
+    check(rc == 0 and "migrated from schema version 0 to 1" in out
+          and ver.strip() == "1", "upgradegame migrates a version 0 database")
 
 
-def test_fightsim(fresh):
-    if not os.path.exists(os.path.join(BIN, "fightsim")):
-        print("skip fightsim: not built")
-        return
+def test_fightsim():
     g = game("fight")
-    strip(g)
-    run("upgradegame", g)
-    a = run("fightsim", "-r", "1", fresh, "4", "9")
-    b = run("fightsim", "-r", "1", g, "4", "9")
-    check(a[0] == 0 and a == b and "won 199 (99.5%)" in a[2] and "average 2.74" in a[2],
-          "fightsim gives the same results on a fresh and an upgraded game")
-    strip(g, ["eperson"])
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
-    check(rc == 1 and "eperson" in err, "fightsim refuses a mismatched game")
+    check(rc == 0 and "won 199 (99.5%)" in err and "average 2.74" in err,
+          "fightsim gives its usual results")
 
 
 def main():
     try:
-        fresh = test_fresh()
-        test_damaged()
         test_missing_efile()
         test_gamedir()
         test_database()
         test_dbfuncs()
         test_columns()
-        test_upgrade(fresh)
-        test_upgrade1()
-        test_partial(fresh)
-        test_fightsim(fresh)
+        test_upgradegame()
+        test_fightsim()
     finally:
         shutil.rmtree(TMP)
     print("%d failure(s)" % failures)

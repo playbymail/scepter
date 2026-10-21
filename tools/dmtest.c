@@ -5,7 +5,6 @@
  *
  *	dmtest GAMEDIR TEST
  *	dmtest GAMEDIR player NAME PASSWORD
- *	dmtest - layout
  *
  * TEST is an issue number: 20, 23, 22, 24, 26, 82, 50 or 88; for the command
  * parser 45, 47 or 48; 17 for saving EFILE; for play 27, 28, 29, 30, 32,
@@ -22,9 +21,8 @@
  * Run it under a sanitizer, as tools/securitytest.py does, to catch the
  * memory errors themselves.
  *
- * Two helpers serve the other tests.  "player" saves a 2nd-level character
- * NAME with password PASSWORD, for the login tests.  "layout" prints where the password fields are in a player
- * record, so tools/datatest.py can make version 1 files.
+ * "player" saves a 2nd-level character NAME with password PASSWORD, for
+ * the login tests.
  *
  * main.c is included so the server's own start-up code can be reused.
  */
@@ -1325,6 +1323,95 @@ static void Test150(void)
 	Same(Load(0), "relic", "and room 0's objects are left alone");
 }
 
+/* The first integer the query Sql returns, or -1 */
+static long Number(const char *Sql)
+{
+	sqlite3_stmt	*St;
+	long			N = -1;
+
+	if (sqlite3_prepare_v2(GameDB, Sql, -1, &St, NULL) == SQLITE_OK
+	&&	sqlite3_step(St) == SQLITE_ROW)
+		N = (long)sqlite3_column_int64(St, 0);
+	sqlite3_finalize(St);
+	return N;
+}
+
+/* Save a character Name with the objects Objs, first to last */
+static UserPoint Saved(const char *Name, ObjectPoint Objs)
+{
+	UserPoint	P = malloc(sizeof(UserType));
+
+	if (!P)
+		Abort(" dmtest: out of memory.");
+	*P = ProtoUser;
+	snprintf(P->Name, sizeof(P->Name), "%s", Name);
+	P->Lvl = 2;
+	P->ObjectTail = Objs;
+	WritePlayer(P);
+	return P;
+}
+
+/* #151, #155: characters are rows; seniority, renames and object order */
+static void Test151(void)
+{
+	UserPoint	P, Back;
+	Alfa		New;
+	long		Id;
+
+	FreePlayer(Saved("Zed", NULL));
+	FreePlayer(Saved("Amy", NULL));
+	FreePlayer(Saved("Yan", NULL));
+	Capture();
+	Say("users");
+	Check(strstr(Captured(), "ZED\nAMY\nYAN\n") != NULL,
+		  "USERS lists characters by seniority");
+
+	/* ids are never reused, not even the newest's */
+	Id = Number("SELECT id FROM players WHERE name = 'YAN'");
+	DeleteUsr("Yan");
+	FreePlayer(Saved("Xia", NULL));
+	Check(Number("SELECT id FROM players WHERE name = 'XIA'") > Id,
+		  "a new character never gets a deleted one's id");
+
+	/* a rename keeps seniority, and a taken name is refused */
+	strcpy(New, "Bea");
+	Check(ChangeUsrName("Amy", New) && PlayerOnFile("Bea") && !PlayerOnFile("Amy"),
+		  "AMY is renamed BEA");
+	Check(Number("SELECT name = 'BEA' FROM players ORDER BY id LIMIT 1 OFFSET 1") == 1,
+		  "and keeps her place");
+	strcpy(New, "Zed");
+	Capture();
+	Check(!ChangeUsrName("Bea", New) && strstr(Captured(), "already taken")
+		  && PlayerOnFile("Bea") && PlayerOnFile("Zed"),
+		  "renaming BEA to ZED's name is refused");
+	EditLine("modify file bea na=zed");
+	Check(PlayerOnFile("Bea") && Number("SELECT count(*) FROM players"
+										" WHERE name = 'ZED'") == 1,
+		  "and so is the editor's NA=, which keeps BEA's name");
+
+	/* #155: objects come back in the order they were saved, every time */
+	P = Saved("Ola", List(NewObj("first", Misc, NULL), NewObj("second", Misc, NULL),
+						  NewObj("third", Misc, NULL), NULL));
+	P->USWeap = P->ObjectTail->Next;
+	WritePlayer(P);
+	FreePlayer(P);
+	Back = malloc(sizeof(UserType));
+	ReadPlayer(Back, "ola");
+	WritePlayer(Back);
+	FreePlayer(Back);
+	Back = malloc(sizeof(UserType));
+	ReadPlayer(Back, "ola");
+	Same(Show(Back->ObjectTail), "first second third",
+		 "objects keep their order over two saves");
+	Check(Back->USWeap == Back->ObjectTail->Next, "and the wielded one is still wielded");
+	FreePlayer(Back);
+
+	/* deleting a character takes its objects */
+	DeleteUsr("Ola");
+	Check(!PlayerOnFile("Ola") && Number("SELECT count(*) FROM player_objects") == 0,
+		  "a deleted character's objects go with it");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1472,23 +1559,13 @@ int main(int argc, char **argv)
 		{"103", Test103}, {"46", Test46}, {"16", Test16}, {"120", Test120},
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
-		{"149", Test149}, {"150", Test150},
+		{"149", Test149}, {"150", Test150}, {"151", Test151},
 	};
 	int		I;
 
-#ifdef PWHashLen
-	if (argc == 3 && !strcmp(argv[2], "layout"))
-	{
-		printf("pw %zu pwhash %zu %d usersave %zu record %zu\n",
-			   offsetof(UserSave, PW), offsetof(UserSave, PWHash), PWHashLen,
-			   sizeof(UserSave), sizeof(UserFRec));
-		return 0;
-	}
-#endif
 	if (!(argc == 3 || argc == 5 && !strcmp(argv[2], "player")) || chdir(argv[1]))
 	{
-		fprintf(stderr, "usage: dmtest GAMEDIR TEST | GAMEDIR player NAME PASSWORD"
-				" | - layout\n");
+		fprintf(stderr, "usage: dmtest GAMEDIR TEST | GAMEDIR player NAME PASSWORD\n");
 		return 2;
 	}
 

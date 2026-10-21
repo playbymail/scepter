@@ -30,7 +30,7 @@ endif
 SQLITELIB = -lsqlite3
 LIBS     = $(CRYPTLIB) $(SQLITELIB)
 
-OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o datafile.o db.o execute.o \
+OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	dbstore.o edit1.o edit2.o gamedb.o io.o ipc.o log.o main.o matt.o \
 	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o
 
@@ -40,14 +40,14 @@ scepterd: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
 # World compiler; must be built from the same headers as scepterd.
-mkgame: mkgame.o datafile.o dbstore.o gamedb.o
-	$(CC) $(CFLAGS) -o $@ mkgame.o datafile.o dbstore.o gamedb.o $(SQLITELIB)
+mkgame: mkgame.o dbstore.o gamedb.o
+	$(CC) $(CFLAGS) -o $@ mkgame.o dbstore.o gamedb.o $(SQLITELIB)
 
-# Converts an older game directory to this build's data format.
-upgradegame: tools/upgradegame.o datafile.o
-	$(CC) $(CFLAGS) -o $@ tools/upgradegame.o datafile.o
+# Brings a game database up to this build's schema (tools/upgradegame.c).
+upgradegame: tools/upgradegame.o gamedb.o
+	$(CC) $(CFLAGS) -o $@ tools/upgradegame.o gamedb.o $(SQLITELIB)
 
-tools/upgradegame.o: tools/upgradegame.c common.h scepter.h proto.h gamedb.h
+tools/upgradegame.o: tools/upgradegame.c gamedb.h
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) -I. -c tools/upgradegame.c -o $@
 
 %.o: %.c

@@ -2,21 +2,20 @@
 
 `mkgame` writes a game directory; `scepterd` reads and updates it.  Every
 file sits directly in the game directory, which has no subdirectories.
-The game is moving from raw struct files to one SQLite database,
-`game.db` (#71): it exists from #147 on, and each later stage moves one
-kind of file into it.  The binary struct files start with a header, so a
-server never reads a file it wasn't built for.
+The game's state is in one SQLite database, `game.db` (#71), which
+replaced the raw struct files of the QNX version (#5).
 
 ## Files
 
-| File | Holds | Magic |
-|---|---|---|
-| `game.db` | the game database (see below): everything but the characters, settings and special rooms so far | |
-| `eperson` | saved characters (`UserFRec`) | `SCEPPERS` |
+| File | Holds |
+|---|---|
+| `game.db` | the game database (see below): everything but the settings and special rooms so far |
+| `efile` | game settings, news and the encounter and treasure tables (text) |
+| `special` | special rooms (text) |
+| `errlog` | the server's error log (text), made when something is first logged |
 
-`efile` (game settings and news), `special` (special rooms) and `errlog`
-are text files without headers.  The hourly update writes `efile.tmp`
-and renames it over `efile`, so a failed write leaves the old file (#17).
+The hourly update writes `efile.tmp` and renames it over `efile`, so a
+failed write leaves the old file (#17).
 
 ## The game database
 
@@ -27,8 +26,8 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
 - **`mkgame`** creates it with the whole schema, then fills the tables
   moved so far (#148: `monster_templates`, `object_templates` and
   `descriptions`; #149: `rooms`; #150: `room_objects`, `chest_objects`,
-  `room_monsters` and `monster_objects`).  The game directory must
-  already exist and be empty.
+  `room_monsters` and `monster_objects`; #151: `players`, empty).  The
+  game directory must already exist and be empty.
 - **Rooms:** `rooms` holds every room of every segment, 0 to
   `NumSegs * 10 - 1`, and the server counts the segments from it; a gap
   is refused at start-up.  A segment swap saves its ten rooms in one
@@ -39,6 +38,13 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
   with it.  The engine keeps at most 8 things in each list; chests inside
   chests, and what a monster's chests hold, aren't saved (#44).  This
   replaces the 1009-slot hash tables of `dbobj` and `dbmon` (#64).
+- **Characters:** `players` has one row per saved character, named in
+  capitals as `CapAlfa()` folds it, and `player_objects` its first 10
+  objects, in the order they were carried (#155), with what it wears.
+  `id` is the character's seniority: it is given when the character is
+  first saved and never reused, even after a delete; `USERS` lists by it.
+  A save is one transaction.  A rename keeps the id, and a name another
+  character has is refused (#164).
 - **Rows:** `dbstore.c` turns each saved struct into a row and back.  The
   DM editor's changes to a template or a description are one transaction
   each.
@@ -410,46 +416,21 @@ CREATE TABLE player_objects (
 CREATE UNIQUE INDEX player_worn ON player_objects (player, worn) WHERE worn IS NOT NULL;
 ```
 
-## Header
+## Schema versions and upgrading
 
-Each binary file starts with 32 bytes, written byte by byte so they read the
-same on every machine:
+`DBVersion` in `gamedb.h` is the schema version this build reads, kept in
+the database as `PRAGMA user_version`.  `scepterd` refuses any other: an
+older database says to run `upgradegame`, a newer one that it needs a newer
+`scepterd`.  The server never migrates a database itself, so the previous
+binary can always go back to the backup `upgradegame` made.
 
-| Offset | Size | Field |
-|---|---|---|
-| 0 | 8 | magic: names the kind of file (table above) |
-| 8 | 4 | format version, unsigned little-endian; currently 2 |
-| 12 | 4 | record size in bytes, unsigned little-endian |
-| 16 | 16 | reserved, zero |
-
-The records follow the header.  They are still raw C structs (#5), so their
-layout depends on the compiler and ABI.  The record size in the header
-catches a build whose structs differ.
-
-## Versions
-
-`DataVersion` in `scepter.h` is the format version.  Bump it whenever any
-record layout changes, and add a conversion step to `tools/upgradegame.c`.
-
-`scepterd` and `fightsim` check every file before starting.  They refuse the
-whole game if any file:
-
-- is missing or unreadable;
-- has no header or the wrong magic;
-- has a different version, older or newer;
-- has a record size that doesn't match the build.
-
-Each problem is reported with the file's name.  The server never converts
-files itself, so you can always go back to the previous binary with the
-backup that `upgradegame` made.
+To change the schema, add migration `DBVersion + 1` to `Migration[]` in
+`gamedb.c` and raise `DBVersion`.  Never edit a migration a deployed game
+has already applied.
 
 | Version | Change |
 |---|---|
-| 0 | No header.  Every game made before headers existed. |
-| 1 | Adds the header; the records are unchanged. |
-| 2 | Player records (`UserSave`) gain `PWHash`, a bcrypt hash (#82). |
-
-## Upgrading a game
+| 1 | The whole game (#147 to #152). |
 
 Stop the server, then run `upgradegame` as the user that owns the game:
 
@@ -458,28 +439,28 @@ upgradegame -n GAMEDIR    # report what would change
 upgradegame GAMEDIR
 ```
 
-`upgradegame` checks every file first and changes nothing if any of them
-can't be upgraded (for example, a newer version or a foreign file).  It then:
+`upgradegame` (`DBMigrate`):
 
-1. copies the game directory to `GAMEDIR.backup-YYYYMMDD-HHMMSS`;
-2. rewrites each old file to a temporary file, flushes it to disk, and
-   renames it over the original, keeping the owner and mode;
-3. checks the result as `scepterd` would.
+1. backs `game.db` up to `game.db.backup-YYYYMMDD-HHMMSS` in the game
+   directory;
+2. applies every missing migration in one transaction;
+3. checks the result (`quick_check`, `foreign_key_check`, the version).
 
-Each file is converted straight to the current version.  From version 1
-to 2 only the player file's records change: each gets a locked `PWHash`
-(`*`), which no password matches, since the server no longer accepts the
-old hash (#50).  A master DM unlocks a character by giving it a temporary
-password: `*EDIT`, then `MODIFY PLAYER name PW=password`.  The password is
-the rest of the line, so `PW=` comes last; it may contain spaces, and it
-must be 8 to 72 characters long, as at `CHANGEPW`.  The player then chooses a real one with `CHANGEPW`.  The
-other files just get the new header.
-
-If it stops part way, run it again: files that are already current are left
-alone.  To undo an upgrade, stop the server and put the backup back in place
-of the game directory.
+If any step fails, the database is left as it was, beside its backup.  A
+current database is left alone.  To undo an upgrade, stop the server and
+restore the backup (`DBRestore`): copy it over `game.db` and remove any
+`game.db-wal` and `game.db-shm` left beside it.
 
 `make check-data` tests all of this.
+
+## Locked characters
+
+A character whose `pw_hash` is `*` or empty is locked: no password opens
+it (#50).  A master DM unlocks one by giving it a temporary password:
+`*EDIT`, then `MODIFY PLAYER name PW=password`.  The password is the rest
+of the line, so `PW=` comes last; it may contain spaces, and it must be 8
+to 72 characters long, as at `CHANGEPW`.  The player then chooses a real
+one with `CHANGEPW`.
 
 ## Dumping a game
 

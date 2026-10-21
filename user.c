@@ -3,141 +3,92 @@
 #include "common.h"
 #include "scepter.h"
 
-static FILE			*EPerson;
-static char			*EPERSON = WORKDIR "/eperson";
+/*
+ * Saved characters are rows of the game database (dbstore.c).  A name is
+ * saved in capitals, as CapAlfa() folds it, so "bob" finds "BOB".  Every
+ * failure of the store is fatal: it is logged, and the server stops
+ * rather than lose a save.
+ */
 
-static void	OpenPer(void);
-static void	ClosePer(void);
-static int	SearchPlFile(char *Name);
-
-static void OpenPer(void)
+/* Name as it is saved: at most an Alfa, in capitals */
+static void SavedName(const char *Name, char *Key)
 {
-	if (!(EPerson = OpenData(EPERSON, DPerson)))
-		Abort(" Sce203 - Error opening person file.");
-}
-
-static void ClosePer(void)
-{
-	if (fclose(EPerson))
-		Abort(" Sce204 - Error closing person file.");
-}
-
-static int SearchPlFile(char *Name)
-{
-	Alfa	TempName;
-
-	strcpy(TempName, Name);
-	CapAlfa(TempName);
-
-	OpenPer();
-	while (fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
-		if (!strcmp(TempName, UserFRec.User.Name))
-			return TRUE;
-	return FALSE;
+	snprintf(Key, sizeof(Alfa), "%s", Name);
+	CapAlfa(Key);
 }
 
 int PlayerOnFile(char *Name)
 {
+	Alfa	Key;
 	int		Found;
 
-	Found = SearchPlFile(Name);
-	ClosePer();
+	SavedName(Name, Key);
+	if ((Found = HavePlayer(Key)) < 0)
+		Abort(" Sce203 - Cannot read the players.");
 	return Found;
 }
 
-/* Copy the name of the Nth (from 0) saved player to Name; FALSE if none */
+/* Copy the name of the Nth (from 0, most senior first) saved player to Name */
 int PlayerName(int N, char *Name)
 {
-	int		Found = FALSE;
+	UserType	P;
+	long		After = 0;
+	int			Found;
 
-	OpenPer();
-	while (!Found && fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
-		if (*UserFRec.User.Name && N-- == 0)
-		{
-			strcpy(Name, UserFRec.User.Name);
-			Found = TRUE;
-		}
-	ClosePer();
+	do
+		if (!NextPlayer(&After, &P, &Found))
+			Abort(" Sce203 - Cannot read the players.");
+	while (Found && N-- > 0);
+	if (Found)
+		strcpy(Name, P.Name);
 	return Found;
 }
 
+/*
+ * Load saved player Name into *Player, ready to log in, with its objects
+ * in the order they were saved (#155).  If there is none, *Player is
+ * ProtoUser with an empty name.
+ */
 void ReadPlayer(UserPoint Player, char *Name)
 {
-	if (SearchPlFile(Name))
-	{
-		int		ILoop;
+	ObjectPoint	Pt;
+	Alfa		Key;
+	int			Found;
 
-		memcpy(Player, &UserFRec.User, sizeof UserFRec.User);
-		strcpy(Player->Name, Name);
-		Player->Weight		= 0;
-		Player->AC			= 10;
-		Player->Next		= NULL;
-		Player->USWeap		= NULL;
-		Player->Pending		= NULL;
-		Player->USShield	= NULL;
-		Player->USArm		= NULL;
-		Player->USRingL		= NULL;
-		Player->USRingR		= NULL;
-		Player->Follow		= NULL;
-		Player->DefPlayer	= NULL;
-		Player->DefMon		= NULL;
-		Player->ObjectTail	= NULL;
-		Player->LastInput	= RealTime;
-		Player->LastAtk		= RealTime - 50;
-		Player->LastHeal	= RealTime - 50;
-		Player->HitAtTime	= RealTime - 50;
-		Player->Drunk		= RealTime;
-		Player->Entry		= XName;
-
-		for (ILoop = 0; ILoop < Min(MaxObjs, UserFRec.NObj); ILoop++)
-		{
-			ObjectPoint	Pt;
-
-			if (!(Pt = malloc(sizeof(ObjectType))))
-				Abort(" Out of memory loading a player's objects.");
-			*Pt = UserFRec.Objs[ILoop];
-			Player->Weight += Pt->Weight;
-
-			/* since chests don't work correctly... */
-			if (Pt->ObClass == Chest)
-			{
-				Pt->Object.Chest.NumInside = 0;
-				Pt->Object.Chest.ObjectTail = NULL;
-			}
-
-			Pt->Next = Player->ObjectTail;
-			Player->ObjectTail = Pt;
-
-			if (ILoop == UserFRec.NWeap)
-				Player->USWeap = Pt;
-			else
-			if (ILoop == UserFRec.NArm)
-			{
-				Player->USArm = Pt;
-				Player->AC =
-					Max(-50, Min(50, Player->AC - Pt->Object.Armor.ArmPlus));
-			}
-			else
-			if (ILoop == UserFRec.NShield)
-			{
-				Player->USShield = Pt;
-				Player->AC =
-					Max(-50, Min(50, Player->AC - Pt->Object.Shield.ShPlus));
-			}
-			else
-			if (ILoop == UserFRec.NRingL)
-				Player->USRingL = Pt;
-			else
-			if (ILoop == UserFRec.NRingR)
-				Player->USRingR = Pt;
-		}
-	}
-	else
+	SavedName(Name, Key);
+	if (!GetPlayer(Key, Player, &Found))
+		Abort(" Sce203 - Cannot read a player.");
+	if (!Found)
 	{
 		*Player = ProtoUser;
 		*Player->Name = '\0';
+		return;
 	}
-	ClosePer();
+
+	strcpy(Player->Name, Name);
+	Player->Weight		= 0;
+	Player->AC			= 10;
+	Player->Next		= NULL;
+	Player->Pending		= NULL;
+	Player->Follow		= NULL;
+	Player->DefPlayer	= NULL;
+	Player->DefMon		= NULL;
+	Player->LastInput	= RealTime;
+	Player->LastAtk		= RealTime - 50;
+	Player->LastHeal	= RealTime - 50;
+	Player->HitAtTime	= RealTime - 50;
+	Player->Drunk		= RealTime;
+	Player->Entry		= XName;
+
+	for (Pt = Player->ObjectTail; Pt; Pt = Pt->Next)
+	{
+		Player->Weight += Pt->Weight;
+		if (Pt == Player->USArm)
+			Player->AC = Max(-50, Min(50, Player->AC - Pt->Object.Armor.ArmPlus));
+		else
+		if (Pt == Player->USShield)
+			Player->AC = Max(-50, Min(50, Player->AC - Pt->Object.Shield.ShPlus));
+	}
 }
 
 void FreePlayer(UserPoint Player)
@@ -153,104 +104,81 @@ void FreePlayer(UserPoint Player)
 	free(Player);
 }
 
+/* Save *Player and its first MaxObjs objects, in one transaction */
 void WritePlayer(UserPoint Player)
 {
-	ObjectPoint			Pt;
-	struct tUserFRec	EBuffer;
-	int					I;
+	Alfa	Key;
 
-	memcpy(&EBuffer.User, Player, sizeof EBuffer.User);
-	CapAlfa(EBuffer.User.Name);
-	EBuffer.NWeap = EBuffer.NArm = EBuffer.NShield =
-	EBuffer.NRingL = EBuffer.NRingR = -1;
-
-	for (Pt = Player->ObjectTail, I = 0; Pt && I < MaxObjs; Pt = Pt->Next, I++)
-	{
-		EBuffer.Objs[I] = *Pt;
-		if (Pt == Player->USWeap)
-			EBuffer.NWeap = I;
-		else
-		if (Pt == Player->USArm)
-			EBuffer.NArm = I;
-		else
-		if (Pt == Player->USShield)
-			EBuffer.NShield = I;
-		else
-		if (Pt == Player->USRingL)
-			EBuffer.NRingL = I;
-		else
-		if (Pt == Player->USRingR)
-			EBuffer.NRingR = I;
-	}
-	EBuffer.NObj = I;
-
-	if (SearchPlFile(Player->Name))
-		fseek(EPerson, -(long)sizeof(UserFRec), 1);
-	else
-	{
-		SeekRec(EPerson, 0L);
-		while (fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
-			if (!*UserFRec.User.Name)
-			{
-				fseek(EPerson, -(long)sizeof(UserFRec), 1);
-				break;
-			}
-	}
-
-	if (!fwrite((char *)&EBuffer, sizeof(EBuffer), 1, EPerson))
+	SavedName(Player->Name, Key);
+	if (!PutPlayer(Key, Player))
 		Abort(" Sce206 - Error updating person.");
-	ClosePer();
 }
 
 void DeleteUsr(char *Nm)
 {
-	if (SearchPlFile(Nm))
-	{
-		*UserFRec.User.Name = '\0';
-		fseek(EPerson, -(long)sizeof(UserFRec), 1);
-		if (!fwrite((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
-			Abort(" Sce208 - Error while deleting player.");
-	}
-	else
+	Alfa	Key;
+	int		Found;
+
+	SavedName(Nm, Key);
+	if (!DropPlayer(Key, &Found))
+		Abort(" Sce208 - Error while deleting player.");
+	if (!Found)
 		QOut(Term, " Sce208 - Error while deleting player.");
-	ClosePer();
 }
 
-void ChangeUsrName(char *OldNm, char *NewNm)
+/*
+ * Rename saved player OldNm to NewNm, which is capitalised in place; an
+ * empty NewNm deletes the player.  A name another saved player has is
+ * refused, and FALSE returned, so two characters never share one (#151).
+ */
+int ChangeUsrName(char *OldNm, char *NewNm)
 {
-	if (SearchPlFile(OldNm))
+	Alfa	Old;
+	int		Result;
+
+	SavedName(OldNm, Old);
+	CapAlfa(NewNm);
+	if (!*NewNm)
 	{
-		CapAlfa(NewNm);
-		strcpy(UserFRec.User.Name, NewNm);
-		fseek(EPerson, -(long)sizeof(UserFRec), 1);
-		if (!fwrite((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
+		if (!DropPlayer(Old, &Result))
 			Abort(" Sce208 - Error while changing name.");
 	}
 	else
+	if (!RenamePlayer(Old, NewNm, &Result))
+		Abort(" Sce208 - Error while changing name.");
+	if (Result < 0)
+	{
+		QOut(Term, "0That name is already taken.");
+		return FALSE;
+	}
+	if (!Result)
 		QOut(Term, " Sce208 - Error while changing name.");
-	ClosePer();
+	return TRUE;
 }
 
+/* List the saved players, most senior first */
 void Users(char *Word)
 {
+	UserType	P;
+	long		After = 0;
+	int			Found;
+
 	UNUSED(Word);
-	
-	OpenPer();
-	while (fread((char *)&UserFRec, sizeof(UserFRec), 1, EPerson))
-		if (*UserFRec.User.Name)
-		{
-			if (User->SSJ)
-				snprintf(B1, sizeof(B1), "0%c%c%-10s %4d %02d/%02d",
-						UserFRec.User.SSJ ? '*' : ' ',
-						UserFRec.User.It ? '+' : ' ', UserFRec.User.Name,
-						UserFRec.User.Lvl,
-						UserFRec.User.LastAccess >> 7,
-						UserFRec.User.LastAccess & 0x3f);
-			else
-				snprintf(B1, sizeof(B1), "0%s", UserFRec.User.Name);
-			QOut(Term, B1);
-		}
-	ClosePer();
+
+	for (;;)
+	{
+		if (!NextPlayer(&After, &P, &Found))
+			Abort(" Sce203 - Cannot read the players.");
+		if (!Found)
+			break;
+		if (User->SSJ)
+			snprintf(B1, sizeof(B1), "0%c%c%-10s %4d %02d/%02d",
+					P.SSJ ? '*' : ' ', P.It ? '+' : ' ', P.Name, P.Lvl,
+					P.LastAccess >> 7, P.LastAccess & 0x3f);
+		else
+			snprintf(B1, sizeof(B1), "0%s", P.Name);
+		QOut(Term, B1);
+	}
 }
 
 UserPoint FindPlayer(char *Word, UserPoint PlayerTail)

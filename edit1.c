@@ -484,8 +484,9 @@ static void ModPlayer(UserPoint Player, int OnLine)
 
 	if (NP)
 	{
-		if (*OldName)
-			ChangeUsrName(OldName, Player->Name);
+		/* a name another saved player has is refused: keep the old one */
+		if (*OldName && !ChangeUsrName(OldName, Player->Name))
+			strcpy(Player->Name, OldName);
 		QOut(Term, "0Player modified.");
 	}
 }

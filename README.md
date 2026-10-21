@@ -10,7 +10,7 @@ This repository ports that game to macOS and Linux:
   is ever changed; it is the reference for how the game behaved.
 - The top level is the port: `scepterd` (the server, with its own telnet
   front end), `mkgame` (builds a game from a world file) and `upgradegame`
-  (converts a game to a newer data format).
+  (brings a game's database up to a newer schema).
 
 ## Build
 
@@ -60,7 +60,5 @@ let many different passwords open the same character.  The port instead:
 - limits wrong passwords, at login and in `CHANGEPW`, for each address and
   each character.
 
-The player record gained a field for the hash, so the data format is now
-version 2.  `upgradegame` converts older games, keeping a backup; nothing
-converts a game back.  The old hash is no longer accepted (#50): a character
-saved before the change is locked until a master DM sets a new password.
+The old hash is no longer accepted (#50): a locked character takes no
+password until a master DM sets a new one (docs/data-files.md).

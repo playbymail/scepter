@@ -80,7 +80,7 @@ void	ReadPlayer(UserPoint Player, char *Name);
 void	FreePlayer(UserPoint Player);
 void	WritePlayer(UserPoint Player);
 void	DeleteUsr(char *Nm);
-void	ChangeUsrName(char *OldNm, char *NewNm);
+int		ChangeUsrName(char *OldNm, char *NewNm);
 void	Users(char *Word);
 UserPoint	FindPlayer(char *Word, UserPoint PlayerTail);
 UserPoint	FindUser(char *Word);
@@ -151,15 +151,6 @@ void	NetFlush(void);
 void	NetWho(void);
 void	NetCheckHup(void);
 const char	*NetHost(int Chn);
-
-/* datafile.c */
-int		WriteDataHead(FILE *fp, int Kind);
-int		ReadDataHead(FILE *fp, int Kind, unsigned long *Version, unsigned long *RecSize);
-void	DataProblem(int Result, int Kind, unsigned long Version,
-					unsigned long RecSize, char *Msg, size_t Len);
-FILE	*OpenData(const char *Path, int Kind);
-int		SeekRec(FILE *fp, long Offset);
-int		CheckGame(const char *Dir);
 
 /* edit1.c */
 void	Edit(void);
@@ -271,3 +262,9 @@ int		GetRoomObjs(int Rm, ObjectPoint *List);
 int		PutRoomObjs(int Rm, ObjectPoint List);
 int		GetRoomMons(int Rm, MonsterPoint *List);
 int		PutRoomMons(int Rm, MonsterPoint List);
+int		HavePlayer(const char *Name);
+int		GetPlayer(const char *Name, UserPoint P, int *Found);
+int		PutPlayer(const char *Name, UserPoint P);
+int		DropPlayer(const char *Name, int *Found);
+int		RenamePlayer(const char *Old, const char *New, int *Result);
+int		NextPlayer(long *After, UserPoint P, int *Found);

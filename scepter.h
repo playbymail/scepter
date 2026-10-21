@@ -396,14 +396,6 @@ typedef struct tUserSave
 	char		PWHash[PWHashLen];	/* bcrypt (#82); "*" or empty: locked */
 } UserSave;
 
-extern struct tUserFRec
-{
-	UserSave	User;
-	short		NObj;
-	short		NWeap, NArm, NShield, NRingL, NRingR;	/* index into Objs[] */
-	ObjectType	Objs[MaxObjs];
-} UserFRec;
-
 typedef struct
 {
 	AdjoinType		Adjoin;
@@ -420,32 +412,6 @@ typedef struct
 	unsigned		Dark		: 1;
 } RoomType;
 
-/* game data files and their headers (datafile.c, docs/data-files.md) */
-#define	DataVersion		2		/* bump when any record layout changes */
-#define	DataHeadSize	32
-
-enum { DPerson, NDataKinds };
-#define	NDataFiles		1
-
-/* ReadDataHead() results */
-enum { DataOK, DataNoHead, DataWrongVersion, DataWrongSize, DataWrongKind,
-	   DataShort, DataForeign, DataUnreadable };
-
-typedef struct
-{
-	const char	*Magic;			/* 8 characters */
-	const char	*Label;
-	size_t		RecSize;
-} DataKindType;
-
-typedef struct
-{
-	const char	*Name;			/* relative to the game directory */
-	int			Kind;
-} DataFileType;
-
-extern DataKindType	DataKind[NDataKinds];
-extern DataFileType	DataFile[NDataFiles];
 
 
 /* global variables */
