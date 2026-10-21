@@ -152,7 +152,7 @@ static void ReadSeg(int SlotNum, int SegNum)
 			Abort(" Sce912 - Cannot read a room.");
 		if (!Found)		/* a missing room: leave it empty */
 			ErrLog(" Sce912 - A room is missing from the game.");
-		ReadUObj(WRm, &Room[Rm].RmObjectTail, 0);
+		ReadUObj(WRm, &Room[Rm].RmObjectTail);
 		ReadUMon(WRm, &Room[Rm].RmMonsterTail);
 	}
 }
@@ -182,7 +182,7 @@ void WriteSeg(int SlotNum, int SegNum, int Erase)
 
 		if (Room[Rm].RmObjectTail)
 		{
-			WriteUObj(WRm, Room[Rm].RmObjectTail, 0);
+			WriteUObj(WRm, Room[Rm].RmObjectTail);
 			if (Erase)
 				EraseTail(Room[Rm].RmObjectTail);
 		}

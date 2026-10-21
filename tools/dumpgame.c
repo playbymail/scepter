@@ -537,8 +537,6 @@ int main(int argc, char **argv)
 	Init_Scepter();
 	LoadSpecial();
 	Init();
-	if (!(EDBMon = OpenData(DBMON, DMonDB)) || !(EDBObj = OpenData(DBOBJ, DObjDB)))
-		Abort(" dumpgame: cannot open game files.");
 
 	DumpSettings();
 	DumpSpecial();
@@ -547,8 +545,6 @@ int main(int argc, char **argv)
 	DumpRooms();
 	DumpPlayers();
 
-	fclose(EDBMon);
-	fclose(EDBObj);
 	DBClose();
 	return ferror(stdout) || fflush(stdout) ? 1 : 0;
 }

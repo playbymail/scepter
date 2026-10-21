@@ -87,11 +87,6 @@ int main(int argc, char **argv)
 
 	Init();
 
-	if ((EDBMon = OpenData(DBMON, DMonDB)) == NULL)
-		Abort(" File open error on DBMON.");
-
-	if ((EDBObj = OpenData(DBOBJ, DObjDB)) == NULL)
-		Abort(" File open error on DBOBJ.");
 
 
 	InitEvents();
@@ -165,8 +160,6 @@ int main(int argc, char **argv)
 	Off();
 
 	CurrentRec = 0;
-	fclose(EDBMon);
-	fclose(EDBObj);
 	DBClose();
 	exit(0);
 }

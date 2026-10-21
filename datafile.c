@@ -24,15 +24,11 @@
 
 DataKindType DataKind[NDataKinds] =
 {
-	{ "SCEPDBOB", "object db",		sizeof(ObjRec) },
-	{ "SCEPDBMN", "monster db",		sizeof(MonRec) },
 	{ "SCEPPERS", "player file",	sizeof(UserFRec) },
 };
 
 DataFileType DataFile[NDataFiles] =
 {
-	{ "dbobj",		DObjDB },
-	{ "dbmon",		DMonDB },
 	{ "eperson",	DPerson },
 };
 

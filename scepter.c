@@ -4,8 +4,6 @@
 struct tUserFRec	UserFRec;
 
 /* global variables */
-FILE		*EDBMon;
-FILE		*EDBObj;
 FILE		*EFile;
 
 RoomType	Room[RmLimit];
@@ -85,8 +83,6 @@ int					CurrentRec;
 #include "proto.h"
 
 /* data files */
-char	DBMON[]		= WORKDIR "/dbmon";
-char	DBOBJ[]		= WORKDIR "/dbobj";
 char	EFILE[]		= WORKDIR "/efile";
 char	ERRLOG[]	= WORKDIR "/errlog";
 char	PASSWD[]	= "/etc/passwd";

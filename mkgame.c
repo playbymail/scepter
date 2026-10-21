@@ -25,7 +25,6 @@
 #define	NumSegsInit	200					/* main.c: NumSegs */
 #define	MaxRoom		(NumSegsInit * 10 - 1)
 #define	MaxDesc		255					/* DescRec is a uchar */
-#define	DBSize		1009				/* db.c: hash table size */
 #define	MaxArea		255
 #define	AreaNameLen	60
 #define	MaxCoord	999
@@ -1190,139 +1189,94 @@ static void WriteBlob(const char *Name, int Kind, const void *Data, size_t N)
 	Close(fp, Name);
 }
 
-/* db.c: HashObj() */
-static int DBHash(int Room, int Type)
-{
-	return (int)(((long)Room * 73 + Type) % DBSize);
-}
+/* Each room's saved objects and monsters, linked through the nodes */
+static ObjectPoint	RoomObjs[MaxRoom + 1];
+static MonsterPoint	RoomMons[MaxRoom + 1];
 
-static int DBSlot(RmCodeType *RoomOf(int), int Room, int Type)
+/* Link the nodes From[1..SavedItems] that are there into a list */
+static ObjectPoint Link(ONode **From)
 {
-	int		n = DBHash(Room, Type), First = n;
+	ObjectPoint	List = NULL, *Tail = &List;
+	int			i;
 
-	while (*RoomOf(n))
-	{
-		if ((n = (n + 1) % DBSize) == First)
+	for (i = 1; i <= SavedItems; i++)
+		if (From[i])
 		{
-			fprintf(stderr, "mkgame: database full\n");
-			exit(1);
+			*Tail = &From[i]->Obj;
+			Tail = &From[i]->Obj.Next;
 		}
-	}
-	return n;
+	*Tail = NULL;
+	return List;
 }
 
-static ObjRec	DBObj[DBSize];
-static MonRec	DBMon[DBSize];
-
-static RmCodeType *ObjRoomOf(int n)	{ return &DBObj[n].Room; }
-static RmCodeType *MonRoomOf(int n)	{ return &DBMon[n].Room; }
-
-static void PutObjRec(int Room, int Type, ONode **Nodes, int N)
-{
-	ObjRec	*Rec = &DBObj[DBSlot(ObjRoomOf, Room, Type)];
-	int		i;
-
-	Rec->Room = (RmCodeType)Room;
-	Rec->DataType = (char)Type;
-	Rec->Num = (char)N;
-	for (i = 0; i < N; i++)
-	{
-		Rec->Obj[i] = Nodes[i]->Obj;
-		Rec->Obj[i].Next = NULL;
-		if (Rec->Obj[i].ObClass == Chest)
-			Rec->Obj[i].Object.Chest.ObjectTail = NULL;
-	}
-}
-
-static int Pack(ONode **From, ONode **To)
+static int Count(ONode **From)
 {
 	int		i, n = 0;
 
 	for (i = 1; i <= SavedItems; i++)
-		if (From[i])
-			To[n++] = From[i];
+		n += From[i] != NULL;
 	return n;
 }
 
+/*
+ * Link each room's objects, chest contents, monsters and inventories into
+ * the lists the game stores (dbstore.c), numbering duplicate monsters.
+ */
 static void BuildDB(void)
 {
 	int		Rm, i, j;
 
 	for (Rm = 1; Rm <= MaxRoom; Rm++)
 	{
-		RoomDef	*R = &Rooms[Rm];
-		ONode	*Objs[SavedItems];
-		MNode	*Mons[SavedItems];
-		int		NObj, NMon = 0, ChestNo = 1;
+		RoomDef			*R = &Rooms[Rm];
+		MNode			*Mons[SavedItems];
+		MonsterPoint	*Tail = &RoomMons[Rm];
+		ObjectPoint		O;
+		int				NMon = 0;
 
 		if (!R->Defined)
 			continue;
 
-		NObj = Pack(R->Objs, Objs);
-		if (NObj)
-		{
-			for (i = 0; i < NObj; i++)
-				if (Objs[i]->Obj.ObClass == Chest)
-				{
-					int		n = 0;
-
-					for (j = 1; j <= SavedItems; j++)
-						n += Objs[i]->Kids[j] != NULL;
-					Objs[i]->Obj.Object.Chest.NumInside = (char)n;
-				}
-			PutObjRec(Rm, 0, Objs, NObj);
-
-			for (i = 0; i < NObj; i++)
+		RoomObjs[Rm] = Link(R->Objs);
+		for (i = 1; i <= SavedItems; i++)
+			if (R->Objs[i] && R->Objs[i]->Obj.ObClass == Chest)
 			{
-				ONode	*Kids[SavedItems];
-				int		NKids;
+				ObjectType	*Box = &R->Objs[i]->Obj;
 
-				if (Objs[i]->Obj.ObClass != Chest)
-					continue;
-				NKids = Pack(Objs[i]->Kids, Kids);
-				/* the Nth chest's contents are record N (ReadUObj) */
-				if (NKids)
-					PutObjRec(Rm, ChestNo, Kids, NKids);
-				ChestNo++;
+				Box->Object.Chest.NumInside = (char)Count(R->Objs[i]->Kids);
+				Box->Object.Chest.ObjectTail = Link(R->Objs[i]->Kids);
+				/* a chest in a chest keeps nothing (#44) */
+				for (O = Box->Object.Chest.ObjectTail; O; O = O->Next)
+					if (O->ObClass == Chest)
+						O->Object.Chest.ObjectTail = NULL;
 			}
-		}
 
 		for (i = 1; i <= SavedItems; i++)
 			if (R->Mons[i])
 				Mons[NMon++] = R->Mons[i];
-		if (NMon)
+		for (i = 0; i < NMon; i++)
 		{
-			MonRec	*Rec = &DBMon[DBSlot(MonRoomOf, Rm, 0)];
+			MonsterType	*M = &Mons[i]->Mon;
+			int			Same = 0, Before = 0;
 
-			Rec->Room = (RmCodeType)Rm;
-			Rec->DataType = 0;
-			Rec->Num = (char)NMon;
-			for (i = 0; i < NMon; i++)
-			{
-				int		Same = 0, Before = 0;
-
-				Rec->Mon[i] = Mons[i]->Mon;
-				/* number duplicates as FixMonCount() (mon.c) does */
-				for (j = 0; j < NMon; j++)
-					if (!strcmp(Mons[j]->Mon.Name, Mons[i]->Mon.Name))
-					{
-						Same++;
-						if (j < i)
-							Before++;
-					}
-				Rec->Mon[i].Num = (char)(Same - Before > 9 ? 9 : Same - Before);
-				Rec->Mon[i].Top = Before == 0;
-
-				/* inventory: record type 9 + N, as in db.c */
+			/* number duplicates as FixMonCount() (mon.c) does */
+			for (j = 0; j < NMon; j++)
+				if (!strcmp(Mons[j]->Mon.Name, M->Name))
 				{
-					ONode	*Inv[SavedItems];
-					int		NInv = Pack(Mons[i]->Inv, Inv);
-
-					if (NInv)
-						PutObjRec(Rm, 9 + i, Inv, NInv);
+					Same++;
+					if (j < i)
+						Before++;
 				}
-			}
+			M->Num = (char)(Same - Before > 9 ? 9 : Same - Before);
+			M->Top = Before == 0;
+			M->ObjectTail = Link(Mons[i]->Inv);
+			for (O = M->ObjectTail; O; O = O->Next)
+				if (O->ObClass == Chest)
+					O->Object.Chest.ObjectTail = NULL;
+			*Tail = M;
+			Tail = &M->Next;
 		}
+		*Tail = NULL;
 	}
 }
 
@@ -1330,7 +1284,7 @@ static void BuildDB(void)
  * The game database's tables, in one transaction (dbstore.c).  Every
  * template slot is written, unused ones too, as the game has always had
  * them, every description record up to the highest, and every room of
- * every segment, room 0 and empty rooms included.
+ * every segment, room 0 and empty rooms included, with their contents.
  */
 static void WriteTables(void)
 {
@@ -1350,6 +1304,9 @@ static void WriteTables(void)
 		Ok = PutObjTemplate(i, &OTmpl[i]);
 	for (i = 0; Ok && i <= MaxRoom; i++)
 		Ok = PutRoom(i, &Rooms[i].Rm);
+	for (i = 0; Ok && i <= MaxRoom; i++)
+		Ok = (!RoomObjs[i] || PutRoomObjs(i, RoomObjs[i]))
+		  && (!RoomMons[i] || PutRoomMons(i, RoomMons[i]));
 	if (!Ok || !DBCommit())
 	{
 		DBRollback();
@@ -1364,8 +1321,6 @@ static void WriteGame(void)
 	FILE	*fp;
 	int		i, j;
 
-	WriteBlob("dbobj", DObjDB, DBObj, DBSize);
-	WriteBlob("dbmon", DMonDB, DBMon, DBSize);
 	WriteBlob("eperson", DPerson, NULL, 0);
 
 	WriteTables();

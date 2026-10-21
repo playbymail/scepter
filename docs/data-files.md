@@ -11,22 +11,12 @@ server never reads a file it wasn't built for.
 
 | File | Holds | Magic |
 |---|---|---|
-| `game.db` | the game database (see below): templates, descriptions and rooms so far | |
-| `dbobj` | room and chest contents (`ObjRec`), a 1009-slot hash table | `SCEPDBOB` |
-| `dbmon` | room monsters (`MonRec`), a 1009-slot hash table | `SCEPDBMN` |
+| `game.db` | the game database (see below): everything but the characters, settings and special rooms so far | |
 | `eperson` | saved characters (`UserFRec`) | `SCEPPERS` |
 
 `efile` (game settings and news), `special` (special rooms) and `errlog`
 are text files without headers.  The hourly update writes `efile.tmp`
 and renames it over `efile`, so a failed write leaves the old file (#17).
-
-`dbobj.new` and `dbmon.new` always hold 1009 records.  A record's slot is
-`(room × 73 + type) mod 1009`, or the next slot along that isn't taken.
-In `dbobj.new`, type 0 is a room's objects, 1–8 the contents of its first to
-eighth chest, and 9–16 the inventory of its first to eighth monster.
-`dbmon.new` uses type 0 only.  The first field, `Room`, is 0 for a slot
-never used, which ends a search, and -1 for a deleted record, which doesn't,
-so records stored past it can still be found (#64).
 
 ## The game database
 
@@ -36,12 +26,19 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
 
 - **`mkgame`** creates it with the whole schema, then fills the tables
   moved so far (#148: `monster_templates`, `object_templates` and
-  `descriptions`; #149: `rooms`).  The game directory must already exist
-  and be empty.
+  `descriptions`; #149: `rooms`; #150: `room_objects`, `chest_objects`,
+  `room_monsters` and `monster_objects`).  The game directory must
+  already exist and be empty.
 - **Rooms:** `rooms` holds every room of every segment, 0 to
   `NumSegs * 10 - 1`, and the server counts the segments from it; a gap
   is refused at start-up.  A segment swap saves its ten rooms in one
   transaction, and the hourly update saves every loaded segment in one.
+- **Room contents:** each save replaces all of a room's objects (with
+  their chests' contents) or all its monsters (with their inventories).
+  A chest's contents are keyed by the chest's slot in the room and go
+  with it.  The engine keeps at most 8 things in each list; chests inside
+  chests, and what a monster's chests hold, aren't saved (#44).  This
+  replaces the 1009-slot hash tables of `dbobj` and `dbmon` (#64).
 - **Rows:** `dbstore.c` turns each saved struct into a row and back.  The
   DM editor's changes to a template or a description are one transaction
   each.
