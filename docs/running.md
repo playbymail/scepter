@@ -115,7 +115,7 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 |---------------------|--------------------------------------------------------|
 | `make check-net`    | the telnet front end, byte by byte, over raw sockets   |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
-| `make check-worlds` | that each world file matches its JSON copy             |
+| `make check-worlds` | that each world file matches its JSON copy, and mkgame's checks on areas and coordinates |
 | `make check-data`   | data file headers and `upgradegame` (docs/data-files.md)|
 | `make check-security` | that players can't crash, hang or corrupt the server, and that bad DM edits or data can't either (issues labelled `security`; `tools/securitytest.py`, `tools/dmtest.c`) |
 

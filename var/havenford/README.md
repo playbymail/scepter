@@ -151,29 +151,20 @@ to Claude Code in this repository:
 > in the River Inn." becomes "River Inn").  Expand object and monster names
 > as `ExpandName` does: `sign,aether *` is "aether sign".
 >
-> Draw one SVG with every room as a numbered square on a grid.  The world
-> isn't a consistent grid, so use this layout (x grows east, y grows
-> south), and check that no two rooms share a square:
+> Draw one SVG with every room as a numbered square on a grid, at the
+> room's `x` and `y` from the world file (`y` grows north, so draw it
+> upward), with its `area` as its region.  Rooms above or below the ground
+> (`z` not 0) would share a square with the room under them, so shift them
+> on the flat map, and check that no two rooms share a square:
 >
-> - City: 1 (0,0), 2 (1,0), 3 (1,−1), 4 (−1,−1), 5 (2,−1), 6 (1,−2),
->   7 (−1,−2), 8 (−1,−3), 9 (2,−2), 10 (1,1), 11 (2,1), 12 (0,1),
->   13 (1,2), 14 (2,2), 15 (0,2), 16 (3,0), 17 (3,−1), 18 (3,−2),
->   19 (3,−3), 20 (4,−3), 21 (3,−4), 22 (3,−5), 38 (2,−3), 39 (1,−3),
->   40 (−1,−4), 41 (4,0), 42 (4,−1).
-> - North road: 23–31 run north from (3,−6) to (3,−14); 32 (2,−11),
->   37 (1,−11), 33 (3,−15), 34 (3,−16), 35 (3,−17), 36 (4,−17).
-> - Graveward: 43–51 run west from (−2,−2) to (−10,−2); 56 (−8,−3),
->   52 (−10,−1), 53 (−11,−1), 55 (−11,0), 54 (−12,−1), 57 (−13,−1).
-> - Lockspire Keep, one floor below another: 58–63 run west from (0,3) to
->   (−5,3); 65 (−6,3), 64 (−5,4), 76 (−5,2); 66 (−6,5), 67 (−7,5),
->   69 (−8,5), 68 (−7,6), 77 (−7,4); 70 (−8,7), 71 (−9,7), 73 (−10,7),
->   72 (−9,8), 78 (−9,6); 74 (−10,9), 75 (−11,9).  Label the rows
->   ground, 2nd floor, 3rd floor and roof.
-> - Aether Observatory: 79 (0,−6), 80 (−1,−6), 93 (−1,−5), 81 (−1,−7),
->   91 (0,−7), 94 (1,−7), 82 (−2,−7), 92 (−2,−6), 83 (−3,−7), 84 (−3,−8),
->   85 (−3,−9), 86 (−4,−9), 87–90 run north from (−4,−10) to (−4,−13).
->   Bend the link from 6 to 79 through (0,−3), so it doesn't look like a
->   link from 6 to 7.
+> - Lockspire Keep: draw each floor two rows south of the one below it, and
+>   label the rows ground, 2nd floor, 3rd floor and roof.
+> - The Graveward crypt (`z` −1): one row south.
+> - The watchtower loft (36): one column east.
+> - The observatory tower (88–90): one row north for each level.
+>
+> Bend the link from 6 to 79 through the empty square at (0,3), so it doesn't
+> look like a link from 6 to 7.
 >
 > Draw each exit once: solid for paths, dotted for up and down, and dashed
 > in another colour for doors (`kind = door` objects with `to`, which lead
@@ -201,4 +192,7 @@ to Claude Code in this repository:
 > search on 13 → 22 (eight moves: `n n e n n n n n`) and 1 → 75 (through
 > the crowning door).  Publish it as an artifact named "Havenford Map".
 
-Update the layout in the prompt when rooms are added or moved.
+Give new rooms an `area` and coordinates in the world file.  Two exits
+don't match the coordinates: west from 6 leads to 79, four squares north
+of where west would be, and south from 91 leads to 94, which is east of it.
+A room's square is taken in each case.

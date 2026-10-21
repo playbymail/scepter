@@ -15,6 +15,23 @@ news-3 = Beyond the warning sign, beasts wander in the meadow.
 news-4 = The northwest Aether Observatory welcomes apprentice magic-users.
 news-5 = The southwest keep offers locks, traps and ascending thief challenges.
 
+# ---- areas: rooms are placed at x y z within an area ----
+
+[area 1]
+name = Havenford
+
+[area 2]
+name = The north road
+
+[area 3]
+name = The Graveward
+
+[area 4]
+name = Lockspire Keep
+
+[area 5]
+name = Aether Observatory
+
 # ---- descriptions: RECORD:LINE is referenced by desc = ----
 
 [description 1]
@@ -779,6 +796,9 @@ objects = 24 24 25 26
 
 [room 1]
 east = 2
+area = 1
+x = 0
+y = 0
 desc = 1:1
 safe = yes
 
@@ -787,6 +807,9 @@ north = 3
 south = 10
 east = 16
 west = 1
+area = 1
+x = 1
+y = 0
 desc = 1:2
 safe = yes
 
@@ -795,18 +818,27 @@ north = 6
 south = 2
 east = 5
 west = 4
+area = 1
+x = 1
+y = 1
 desc = 1:3
 safe = yes
 
 [room 4]
 north = 7
 east = 3
+area = 1
+x = -1
+y = 1
 desc = 1:4
 safe = yes
 trains = fighter barbarian
 
 [room 5]
 west = 3
+area = 1
+x = 2
+y = 1
 desc = 1:5
 safe = yes
 trains = ranger
@@ -815,6 +847,9 @@ trains = ranger
 south = 3
 east = 9
 west = 79
+area = 1
+x = 1
+y = 2
 desc = 1:6
 safe = yes
 trains = magic-user
@@ -823,6 +858,9 @@ trains = magic-user
 north = 8
 south = 4
 west = 43
+area = 1
+x = -1
+y = 2
 desc = 1:7
 safe = yes
 trains = cleric paladin
@@ -830,12 +868,18 @@ trains = cleric paladin
 [room 8]
 north = 40
 south = 7
+area = 1
+x = -1
+y = 3
 desc = 1:8
 safe = yes
 trains = thief
 
 [room 9]
 west = 6
+area = 1
+x = 2
+y = 2
 desc = 1:9
 safe = yes
 trains = dm
@@ -845,11 +889,17 @@ north = 2
 south = 13
 east = 11
 west = 12
+area = 1
+x = 1
+y = -1
 desc = 1:10
 safe = yes
 
 [room 11]
 west = 10
+area = 1
+x = 2
+y = -1
 desc = 2:1
 greeting = Keeper: Basic supplies for careful travellers.
 safe = yes
@@ -858,6 +908,9 @@ stock = 1 2 3 4 5 6
 
 [room 12]
 east = 10
+area = 1
+x = 0
+y = -1
 desc = 2:2
 greeting = Smith: I can repair your worn equipment.
 safe = yes
@@ -867,6 +920,9 @@ role = smith
 north = 10
 east = 14
 west = 15
+area = 1
+x = 1
+y = -2
 desc = 2:3
 greeting = Innkeeper: The city is safe; danger lies up the north road. Take the square's east exit, then go north through the North Gate.
 safe = yes
@@ -875,6 +931,9 @@ staggers = 1 2 10 13
 
 [room 14]
 west = 13
+area = 1
+x = 2
+y = -2
 desc = 2:4
 greeting = Newskeeper: Read the road warnings before leaving town.
 safe = yes
@@ -883,6 +942,9 @@ role = newsstand
 [room 15]
 south = 58
 east = 13
+area = 1
+x = 0
+y = -2
 desc = 2:5
 greeting = Broker: Bring me your unwanted finds.
 safe = yes
@@ -892,12 +954,18 @@ role = pawnshop
 north = 17
 east = 41
 west = 2
+area = 1
+x = 3
+y = 0
 desc = 2:6
 safe = yes
 
 [room 17]
 north = 18
 south = 16
+area = 1
+x = 3
+y = 1
 desc = 2:7
 safe = yes
 
@@ -912,6 +980,9 @@ permanent = yes
 [room 18]
 north = 19
 south = 17
+area = 1
+x = 3
+y = 2
 desc = 2:8
 safe = yes
 
@@ -920,23 +991,35 @@ north = 21
 south = 18
 east = 20
 west = 38
+area = 1
+x = 3
+y = 3
 desc = 2:9
 safe = yes
 
 [room 20]
 west = 19
+area = 1
+x = 4
+y = 3
 desc = 2:10
 safe = yes
 
 [room 21]
 north = 22
 south = 19
+area = 1
+x = 3
+y = 4
 desc = 3:1
 safe = yes
 
 [room 22]
 north = 23
 south = 21
+area = 1
+x = 3
+y = 5
 desc = 3:2
 safe = yes
 
@@ -951,6 +1034,9 @@ permanent = yes
 [room 23]
 north = 24
 south = 22
+area = 2
+x = 3
+y = 6
 desc = 3:3
 encounter-table = 1
 encounter-rate = 100
@@ -958,6 +1044,9 @@ encounter-rate = 100
 [room 24]
 north = 25
 south = 23
+area = 2
+x = 3
+y = 7
 desc = 3:4
 encounter-table = 1
 encounter-rate = 85
@@ -965,6 +1054,9 @@ encounter-rate = 85
 [room 25]
 north = 26
 south = 24
+area = 2
+x = 3
+y = 8
 desc = 3:5
 encounter-table = 1
 encounter-rate = 80
@@ -972,6 +1064,9 @@ encounter-rate = 80
 [room 26]
 north = 27
 south = 25
+area = 2
+x = 3
+y = 9
 desc = 3:6
 encounter-table = 1
 encounter-rate = 75
@@ -979,6 +1074,9 @@ encounter-rate = 75
 [room 27]
 north = 28
 south = 26
+area = 2
+x = 3
+y = 10
 desc = 3:7
 encounter-table = 1
 encounter-rate = 65
@@ -987,6 +1085,9 @@ encounter-rate = 65
 north = 29
 south = 27
 west = 32
+area = 2
+x = 3
+y = 11
 desc = 3:8
 encounter-table = 2
 encounter-rate = 65
@@ -994,6 +1095,9 @@ encounter-rate = 65
 [room 29]
 north = 30
 south = 28
+area = 2
+x = 3
+y = 12
 desc = 3:9
 encounter-table = 2
 encounter-rate = 60
@@ -1001,6 +1105,9 @@ encounter-rate = 60
 [room 30]
 north = 31
 south = 29
+area = 2
+x = 3
+y = 13
 desc = 3:10
 encounter-table = 2
 encounter-rate = 55
@@ -1008,6 +1115,9 @@ encounter-rate = 55
 [room 31]
 north = 33
 south = 30
+area = 2
+x = 3
+y = 14
 desc = 4:1
 encounter-table = 2
 encounter-rate = 55
@@ -1015,6 +1125,9 @@ encounter-rate = 55
 [room 32]
 east = 28
 west = 37
+area = 2
+x = 2
+y = 11
 desc = 4:2
 encounter-table = 2
 encounter-rate = 50
@@ -1022,6 +1135,9 @@ encounter-rate = 50
 [room 33]
 north = 34
 south = 31
+area = 2
+x = 3
+y = 15
 desc = 4:3
 encounter-table = 3
 encounter-rate = 55
@@ -1029,6 +1145,9 @@ encounter-rate = 55
 [room 34]
 north = 35
 south = 33
+area = 2
+x = 3
+y = 16
 desc = 4:4
 encounter-table = 3
 encounter-rate = 45
@@ -1036,18 +1155,28 @@ encounter-rate = 45
 [room 35]
 south = 34
 up = 36
+area = 2
+x = 3
+y = 17
 desc = 4:5
 encounter-table = 3
 encounter-rate = 40
 
 [room 36]
 down = 35
+area = 2
+x = 3
+y = 17
+z = 1
 desc = 4:6
 encounter-table = 3
 encounter-rate = 40
 
 [room 37]
 east = 32
+area = 2
+x = 1
+y = 11
 desc = 4:7
 encounter-table = 2
 encounter-rate = 70
@@ -1055,57 +1184,87 @@ encounter-rate = 70
 [room 38]
 east = 19
 west = 39
+area = 1
+x = 2
+y = 3
 desc = 4:8
 safe = yes
 
 [room 39]
 east = 38
+area = 1
+x = 1
+y = 3
 desc = 4:9
 safe = yes
 
 [room 40]
 south = 8
+area = 1
+x = -1
+y = 4
 desc = 4:10
 safe = yes
 
 [room 41]
 north = 42
 west = 16
+area = 1
+x = 4
+y = 0
 desc = 5:1
 safe = yes
 
 [room 42]
 south = 41
+area = 1
+x = 4
+y = 1
 desc = 5:2
 safe = yes
 
 [room 43]
 east = 7
 west = 44
+area = 3
+x = -2
+y = 2
 desc = 8:1
 safe = yes
 
 [room 44]
 east = 43
 west = 45
+area = 3
+x = -3
+y = 2
 desc = 8:2
 safe = yes
 
 [room 45]
 east = 44
 west = 46
+area = 3
+x = -4
+y = 2
 desc = 8:3
 safe = yes
 
 [room 46]
 east = 45
 west = 47
+area = 3
+x = -5
+y = 2
 desc = 8:4
 safe = yes
 
 [room 47]
 east = 46
 west = 48
+area = 3
+x = -6
+y = 2
 desc = 8:5
 safe = yes
 
@@ -1120,6 +1279,9 @@ permanent = yes
 [room 48]
 east = 47
 west = 49
+area = 3
+x = -7
+y = 2
 desc = 8:6
 encounter-table = 4
 encounter-rate = 110
@@ -1128,6 +1290,9 @@ encounter-rate = 110
 north = 56
 east = 48
 west = 50
+area = 3
+x = -8
+y = 2
 desc = 8:7
 encounter-table = 4
 encounter-rate = 95
@@ -1135,6 +1300,9 @@ encounter-rate = 95
 [room 50]
 east = 49
 west = 51
+area = 3
+x = -9
+y = 2
 desc = 8:8
 encounter-table = 4
 encounter-rate = 85
@@ -1142,6 +1310,9 @@ encounter-rate = 85
 [room 51]
 east = 50
 down = 52
+area = 3
+x = -10
+y = 2
 desc = 8:9
 encounter-table = 5
 encounter-rate = 75
@@ -1149,6 +1320,10 @@ encounter-rate = 75
 [room 52]
 west = 53
 up = 51
+area = 3
+x = -10
+y = 2
+z = -1
 desc = 8:10
 encounter-table = 5
 encounter-rate = 65
@@ -1157,6 +1332,10 @@ encounter-rate = 65
 south = 55
 east = 52
 west = 54
+area = 3
+x = -11
+y = 2
+z = -1
 desc = 9:1
 encounter-table = 5
 encounter-rate = 60
@@ -1164,23 +1343,38 @@ encounter-rate = 60
 [room 54]
 east = 53
 west = 57
+area = 3
+x = -12
+y = 2
+z = -1
 desc = 9:2
 encounter-table = 6
 encounter-rate = 55
 
 [room 55]
 north = 53
+area = 3
+x = -11
+y = 1
+z = -1
 desc = 9:4
 encounter-table = 5
 encounter-rate = 70
 
 [room 56]
 south = 49
+area = 3
+x = -8
+y = 3
 desc = 9:5
 safe = yes
 
 [room 57]
 east = 54
+area = 3
+x = -13
+y = 2
+z = -1
 desc = 9:3
 encounter-table = 6
 encounter-rate = 45
@@ -1188,18 +1382,27 @@ encounter-rate = 45
 [room 58]
 north = 15
 west = 59
+area = 4
+x = 0
+y = -3
 desc = 11:1
 safe = yes
 
 [room 59]
 east = 58
 west = 60
+area = 4
+x = -1
+y = -3
 desc = 11:2
 safe = yes
 
 [room 60]
 east = 59
 west = 61
+area = 4
+x = -2
+y = -3
 desc = 11:3
 safe = yes
 
@@ -1214,12 +1417,18 @@ permanent = yes
 [room 61]
 east = 60
 west = 62
+area = 4
+x = -3
+y = -3
 desc = 11:4
 safe = yes
 
 [room 62]
 east = 61
 west = 63
+area = 4
+x = -4
+y = -3
 desc = 11:5
 greeting = A plaque reads: Practice locks first; then try the upper floors.
 safe = yes
@@ -1227,6 +1436,9 @@ safe = yes
 [room 63]
 east = 62
 west = 65
+area = 4
+x = -5
+y = -3
 desc = 11:6
 safe = yes
 
@@ -1250,6 +1462,9 @@ lock = 102
 trap = 2
 
 [room 64]
+area = 4
+x = -5
+y = -4
 desc = 11:7
 safe = yes
 
@@ -1284,18 +1499,29 @@ carry = yes
 [room 65]
 east = 63
 up = 66
+area = 4
+x = -6
+y = -3
 desc = 11:9
 safe = yes
 
 [room 66]
 west = 67
 down = 65
+area = 4
+x = -6
+y = -3
+z = 1
 desc = 11:10
 safe = yes
 
 [room 67]
 east = 66
 west = 69
+area = 4
+x = -7
+y = -3
+z = 1
 desc = 12:1
 safe = yes
 
@@ -1320,6 +1546,10 @@ lock = 205
 trap = 8
 
 [room 68]
+area = 4
+x = -7
+y = -4
+z = 1
 desc = 12:2
 safe = yes
 
@@ -1354,18 +1584,30 @@ carry = yes
 [room 69]
 east = 67
 up = 70
+area = 4
+x = -8
+y = -3
+z = 1
 desc = 12:4
 safe = yes
 
 [room 70]
 west = 71
 down = 69
+area = 4
+x = -8
+y = -3
+z = 2
 desc = 12:5
 safe = yes
 
 [room 71]
 east = 70
 west = 73
+area = 4
+x = -9
+y = -3
+z = 2
 desc = 12:6
 safe = yes
 
@@ -1390,6 +1632,10 @@ lock = 308
 trap = 12
 
 [room 72]
+area = 4
+x = -9
+y = -4
+z = 2
 desc = 12:7
 safe = yes
 
@@ -1424,11 +1670,19 @@ carry = yes
 [room 73]
 east = 71
 up = 74
+area = 4
+x = -10
+y = -3
+z = 2
 desc = 12:9
 safe = yes
 
 [room 74]
 down = 73
+area = 4
+x = -10
+y = -3
+z = 3
 desc = 12:10
 safe = yes
 
@@ -1443,6 +1697,10 @@ lock = 409
 trap = 18
 
 [room 75]
+area = 4
+x = -11
+y = -3
+z = 3
 desc = 13:1
 safe = yes
 
@@ -1475,6 +1733,9 @@ price = 650
 carry = yes
 
 [room 76]
+area = 4
+x = -5
+y = -2
 desc = 11:8
 safe = yes
 
@@ -1507,6 +1768,10 @@ price = 30
 carry = yes
 
 [room 77]
+area = 4
+x = -7
+y = -2
+z = 1
 desc = 12:3
 safe = yes
 
@@ -1539,6 +1804,10 @@ price = 180
 carry = yes
 
 [room 78]
+area = 4
+x = -9
+y = -2
+z = 2
 desc = 12:8
 safe = yes
 
@@ -1573,6 +1842,9 @@ carry = yes
 [room 79]
 east = 6
 west = 80
+area = 5
+x = 0
+y = 6
 desc = 14:1
 safe = yes
 
@@ -1580,6 +1852,9 @@ safe = yes
 north = 81
 south = 93
 east = 79
+area = 5
+x = -1
+y = 6
 desc = 14:2
 safe = yes
 
@@ -1587,6 +1862,9 @@ safe = yes
 south = 80
 east = 91
 west = 82
+area = 5
+x = -1
+y = 7
 desc = 14:3
 safe = yes
 
@@ -1594,12 +1872,18 @@ safe = yes
 south = 92
 east = 81
 west = 83
+area = 5
+x = -2
+y = 7
 desc = 14:4
 safe = yes
 
 [room 83]
 north = 84
 east = 82
+area = 5
+x = -3
+y = 7
 desc = 14:5
 safe = yes
 
@@ -1614,6 +1898,9 @@ permanent = yes
 [room 84]
 north = 85
 south = 83
+area = 5
+x = -3
+y = 8
 desc = 14:6
 encounter-table = 7
 encounter-rate = 110
@@ -1621,6 +1908,9 @@ encounter-rate = 110
 [room 85]
 south = 84
 west = 86
+area = 5
+x = -3
+y = 9
 desc = 14:7
 encounter-table = 7
 encounter-rate = 90
@@ -1628,6 +1918,9 @@ encounter-rate = 90
 [room 86]
 north = 87
 east = 85
+area = 5
+x = -4
+y = 9
 desc = 14:8
 encounter-table = 8
 encounter-rate = 80
@@ -1635,6 +1928,9 @@ encounter-rate = 80
 [room 87]
 south = 86
 up = 88
+area = 5
+x = -4
+y = 10
 desc = 14:9
 encounter-table = 8
 encounter-rate = 70
@@ -1642,6 +1938,10 @@ encounter-rate = 70
 [room 88]
 up = 89
 down = 87
+area = 5
+x = -4
+y = 10
+z = 1
 desc = 14:10
 encounter-table = 8
 encounter-rate = 65
@@ -1649,12 +1949,20 @@ encounter-rate = 65
 [room 89]
 up = 90
 down = 88
+area = 5
+x = -4
+y = 10
+z = 2
 desc = 15:1
 encounter-table = 9
 encounter-rate = 55
 
 [room 90]
 down = 89
+area = 5
+x = -4
+y = 10
+z = 3
 desc = 15:2
 encounter-table = 9
 encounter-rate = 45
@@ -1662,6 +1970,9 @@ encounter-rate = 45
 [room 91]
 south = 94
 west = 81
+area = 5
+x = 0
+y = 7
 desc = 15:3
 safe = yes
 
@@ -1675,12 +1986,18 @@ permanent = yes
 
 [room 92]
 north = 82
+area = 5
+x = -2
+y = 6
 desc = 15:5
 safe = yes
 anti-magic = yes
 
 [room 93]
 north = 80
+area = 5
+x = -1
+y = 5
 desc = 15:6
 safe = yes
 
@@ -1698,6 +2015,9 @@ spell = heal
 
 [room 94]
 north = 91
+area = 5
+x = 1
+y = 7
 desc = 15:4
 dark = yes
 

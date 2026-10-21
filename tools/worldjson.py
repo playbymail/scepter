@@ -70,6 +70,7 @@ MON_KEYS = [
     ('permanent', 'permanent')]]
 
 ROOM_KEYS = [
+    ('area', 'area', int), ('x', 'x', int), ('y', 'y', int), ('z', 'z', int),
     ('out', 'out', int), ('desc', 'desc', 'desc'),
     ('encounterTable', 'encounter-table', int),
     ('encounterRate', 'encounter-rate', int), ('greeting', 'greeting', str),
@@ -149,6 +150,11 @@ def to_world(w):
     for i, n in enumerate(w.get('news', []), 1):
         wl.append(f"news-{i} = {n}")
     block(out, 'world', wl)
+
+    if w['areas']:
+        out.append("# ---- areas: rooms are placed at x y z within an area ----\n")
+    for a in w['areas']:
+        block(out, f"area {a['id']}", [f"name = {a['name']}"])
 
     out.append("# ---- descriptions: RECORD:LINE is referenced by desc = ----\n")
     for d in w['descriptions']:
@@ -239,7 +245,7 @@ def done(kv, where):
 
 def to_json(text, fname='world'):
     w = {}
-    descs, rooms, mons, objs, encs, tres = [], {}, [], [], [], []
+    descs, areas, rooms, mons, objs, encs, tres = [], [], {}, [], [], [], []
     for toks, kv, n in parse_blocks(text, fname):
         where = f"{fname}:{n}"
         kind = toks[0]
@@ -255,6 +261,9 @@ def to_json(text, fname='world'):
             lines = [kv.pop(str(i)) for i in range(1, 11) if str(i) in kv]
             done(kv, where)
             descs.append({'record': ident, 'lines': lines})
+        elif kind == 'area':
+            areas.append({'id': ident, **take_keys(kv, [('name', 'name', str)], where)})
+            done(kv, where)
         elif kind == 'object':
             objs.append({'id': ident, **obj_json(kv, where)})
             done(kv, where)
@@ -299,6 +308,7 @@ def to_json(text, fname='world'):
             raise WorldError(f"{where}: unknown block '{kind}'")
 
     w['descriptions'] = descs
+    w['areas'] = areas
     w['rooms'] = list(rooms.values())
     w['monsters'] = mons
     w['objects'] = objs

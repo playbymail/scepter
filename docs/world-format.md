@@ -68,6 +68,15 @@ key = value
 | `revive-room` | where dead characters revive (default: the start room) |
 | `jail-room` | where guards take a player who attacks a monster with `assistance` (default: the start room). This is disabled in the original source (`USEJAIL` in `cmd2.c`/`cmd3.c`), so it currently has no effect. |
 
+## `[area N]`, N = 1…255
+
+An area is a part of the world that a map draws together, such as a town
+or a dungeon.
+
+| Key | Meaning |
+|---|---|
+| `name` | required; printable ASCII, at most 60 characters |
+
 ## `[description R]`, R = 1…255
 
 There are ten lines per record, with keys `1` to `10`. Each value is at
@@ -93,6 +102,19 @@ N/phrase one/phrase two/
 | `anti-magic` | magic does not work here |
 | `dark` | the room is dark |
 | `notify-dm` | DMs are told when a player enters |
+| `area` | the `[area N]` the room belongs to |
+| `x` `y` `z` | the room's position in its area, each -999…999 |
+
+A room with an `area` is placed on the map at `x y z`, and a key you leave
+out is 0. The axes are Mudlet's: `x` grows east, `y` grows north and `z`
+grows up, so `north` from (0,0,0) normally leads to (0,1,0) and `up` to
+(0,0,1). Exits don't have to match the positions, since not every world is
+a grid. A room without an `area` isn't placed, and `x`, `y` or `z` on it
+is an error. `mkgame` warns when two rooms in an area share a position.
+
+`mkgame` checks areas and positions but doesn't store them in the game
+yet. They will be stored with the rooms once game data moves to SQLite
+(#71), for maps such as Mudlet's (#80).
 
 These keys make a room special:
 
