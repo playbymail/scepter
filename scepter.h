@@ -411,6 +411,20 @@ typedef struct
 	int			StartRoom, ReviveRoom, JailRoom;
 } SettingsType;
 
+/* The login limits on an address and on a character (log.c, #93) */
+typedef struct
+{
+	int			Fails;				/* since Start */
+	int			Blocks;				/* refusals, for the doubling */
+	long		Start, Until;
+} LoginHostType;
+
+typedef struct
+{
+	int			Fails;
+	long		Last;
+} LoginNameType;
+
 typedef struct
 {
 	AdjoinType		Adjoin;

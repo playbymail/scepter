@@ -1453,6 +1453,67 @@ static void Test152(void)
 		  "the schema refuses an unknown role");
 }
 
+/* #93: the login limits have no fixed size, group IPv6, and are pruned */
+static void Test93(void)
+{
+	char	Host[64], Name[16];
+	int		I;
+
+	/* a hundred other addresses don't push one out */
+	LoginFailed("10.1.0.0", "Many");
+	for (I = 1; I <= 100; I++)
+	{
+		snprintf(Host, sizeof(Host), "10.1.0.%d", I);
+		LoginFailed(Host, "Many");
+	}
+	for (I = 0; I < 4; I++)
+		LoginFailed("10.1.0.0", "Many");
+	Check(LoginWait("10.1.0.0", "Other") == 600,
+		  "an address's failures survive a hundred other addresses");
+
+	/* nor do a hundred other names reset a character's count */
+	for (I = 0; I < 9; I++)
+	{
+		snprintf(Host, sizeof(Host), "10.2.%d.1", I);
+		LoginFailed(Host, "Victim");
+	}
+	for (I = 0; I < 100; I++)
+	{
+		snprintf(Host, sizeof(Host), "10.3.%d.1", I);
+		snprintf(Name, sizeof(Name), "Name%d", I);
+		LoginFailed(Host, Name);
+	}
+	LoginFailed("10.4.0.1", "Victim");
+	Check(LoginWait("10.4.0.2", "Victim") == 30,
+		  "a character's failures survive a hundred other names");
+	Check(LoginWait("10.4.0.2", "vicTIM") == 30, "whatever case it is typed in");
+
+	/* an IPv6 /64 is one address */
+	for (I = 1; I <= 5; I++)
+	{
+		snprintf(Host, sizeof(Host), "2001:db8:5:6::%d", I);
+		LoginFailed(Host, "Six");
+	}
+	Check(LoginWait("2001:db8:5:6:ffff::1", "Seven") == 600,
+		  "five addresses in one IPv6 /64 refuse the whole /64");
+	Check(!LoginWait("2001:db8:5:7::1", "Seven"), "but not the next /64");
+	for (I = 0; I < 5; I++)
+		LoginFailed("::ffff:10.9.9.9", "Mapped");
+	Check(LoginWait("10.9.9.9", "Other") == 600,
+		  "an IPv4 address mapped into IPv6 is the same address");
+
+	/* rows that can't matter any more are pruned */
+	LoginOK("10.5.0.1", "Nobody");
+	Check(Number("SELECT count(*) FROM login_hosts WHERE host = '10.5.0.1'") == 0
+		  && Number("SELECT count(*) FROM login_names WHERE name = 'NOBODY'") == 0,
+		  "a login with no failures adds nothing");
+	RealTime += 86400 + 7200;
+	LoginFailed("10.6.0.1", "Late");
+	Check(Number("SELECT count(*) FROM login_hosts") == 1
+		  && Number("SELECT count(*) FROM login_names") == 1,
+		  "a day later, only the new failure is left");
+}
+
 /* Template Index from OList, put at the front of List */
 static ObjectPoint Add(int Index, ObjectPoint List)
 {
@@ -1570,6 +1631,10 @@ static void Test146(void)
 	WritePlayer(Dave);
 	ChangeUsrName("Dave", Eve);
 
+	/* a wrong password, at a fixed time (#93) */
+	RealTime = 1792540800;			/* 2026-10-21 00:00 UTC */
+	LoginFailed("2001:db8:1:2::77", "Bob");
+
 	UpdateF();
 	Check(PlayerOnFile("Alice") && PlayerOnFile("Bob") && PlayerOnFile("Eve")
 		  && !PlayerOnFile("Carol") && !PlayerOnFile("Dave"),
@@ -1601,7 +1666,7 @@ int main(int argc, char **argv)
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
 		{"149", Test149}, {"150", Test150}, {"151", Test151},
-		{"152", Test152},
+		{"152", Test152}, {"93", Test93},
 	};
 	int		I;
 

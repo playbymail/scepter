@@ -19,7 +19,7 @@ the database; a clean stop removes them.
 
 `game.db` is a SQLite database in WAL mode (`gamedb.c`).  Its schema
 version is `PRAGMA user_version`; this build reads version `DBVersion`
-(`gamedb.h`), currently 1.
+(`gamedb.h`), currently 2.
 
 - **`mkgame`** creates it with the whole schema and fills it from the
   world: templates, descriptions, rooms and their contents, settings,
@@ -35,6 +35,11 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
   with it.  The engine keeps at most 8 things in each list; chests inside
   chests, and what a monster's chests hold, aren't saved (#44).  This
   replaces the 1009-slot hash tables of `dbobj` and `dbmon` (#64).
+- **Login limits:** `login_hosts` and `login_names` hold the counts behind
+  the limits on wrong passwords (docs/running.md, #93).  A row is deleted
+  once it can no longer matter: an address a day after its last refusal
+  (and 10 minutes after its last failure), a character an hour after its
+  last failure.
 - **Characters:** `players` has one row per saved character, named in
   capitals as `CapAlfa()` folds it, and `player_objects` its first 10
   objects, in the order they were carried (#155), with what it wears.
@@ -419,6 +424,24 @@ CREATE TABLE player_objects (
 CREATE UNIQUE INDEX player_worn ON player_objects (player, worn) WHERE worn IS NOT NULL;
 ```
 
+Migration 2, the login limits (#93).  Times are seconds since 1970.
+
+```sql
+CREATE TABLE login_hosts (
+	host			TEXT PRIMARY KEY,	-- an IPv4 address, or an IPv6 /64 as "2001:db8:1:2::/64"
+	fails			INTEGER NOT NULL CHECK (fails >= 0),	-- wrong passwords since start
+	blocks			INTEGER NOT NULL CHECK (blocks >= 0),	-- refusals, for the doubling
+	start			INTEGER NOT NULL,	-- when this count of failures began
+	until			INTEGER NOT NULL	-- the end of its refusal; 0 if never refused
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE login_names (
+	name			TEXT PRIMARY KEY CHECK (name <> '' AND name = upper(name)),	-- a character, in capitals
+	fails			INTEGER NOT NULL CHECK (fails >= 0),	-- wrong passwords, from anywhere
+	last			INTEGER NOT NULL	-- the last of them
+) STRICT, WITHOUT ROWID;
+```
+
 ## Schema versions and upgrading
 
 `DBVersion` in `gamedb.h` is the schema version this build reads, kept in
@@ -434,6 +457,7 @@ has already applied.
 | Version | Change |
 |---|---|
 | 1 | The whole game (#147 to #152). |
+| 2 | The login limits, `login_hosts` and `login_names` (#93). |
 
 Stop the server, then run `upgradegame` as the user that owns the game:
 

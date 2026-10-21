@@ -1548,3 +1548,127 @@ int PutSpecial(int Room, RoleType Role, const char *Greeting, int NStock,
 			  && Done(Trn, Where, "save");
 	return DBFinish(Own, Ok);
 }
+
+/* ---------- login limits (#93) ---------- */
+
+/* The limits on address Key into *H; zero if it has none */
+int GetLoginHost(const char *Key, LoginHostType *H)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "login limits";
+	long				V;
+	int					At = 0, Rc;
+
+	memset(H, 0, sizeof(*H));
+	if (!DBPrepare(&St, "SELECT fails, blocks, start, until FROM login_hosts"
+				   " WHERE host = ?")
+	||	sqlite3_bind_text(St, 1, Key, -1, SQLITE_TRANSIENT) != SQLITE_OK)
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		Rc = GET(0, H->Fails, 0, INT_MAX) && GET(1, H->Blocks, 0, INT_MAX)
+		  && GET(2, H->Start, LONG_MIN, LONG_MAX)
+		  && GET(3, H->Until, LONG_MIN, LONG_MAX);
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "read");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+int PutLoginHost(const char *Key, LoginHostType *H)
+{
+	static sqlite3_stmt	*St;
+
+	return DBPrepare(&St, "INSERT OR REPLACE INTO login_hosts (host, fails,"
+					 " blocks, start, until) VALUES (?, ?, ?, ?, ?)")
+		&& sqlite3_bind_text(St, 1, Key, -1, SQLITE_TRANSIENT) == SQLITE_OK
+		&& BindInt(St, 2, H->Fails) && BindInt(St, 3, H->Blocks)
+		&& BindInt(St, 4, H->Start) && BindInt(St, 5, H->Until)
+		&& Done(St, "login limits", "save");
+}
+
+/* The limits on character Name (in capitals) into *N; zero if none */
+int GetLoginName(const char *Name, LoginNameType *N)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "login limits";
+	long				V;
+	int					At = 0, Rc;
+
+	memset(N, 0, sizeof(*N));
+	if (!DBPrepare(&St, "SELECT fails, last FROM login_names WHERE name = ?")
+	||	!BindText(St, 1, Name, sizeof(Alfa)))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		Rc = GET(0, N->Fails, 0, INT_MAX) && GET(1, N->Last, LONG_MIN, LONG_MAX);
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "read");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+int PutLoginName(const char *Name, LoginNameType *N)
+{
+	static sqlite3_stmt	*St;
+
+	return DBPrepare(&St, "INSERT OR REPLACE INTO login_names (name, fails, last)"
+					 " VALUES (?, ?, ?)")
+		&& BindText(St, 1, Name, sizeof(Alfa))
+		&& BindInt(St, 2, N->Fails) && BindInt(St, 3, N->Last)
+		&& Done(St, "login limits", "save");
+}
+
+/*
+ * Forget the limits that no longer matter: addresses whose last refusal
+ * ended at or before HostUntil and whose failures started at or before
+ * HostStart, and characters whose last failure was at or before NameLast.
+ * A forgotten row reads as zero, which is what it would have counted as.
+ */
+int PruneLogins(long HostUntil, long HostStart, long NameLast)
+{
+	static sqlite3_stmt	*Hosts, *Names;
+
+	return DBPrepare(&Hosts, "DELETE FROM login_hosts WHERE until <= ? AND start <= ?")
+		&& BindInt(Hosts, 1, HostUntil) && BindInt(Hosts, 2, HostStart)
+		&& Done(Hosts, "login limits", "prune")
+		&& DBPrepare(&Names, "DELETE FROM login_names WHERE last <= ?")
+		&& BindInt(Names, 1, NameLast)
+		&& Done(Names, "login limits", "prune");
+}
+
+/*
+ * The limits after the one keyed *Key (in key order; "" for the first),
+ * of addresses (Hosts TRUE) or of characters, into *Key and *H or *N;
+ * *Found is FALSE after the last.  For tools/dumpgame.c.
+ */
+int NextLogin(int Hosts, char *Key, size_t Size, LoginHostType *H,
+			  LoginNameType *N, int *Found)
+{
+	static sqlite3_stmt	*SH, *SN;
+	sqlite3_stmt		*St;
+	const char			*Where = "login limits";
+	long				V;
+	int					At = 1, Rc;
+
+	*Found = FALSE;
+	if (!(St = DBPrepare(Hosts ? &SH : &SN, Hosts
+						 ? "SELECT host, fails, blocks, start, until FROM login_hosts"
+						   " WHERE host > ? ORDER BY host LIMIT 1"
+						 : "SELECT name, fails, last FROM login_names"
+						   " WHERE name > ? ORDER BY name LIMIT 1"))
+	||	sqlite3_bind_text(St, 1, Key, -1, SQLITE_TRANSIENT) != SQLITE_OK)
+		return Failed(Where, "list");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		*Found = Rc = ColText(St, 0, Key, Size, TRUE, Where)
+			&& (Hosts ? GET(0, H->Fails, 0, INT_MAX) && GET(1, H->Blocks, 0, INT_MAX)
+						&& GET(2, H->Start, LONG_MIN, LONG_MAX)
+						&& GET(3, H->Until, LONG_MIN, LONG_MAX)
+					  : GET(0, N->Fails, 0, INT_MAX)
+						&& GET(1, N->Last, LONG_MIN, LONG_MAX));
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "list");
+	sqlite3_reset(St);
+	return Rc;
+}

@@ -279,3 +279,10 @@ int		GetSpecials(int (*Each)(int Kind, int Room, int Value, RoleType Role,
 int		PutSpecial(int Room, RoleType Role, const char *Greeting, int NStock,
 				   const int *Stock, int NStagger, const int *Stagger,
 				   unsigned Trains);
+int		GetLoginHost(const char *Key, LoginHostType *H);
+int		PutLoginHost(const char *Key, LoginHostType *H);
+int		GetLoginName(const char *Name, LoginNameType *N);
+int		PutLoginName(const char *Name, LoginNameType *N);
+int		PruneLogins(long HostUntil, long HostStart, long NameLast);
+int		NextLogin(int Hosts, char *Key, size_t Size, LoginHostType *H,
+				  LoginNameType *N, int *Found);

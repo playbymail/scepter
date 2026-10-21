@@ -1,124 +1,149 @@
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 #include "scepter.h"
 
 static void	AnnounceLogin(void);
 static void	SetStats(ChType Cl, int Vit, int Fat, int Mag, int Mony);
-static int	FindHost(const char *Host);
-static int	FindName(char *Name);
 
 /*
- * Limits on guessing passwords (#82), kept in memory only.  An address with
- * HostFails wrong passwords within HostWindow seconds is refused for
- * HostBlock seconds, doubling each time up to HostBlockMax; the doubling is
- * forgotten after a day without a refusal.  A character with NameFails wrong
+ * Limits on guessing passwords (#82).  An address with HostFails wrong
+ * passwords within HostWindow seconds is refused for HostBlock seconds,
+ * doubling each time up to HostBlockMax; the doubling is forgotten after
+ * HostForget seconds without a refusal.  A character with NameFails wrong
  * passwords from anywhere, the last within NameWindow seconds, may be tried
  * only once every NameDelay seconds: slow enough to stop guessing, without
  * letting anyone lock the owner out.
+ *
+ * The counts are rows of the game database (dbstore.c, #93), so a restart
+ * keeps them and no number of addresses or names can push one out.  Rows
+ * that can no longer matter are pruned as new failures come in.
  */
 #define	HostFails		5
 #define	HostWindow		600
 #define	HostBlock		600
 #define	HostBlockMax	7200
+#define	HostForget		86400
 #define	NameFails		10
 #define	NameWindow		3600
 #define	NameDelay		30
-#define	FailSlots		64
 
-static struct
+/*
+ * The key an address's limits are kept under: an IPv4 address as it is,
+ * and an IPv6 address by its /64, since one subscriber is normally given a
+ * whole /64 to choose addresses from.  An IPv4 address mapped into IPv6
+ * counts as IPv4; anything else (the console) is its own key.
+ */
+static void HostKey(const char *Host, char *Key, size_t Len)
 {
-	char	Host[64];
-	int		Fails;			/* since Start */
-	int		Blocks;			/* refusals, for the doubling */
-	long	Start, Until;
-} FailHost[FailSlots];
+	struct in6_addr	A;
+	char			Text[INET6_ADDRSTRLEN];
 
-static struct
-{
-	Alfa	Name;
-	int		Fails;
-	long	Last;
-} FailName[FailSlots];
-
-/* The slot for Host: its own, else the one least recently used */
-static int FindHost(const char *Host)
-{
-	int		ILoop, Old = 0;
-
-	for (ILoop = 0; ILoop < FailSlots; ILoop++)
+	if (inet_pton(AF_INET6, Host, &A) != 1)
+		snprintf(Key, Len, "%s", Host);
+	else
+	if (IN6_IS_ADDR_V4MAPPED(&A)
+	&&	inet_ntop(AF_INET, &A.s6_addr[12], Text, sizeof(Text)))
+		snprintf(Key, Len, "%s", Text);
+	else
 	{
-		if (!strcmp(FailHost[ILoop].Host, Host))
-			return ILoop;
-		if (MaxL(FailHost[ILoop].Start, FailHost[ILoop].Until)
-			< MaxL(FailHost[Old].Start, FailHost[Old].Until))
-			Old = ILoop;
+		memset(&A.s6_addr[8], 0, 8);
+		if (!inet_ntop(AF_INET6, &A, Text, sizeof(Text)))
+			snprintf(Text, sizeof(Text), "%s", Host);
+		snprintf(Key, Len, "%s/64", Text);
 	}
-	memset(&FailHost[Old], 0, sizeof(FailHost[Old]));
-	snprintf(FailHost[Old].Host, sizeof(FailHost[Old].Host), "%s", Host);
-	return Old;
 }
 
-/* The slot for Name: its own, else the one least recently used */
-static int FindName(char *Name)
+/* Name as its limits are kept: in capitals, as characters are saved */
+static void NameKey(const char *Name, char *Key)
 {
-	int		ILoop, Old = 0;
+	snprintf(Key, sizeof(Alfa), "%s", Name);
+	CapAlfa(Key);
+}
 
-	for (ILoop = 0; ILoop < FailSlots; ILoop++)
-	{
-		if (!strcmp(FailName[ILoop].Name, Name))
-			return ILoop;
-		if (FailName[ILoop].Last < FailName[Old].Last)
-			Old = ILoop;
-	}
-	memset(&FailName[Old], 0, sizeof(FailName[Old]));
-	strcpy(FailName[Old].Name, Name);
-	return Old;
+/* The limits on Host and Name; a failure to read them stops the server */
+static void GetLimits(const char *Host, const char *Name, char *HKey, char *NKey,
+					  LoginHostType *H, LoginNameType *N)
+{
+	HostKey(Host, HKey, 64);
+	NameKey(Name, NKey);
+	if (!GetLoginHost(HKey, H) || !GetLoginName(NKey, N))
+		Abort(" Cannot read the login limits.");
 }
 
 /* Seconds before Name may try a password from Host; 0 if it may now */
 int LoginWait(const char *Host, char *Name)
 {
-	int		H = FindHost(Host), N = FindName(Name);
+	LoginHostType	H;
+	LoginNameType	N;
+	char			HKey[64];
+	Alfa			NKey;
 
-	if (FailHost[H].Until > RealTime)
-		return FailHost[H].Until - RealTime;
-	if (FailName[N].Fails >= NameFails && RealTime - FailName[N].Last < NameDelay)
-		return FailName[N].Last + NameDelay - RealTime;
+	GetLimits(Host, Name, HKey, NKey, &H, &N);
+	if (H.Until > RealTime)
+		return H.Until - RealTime;
+	if (N.Fails >= NameFails && RealTime - N.Last < NameDelay)
+		return N.Last + NameDelay - RealTime;
 	return 0;
 }
 
 void LoginFailed(const char *Host, char *Name)
 {
-	int		H = FindHost(Host), N = FindName(Name);
+	LoginHostType	H;
+	LoginNameType	N;
+	char			HKey[64];
+	Alfa			NKey;
+	int				Own;
 
-	if (RealTime - FailHost[H].Start >= HostWindow)
+	if (!DBStart(&Own))
+		Abort(" Cannot save the login limits.");
+	GetLimits(Host, Name, HKey, NKey, &H, &N);
+	if (RealTime - H.Start >= HostWindow)
 	{
-		FailHost[H].Fails = 0;
-		FailHost[H].Start = RealTime;
+		H.Fails = 0;
+		H.Start = RealTime;
 	}
-	if (RealTime - FailHost[H].Until >= 86400)
-		FailHost[H].Blocks = 0;
-	if (RealTime - FailName[N].Last >= NameWindow)
-		FailName[N].Fails = 0;
-	FailName[N].Fails++;
-	FailName[N].Last = RealTime;
+	if (RealTime - H.Until >= HostForget)
+		H.Blocks = 0;
+	if (RealTime - N.Last >= NameWindow)
+		N.Fails = 0;
+	N.Fails++;
+	N.Last = RealTime;
 
 	snprintf(B1, sizeof(B1), " Wrong password for %s from %s.", Name, Host);
-	if (++FailHost[H].Fails >= HostFails)
+	if (++H.Fails >= HostFails)
 	{
-		long	Block = MinL(HostBlockMax, (long)HostBlock << Min(FailHost[H].Blocks, 4));
+		long	Block = MinL(HostBlockMax, (long)HostBlock << Min(H.Blocks, 4));
 
-		FailHost[H].Until = RealTime + Block;
-		FailHost[H].Blocks++;
-		FailHost[H].Fails = 0;
+		H.Until = RealTime + Block;
+		H.Blocks++;
+		H.Fails = 0;
 		snprintf(B1, sizeof(B1), " Wrong password for %s from %s;"
 				 " address refused for %ld minutes.", Name, Host, Block / 60);
 	}
+	if (!DBFinish(Own, PutLoginHost(HKey, &H) && PutLoginName(NKey, &N)
+				  && PruneLogins(RealTime - HostForget, RealTime - HostWindow,
+								 RealTime - NameWindow)))
+		Abort(" Cannot save the login limits.");
 	ErrLog(B1);
 }
 
 void LoginOK(const char *Host, char *Name)
 {
-	FailHost[FindHost(Host)].Fails = 0;
-	FailName[FindName(Name)].Fails = 0;
+	LoginHostType	H;
+	LoginNameType	N;
+	char			HKey[64];
+	Alfa			NKey;
+	int				Own;
+
+	if (!DBStart(&Own))
+		Abort(" Cannot save the login limits.");
+	GetLimits(Host, Name, HKey, NKey, &H, &N);
+	H.Fails = 0;
+	N.Fails = 0;
+	if (!DBFinish(Own, (!H.Start && !H.Until || PutLoginHost(HKey, &H))
+				  && (!N.Last || PutLoginName(NKey, &N))))
+		Abort(" Cannot save the login limits.");
 }
 
 /* Tell the player how long LoginWait says to wait */

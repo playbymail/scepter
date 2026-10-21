@@ -15,6 +15,7 @@ Most scenarios use the wizards' workshop, room 27 of the alpha world.
 
 import os
 import re
+import signal
 import socket
 import subprocess
 import sys
@@ -353,6 +354,17 @@ def test_82_limit(port):
           and "address refused for 10 minutes" in log, "errlog records the failures")
 
 
+def test_93_restart(port):
+    """A refused address stays refused after a restart (#93)."""
+    for i in range(5):
+        c, got = enter(port, "Oldtimer", "guess %d" % i)
+        check(got and b"Wrong password" in got, "wrong password %d is refused" % (i + 1))
+    RESTART()
+    c, got = enter(port, "Oldtimer", "ac")
+    check(got and b"Too many wrong passwords.  Try again in 10 minutes." in got,
+          "after a restart, even the right password is still refused")
+
+
 def test_92(port):
     """Wrong old passwords at CHANGEPW count against the login limits (#92)."""
     c, got = enter(port, "Oldtimer", "ac")
@@ -589,16 +601,18 @@ TESTS = {
     "82-change": (test_82_change, None, saved),
     "82-limit": (test_82_limit, None, saved),
     "92": (test_92, None, saved),
+    "93-restart": (test_93_restart, None, saved),
     "119": (test_119, long_notice, None),
 }
 GAME = None
+RESTART = None
 
 
 # DM-only and bad-data tests, run by tools/dmtest.c
 DMTESTS = ["20", "23", "22", "24", "26", "82", "88", "42", "43", "44", "56", "64",
            "47", "48", "17", "27", "28", "29", "30", "32", "33", "38", "45",
            "34", "35", "36", "40", "21", "103", "46", "16", "50", "121", "120",
-           "136", "148", "149", "150", "151", "152"]
+           "136", "148", "149", "150", "151", "152", "93"]
 
 
 def free_port():
@@ -657,16 +671,30 @@ def run(name, scepterd, mkgame, world, dmtest):
         GAME = game
         port = free_port()
         errlog = open(os.path.join(tmp, "stderr"), "w+")
-        server = subprocess.Popen([scepterd, "-l", "127.0.0.1:%d" % port, game],
-                                  stdin=subprocess.DEVNULL,
-                                  stdout=subprocess.DEVNULL, stderr=errlog)
-        try:
+
+        def start():
+            s = subprocess.Popen([scepterd, "-l", "127.0.0.1:%d" % port, game],
+                                 stdin=subprocess.DEVNULL,
+                                 stdout=subprocess.DEVNULL, stderr=errlog)
             for _ in range(50):
                 try:
                     socket.create_connection(("127.0.0.1", port)).close()
                     break
                 except OSError:
                     time.sleep(0.1)
+            return s
+
+        def restart():
+            """Stop the server as systemd would, and start it again."""
+            nonlocal server
+            server.send_signal(signal.SIGTERM)
+            check(server.wait(10) == 0, "scepterd stops cleanly")
+            server = start()
+
+        global RESTART
+        RESTART = restart
+        server = start()
+        try:
             try:
                 fn(port)
             except OSError as e:

@@ -1004,3 +1004,5 @@ player BOB obj 9 Worn=- Name="dagger,*" Article=A Weight=2 Price=10 DescCode=5 D
 player BOB obj 10 Worn=- Name="armor,leather *" Article=Some Weight=15 Price=30 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Armor ArmPlus=1 ArmHits=50
 player Name="EVE" Lvl=1 Class=Fighter Hits=8 MaxHits=8 Fatigue=14 MaxFatigue=14 Magic=2 MaxMagic=2 Experience=0 RmCode=1 Str=15 Int=7 Dex=9 Pty=10 Con=9 LastAccess=1301 PW=0 Money=200 Sex=Male SSharp=1 SThrust=0 SBlunt=0 SLong=0 Assoc=0 Spells=0 SSJ=0 Master=0 PlayTester=0 AGuild=0 TGuild=0 Evil=0 Invisible=0 NonExistant=0 SkillNew=0 SpellNew=0 Poisoned=0 Hidden=0 It=0 Suck=0 Brief=0 Echo=0 MesBlock=0 Dead=0 Plague=0 PWHash=locked
 players 3
+login host 2001:db8:1:2::/64 Fails=1 Blocks=0 Start=1792540800 Until=0
+login name BOB Fails=1 Last=1792540800

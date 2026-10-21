@@ -75,14 +75,18 @@ A password is the whole line you type, without leading and trailing spaces:
 8 to 72 characters, spaces allowed, and capital letters differ from small
 ones.  `CHANGEPW` asks for the old password, then the new one twice.  A
 wrong password at login disconnects you.  Wrong passwords at login and wrong
-old passwords at `CHANGEPW` count together, and the server keeps count in
-memory:
+old passwords at `CHANGEPW` count together.  The counts are kept in the
+game database, so a restart doesn't forget them, and there is no limit to
+how many addresses or characters they track (#93):
 
 - five wrong passwords from one address within 10 minutes refuse that
   address for 10 minutes, then 20, 40, 80 and at most 120 for each further
-  five; a day without a refusal starts again at 10;
+  five; a day without a refusal starts again at 10.  An IPv6 address counts
+  as its whole /64, since one subscriber is normally given a /64;
 - ten wrong passwords for one character, from anywhere, allow only one try
   every 30 seconds until the right one is given (or an hour passes).
+
+Counts that can no longer matter are deleted as new wrong passwords come in.
 
 While a limit applies, `CHANGEPW` is refused too, without asking for the old
 password.
