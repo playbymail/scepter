@@ -178,8 +178,13 @@ UserPoint Login(void)
 {
 	UserPoint	NewUser;
 
+	if (!(NewUser = malloc(sizeof(UserType))))
+	{
+		ErrLog(" Out of memory for a new connection.");
+		QOut(Term, "2The game is out of memory.  Please try again later.");
+		return NULL;
+	}
 	NUsers++;
-	NewUser = malloc(sizeof(UserType));
 	*NewUser = ProtoUser;
 	snprintf(B1, sizeof(B1), "0Scepter Fantasy Role-Playing Game  Ver 2.4.3  (Run %d)",
 			NumRun);

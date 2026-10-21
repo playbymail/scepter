@@ -77,7 +77,8 @@ void ReadPlayer(UserPoint Player, char *Name)
 		{
 			ObjectPoint	Pt;
 
-			Pt = malloc(sizeof(ObjectType));
+			if (!(Pt = malloc(sizeof(ObjectType))))
+				Abort(" Out of memory loading a player's objects.");
 			*Pt = UserFRec.Objs[ILoop];
 			Player->Weight += Pt->Weight;
 

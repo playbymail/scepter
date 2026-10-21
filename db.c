@@ -259,8 +259,8 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 		MonsterPoint	Pt;
 		int				N;
 
-		Pt = malloc(sizeof(MonsterType));
-		memset(Pt, 0, sizeof(*Pt));
+		if (!(Pt = malloc(sizeof(MonsterType))))
+			Abort(" Out of memory loading room monsters.");
 
 		*Monster = Pt;
 
@@ -273,9 +273,9 @@ void ReadUMon(RmCodeType Rm, MonsterPoint *Monster)
 
 		for (N = 1; N < MRec.Num; N++)
 		{
-			Pt->Next = malloc(sizeof(MonsterType));
+			if (!(Pt->Next = malloc(sizeof(MonsterType))))
+				Abort(" Out of memory loading room monsters.");
 			Pt = Pt->Next;
-			memset(Pt, 0, sizeof(*Pt));
 
 			*Pt = MRec.Mon[N];
 			Pt->Next = NULL;

@@ -131,8 +131,8 @@ int main(int argc, char **argv)
 			case '0':
 				QAss(C1 + 1, &Term);
 				Term = Pid;
-				User = Login();
-				User->LastInput = RealTime;
+				if (User = Login())
+					User->LastInput = RealTime;
 				Loc	= LenBuf + 1;
 				break;
 
