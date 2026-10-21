@@ -900,26 +900,22 @@ void Parley(char *Word, int Num)
 
 		case 10:
 		{
-			int		T, NewRm, ILoop, Exit;
+			int		NewRm;
 
 			PM(Mon, TRUE, B2);
+			NewRm = TeleportRoom(User->RmCode, Mon->Lvl, TRUE);
+			if (!NewRm)
+			{
+				sprintf(B1, "0%s makes no apparent response.", B2);
+				QOut(Term, B1);
+				break;
+			}
 			sprintf(B1, "0** ZAP **  %s teleports you elsewhere!", B2);
 			QOut(Term, B1);
 
 			sprintf(B1, "0%s makes %s vanish in a cloud of smoke!",
 					B2, User->Name);
 			LocalMsg(B1);
-
-			do
-			{
-				if (Mon->Lvl < 10)
-					NewRm = (User->RmCode / 100) * 100 + Rnd(99);
-				else
-					NewRm = Rnd(669) + 30;
-				T = S(NewRm);
-				for (Exit = ILoop = 0; !Exit && ILoop < 6; ILoop++)
-					Exit += Room[T].Adjoin[ILoop];
-			} while (!Exit && !Room[T].Out);
 
 			StopFollow(User);
 			DeletePlayer(User, User->RmCode);

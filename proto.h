@@ -114,6 +114,7 @@ void	PlayerDisplay(UserPoint Plyer);
 void	WriteSeg(int SlotNum, int SegNum, int Erase);
 int		S(int Rm);
 void	AddSeg(void);
+int		TeleportRoom(RmCodeType Rm, int Level, int AntiMagicOk);
 void	DeleteMonster(MonsterPoint Pt, RmCodeType Rm);
 void	InsertMonster(MonsterPoint Monster, RmCodeType Rm);
 void	PlacePlayer(UserPoint Plyr, RmCodeType Rm);
