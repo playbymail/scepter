@@ -6,7 +6,7 @@
  *	dmtest GAMEDIR legacy NAME PASSWORD
  *	dmtest - layout
  *
- * TEST is an issue number: 20, 23, 22, 24, 26 or 82.  The game directory (made
+ * TEST is an issue number: 20, 23, 22, 24, 26, 82 or 88.  The game directory (made
  * with mkgame) is opened as scepterd opens it; test 20 writes a description
  * line into it, so use a scratch copy.  There is no DM login yet (#70), so
  * each test sets up the state the DM editor or a corrupt record would leave
@@ -294,6 +294,59 @@ static void Test82(void)
 		  && !User->PW, "a master DM sets a password, case and all");
 }
 
+/* Give the character an object, as a corrupt record would leave it */
+static void Carry(ObjectType *Obj)
+{
+	ObjectPoint	Copy;
+
+	if (!(Copy = (ObjectPoint)malloc(sizeof(ObjectType))))
+		Abort(" dmtest: out of memory.");
+	*Copy = *Obj;
+	Copy->Next = User->ObjectTail;
+	User->ObjectTail = Copy;
+	User->LastAtk = 0;
+}
+
+/* #88: reading or using an object whose spell number is out of range */
+static void Test88(void)
+{
+	ObjectType	Obj;
+
+	Obj = ProtoObject;
+	strcpy(Obj.Name, "scroll,odd *");
+	Obj.ObClass = Scroll;
+	Obj.Object.Scroll.Spell = 30000;
+	Carry(&Obj);
+	Capture();
+	Say("read scroll");
+	Check(strstr(Captured(), "Nothing happens") != NULL,
+		  "a scroll with spell 30000 does nothing");
+
+	Obj = ProtoObject;
+	strcpy(Obj.Name, "wand,odd *");
+	Obj.ObClass = MagDevice;
+	Obj.Object.MagDevice.MSpell = 200;
+	Obj.Object.MagDevice.MLevel = 1;
+	Obj.Object.MagDevice.NumCharges = 5;
+	Carry(&Obj);
+	Capture();
+	Say("use wand");
+	Check(strstr(Captured(), "Nothing happens") != NULL,
+		  "a device with spell 200 does nothing");
+
+	Obj = ProtoObject;
+	strcpy(Obj.Name, "rod,odd *");
+	Obj.ObClass = MagDevice;
+	Obj.Object.MagDevice.MSpell = -300;
+	Obj.Object.MagDevice.MLevel = 0;
+	Obj.Object.MagDevice.NumCharges = 5;
+	Carry(&Obj);
+	Capture();
+	Say("use rod");
+	Check(strstr(Captured(), "Nothing happens") != NULL,
+		  "a device with spell -300 does nothing");
+}
+
 /* Save a 2nd-level character Name with only the old hash of PassWord */
 static void Legacy(char *Name, char *PassWord)
 {
@@ -312,7 +365,7 @@ int main(int argc, char **argv)
 	static const struct { const char *Name; void (*Fn)(void); } Tests[] =
 	{
 		{"20", Test20}, {"23", Test23}, {"22", Test22}, {"24", Test24},
-		{"26", Test26}, {"82", Test82},
+		{"26", Test26}, {"82", Test82}, {"88", Test88},
 	};
 	int		I;
 
