@@ -23,6 +23,8 @@ import time
 
 
 BIN = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else ".")
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gamedb.h")) as f:
+    VERSION = int(re.search(r"#define\tDBVersion\t(\d+)", f.read()).group(1))
 WORLD = os.path.abspath(sys.argv[2] if len(sys.argv) > 2 else "var/alpha/alpha.world")
 TMP = tempfile.mkdtemp()
 failures = 0
@@ -164,8 +166,8 @@ def test_database():
             "No such file or directory")
     refuses("an older schema version", lambda g: set_version(g, 0),
             "schema version 0", "upgradegame")
-    refuses("a newer schema version", lambda g: set_version(g, 2),
-            "schema version 2", "newer scepterd")
+    refuses("a newer schema version", lambda g: set_version(g, VERSION + 1),
+            "schema version %d" % (VERSION + 1), "newer scepterd")
     if ROOT:
         print("skip a read-only database: root can write to it")
     else:
@@ -315,17 +317,19 @@ def test_dbfuncs():
     db.close()
     before = tree(old)
     rc, out, _ = dbtest("migrate", "-n", old)
-    check(rc == 0 and "would migrate to 1" in out and tree(old) == before,
+    check(rc == 0 and "would migrate to %d" % VERSION in out and tree(old) == before,
           "migrate -n: says what it would do and changes nothing")
     rc, out, _ = dbtest("migrate", old)
     backups = [f for f in os.listdir(old) if f.startswith("game.db.backup-")]
     rc2, ver, _ = dbtest("version", old)
-    check(rc == 0 and len(backups) == 1 and ver.strip() == "1",
-          "migrate: backs up to a file in the game directory, then reaches version 1")
+    check(rc == 0 and len(backups) == 1 and ver.strip() == str(VERSION),
+          "migrate: backs up to a file in the game directory, then reaches version %d"
+          % VERSION)
     rc, _, _ = dbtest("open", old)
     check(rc == 0, "open: the migrated game opens")
     rc, out, _ = dbtest("migrate", old)
-    check(rc == 0 and "already at schema version 1" in out, "migrate: a current game is left alone")
+    check(rc == 0 and "already at schema version %d" % VERSION in out,
+          "migrate: a current game is left alone")
     os.chmod(ro, 0o755)
 
 
@@ -334,11 +338,11 @@ def test_upgradegame():
     g = game("current")
     before = tree(g)
     rc, out, _ = run("upgradegame", g)
-    check(rc == 0 and "already at schema version 1" in out and tree(g) == before,
+    check(rc == 0 and "already at schema version %d" % VERSION in out and tree(g) == before,
           "upgradegame leaves a current game alone")
 
     g = game("newer")
-    set_version(g, 2)
+    set_version(g, VERSION + 1)
     before = tree(g)
     rc, _, err = run("upgradegame", g)
     check(rc == 1 and "newer than this build" in err and tree(g) == before,
@@ -350,7 +354,7 @@ def test_upgradegame():
     set_version(g, 0)
     before = tree(g)
     rc, out, err = run("upgradegame", "-n", g)
-    check(rc == 0 and "would migrate to 1" in out and tree(g) == before,
+    check(rc == 0 and "would migrate to %d" % VERSION in out and tree(g) == before,
           "upgradegame -n says what it would do and changes nothing")
     rc, out, err = run("upgradegame", g)
     after = tree(g)
@@ -371,8 +375,31 @@ def test_upgradegame():
     db.close()
     rc, out, _ = run("upgradegame", g)
     rc2, ver, _ = dbtest("version", g)
-    check(rc == 0 and "migrated from schema version 0 to 1" in out
-          and ver.strip() == "1", "upgradegame migrates a version 0 database")
+    check(rc == 0 and "migrated from schema version 0 to %d" % VERSION in out
+          and ver.strip() == str(VERSION), "upgradegame migrates a version 0 database")
+
+
+def test_upgrade_1_to_2():
+    """A version 1 game, like the one deployed before #93, upgrades to 2."""
+    g = game("v1")
+    run("dmtest", g, "player", "Oldtimer", "ac secret")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    db.executescript("DROP TABLE login_hosts; DROP TABLE login_names;"
+                     " PRAGMA user_version = 1;")
+    db.close()
+    ok, _ = server_refuses(g, "schema version 1", "upgradegame")
+    check(ok, "scepterd refuses a version 1 game")
+    rc, out, err = run("upgradegame", g)
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    tables = {r[0] for r in db.execute("SELECT name FROM sqlite_schema WHERE type = 'table'")}
+    who = db.execute("SELECT name FROM players").fetchall()
+    db.close()
+    check(rc == 0 and "migrated from schema version 1 to 2" in out
+          and {"login_hosts", "login_names"} <= tables and who == [("OLDTIMER",)],
+          "upgradegame adds the login tables (migration 2), keeping the character")
+    rc, out, _ = run("scepterd", "-c", g, stdin="Oldtimer\nac secret\nquit\ny\n")
+    check("Oldtimer" in out and "Wrong password" not in out,
+          "and Oldtimer logs in to the upgraded game")
 
 
 def test_migration():
@@ -387,10 +414,11 @@ def test_migration():
     got = db.execute("SELECT x FROM test_migration").fetchall()
     who = db.execute("SELECT name FROM players").fetchall()
     db.close()
-    check(rc == 0 and "migrated from schema version 1 to 2" in out
-          and len(backups) == 1 and got == [(2,)] and who == [("OLDTIMER",)],
+    check(rc == 0 and "migrated from schema version %d to %d" % (VERSION, VERSION + 1)
+          in out
+          and len(backups) == 1 and got == [(VERSION + 1,)] and who == [("OLDTIMER",)],
           "a game is migrated, keeping its character, beside a backup")
-    ok, _ = server_refuses(g, "schema version 2", "newer scepterd")
+    ok, _ = server_refuses(g, "schema version %d" % (VERSION + 1), "newer scepterd")
     check(ok, "this build's scepterd refuses the migrated game")
     rc, _, _ = dbtest("restore", os.path.join(g, backups[0]), g)
     os.remove(os.path.join(g, backups[0]))
@@ -416,6 +444,7 @@ def main():
         test_dbfuncs()
         test_columns()
         test_upgradegame()
+        test_upgrade_1_to_2()
         test_migration()
         test_fightsim()
     finally:

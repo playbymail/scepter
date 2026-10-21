@@ -349,19 +349,39 @@ static const char	Migration1[] =
 	"	PRIMARY KEY (player, slot)\n"
 	") STRICT;\n"
 	"CREATE UNIQUE INDEX player_worn ON player_objects (player, worn) WHERE worn IS NOT NULL;\n";
+/*
+ * Migration 2: the login limits (#93), kept per address (an IPv6 address
+ * by its /64) and per character, without a fixed size, across restarts.
+ * Times are seconds since 1970, as RealTime.
+ */
+static const char	Migration2[] =
+	"CREATE TABLE login_hosts (\n"
+	"	host			TEXT PRIMARY KEY,\n"
+	"	fails			INTEGER NOT NULL CHECK (fails >= 0),\n"
+	"	blocks			INTEGER NOT NULL CHECK (blocks >= 0),\n"
+	"	start			INTEGER NOT NULL,\n"
+	"	until			INTEGER NOT NULL\n"
+	") STRICT, WITHOUT ROWID;\n"
+	"CREATE TABLE login_names (\n"
+	"	name			TEXT PRIMARY KEY CHECK (name <> '' AND name = upper(name)),\n"
+	"	fails			INTEGER NOT NULL CHECK (fails >= 0),\n"
+	"	last			INTEGER NOT NULL\n"
+	") STRICT, WITHOUT ROWID;\n";
+
 #ifdef TestMigration
 /*
- * tools/datatest.py only: dbtest2 is dbtest built with this second
+ * tools/datatest.py only: dbtest2 is dbtest built with this extra
  * migration, to migrate a whole game as a real schema change would.
  */
 #undef	DBVersion
-#define	DBVersion	2
-static const char	Migration2[] =
+#define	DBVersion	3
+static const char	Migration3[] =
 	"CREATE TABLE test_migration (x INTEGER) STRICT;\n"
-	"INSERT INTO test_migration VALUES (2);\n";
-static const char	*Migration[DBVersion + 1] = { NULL, Migration1, Migration2 };
+	"INSERT INTO test_migration VALUES (3);\n";
+static const char	*Migration[DBVersion + 1] =
+	{ NULL, Migration1, Migration2, Migration3 };
 #else
-static const char	*Migration[DBVersion + 1] = { NULL, Migration1 };
+static const char	*Migration[DBVersion + 1] = { NULL, Migration1, Migration2 };
 #endif
 
 /* ---------- reporting ---------- */

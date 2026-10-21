@@ -15,6 +15,7 @@
  *								("obj 2.1" is the first thing in the second
  *								item), monsters and monsters' inventories
  *	player						saved characters, by name, then their objects
+ *	login						the login limits on addresses and characters
  *
  * Everything is read through the engine's own functions (ReadMList,
  * ReadOList, ReadDesc, S and so ReadSeg, ReadUObj and ReadUMon, PlayerName
@@ -522,6 +523,29 @@ static void DumpPlayers(void)
 	printf("players %d\n", NNames);
 }
 
+/* The login limits (#93), in key order */
+static void DumpLogins(void)
+{
+	LoginHostType	H;
+	LoginNameType	N;
+	char			Key[64];
+	int				Hosts, Found;
+
+	for (Hosts = 1; Hosts >= 0; Hosts--)
+		for (*Key = '\0';;)
+		{
+			if (!NextLogin(Hosts, Key, sizeof(Key), &H, &N, &Found))
+				Abort(" dumpgame: cannot read the login limits.");
+			if (!Found)
+				break;
+			if (Hosts)
+				printf("login host %s Fails=%d Blocks=%d Start=%ld Until=%ld\n",
+					   Key, H.Fails, H.Blocks, H.Start, H.Until);
+			else
+				printf("login name %s Fails=%d Last=%ld\n", Key, N.Fails, N.Last);
+		}
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 2 || chdir(argv[1]))
@@ -544,6 +568,7 @@ int main(int argc, char **argv)
 	DumpTemplates();
 	DumpRooms();
 	DumpPlayers();
+	DumpLogins();
 
 	DBClose();
 	return ferror(stdout) || fflush(stdout) ? 1 : 0;
