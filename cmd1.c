@@ -290,6 +290,9 @@ void DropObject(char *Word, int Num, RmCodeType Rm)
 		if (Box == Object)
 			QOut(Term, "0You can't put an object inside itself!");
 		else
+		if (Object->ObClass == Chest)		/* contents can't be saved (#44) */
+			QOut(Term, "0A chest won't fit inside another chest!");
+		else
 		{
 			Where = Container;
 			ObTail = Box->Object.Chest.ObjectTail;

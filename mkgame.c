@@ -971,7 +971,7 @@ static void Validate(void)
 	for (i = 1; i <= MaxRoom; i++)
 	{
 		RoomDef	*R = &Rooms[i];
-		int		Chests = 0, Gap = FALSE;
+		int		Gap = FALSE;
 
 		if (!R->Defined)
 			continue;
@@ -1018,24 +1018,6 @@ static void Validate(void)
 					else if (o->Kids[k]->Obj.ObClass == Chest)
 						Err("chests inside chests are not supported");
 				}
-			if (o->Obj.ObClass == Chest)
-				Chests++;
-		}
-
-		/* ReadUObj() in db.c gives the first object's contents record
-		 * type 1 and then restarts numbering at 1 for the others (#47),
-		 * and reads at most 7 chests. */
-		LineNo = R->Line;
-		{
-			ONode	*First = NULL;
-
-			for (j = 1; j <= SavedItems && !First; j++)
-				First = R->Objs[j];
-			if (First && First->Obj.ObClass == Chest && Chests > 1)
-				Err("room %d: a chest listed first cannot share the room with"
-					" other chests (engine bug #47); list another object first", i);
-			if (Chests > 7)
-				Err("room %d has more than 7 chests", i);
 		}
 
 		Gap = FALSE;
@@ -1221,13 +1203,10 @@ static void BuildDB(void)
 				if (Objs[i]->Obj.ObClass != Chest)
 					continue;
 				NKids = Pack(Objs[i]->Kids, Kids);
-				/* contents record type, as ReadUObj() numbers them
-				 * (see Validate): the first object's chest is 1, then
-				 * the remaining chests count up from 1 */
+				/* the Nth chest's contents are record N (ReadUObj) */
 				if (NKids)
-					PutObjRec(Rm, i == 0 ? 1 : ChestNo, Kids, NKids);
-				if (i)
-					ChestNo++;
+					PutObjRec(Rm, ChestNo, Kids, NKids);
+				ChestNo++;
 			}
 		}
 

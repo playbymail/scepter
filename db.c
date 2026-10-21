@@ -12,80 +12,68 @@ static void	WriteMonInv(RmCodeType Rm, MonsterPoint Monster);
  * chests, and MonInvType + N the inventory of its Nth monster (from 0). */
 #define	MonInvType	9
 
+/*
+ * Read the objects of room *Rm* (Type 0) or the contents of its Nth chest
+ * (Type N).  The Nth chest in the room's list, empty or not, keeps its
+ * contents in record N, as WriteUObj() and mkgame number them (#43, #56).
+ * Chests inside chests have no record (#44).
+ */
 void ReadUObj(RmCodeType Rm, ObjectPoint *Object, int Type)
 {
 	ObjRec		Rec;
+	ObjectPoint	Pt, *Tail = Object;
+	int			N, ChestNo = 0;
 
-	if (ReadObj(&Rec, Rm, Type))
+	*Object = NULL;
+	if (!ReadObj(&Rec, Rm, Type))
+		return;
+
+	for (N = 0; N < Rec.Num && N < SavedItems; N++)
 	{
-		ObjectPoint	Pt;
-		int			N, ContCount;
-
-		Pt = malloc(sizeof(ObjectType));
-		memset(Pt, 0, sizeof(*Pt));
-
-		*Object = Pt;
-
-		*Pt = Rec.Obj[0];
+		if (!(Pt = malloc(sizeof(ObjectType))))
+			Abort(" Out of memory loading room objects.");
+		*Pt = Rec.Obj[N];
 		Pt->Next = NULL;
-		ContCount = 1;
 		if (Pt->ObClass == Chest)
 		{
-			ObjectPoint	Pt3;
-
 			Pt->Object.Chest.ObjectTail = NULL;	/* stale pointer from disk */
-			Pt3	= Pt->Object.Chest.ObjectTail;
-			ReadUObj(Rm, &Pt3, ContCount);
-			Pt->Object.Chest.ObjectTail = Pt3;
-			ContCount++;
+			if (Type == 0)
+				ReadUObj(Rm, &Pt->Object.Chest.ObjectTail, ++ChestNo);
+			else
+				Pt->Object.Chest.NumInside = 0;
 		}
-
-		ContCount = 1;
-		for (N = 2; N <= Rec.Num; N++)
-		{
-			ObjectPoint	Pt2;
-
-			Pt2 = malloc(sizeof(ObjectType));
-			Pt->Next = Pt2;
-			Pt = Pt2;
-			memset(Pt, 0, sizeof(*Pt));
-
-			*Pt = Rec.Obj[N - 1];
-			Pt->Next = NULL;
-			if (Pt->ObClass == Chest)
-				Pt->Object.Chest.ObjectTail = NULL;	/* stale pointer from disk */
-			if (Pt->ObClass == Chest && ContCount <= 7)
-			{
-				ObjectPoint	Pt3;
-
-				Pt3	= Pt->Object.Chest.ObjectTail;
-				ReadUObj(Rm, &Pt3, ContCount);
-				Pt->Object.Chest.ObjectTail = Pt3;
-				ContCount++;
-			}
-		}
+		*Tail = Pt;
+		Tail = &Pt->Next;
 	}
-	else
-		*Object = NULL;
 }
 
+/*
+ * Save the objects of room *Rm* (Type 0) or the contents of its Nth chest
+ * (Type N), numbering chests as ReadUObj() does.  The record of a chest
+ * that is now empty, or no longer in the room, is deleted, so its old
+ * contents can't come back (#42).
+ */
 void WriteUObj(RmCodeType Rm, ObjectPoint Object, int Type)
 {
 	ObjectPoint	Pt;
 	ObjRec		Rec;
-	int			N, ContCount;
+	int			N, ChestNo = 0;
 
-	ContCount = 1;
-
+	memset(&Rec, 0, sizeof(Rec));
 	for (Pt = Object, N = 0; Pt && N < SavedItems; Pt = Pt->Next, N++)
 	{
 		Rec.Obj[N] = *Pt;
-		if (Pt->ObClass == Chest && Pt->Object.Chest.ObjectTail && ContCount <= SavedItems)
+		if (Pt->ObClass == Chest && Type == 0)
 		{
-			WriteUObj(Rm, Pt->Object.Chest.ObjectTail, ContCount);
-			ContCount++;
+			if (Pt->Object.Chest.ObjectTail)
+				WriteUObj(Rm, Pt->Object.Chest.ObjectTail, ++ChestNo);
+			else
+				DeleteObjType(Rm, ++ChestNo);
 		}
 	}
+	if (Type == 0)
+		while (ChestNo < SavedItems)
+			DeleteObjType(Rm, ++ChestNo);
 
 	Rec.Room = Rm;
 	Rec.DataType = Type;
