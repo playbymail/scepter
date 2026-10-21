@@ -402,15 +402,21 @@ def test_92(port):
 
 
 def teleport(c, device, times):
-    """Use device on c's player times; return how many teleported, or -1."""
-    n = 0
+    """Use device on c's player up to times; return what each use did.
+
+    Each is "poof", "nothing" or "timeout".  A teleport can land in a safe
+    room, where spells fail, so stop there."""
+    did = []
     for _ in range(times):
         c.line("use %s" % device)
-        got = c.expect(rb"\*\*Poof\*\* You find that you are elsewhere|Nothing happens\.", 10)
+        got = c.expect(rb"\*\*Poof\*\* You find that you are elsewhere"
+                       rb"|Nothing happens\.|Spell fails\.", 10)
         if got is None:
-            return -1
-        n += b"Poof" in got
-    return n
+            return did + ["timeout"]
+        if b"Spell fails" in got:
+            break
+        did.append("poof" if b"Poof" in got else "nothing")
+    return did
 
 
 def test_9(port):
@@ -421,9 +427,11 @@ def test_9(port):
     a.line("get staff")
     a.line("get rod")
     check(a.expect(rb"Ok\..*Ok\.", 5) is not None, "Alpha takes the staff and rod")
-    check(teleport(a, "staff", 3) == 0,
+    check(teleport(a, "staff", 3) == ["nothing"] * 3,
           "the level 10 staff finds no room in 31-699: nothing happens")
-    check(teleport(a, "rod", 10) == 10, "the level 1 rod teleports Alpha every time")
+    did = teleport(a, "rod", 10)
+    check(did and set(did) == {"poof"},
+          "the level 1 rod teleports Alpha every time %s" % did)
     alive(a, "Alpha", "teleporting")
 
 
@@ -434,7 +442,9 @@ def test_9_far(port):
         return
     a.line("get staff")
     check(a.expect(rb"Ok\.", 5) is not None, "Alpha takes the staff")
-    check(teleport(a, "staff", 5) == 5, "the level 10 staff teleports Alpha every time")
+    did = teleport(a, "staff", 5)
+    check(did and set(did) == {"poof"},
+          "the level 10 staff teleports Alpha every time %s" % did)
     a.line("look")
     check(a.expect(rb"You are on (the north|a rutted) road", 5) is not None,
           "Alpha is in one of rooms 40-150")
