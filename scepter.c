@@ -1,7 +1,6 @@
 #include "common.h"
 #include "scepter.h"
 
-struct tUserFRec	UserFRec;
 
 /* global variables */
 FILE		*EFile;

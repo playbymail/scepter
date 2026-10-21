@@ -19,7 +19,8 @@ fi
 
 SCEPTERD=$(cd "$(dirname "$SCEPTERD")" && pwd)/$(basename "$SCEPTERD")
 TMP=$(mktemp -d)
-trap 'kill $PID 2>/dev/null; rm -rf "$TMP"' EXIT
+# the server saves and closes its database as it stops: let it finish
+trap 'kill $PID 2>/dev/null; wait $PID 2>/dev/null; rm -rf "$TMP"' EXIT
 
 mkdir "$TMP/game"		# mkgame never creates it
 "$MKGAME" "$WORLD" "$TMP/game" >/dev/null 2>&1 || exit 1

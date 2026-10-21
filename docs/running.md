@@ -19,7 +19,7 @@ mkdir -p games/alpha
 game directory, which must already exist and be empty: `mkgame` never
 creates a directory, and refuses one that holds anything, hidden files
 included.  The server reads and writes the files in that directory.
-A newer `scepterd` may need the game converted first with
+A newer `scepterd` may need the game's database upgraded first with
 `./upgradegame games/alpha`; it says so when it refuses to start (see
 [data-files.md](data-files.md)).
 
@@ -120,7 +120,7 @@ printf 'Tester\nfighter\n15, 7, 9, 10, 9\nsharp\nsecret\nmale\nwho\n' |
 | `make check-net`    | the telnet front end, byte by byte, over raw sockets   |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy, and mkgame's checks on areas and coordinates |
-| `make check-data`   | data file headers and `upgradegame` (docs/data-files.md)|
+| `make check-data`   | `mkgame`'s game directory, the game database and `upgradegame` (docs/data-files.md)|
 | `make check-dump`   | that whole games dump exactly as the golden dumps in `tools/dumps/` (docs/data-files.md) |
 | `make check-security` | that players can't crash, hang or corrupt the server, and that bad DM edits or data can't either (issues labelled `security`; `tools/securitytest.py`, `tools/dmtest.c`) |
 

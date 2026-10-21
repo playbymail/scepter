@@ -15,10 +15,9 @@ games. Each game keeps its own state in its directory:
 
 | File | Contents |
 |---|---|
-| `game.db` | the game database: monster and object templates, description text, rooms, and the objects and monsters in them so far; the files below move into it (#71) |
+| `game.db` | the game database: monster and object templates, description text, rooms and what is in them, and player characters (none in a new game); the files below move into it (#71) |
 | `efile` | notice, news, obituaries, run counter, monster speed, encounter and treasure tables |
 | `special` | start, revive and jail rooms; shop roles, greetings, stock, bar staggers, training rooms |
-| `eperson` | player characters (empty in a new game) |
 | `errlog` | server error log, made when something is first logged |
 
 The directory must exist and be empty before `mkgame` runs; `mkgame`

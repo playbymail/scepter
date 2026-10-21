@@ -1178,17 +1178,6 @@ static void Close(FILE *fp, const char *Name)
 	}
 }
 
-/* A data file: its header (datafile.c), then N records of Kind. */
-static void WriteBlob(const char *Name, int Kind, const void *Data, size_t N)
-{
-	FILE	*fp = Create(Name);
-
-	if (!WriteDataHead(fp, Kind)
-	||	N && fwrite(Data, DataKind[Kind].RecSize, N, fp) != N)
-		Errors++;
-	Close(fp, Name);
-}
-
 /* Each room's saved objects and monsters, linked through the nodes */
 static ObjectPoint	RoomObjs[MaxRoom + 1];
 static MonsterPoint	RoomMons[MaxRoom + 1];
@@ -1321,7 +1310,6 @@ static void WriteGame(void)
 	FILE	*fp;
 	int		i, j;
 
-	WriteBlob("eperson", DPerson, NULL, 0);
 
 	WriteTables();
 

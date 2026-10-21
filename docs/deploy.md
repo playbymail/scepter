@@ -90,17 +90,18 @@ players' characters, even if the old game is kept on disk.  Never announce
 a reset as a restart.  The warnings work only for telnet; `scepterd -c`
 doesn't handle the signals.
 
-`upgradegame` does nothing if the game is already in the new build's
-format.  When the format has changed (docs/data-files.md), it first backs
-the game up to `/var/lib/scepter/havenford.backup-*`.  If it refuses or fails,
-the old files are still in place.  Reinstall the previous binaries, or fix
-the reported file, before starting the server again.  The new `scepterd`
+`upgradegame` does nothing if the game's database is already at the new
+build's schema version.  When the schema has changed (docs/data-files.md),
+it first backs the database up to
+`/var/lib/scepter/havenford/game.db.backup-*`.  If it refuses or fails, the
+database is as it was.  Reinstall the previous binaries, or fix the
+reported problem, before starting the server again.  The new `scepterd`
 won't start on a game it can't read; check `journalctl -u scepter`.
 
 To roll back after an upgrade: stop the server, copy the previous binaries
-back from `/usr/local/share/scepter/prev/`, and replace
-`/var/lib/scepter/havenford` with the backup.  Anything saved since the upgrade
-is lost.
+back from `/usr/local/share/scepter/prev/`, copy the backup over
+`/var/lib/scepter/havenford/game.db`, and remove any `game.db-wal` and
+`game.db-shm` beside it.  Anything saved since the upgrade is lost.
 
 Upgrade history:
 

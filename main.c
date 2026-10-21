@@ -208,16 +208,15 @@ static void DeployCountdown(void)
 }
 
 /*
- * Open the game in the current directory, refusing one whose data files or
- * database this build can't use (datafile.c, gamedb.c).  Problems go to
- * stderr only, so a refused game is left exactly as it was; every problem
- * is reported, not just the first.  Sets NumSegs from the rooms.
+ * Open the game in the current directory, refusing one whose database this
+ * build can't use (gamedb.c).  Problems go to stderr only, so a refused
+ * game is left exactly as it was.  Sets NumSegs from the rooms.
  */
 static int OpenGame(const char *Prog)
 {
 	int		Bad;
 
-	Bad = CheckGame(WORKDIR) + !DBOpen(WORKDIR);
+	Bad = !DBOpen(WORKDIR);
 	if (!Bad && !CountSegs(&NumSegs))
 		Bad++;
 	if (Bad)
