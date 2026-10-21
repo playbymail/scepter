@@ -54,7 +54,8 @@ let many different passwords open the same character.  The port instead:
   removed: 8 to 72 characters, spaces allowed, capitals different from
   small letters;
 - asks for the old password and the new one twice in `CHANGEPW`;
-- limits wrong passwords for each address and each character.
+- limits wrong passwords, at login and in `CHANGEPW`, for each address and
+  each character.
 
 The player record gained a field for the hash, so the data format is now
 version 2.  `upgradegame` converts older games, keeping a backup; nothing

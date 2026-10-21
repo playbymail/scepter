@@ -121,6 +121,17 @@ void LoginOK(const char *Host, char *Name)
 	FailName[FindName(Name)].Fails = 0;
 }
 
+/* Tell the player how long LoginWait says to wait */
+void TooManyPW(int Wait)
+{
+	if (Wait < 120)
+		sprintf(B1, "0Too many wrong passwords.  Try again in %d seconds.", Wait);
+	else
+		sprintf(B1, "0Too many wrong passwords.  Try again in %d minutes.",
+				(Wait + 59) / 60);
+	QOut(Term, B1);
+}
+
 static void AnnounceLogin(void)
 {
 	User->Status = SNormal;
@@ -369,13 +380,8 @@ void MatchPW(void)
 
 	if ((Wait = LoginWait(Host, User->Name)))
 	{
-		if (Wait < 120)
-			sprintf(B1, "0Too many wrong passwords.  Try again in %d seconds.", Wait);
-		else
-			sprintf(B1, "0Too many wrong passwords.  Try again in %d minutes.",
-					(Wait + 59) / 60);
 		Logoff(User);
-		QOut(Term, B1);
+		TooManyPW(Wait);
 		QOut(Term, "2");
 		QDea(Term);
 		User = NULL;

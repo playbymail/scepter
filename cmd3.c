@@ -479,13 +479,21 @@ void ChangeName(char *Word, int Num)
 	}
 }
 
-/* Passwords may hold spaces now (#82), so CHANGEPW asks for each one. */
+/*
+ * Passwords may hold spaces now (#82), so CHANGEPW asks for each one.  A
+ * wrong old password counts against the login limits (#92).
+ */
 void ChangePW(char *Word, int Num)
 {
+	int		Wait;
+
 	UNUSED(Word);
 	UNUSED(Num);
-	User->Entry = XOldPW;
 	Loc = LenBuf + 1;
+	if ((Wait = LoginWait(QHost(Term), User->Name)))
+		TooManyPW(Wait);
+	else
+		User->Entry = XOldPW;
 }
 
 void EnterOldPW(void)
@@ -495,9 +503,15 @@ void EnterOldPW(void)
 	GetPW(PassWord);
 	User->Entry = XCmd;
 	if (!CheckPW(User->PWHash, PassWord))
+	{
+		LoginFailed(QHost(Term), User->Name);
 		QOut(Term, "0Wrong password, sorry.");
+	}
 	else
+	{
+		LoginOK(QHost(Term), User->Name);
 		User->Entry = XChangePW;
+	}
 }
 
 void EnterNewPW(void)

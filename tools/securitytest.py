@@ -373,6 +373,34 @@ def test_82_limit(port):
           and "address refused for 10 minutes" in log, "errlog records the failures")
 
 
+def test_92(port):
+    """Wrong old passwords at CHANGEPW count against the login limits (#92)."""
+    c, got = enter(port, "Oldtimer", "ac")
+    if not check(got and got.endswith(b"You are "), "Oldtimer logs in"):
+        return
+    for i in range(5):
+        c.line("changepw")
+        ok = c.expect(prompt("Enter your password? "), 5) is not None
+        c.line("guess %d" % i)
+        check(ok and c.expect(rb"Wrong password, sorry\.", 5) is not None,
+              "wrong old password %d is refused" % (i + 1))
+    c.line("changepw")
+    check(c.expect(rb"Too many wrong passwords\.  Try again in 10 minutes\.", 5)
+          is not None, "then CHANGEPW is refused for 10 minutes")
+    c.line("ac")
+    check(c.expect(rb"Enter new password\? ", 2) is None,
+          "without asking for the old password")
+    alive(c, "Oldtimer", "the refusal")
+    check(quit_game(c), "Oldtimer quits")
+    c, got = enter(port, "Oldtimer", "ac")
+    check(got and b"Too many wrong passwords.  Try again in 10 minutes." in got,
+          "and logging in again from that address is refused too")
+    with open(os.path.join(GAME, "dat", "errlog")) as f:
+        log = f.read()
+    check(log.count("Wrong password for Oldtimer from 127.0.0.1") == 5
+          and "address refused for 10 minutes" in log, "errlog records the failures")
+
+
 def legacy(dmtest, game):
     """Save Oldtimer, a 2nd-level character with the old password hash of "ac"."""
     subprocess.run([dmtest, game, "legacy", "Oldtimer", "ac"], check=True,
@@ -415,6 +443,7 @@ TESTS = {
     "82-legacy": (test_82_legacy, None, legacy),
     "82-change": (test_82_change, None, legacy),
     "82-limit": (test_82_limit, None, legacy),
+    "92": (test_92, None, legacy),
 }
 GAME = None
 

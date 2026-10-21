@@ -27,6 +27,7 @@ void	MatchPW(void);
 int		LoginWait(const char *Host, char *Name);
 void	LoginFailed(const char *Host, char *Name);
 void	LoginOK(const char *Host, char *Name);
+void	TooManyPW(int Wait);
 void	GetName(void);
 
 /* execute.c */
