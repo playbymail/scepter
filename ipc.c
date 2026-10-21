@@ -14,7 +14,8 @@
  *                     2<text> print and disconnect, 3 aborted
  *
  * QRea() returns "9" when stdin reaches end of file (telnet: on SIGINT or
- * SIGTERM); main() then shuts down.
+ * SIGTERM); main() then shuts down.  With telnet it also returns "7R" on
+ * SIGUSR1 and "7X" on SIGUSR2, the warning of a restart or a reset (#136).
  */
 #include <string.h>
 #include <sys/select.h>

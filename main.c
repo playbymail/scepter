@@ -7,6 +7,8 @@
 
 static void	Init_Scepter(void);
 static void	DoEntry(void);
+static void	DeployWarning(int Reset);
+static void	DeployCountdown(void);
 
 static unsigned GetDate(time_t t)
 {
@@ -125,6 +127,7 @@ int main(int argc, char **argv)
 		}
 
 		MonAttack();
+		DeployCountdown();
 
 		switch (C1[0])
 		{
@@ -145,6 +148,11 @@ int main(int argc, char **argv)
 					DoInput();
 					DoEntry();
 				}
+				break;
+
+			case '7':	/* a deploy is coming: SIGUSR1 (restart), SIGUSR2 (reset) */
+				User = NULL;
+				DeployWarning(C1[1] == 'X');
 				break;
 
 			case '9':	/* end of console input, or SIGINT/SIGTERM */
@@ -176,6 +184,49 @@ int main(int argc, char **argv)
 	fclose(EDBObj);
 	CloseCave();
 	exit(0);
+}
+
+/*
+ * Deploy warnings (#136, docs/deploy.md).  A deploy sends SIGUSR1 before
+ * a restart or SIGUSR2 before a reset, and stops the server two minutes
+ * later.  Every player is told what will happen and what to do about it,
+ * then warned again WarnFinal seconds later.  Saving keeps a character
+ * over a restart, but nothing survives a reset, so its warnings never
+ * suggest saving.
+ */
+#define	WarnFinal	90
+
+static int		WarnReset = -1;		/* -1 when no warning is pending */
+static TimeType	WarnTime;
+
+static void WarnAll(char *Msg)
+{
+	UserPoint	Usr;
+
+	for (Usr = UserTail; Usr; Usr = Usr->NextUser)
+		QOut(Usr->Trm, Msg);
+}
+
+static void DeployWarning(int Reset)
+{
+	WarnReset = Reset;
+	WarnTime = RealTime;
+	WarnAll(Reset
+		? "0*** The game will be RESET in 2 minutes. Every character will be"
+		  " deleted, and saving won't keep it. You'll need to make a new"
+		  " character when it's back. ***"
+		: "0*** The server restarts in 2 minutes. Type SAVE now to keep your"
+		  " progress. Characters below 2nd level can't be saved and will be"
+		  " lost. Reconnect in a minute or two. ***");
+}
+
+static void DeployCountdown(void)
+{
+	if (WarnReset < 0 || RealTime < WarnTime + WarnFinal)
+		return;
+	WarnAll(WarnReset ? "0*** Reset in 30 seconds. ***"
+					  : "0*** Restarting in 30 seconds. Type SAVE now. ***");
+	WarnReset = -1;
 }
 
 /* One line of EFILE without its newline; the rest of a long line is skipped. */

@@ -249,6 +249,22 @@ def test_full(a):
           "dropped logins leave no one behind")
 
 
+def test_warning(server, a):
+    """#136: SIGUSR1 and SIGUSR2 warn every player of a restart or a reset."""
+    server.send_signal(signal.SIGUSR1)
+    got = a.expect(rb"\*\*\* The server restarts in 2 minutes\..*?\*\*\*\r\n")
+    check(got is not None and b"Type SAVE now to keep your progress." in got
+          and b"Reconnect in a minute or two." in got,
+          "SIGUSR1 warns of a restart and tells players to SAVE")
+    server.send_signal(signal.SIGUSR2)
+    got = a.expect(rb"\*\*\* The game will be RESET in 2 minutes\..*?\*\*\*\r\n")
+    check(got is not None and b"Every character will be deleted" in got
+          and b"Type SAVE" not in got,
+          "SIGUSR2 warns of a reset and doesn't suggest saving")
+    a.line("who")
+    check(a.expect(rb"Alpha\r\n") is not None, "and the game goes on")
+
+
 def free_port():
     s = socket.socket()
     s.bind(("127.0.0.1", 0))
@@ -286,6 +302,7 @@ def main():
                 if a:
                     test_hangup(a, b)
                     test_full(a)
+                    test_warning(server, a)
                     server.send_signal(signal.SIGTERM)
                     got = a.eof()
                     check(got is not None and got.endswith(b"End - aborted\r\n"),
