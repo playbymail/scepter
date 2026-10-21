@@ -1166,7 +1166,11 @@ int main(int argc, char **argv)
 	Today = GetDate(RealTime);
 
 	/* a character to act as the DM */
-	freopen("/dev/null", "w", stdout);
+	if (!freopen("/dev/null", "w", stdout))
+	{
+		perror("dmtest: /dev/null");
+		return 1;
+	}
 	Pid = Term = 1;
 	User = Login();
 	User->LastInput = RealTime;

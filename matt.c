@@ -260,7 +260,7 @@ void MonStrike(RmCodeType Rm)
 					if (!Plyr->Brief)
 					{
 						PM(Monster, TRUE, B2);
-						sprintf(B1, "0%s misses you!", B2);
+						snprintf(B1, sizeof(B1), "0%s misses you!", B2);
 						QOut(Plyr->Trm, B1);
 					}
 				}
@@ -293,7 +293,7 @@ void MonStrike(RmCodeType Rm)
 							case 10:
 								NumSp = 16;	/* poison */
 								break;
-							case 11:
+							default:
 								NumSp = 18;	/* psi blast */
 								break;
 						}
@@ -301,10 +301,10 @@ void MonStrike(RmCodeType Rm)
 						User = Plyr;
 						Term = Plyr->Trm;
 						PrintMon(Monster, TRUE, TRUE, B2);
-						sprintf(B1, "0%s casts %s %s spell on %s!",
+						snprintf(B1, sizeof(B1), "0%s casts %s %s spell on %s!",
 								B2, Pa(*SpellList[NumSp]), SpellList[NumSp], Plyr->Name);
 						LocalMsg(B1);
-						sprintf(B1, "0%s casts %s %s spell on you!",
+						snprintf(B1, sizeof(B1), "0%s casts %s %s spell on you!",
 								B2, Pa(*SpellList[NumSp]), SpellList[NumSp]);
 						QOut(Term, B1);
 						Damage = SpellMon(NumSp, Monster->Lvl, 15, Plyr,
@@ -347,7 +347,7 @@ void MonStrike(RmCodeType Rm)
 								Monster->MReact = 3;
 								Damage = 0;
 								PrintMon(Monster, TRUE, TRUE, B2);
-								sprintf(B1, "0%s fumbles!", B2);
+								snprintf(B1, sizeof(B1), "0%s fumbles!", B2);
 								QOut(Term, B1);
 								Monster->DefPlayer = NULL;
 								break;
@@ -356,7 +356,7 @@ void MonStrike(RmCodeType Rm)
 						HitShArmor(Plyr, &Damage);
 						PM(Monster, TRUE, B2);
 						PrintDmg(Plyr, Damage, Plyr->Brief, B3);
-						sprintf(B1, "0%s hits you for %s", B2, B3);
+						snprintf(B1, sizeof(B1), "0%s hits you for %s", B2, B3);
 						QOut(Term, B1);
 
 						if (Monster->Drain && Rnd(25) > Plyr->Con)
@@ -411,12 +411,12 @@ void MonStrike(RmCodeType Rm)
 						Term = Plyr->Trm;
 						PrintMon(Monster, FALSE, FALSE, B2);
 
-						sprintf(B1, "0### %s the %s was just %s by %s.",
+						snprintf(B1, sizeof(B1), "0### %s the %s was just %s by %s.",
 							Plyr->Name, CName[(int)Plyr->Class],
 							Rnd(2) == 1 ? "slain" : "killed", B2);
 
 						if (Plyr->Lvl > 4)
-							sprintf(B3, "0### We shall all grieve for %s.",
+							snprintf(B3, sizeof(B3), "0### We shall all grieve for %s.",
 									Pro[(int)Plyr->Sex]);
 
 						Count = MsgTerm(All);
@@ -500,10 +500,10 @@ void AttackMsg(MonsterPoint Monster, UserPoint Plyr)
 	TUser = User;
 	User = Plyr;
 	PM(Monster, TRUE, B2);
-	sprintf(B1, "0%s attacks %s!", B2, User->Name);
+	snprintf(B1, sizeof(B1), "0%s attacks %s!", B2, User->Name);
 	LocalMsg(B1);
 	PM(Monster, TRUE, B2);
-	sprintf(B1, "0%s attacks you!", B2);
+	snprintf(B1, sizeof(B1), "0%s attacks you!", B2);
 	QOut(User->Trm, B1);
 	User = TUser;
 }

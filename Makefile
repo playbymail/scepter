@@ -4,7 +4,14 @@ CC      ?= cc
 CSTD    ?= -std=c11
 # glibc hides POSIX functions (strdup, getopt, ...) under strict -std=c11
 FEATURES = -D_DEFAULT_SOURCE
-WARN     = -Wall -Wno-parentheses -Wno-dangling-else -Wno-missing-braces -Wno-switch
+WARN     = -Wall -Wno-parentheses -Wno-dangling-else -Wno-missing-braces -Wno-switch \
+	-Wno-format-truncation
+# GCC finds overflows and unchecked reads that clang misses (#119); keep them
+# errors so the Linux build stops on a new one.
+ifneq ($(shell $(CC) --version 2>/dev/null | grep -c 'Free Software Foundation'),0)
+WARN    += -Werror=format-overflow -Werror=maybe-uninitialized \
+	-Werror=unused-result -Werror=array-parameter
+endif
 CFLAGS  ?= -g -O2
 # Data paths default to the current directory; override with e.g.
 #   make DEFS='-DWORKDIR=\"/var/lib/scepter\"'
@@ -86,8 +93,9 @@ check-data: scepterd mkgame upgradegame fightsim dmtest
 
 # Player-reachable security bugs (tools/securitytest.py).  Run it on a build
 # that makes memory errors visible:
-#   make CFLAGS='-g -O1 -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
+#   make CFLAGS='-g -O1 -fno-common -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
 # The pattern fill turns an uninitialized pointer (#11) into a sure crash.
+# -fno-common gives globals such as B1 the redzones that catch an overflow (#119).
 check-security: scepterd mkgame dmtest
 	python3 -I tools/securitytest.py ./scepterd ./mkgame var/alpha/alpha.world
 

@@ -583,7 +583,7 @@ void NetWho(void)
 				task = " (talk)";
 		}
 		idle = (long)(now - Conn[i].LastIn);
-		sprintf(B1, "0%2d %3ld:%02ld  %s%s", i, idle / 60, idle % 60, name, task);
+		snprintf(B1, sizeof(B1), "0%2d %3ld:%02ld  %s%s", i, idle / 60, idle % 60, name, task);
 		QOut(Term, B1);
 	}
 }
@@ -615,7 +615,7 @@ void NetCheckHup(void)
 		CmdCode = 0;
 		if (Plyr->Status != SLogin)
 		{
-			sprintf(B1, "0### %s was devoured by US West Communications.",
+			snprintf(B1, sizeof(B1), "0### %s was devoured by US West Communications.",
 					Plyr->Name);
 			Count = MsgTerm(BrAll);
 			for (ILoop = 0; ILoop < Count; ILoop++)

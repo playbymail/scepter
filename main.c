@@ -178,6 +178,22 @@ int main(int argc, char **argv)
 	exit(0);
 }
 
+/* One line of EFILE without its newline; the rest of a long line is skipped. */
+static void ReadELine(char *Str, int Size)
+{
+	int		Ch;
+	size_t	Len;
+
+	if (!fgets(Str, Size, EFile))
+		Abort(" EFILE is too short.");
+	Len = strcspn(Str, "\n");
+	if (Str[Len])
+		Str[Len] = '\0';
+	else
+		while ((Ch = getc(EFile)) != EOF && Ch != '\n')
+			;
+}
+
 static void Init_Scepter(void)
 {
 	int		ILoop;
@@ -185,31 +201,28 @@ static void Init_Scepter(void)
 	if ((EFile = fopen(EFILE, "r")) == NULL)
 		Abort(" File open error on EFILE.");
 
-	fgets(Notice, 256, EFile);
-	Notice[strlen(Notice) - 1] = '\0';
+	ReadELine(Notice, sizeof(Notice));
 
 	for (ILoop = 0; ILoop < 5; ILoop++)
-	{
-		fgets(NewsBuf[ILoop], 256, EFile);
-		NewsBuf[ILoop][strlen(NewsBuf[ILoop]) - 1] = '\0';
-	}
+		ReadELine(NewsBuf[ILoop], sizeof(NewsBuf[ILoop]));
 	for (ILoop = 0; ILoop < 3; ILoop++)
 	{
-		fgets(B1, 256, EFile);
+		ReadELine(B1, sizeof(B1));
 		TName[ILoop][0] = TClass[ILoop][0] = '\0';
-		sscanf(B1, "%d%s%s", &TLvl[ILoop], TName[ILoop], TClass[ILoop]);
-		fgets(TBuf[ILoop], 256, EFile);
-		TBuf[ILoop][strlen(TBuf[ILoop]) - 1] = '\0';
+		sscanf(B1, "%d%10s%12s", &TLvl[ILoop], TName[ILoop], TClass[ILoop]);
+		ReadELine(TBuf[ILoop], sizeof(TBuf[ILoop]));
 	}
 
-	fscanf(EFile, "%c%d%d", &TaskClosed, &NumRun, &MSpeed);
+	if (fscanf(EFile, "%c%d%d", &TaskClosed, &NumRun, &MSpeed) != 3)
+		Abort(" Bad run counters in EFILE.");
 
 	for (ILoop = 1; ILoop <= LEncounter; ILoop++)
 	{
 		int j, e[8];
 
-		fscanf(EFile, "%d%d%d%d%d%d%d%d",
-				  &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]);
+		if (fscanf(EFile, "%d%d%d%d%d%d%d%d",
+				  &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]) != 8)
+			Abort(" Bad encounter table in EFILE.");
 
 		for (j = 0; j < 8; j++)
 			PutEncIndex(ILoop, j, e[j]);
@@ -218,8 +231,9 @@ static void Init_Scepter(void)
 	{
 		int		j, o[8];
 
-		fscanf(EFile, "%d%d%d%d%d%d%d%d",
-				  &o[0], &o[1], &o[2], &o[3], &o[4], &o[5], &o[6], &o[7]);
+		if (fscanf(EFile, "%d%d%d%d%d%d%d%d",
+				  &o[0], &o[1], &o[2], &o[3], &o[4], &o[5], &o[6], &o[7]) != 8)
+			Abort(" Bad object table in EFILE.");
 		for (j = 0; j < 8; j++)
 			PutObjIndex(ILoop, j, o[j]);
 	}
@@ -321,7 +335,7 @@ static void DoEntry(void)
 			break;
 
 		default:
-			sprintf(B1,	"0 Sce107 - Undefined entry type = %d", User->Entry);
+			snprintf(B1, sizeof(B1), "0 Sce107 - Undefined entry type = %d", User->Entry);
 			QOut(Term, B1);
 			User->Entry = XCmd;
 			break;

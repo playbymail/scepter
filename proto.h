@@ -55,8 +55,8 @@ void	CapAlfa(char *a);
 void	GetWord(char *Word, int *Num);
 int		GetPW(char *PassWord);
 void	DoInput(void);
-int		BinaryMatch(char *Word, int Count, char **NameList);
-int		WordMatch(char *Word, int Count, char (*NameList)[11]);
+int		BinaryMatch(char *Word, int Count, CmdListType NameList);
+int		WordMatch(char *Word, int Count, NameTList NameList);
 void	Punctuate(int Num, int Total, char *Str);
 void	Pd(int Rec, int Line, int PhraseNum, int Brief, int *Cont, char *V);
 void	PrintDesc(int Rec, int Line, int PhraseNum, int Brief, char *Str1, char *Str2);
@@ -220,7 +220,7 @@ void	Parley(char *Word, int Num);
 void	YesNo(void);
 void	EnterNotice(void);
 void	EnterNews(void);
-void	StealObj(char *Word, int Num);
+void	StealObj(Alfa Word, int Num);
 
 /* cmd4.c */
 void	Appeal(void);

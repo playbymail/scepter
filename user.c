@@ -223,14 +223,14 @@ void Users(char *Word)
 		if (*UserFRec.User.Name)
 		{
 			if (User->SSJ)
-				sprintf(B1, "0%c%c%-10s %4d %02d/%02d",
+				snprintf(B1, sizeof(B1), "0%c%c%-10s %4d %02d/%02d",
 						UserFRec.User.SSJ ? '*' : ' ',
 						UserFRec.User.It ? '+' : ' ', UserFRec.User.Name,
 						UserFRec.User.Lvl,
 						UserFRec.User.LastAccess >> 7,
 						UserFRec.User.LastAccess & 0x3f);
 			else
-				sprintf(B1, "0%s", UserFRec.User.Name);
+				snprintf(B1, sizeof(B1), "0%s", UserFRec.User.Name);
 			QOut(Term, B1);
 		}
 	ClosePer();
@@ -343,10 +343,10 @@ void PrintExp(UserPoint Plyr)
 	long	Exp;
 
 	Exp = Expr(Plyr->Lvl + 1) - Expr(Plyr->Lvl) - Plyr->Experience;
-	sprintf(B1, "0You need %ld more exp points to train for the next level.",
+	snprintf(B1, sizeof(B1), "0You need %ld more exp points to train for the next level.",
 			Exp > 0 ? Exp : 0L);
 	QOut(Term, B1);
-	sprintf(B1, "0You have %ld shillings in cash.", Plyr->Money);
+	snprintf(B1, sizeof(B1), "0You have %ld shillings in cash.", Plyr->Money);
 	QOut(Term, B1);
 }
 
@@ -411,7 +411,7 @@ int ReadyCheck(long LastAtk)
 {
 	if (RealTime + 1 < LastAtk)
 	{
-		sprintf(B1, "0Not ready!  Wait %ld more seconds.", LastAtk - RealTime);
+		snprintf(B1, sizeof(B1), "0Not ready!  Wait %ld more seconds.", LastAtk - RealTime);
 		QOut(Term, B1);
 	}
 	else
@@ -461,7 +461,7 @@ void PromptUser(void)
 	}
 	if (p)
 	{
-		sprintf(B1, "1%s? ", p);
+		snprintf(B1, sizeof(B1), "1%s? ", p);
 		QOut(Term, B1);
 	}
 }
