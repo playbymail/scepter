@@ -106,18 +106,11 @@ clean:
 		tools/dmtest.o tools/upgradegame.o
 
 # The web site for sceptish.pbbgaming.com (docs/deploy.md), built into
-# out/site.  The avatar is too large to commit, so this needs a local copy
-# of var/havenford/avatar.png.
-AVATAR = var/havenford/avatar.png
-
-var/havenford/avatar-light.png: $(AVATAR)
-	magick $(AVATAR) -gamma 1.45 -modulate 108,110 $@
-
-site: site/index.html var/havenford/world-map.html var/havenford/avatar-light.png
+# out/site.
+site: site/index.html site/avatar.webp var/havenford/world-map.html
 	mkdir -p out/site
-	cp site/index.html out/site/index.html
+	cp site/index.html site/avatar.webp out/site/
 	cp var/havenford/world-map.html out/site/map.html
-	magick var/havenford/avatar-light.png -resize 800x800 -quality 85 out/site/avatar.webp
-	magick var/havenford/avatar-light.png -resize 192x192 -strip -colors 128 out/site/icon.png
+	magick site/avatar.webp -resize 192x192 -strip -colors 128 out/site/icon.png
 
 .PHONY: all clean check-worlds site check-net check-tintin check-data check-security
