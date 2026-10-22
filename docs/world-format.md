@@ -96,6 +96,7 @@ N/phrase one/phrase two/
 
 | Key | Meaning |
 |---|---|
+| `name` | a short name, e.g. `Village square`: printable ASCII, at most 60 characters; optional |
 | `desc` | `R:L` |
 | `north` `south` `east` `west` `up` `down` `out` | destination room |
 | `encounter-table` | `[encounter N]` used for random monsters |
@@ -113,6 +114,12 @@ grows up, so `north` from (0,0,0) normally leads to (0,1,0) and `up` to
 (0,0,1). Exits don't have to match the positions, since not every world is
 a grid. A room without an `area` isn't placed, and `x`, `y` or `z` on it
 is an error. `mkgame` warns when two rooms in an area share a position.
+
+A room's `name` is for maps and DM tools, such as Mudlet's mapper (#80),
+not for players: they still see only its description. `EDIT DISPLAY ROOM`
+shows it, and `EDIT COPY` copies it with the room. A room without one
+behaves as before; a map can fall back to the first sentence of its brief
+description.
 
 `mkgame` checks areas and positions but doesn't store them in the game
 yet. They will be stored with the rooms once game data moves to SQLite

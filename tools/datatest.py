@@ -384,10 +384,11 @@ def test_upgradegame():
 # The tables each migration after the first adds, and the columns it adds
 # to older tables, to make an older game
 OLD_TABLES = {2: ["login_hosts", "login_names"], 3: ["rank_changes"],
-              4: ["world", "world_history", "encounter_times", "treasure_times"]}
+              4: ["world", "world_history", "encounter_times", "treasure_times"], 5: []}
 OLD_COLUMNS = {4: [(t, c) for t in ("rooms", "descriptions", "monster_templates",
                                     "object_templates")
-                   for c in ("created_at", "updated_at")]}
+                   for c in ("created_at", "updated_at")],
+               5: [("rooms", "name")]}
 
 
 def test_upgrade_old(version):
@@ -510,8 +511,10 @@ def test_world_unknown():
     """#138: a game from before migration 4 has no world, and says so."""
     g = game("world-v3")
     db = sqlite3.connect(os.path.join(g, "game.db"))
-    db.executescript("".join("DROP TABLE %s; " % t for t in OLD_TABLES[4])
-                     + "".join("ALTER TABLE %s DROP COLUMN %s; " % tc for tc in OLD_COLUMNS[4])
+    db.executescript("".join("DROP TABLE %s; " % t for v in range(4, VERSION + 1)
+                             for t in OLD_TABLES[v])
+                     + "".join("ALTER TABLE %s DROP COLUMN %s; " % tc
+                               for v in range(4, VERSION + 1) for tc in OLD_COLUMNS.get(v, []))
                      + "PRAGMA user_version = 3;")
     db.close()
     rc, out, _ = run("upgradegame", g)

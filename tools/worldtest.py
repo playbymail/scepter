@@ -58,6 +58,14 @@ try:
           "an unprintable name, reported once")
     refused("[area 9]\nname = " + "x" * 61 + "\n", "longer than 60",
             "a name longer than 60 characters")
+
+    # room names (#81)
+    rc, err = mkgame("[room 30]\nname = " + "x" * 60 + "\n")
+    check(rc == 0 and "error" not in err, "a room name of 60 characters is accepted")
+    refused("[room 30]\nname = " + "x" * 61 + "\n", "room name is longer than 60",
+            "a room name longer than 60 characters")
+    refused("[room 30]\nname = A\tB\n", "room name must be printable",
+            "an unprintable room name")
     refused("[area 9]\nname = A\ncolour = red\n", "unknown area key",
             "an unknown area key")
     refused("[area 1]\nname = Again\n", "area 1 defined twice", "an area defined twice")

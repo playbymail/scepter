@@ -19,7 +19,7 @@ the database; a clean stop removes them.
 
 `game.db` is a SQLite database in WAL mode (`gamedb.c`).  Its schema
 version is `PRAGMA user_version`; this build reads version `DBVersion`
-(`gamedb.h`), currently 4.
+(`gamedb.h`), currently 5.
 
 - **`mkgame`** creates it with the whole schema and fills it from the
   world: templates, descriptions, rooms and their contents, settings,
@@ -515,6 +515,13 @@ CREATE TABLE treasure_times (
 ) STRICT;
 ```
 
+Migration 5, room names (#81).
+
+```sql
+ALTER TABLE rooms ADD COLUMN name TEXT NOT NULL DEFAULT ''	-- Name; '': unnamed
+	CHECK (length(name) <= 60 AND name NOT GLOB '*[^ -~]*');	-- printable ASCII
+```
+
 ## Schema versions and upgrading
 
 `DBVersion` in `gamedb.h` is the schema version this build reads, kept in
@@ -533,6 +540,7 @@ has already applied.
 | 2 | The login limits, `login_hosts` and `login_names` (#93). |
 | 3 | The history of DM ranks, `rank_changes` (#139). |
 | 4 | The world a game was made from, its history, and `created_at`/`updated_at` on world data (#138). |
+| 5 | A room's optional `name` (#81). |
 
 Stop the server, then run `upgradegame` as the user that owns the game:
 

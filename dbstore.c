@@ -615,7 +615,7 @@ int GetRoom(int Rm, RoomType *R, int *Found)
 	memset(R, 0, sizeof(*R));
 	if (!DBPrepare(&St, "SELECT north, south, east, west, up, down, out, desc_rec,"
 				   " desc_code, which_encounter, encounter_time, last_dir,"
-				   " notify_dm, safe, anti_magic, dark FROM rooms WHERE room = ?")
+				   " notify_dm, safe, anti_magic, dark, name FROM rooms WHERE room = ?")
 	||	!BindInt(St, 1, Rm))
 		return Failed(Where, "read");
 	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
@@ -634,7 +634,8 @@ int GetRoom(int Rm, RoomType *R, int *Found)
 			&& GETFLAG(12, R->NotifyDM)
 			&& GETFLAG(13, R->Safe)
 			&& GETFLAG(14, R->AntiMagic)
-			&& GETFLAG(15, R->Dark);
+			&& GETFLAG(15, R->Dark)
+			&& ColText(St, 16, R->Name, sizeof(R->Name), TRUE, Where);
 	else
 	if (!(Rc = Rc == SQLITE_DONE))
 		Failed(Where, "read");
@@ -656,8 +657,8 @@ int PutRoom(int Rm, RoomType *R)
 	Ok = DBPrepare(&St, Upsert(Sql, sizeof(Sql), "rooms", "room", "north, south,"
 							   " east, west, up, down, out, desc_rec, desc_code,"
 							   " which_encounter, encounter_time, last_dir, notify_dm,"
-							   " safe, anti_magic, dark", "?, ?, ?, ?, ?, ?, ?, ?, ?,"
-							   " ?, ?, ?, ?, ?, ?, ?, ?"))
+							   " safe, anti_magic, dark, name", "?, ?, ?, ?, ?, ?, ?, ?,"
+							   " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"))
 	  && BindInt(St, 1, Rm);
 	for (I = 0; Ok && I < 6; I++)
 		Ok = BindInt(St, 2 + I, R->Adjoin[I]);
@@ -672,6 +673,7 @@ int PutRoom(int Rm, RoomType *R)
 		&& BindInt(St, 15, R->Safe)
 		&& BindInt(St, 16, R->AntiMagic)
 		&& BindInt(St, 17, R->Dark)
+		&& BindText(St, 18, R->Name, sizeof(R->Name))
 		&& Done(St, Where, "save"));
 }
 

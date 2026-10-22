@@ -407,6 +407,7 @@ objects = 12 7 9 11
 # ---- rooms ----
 
 [room 1]
+name = Village square
 north = 2
 south = 4
 east = 3
@@ -438,6 +439,7 @@ strikes = 100
 skill = sharp
 
 [room 2]
+name = North road
 north = 6
 south = 1
 area = 1
@@ -460,6 +462,7 @@ defend = yes
 permanent = yes
 
 [room 3]
+name = The Gilded Goose
 north = 24
 west = 1
 up = 7
@@ -472,6 +475,7 @@ role = bar
 staggers = 1 2 3 4 5
 
 [room 4]
+name = Market
 north = 1
 south = 13
 east = 23
@@ -485,6 +489,7 @@ role = store
 stock = 1 2 3 6 10 7
 
 [room 5]
+name = Temple
 north = 21
 east = 1
 west = 20
@@ -505,6 +510,7 @@ permanent = yes
 unlocks = 21
 
 [room 6]
+name = Forest edge
 north = 8
 south = 2
 east = 9
@@ -524,6 +530,7 @@ spring = yes
 toll = yes
 
 [room 7]
+name = Inn loft
 down = 3
 area = 1
 x = 1
@@ -577,6 +584,7 @@ encounter-table = 1
 encounter-rate = 20
 
 [room 9]
+name = Foot of the ruined tower
 west = 6
 up = 10
 desc = 1:10
@@ -591,6 +599,7 @@ closed = yes
 lock = 31
 
 [room 10]
+name = Top of the ruined tower
 down = 9
 desc = 2:1
 
@@ -645,6 +654,7 @@ unique = yes
 permanent = yes
 
 [room 11]
+name = Damp cellar
 desc = 2:2
 encounter-table = 2
 encounter-rate = 30
@@ -676,6 +686,7 @@ undead = yes
 permanent = yes
 
 [room 12]
+name = Quiet glade
 out = 6
 desc = 2:3
 anti-magic = yes
@@ -703,6 +714,7 @@ to = 1
 active-room = 12
 
 [room 13]
+name = Guild Street
 north = 4
 south = 15
 east = 14
@@ -726,6 +738,7 @@ watch = yes
 permanent = yes
 
 [room 14]
+name = East end of Guild Street
 south = 18
 east = 17
 west = 13
@@ -733,64 +746,76 @@ down = 19
 desc = 2:5
 
 [room 15]
+name = Fighters' hall
 north = 13
 desc = 2:6
 trains = fighter dm
 
 [room 16]
+name = Barbarians' longhouse
 east = 13
 desc = 2:7
 trains = barbarian
 
 [room 17]
+name = Rangers' lodge
 west = 14
 desc = 2:8
 trains = ranger
 
 [room 18]
+name = Mages' college
 north = 14
 east = 27
 desc = 2:9
 trains = magic-user
 
 [room 19]
+name = Thieves' den
 up = 14
 desc = 2:10
 trains = thief
 
 [room 20]
+name = Cloister
 east = 5
 desc = 4:1
 trains = cleric
 
 [room 21]
+name = Paladins' chapter house
 south = 5
 desc = 4:2
 trains = paladin
 
 [room 22]
+name = Pawnshop
 east = 4
 desc = 4:3
 greeting = Appraisor asks, "What would you like to sell?"
 role = pawnshop
 
 [room 23]
+name = Smithy
 west = 4
 desc = 4:4
 greeting = "Hee hee.  So matey, your gear don't look too good.  Need fixin?"
 role = smith
 
 [room 24]
+name = Newsstand
 south = 3
 desc = 4:5
 greeting = Paperboy says, "Extra! Extra! Read all about it!"
 role = newsstand
 
 [room 25]
+name = Village lockup
 out = 13
 desc = 4:6
 
 [room 26]
+name = Forest bridge
 desc = 4:7
 encounter-table = 3
 encounter-rate = 25
@@ -805,6 +830,7 @@ trap = 5
 spring = yes
 
 [room 27]
+name = Wizards' workshop
 west = 18
 desc = 4:8
 

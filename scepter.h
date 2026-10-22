@@ -32,6 +32,7 @@
 #define	MaxPlusOne		13	/* MaxUsers + 1 */
 #define	RmLimit			130	/* MaxPlusOne * 10 */
 #define	MaxSegs			199
+#define	RoomNameLen		60	/* longest room name (#81) */
 #define	MaxObjs			10	/* max number of objects saved in user record */
 #define	MinPWLen		8	/* shortest new password */
 #define	MaxPWLen		72	/* longest password: bcrypt ignores the rest */
@@ -475,6 +476,7 @@ typedef struct
 	uchar			DescRec, DescCode;
 	uchar			WhichEncounter, EncounterTime;
 	uchar			LastDir;
+	char			Name[RoomNameLen + 1];	/* "": unnamed (#81) */
 	MonsterPoint	RmMonsterTail;
 	UserPoint		RmPlayerTail;
 	ObjectPoint		RmObjectTail;
