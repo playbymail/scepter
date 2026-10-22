@@ -124,6 +124,7 @@ Upgrade history:
 | 2026-10-21 | `1404c7e` | game database, schema version 1 (#71, #146–#153); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning) | `/var/lib/scepter/havenford.structs-20261021` (the old struct-file game, untouched) |
 | 2026-10-21 | `6e12f8e` | schema 1 → 2: the login limits in the database (#93); characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-201641` |
 | 2026-10-21 | `9e957fc` | schema 2 → 3: the history of DM ranks (#139); `dmadmin` installed, and the first master DM, `MOTHELLO`, made with it; characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-224954` |
+| 2026-10-22 | `3fb144b` | schema 4: the game records its world (#138), `mkgame -u` (#137), the smith's repairs (#180); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning); master DM `MOTHELLO` made again with `dmadmin` | `/var/lib/scepter/havenford.reset-20261022-005659` (the old game, untouched) |
 
 ## DMs
 
