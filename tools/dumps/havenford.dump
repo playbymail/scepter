@@ -1094,3 +1094,5 @@ room 94 Adjoin=91,0,0,0,0,0 Out=0 DescRec=15 DescCode=4 WhichEncounter=0 Encount
 room 94 obj 1 Name="lantern,brass *" Article=A Weight=3 Price=0 DescCode=9 DescRec=16 Carry=0 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=23 NumCharges=127 MLevel=0
 rooms 2000 shown 94
 players 0
+world Id="e90e51a4-3d12-408d-9c25-d8f9af6fef5c" Name="Havenford" Revision="f8286c1dba26e78bd13c86dce808f15bb4574b4b6ea0df0f73ab7365985f534e"
+world event Event=WMade Revision="f8286c1dba26e78bd13c86dce808f15bb4574b4b6ea0df0f73ab7365985f534e" Schema=4

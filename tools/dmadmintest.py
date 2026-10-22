@@ -192,11 +192,11 @@ def test_keeps_character():
     rc, _, _ = dmadmin(g, "password", "alice", stdin="alice new password\n")
     rc2, _, _ = dmadmin(g, "rank", "bob", "dm")
     after = dump(g).splitlines()
-    changed = [(a, b) for a, b in zip(before, after) if a != b]
-    check(rc == 0 and rc2 == 0 and len(changed) == 1
-          and "Name=\"BOB\"" in changed[0][0] and "Assoc=0" in changed[0][1]
-          and len(after) == len(before) + 1 and after[-1].startswith("rank ")
-          and "Player=\"BOB\" Old=RAssoc New=RDM" in after[-1],
+    gone = [l for l in before if l not in after]
+    new = [l for l in after if l not in before]
+    check(rc == 0 and rc2 == 0 and len(gone) == 1 and "Name=\"BOB\"" in gone[0]
+          and len(new) == 2 and "Name=\"BOB\"" in new[0] and "Assoc=0" in new[0]
+          and new[1].startswith("rank ") and "Player=\"BOB\" Old=RAssoc New=RDM" in new[1],
           "objects, worn things and other fields are kept")
     out = play(g, ["alice", "alice new password", "quit", "y"])
     check("Wrong password" not in out and "Please welcome alice" in out,

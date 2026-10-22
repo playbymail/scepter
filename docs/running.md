@@ -145,6 +145,9 @@ manages them from outside the game (#139):
   either end.
 - **The last master DM** can't be demoted or removed, by `dmadmin` or in the
   game, so there is always someone who can reset passwords.
+- **The world:** `*WORLD` shows which world and revision the game was made
+  from, its history, and the rooms, descriptions, templates and table rows
+  DMs have changed since (docs/data-files.md).
 - **History:** every change of rank is recorded with the time and who made
   it: the DM character, in the game's editor (`MODIFY PLAYER` or `MODIFY
   FILE` with `ZZ=` or `AS=`, `DELETE FILE`), or the account that ran

@@ -6,6 +6,7 @@
 #include "scepter.h"
 
 static int	OpenGame(const char *Prog);
+static void	LogWorld(void);
 static void	Init_Scepter(void);
 static void	DoEntry(void);
 static void	DeployWarning(int Reset);
@@ -68,6 +69,7 @@ int main(int argc, char **argv)
 	if (!OpenGame(argv[0]))
 		exit(1);
 	DBReport = DBLog;
+	LogWorld();
 
 	/* The QNX server forked into the background here.  It now runs in the
 	 * foreground, serving telnet connections (telnet.c), or with -c the
@@ -236,6 +238,22 @@ static int OpenGame(const char *Prog)
 }
 
 /* The settings and tables, from the game database (dbstore.c) */
+/* Say on standard error which world, and which revision, the game is (#138) */
+static void LogWorld(void)
+{
+	WorldType	W;
+	int			Found;
+
+	if (!GetWorld(&W, &Found))
+		Abort(" Cannot read the world.");
+	if (Found)
+		fprintf(stderr, "scepterd: world %s, id %s, revision %s\n",
+				*W.Name ? W.Name : "(no name)", W.Id, W.Revision);
+	else
+		fprintf(stderr, "scepterd: world unknown: the game was made before"
+				" schema version 4\n");
+}
+
 static void Init_Scepter(void)
 {
 	SettingsType	Set;

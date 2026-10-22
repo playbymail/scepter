@@ -4,6 +4,7 @@
 
 [world]
 name = alpha
+id = adf289bd-8119-431f-a01a-15b36ae561a3
 start-room = 1
 revive-room = 5
 jail-room = 25

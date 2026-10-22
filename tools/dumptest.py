@@ -50,6 +50,8 @@ NOT_DUMPED = {
                  "RmObjectTail": "the objects are dumped as obj lines"},
     "SpecialType": {"Room": "the special line's room number",
                     "NStock": "Stock=", "NStagger": "Stagger="},
+    "WorldEventType": {"Time": "when it happened, which changes every run"},
+    "WorldEditType": {"Updated": "when it was changed, which changes every run"},
 }
 
 # ObClass values and the union member that holds their own fields
@@ -111,7 +113,8 @@ def structs():
                                        "tUserType"]:
         m = re.search(r"struct\s+%s\s*\{" % tag, h)
         out[tag] = fields(body(h, m.start()))
-    for name in ("RoomType", "LoginHostType", "LoginNameType", "RankChangeType"):
+    for name in ("RoomType", "LoginHostType", "LoginNameType", "RankChangeType",
+                 "WorldType", "WorldEventType", "WorldEditType"):
         m = re.search(r"typedef struct\s*\{(?:(?!typedef).)*?\}\s*%s;" % name, h, re.S)
         out[name] = fields(body(h, m.start()))
     m = re.search(r"typedef struct\s*\{(?:(?!typedef).)*?\}\s*SpecialType;", sp, re.S)
@@ -163,6 +166,12 @@ def test_coverage(dumps):
                 kind = "LoginNameType"
             elif line.startswith("rank "):
                 kind = "RankChangeType"
+            elif line.startswith("world event "):
+                kind = "WorldEventType"
+            elif line.startswith("world edit "):
+                kind = "WorldEditType"
+            elif line.startswith("world "):
+                kind = "WorldType"
             if kind:
                 seen[kind] |= k
                 found[kind] = True

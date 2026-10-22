@@ -57,12 +57,18 @@ key = value
 | Key | Meaning |
 |---|---|
 | `name` | world name |
+| `id` | required: the world's id, a UUID such as `3f1c9a52-6b8e-4d7e-9a41-2c5b0e7f8d13`. It names the world across every revision of the file, so keep it when you edit the world, and give a new world a new one: `uuidgen \| tr A-Z a-z`. Capitals are accepted and stored in small letters. |
 | `monster-speed` | seconds between random monster checks |
 | `notice` | the notice shown at login |
 | `news-1` … `news-5` | lines in the newspaper |
 | `start-room` | where new characters start (default 1) |
 | `revive-room` | where dead characters revive (default: the start room) |
 | `jail-room` | where guards take a player who attacks a monster with `assistance` (default: the start room). This is disabled in the QNX files (`USEJAIL` in `cmd2.c`/`cmd3.c`), so it currently has no effect. |
+
+`mkgame` also records the world's **revision**: the SHA-256 of the world
+file's bytes, which `shasum -a 256 WORLD` prints. Any change to the file,
+comments included, is a new revision. The game keeps the id, the name and
+the revision (docs/data-files.md), and `*WORLD` shows them to a DM.
 
 ## `[area N]`, N = 1…255
 

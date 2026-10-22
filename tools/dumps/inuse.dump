@@ -1008,3 +1008,12 @@ login host 2001:db8:1:2::/64 Fails=1 Blocks=0 Start=1792540800 Until=0
 login name BOB Fails=1 Last=1792540800
 rank Time=1792540800 Player="ALICE" Old=RNone New=RMaster By="DUNGEON" Tool=0
 rank Time=1792540800 Player="BOB" Old=RNone New=RAssoc By="DUNGEON" Tool=0
+world Id="adf289bd-8119-431f-a01a-15b36ae561a3" Name="alpha" Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf"
+world event Event=WMade Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf" Schema=4
+world edit Kind=WRoom Number=902
+world edit Kind=WDescription Number=2
+world edit Kind=WDescription Number=7
+world edit Kind=WMonster Number=1
+world edit Kind=WObject Number=2
+world edit Kind=WEncounter Number=4
+world edit Kind=WTreasure Number=5

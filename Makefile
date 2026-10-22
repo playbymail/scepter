@@ -40,8 +40,8 @@ scepterd: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
 # World compiler; must be built from the same headers as scepterd.
-mkgame: mkgame.o dbstore.o gamedb.o
-	$(CC) $(CFLAGS) -o $@ mkgame.o dbstore.o gamedb.o $(SQLITELIB)
+mkgame: mkgame.o dbstore.o gamedb.o sha256.o
+	$(CC) $(CFLAGS) -o $@ mkgame.o dbstore.o gamedb.o sha256.o $(SQLITELIB)
 
 # Brings a game database up to this build's schema (tools/upgradegame.c).
 upgradegame: tools/upgradegame.o gamedb.o
@@ -57,6 +57,8 @@ user.o: user.c
 	$(CC) $(CSTD) $(FEATURES) $(WARN) $(CFLAGS) $(DEFS) $(CRYPTINC) -c $<
 
 $(OBJS) mkgame.o: common.h scepter.h proto.h gamedb.h
+
+mkgame.o sha256.o: sha256.h
 
 # Runs one function of the database module, for tools/datatest.py.
 dbtest: tools/dbtest.o gamedb.o
@@ -134,7 +136,7 @@ check-tintin: scepterd mkgame
 
 # Data file headers, tools/upgradegame, mkgame's game directory and the game
 # database (tools/datatest.py).
-check-data: scepterd mkgame upgradegame fightsim dmtest dumpgame dbtest dbtest2
+check-data: scepterd mkgame upgradegame fightsim dmtest dumpgame dbtest dbtest2 dmadmin
 	python3 -I tools/datatest.py . var/alpha/alpha.world
 
 # dmadmin, and a DM it makes playing in the console harness
@@ -152,7 +154,7 @@ check-security: scepterd mkgame dmtest
 
 clean:
 	rm -f scepterd mkgame fightsim dmtest dumpgame dbtest dbtest2 upgradegame dmadmin \
-		$(OBJS) mkgame.o tools/fightsim.o tools/dmtest.o tools/dumpgame.o \
+		$(OBJS) mkgame.o sha256.o tools/fightsim.o tools/dmtest.o tools/dumpgame.o \
 		tools/dbtest.o tools/gamedb2.o tools/upgradegame.o tools/dmadmin.o
 
 # The web site for sceptish.pbbgaming.com (docs/deploy.md), built into

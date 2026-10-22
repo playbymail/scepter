@@ -64,6 +64,7 @@ static struct
 	{ 86, fROOM,	{ .r = Attack } },
 	{ 87, fVOID,	{ .v = Who } },
 	{ 88, fUSER,	{ .u = Condition } },
+	{ 90, fVOID,	{ .v = ShowWorld } },
 	{  0 }
 };
 
@@ -93,7 +94,8 @@ void ExecuteCommand(void)
 		&&	CmdCode != 40 && CmdCode != 41 && CmdCode != 45 && CmdCode != 47
 		&&	CmdCode != 48 && CmdCode != 51 && CmdCode != 52 && CmdCode != 61
 		&&	CmdCode != 71 && CmdCode != 74 && CmdCode != 75 && CmdCode != 76
-		&&	CmdCode != 78 && CmdCode != 79 && CmdCode != 83 && CmdCode != 87)
+		&&	CmdCode != 78 && CmdCode != 79 && CmdCode != 83 && CmdCode != 87
+		&&	CmdCode != 90)
 			GetWord(Word, &Num);
 	}
 

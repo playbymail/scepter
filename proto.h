@@ -166,6 +166,7 @@ void	EditObject(EdFunc EditCmd, char *Which, int ONum);
 void	EditOList(EdFunc EditCmd, int OIndex);
 void	EditDscrpt(EdFunc EditCmd, int Rec);
 void	EnterDesc(void);
+void	WorldEdited(int Kind, int Number);
 void	EditETList(EdFunc EditCmd, int WhatCode, int Index);
 
 /* cmd1.c */
@@ -202,6 +203,7 @@ void	HitMonster(int Damage);
 /* cmd3.c */
 void	Attack(char *Word, int Num, RmCodeType Rm);
 void	SaveSettings(void);
+void	ShowWorld(void);
 void	SaveTableRow(int Treasure, int Row);
 void	UpdateF(void);
 void	Repair(char *Word, int Num);
@@ -290,5 +292,14 @@ int		PutLoginName(const char *Name, LoginNameType *N);
 int		PruneLogins(long HostUntil, long HostStart, long NameLast);
 int		NextLogin(int Hosts, char *Key, size_t Size, LoginHostType *H,
 				  LoginNameType *N, int *Found);
+int		GetWorld(WorldType *W, int *Found);
+int		PutWorld(WorldType *W);
+int		AddWorldEvent(long Time, int Event, const char *Revision);
+int		NextWorldEvent(long *After, WorldEventType *E, int *Found);
+int		LastWorldTime(long *Time);
+int		StampWorld(long Time, int Made);
+int		TouchWorld(int Kind, int Number);
+int		NextWorldEdit(long Since, int *Kind, int *Number, WorldEditType *E,
+					  int *Found);
 int		PutRankChange(RankChangeType *R);
 int		NextRankChange(long *After, RankChangeType *R, int *Found);

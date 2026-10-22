@@ -386,21 +386,69 @@ static const char	Migration3[] =
 	"	CHECK (old_rank IS NOT NULL OR new_rank IS NOT NULL)\n"
 	") STRICT;\n";
 
+/*
+ * Migration 4: the world a game was made from, and when its world data
+ * was made and last changed (#138).  world has one row once the game's
+ * world is known: made by mkgame, or adopted by an update (#137) for a
+ * game made before this migration.  world_history has a row for each time
+ * the world was made, updated or adopted.
+ *
+ * created_at and updated_at are seconds since 1970.  The game's own saves
+ * leave them alone; the DM editor sets updated_at when it changes a row,
+ * so a row changed since the last make or update is a DM edit.  Rows that
+ * were there before this migration have 0, unknown.  An encounter or
+ * treasure table row is stored only as its non-zero entries, so its times
+ * are kept in a table of their own.
+ */
+#define	Mig4Times \
+	"	created_at		INTEGER NOT NULL DEFAULT 0,\n" \
+	"	updated_at		INTEGER NOT NULL DEFAULT 0\n"
+static const char	Migration4[] =
+	"CREATE TABLE world (\n"
+	"	id				INTEGER PRIMARY KEY CHECK (id = 1),\n"
+	"	world_id		TEXT NOT NULL CHECK (length(world_id) = 36 AND world_id = lower(world_id)),\n"
+	"	name			TEXT NOT NULL,\n"
+	"	revision		TEXT NOT NULL CHECK (length(revision) = 64 AND revision = lower(revision))\n"
+	") STRICT;\n"
+	"CREATE TABLE world_history (\n"
+	"	id				INTEGER PRIMARY KEY,\n"
+	"	time			INTEGER NOT NULL,\n"
+	"	event			TEXT NOT NULL CHECK (event IN ('made', 'updated', 'adopted')),\n"
+	"	revision		TEXT NOT NULL CHECK (length(revision) = 64),\n"
+	"	schema_version	INTEGER NOT NULL CHECK (schema_version >= 4)\n"
+	") STRICT;\n"
+	"ALTER TABLE rooms ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE rooms ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE descriptions ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE descriptions ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE monster_templates ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE monster_templates ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE object_templates ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;\n"
+	"ALTER TABLE object_templates ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0;\n"
+	"CREATE TABLE encounter_times (\n"
+	"	encounter		INTEGER PRIMARY KEY CHECK (encounter >= 1),\n"
+	Mig4Times
+	") STRICT;\n"
+	"CREATE TABLE treasure_times (\n"
+	"	treasure		INTEGER PRIMARY KEY CHECK (treasure >= 1),\n"
+	Mig4Times
+	") STRICT;\n";
+
 #ifdef TestMigration
 /*
  * tools/datatest.py only: dbtest2 is dbtest built with this extra
  * migration, to migrate a whole game as a real schema change would.
  */
 #undef	DBVersion
-#define	DBVersion	4
-static const char	Migration4[] =
+#define	DBVersion	5
+static const char	Migration5[] =
 	"CREATE TABLE test_migration (x INTEGER) STRICT;\n"
-	"INSERT INTO test_migration VALUES (4);\n";
+	"INSERT INTO test_migration VALUES (5);\n";
 static const char	*Migration[DBVersion + 1] =
-	{ NULL, Migration1, Migration2, Migration3, Migration4 };
+	{ NULL, Migration1, Migration2, Migration3, Migration4, Migration5 };
 #else
 static const char	*Migration[DBVersion + 1] =
-	{ NULL, Migration1, Migration2, Migration3 };
+	{ NULL, Migration1, Migration2, Migration3, Migration4 };
 #endif
 
 /* ---------- reporting ---------- */

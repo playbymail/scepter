@@ -12,6 +12,7 @@ everything as it was: nothing created, nothing changed.
 `make check-data` runs this.
 """
 
+import hashlib
 import os
 import re
 import shutil
@@ -236,13 +237,14 @@ def test_columns():
     g = game("columns")
     db = sqlite3.connect(os.path.join(g, "game.db"))
     obj, mon = column_list("ObjCols"), column_list("MonCols")
+    times = ["created_at", "updated_at"]  # world data (migration 4, #138)
     for table, keys, cols in [
-            ("object_templates", ["number"], obj),
+            ("object_templates", ["number"], obj + times),
             ("room_objects", ["room", "slot"], obj),
             ("chest_objects", ["room", "chest", "slot"], obj),
             ("monster_objects", ["room", "monster", "slot"], obj),
             ("player_objects", ["player", "slot", "worn"], obj),
-            ("monster_templates", ["number"], mon),
+            ("monster_templates", ["number"], mon + times),
             ("room_monsters", ["room", "slot"], mon)]:
         got = [r[1] for r in db.execute("PRAGMA table_info(%s)" % table)]
         check(got == keys + cols, "%s has the columns dbstore.c reads and writes" % table)
@@ -379,8 +381,13 @@ def test_upgradegame():
           and ver.strip() == str(VERSION), "upgradegame migrates a version 0 database")
 
 
-# The tables each migration after the first adds, to make an older game
-OLD_TABLES = {2: ["login_hosts", "login_names"], 3: ["rank_changes"]}
+# The tables each migration after the first adds, and the columns it adds
+# to older tables, to make an older game
+OLD_TABLES = {2: ["login_hosts", "login_names"], 3: ["rank_changes"],
+              4: ["world", "world_history", "encounter_times", "treasure_times"]}
+OLD_COLUMNS = {4: [(t, c) for t in ("rooms", "descriptions", "monster_templates",
+                                    "object_templates")
+                   for c in ("created_at", "updated_at")]}
 
 
 def test_upgrade_old(version):
@@ -388,8 +395,10 @@ def test_upgrade_old(version):
     g = game("v%d" % version)
     run("dmtest", g, "player", "Oldtimer", "ac secret")
     added = [t for v in range(version + 1, VERSION + 1) for t in OLD_TABLES[v]]
+    columns = [tc for v in range(version + 1, VERSION + 1) for tc in OLD_COLUMNS.get(v, [])]
     db = sqlite3.connect(os.path.join(g, "game.db"))
     db.executescript("".join("DROP TABLE %s; " % t for t in added)
+                     + "".join("ALTER TABLE %s DROP COLUMN %s; " % tc for tc in columns)
                      + "PRAGMA user_version = %d;" % version)
     db.close()
     ok, _ = server_refuses(g, "schema version %d" % version, "upgradegame")
@@ -434,6 +443,141 @@ def test_migration():
     check(ok, "and scepterd plays it again")
 
 
+def world_text(change):
+    """A world file made from WORLD with change applied to its text."""
+    with open(WORLD) as f:
+        text = change(f.read())
+    path = os.path.join(TMP, "w%d.world" % len(os.listdir(TMP)))
+    with open(path, "w") as f:
+        f.write(text)
+    return path
+
+
+def world_id():
+    with open(WORLD) as f:
+        return re.search(r"^id = (\S+)$", f.read(), re.M).group(1)
+
+
+def test_world_made():
+    """#138: mkgame records the world, its revision and when, in one go."""
+    g = game("world")
+    with open(WORLD, "rb") as f:
+        sha = hashlib.sha256(f.read()).hexdigest()
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    world = db.execute("SELECT world_id, name, revision FROM world").fetchall()
+    hist = db.execute("SELECT time, event, revision, schema_version FROM world_history").fetchall()
+    stamps = set()
+    for t in ("rooms", "descriptions", "monster_templates", "object_templates",
+              "encounter_times", "treasure_times"):
+        stamps |= set(db.execute("SELECT created_at, updated_at FROM %s" % t).fetchall())
+    tables = [db.execute("SELECT count(*) FROM %s" % t).fetchone()[0]
+              for t in ("encounter_times", "treasure_times")]
+    db.close()
+    check(world == [(world_id(), "alpha", sha)],
+          "the world's id, name and revision (shasum -a 256 of the file) are recorded")
+    check(len(hist) == 1 and hist[0][1:] == ("made", sha, VERSION)
+          and abs(hist[0][0] - time.time()) < 60, "and a 'made' history row, now")
+    check(stamps == {(hist[0][0], hist[0][0])} and tables == [200, 200],
+          "every row of world data was created and updated then")
+
+    upper = world_text(lambda t: t.replace("id = " + world_id(), "id = " + world_id().upper()))
+    path = os.path.join(TMP, "world-upper")
+    os.mkdir(path)
+    rc, _, err = run("mkgame", upper, path)
+    db = sqlite3.connect(os.path.join(path, "game.db"))
+    got = db.execute("SELECT world_id FROM world").fetchall()
+    db.close()
+    check(rc == 0 and got == [(world_id(),)], "an id in capitals is kept in small letters")
+
+    for what, change, words in [
+            ("a world without an id",
+             lambda t: t.replace("id = " + world_id() + "\n", ""), ["has no id", ":5:"]),
+            ("an id that is too short",
+             lambda t: t.replace("id = " + world_id(), "id = " + world_id()[:-1]), ["UUID"]),
+            ("an id that isn't hex",
+             lambda t: t.replace("id = " + world_id(), "id = g" + world_id()[1:]), ["UUID"]),
+            ("an id without its dashes",
+             lambda t: t.replace("id = " + world_id(), "id = " + world_id().replace("-", "x")),
+             ["UUID"])]:
+        path = os.path.join(TMP, "world-" + str(len(os.listdir(TMP))))
+        os.mkdir(path)
+        rc, _, err = run("mkgame", world_text(change), path)
+        check(rc == 1 and all(w in err for w in words) and os.listdir(path) == [],
+              "mkgame refuses %s, and writes nothing" % what)
+
+
+def test_world_unknown():
+    """#138: a game from before migration 4 has no world, and says so."""
+    g = game("world-v3")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    db.executescript("".join("DROP TABLE %s; " % t for t in OLD_TABLES[4])
+                     + "".join("ALTER TABLE %s DROP COLUMN %s; " % tc for tc in OLD_COLUMNS[4])
+                     + "PRAGMA user_version = 3;")
+    db.close()
+    rc, out, _ = run("upgradegame", g)
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    world = db.execute("SELECT count(*) FROM world").fetchone()[0]
+    times = db.execute("SELECT DISTINCT created_at, updated_at FROM rooms").fetchall()
+    db.close()
+    check(rc == 0 and world == 0 and times == [(0, 0)],
+          "a version 3 game upgrades with no world and its times unknown (0)")
+    rc, out, err = run("scepterd", "-c", g, stdin="")
+    check("world unknown" in err, "scepterd says its world is unknown")
+    run("dmadmin", g, "create", "Boss", "master", stdin="boss password\n")
+    _, out, _ = run("scepterd", "-c", g, stdin="boss\nboss password\n*world\nquit\ny\n")
+    check("doesn't record its world" in out and "Changed by DMs since then: nothing." in out,
+          "and so does *WORLD")
+
+
+def test_world_edits():
+    """#138: the DM editor marks what it changes; play doesn't."""
+    g = game("world-edits")
+    _, err0 = run("scepterd", "-c", g, stdin="")[1:]
+    check("world alpha, id " + world_id() in err0, "scepterd logs the world at start-up")
+    run("dmadmin", g, "create", "Boss", "master", stdin="boss password\n")
+
+    def stamps():
+        db = sqlite3.connect(os.path.join(g, "game.db"))
+        try:
+            since = db.execute("SELECT max(time) FROM world_history").fetchone()[0]
+            got = set()
+            for kind, sql in [
+                    ("room", "SELECT room FROM rooms WHERE updated_at > ?"),
+                    ("description", "SELECT DISTINCT record FROM descriptions WHERE updated_at > ?"),
+                    ("monster", "SELECT number FROM monster_templates WHERE updated_at > ?"),
+                    ("object", "SELECT number FROM object_templates WHERE updated_at > ?"),
+                    ("encounter", "SELECT encounter FROM encounter_times WHERE updated_at > ?"),
+                    ("treasure", "SELECT treasure FROM treasure_times WHERE updated_at > ?")]:
+                got |= {(kind, r[0]) for r in db.execute(sql, (since,))}
+            return got
+        finally:
+            db.close()
+
+    # play: walking (segment swaps), a character saved, the hourly update, a stop
+    play = "boss\nboss password\n" + "north\nsouth\n" * 5 + "*update\nsave\nquit\ny\n"
+    run("scepterd", "-c", g, stdin=play)
+    # room contents and settings aren't world data an update keeps
+    run("scepterd", "-c", g, stdin="boss\nboss password\n*edit\n"
+        "create object x 3 na=\"rock,grey *\"\nquit\n*notice Hello.\nquit\ny\n")
+    check(stamps() == set(), "play, room contents and the notice mark nothing")
+
+    _, out, _ = run("scepterd", "-c", g, stdin="boss\nboss password\n*edit\n"
+                    "modify room 2 sa=t\ncopy room 2 5\nmodify olist 3 we=9\n"
+                    "modify mlist 1 hi=20\nmodify elist 2 1 2 0 0 0 0 0 0\n"
+                    "modify tlist 4 1 0 0 0 0 0 0 0\nmodify description 3 2\n"
+                    "1/A new line./\nquit\n*world\nquit\ny\n")
+    want = {("room", 2), ("room", 5), ("object", 3), ("monster", 1), ("encounter", 2),
+            ("treasure", 4), ("description", 3)}
+    check(stamps() == want, "the editor marks each room, template, table row and"
+          " description it changes, within the second it was made in too")
+    check("Changed by DMs since then: room 2, room 5, description 3, monster 1," in out
+          and "encounter 2, treasure 4." in out, "and *WORLD lists them")
+    db = sqlite3.connect(os.path.join(g, "game.db"))
+    made = db.execute("SELECT DISTINCT created_at FROM rooms").fetchall()
+    db.close()
+    check(len(made) == 1, "an edit leaves created_at alone")
+
+
 def test_fightsim():
     g = game("fight")
     rc, _, err = run("fightsim", "-r", "1", g, "4", "9")
@@ -452,6 +596,9 @@ def main():
         for version in range(1, VERSION):
             test_upgrade_old(version)
         test_migration()
+        test_world_made()
+        test_world_unknown()
+        test_world_edits()
         test_fightsim()
     finally:
         shutil.rmtree(TMP)

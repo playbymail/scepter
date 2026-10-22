@@ -20,7 +20,7 @@
 #define	MaxNames	40
 #define	StrPerSeg	10
 
-#define	CmdListLen	111		/* number of commands */
+#define	CmdListLen	112		/* number of commands */
 
 #define	LEncounter	200		/* encounters in EList */
 #define	ObjListLen	200		/* treasures in TList */
@@ -426,6 +426,37 @@ typedef struct
 	int			Fails;
 	long		Last;
 } LoginNameType;
+
+/* the world a game was made from, its one row of world (#138) */
+typedef struct
+{
+	char		Id[37];				/* a UUID, in small letters */
+	char		Name[64];
+	char		Revision[65];		/* the SHA-256 of the world file, in hex */
+} WorldType;
+
+typedef enum	/* a row of world_history: what happened to the world */
+	{WMade, WUpdated, WAdopted} WorldEventKind;
+
+/* a row of world_history (#138) */
+typedef struct
+{
+	long		Time;
+	int			Event;				/* a WorldEventKind */
+	char		Revision[65];
+	int			Schema;				/* the DBVersion that wrote it */
+} WorldEventType;
+
+typedef enum	/* world data a DM can edit, and an update replaces (#138) */
+	{WRoom, WDescription, WMonster, WObject, WEncounter, WTreasure} WorldKind;
+
+/* a row of world data changed since the world was last made or updated */
+typedef struct
+{
+	int			Kind;				/* a WorldKind */
+	int			Number;				/* the room, record, template or table row */
+	long		Updated;
+} WorldEditType;
 
 /* a row of rank_changes (#139) */
 typedef struct

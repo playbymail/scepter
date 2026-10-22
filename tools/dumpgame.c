@@ -17,6 +17,8 @@
  *	player						saved characters, by name, then their objects
  *	login						the login limits on addresses and characters
  *	rank						changes of DM rank, oldest first
+ *	world						the world the game was made from, its
+ *								history, and what DMs have changed since
  *
  * Everything is read through the engine's own functions (ReadMList,
  * ReadOList, ReadDesc, S and so ReadSeg, ReadUObj and ReadUMon, PlayerName
@@ -49,6 +51,9 @@ static const char	*ChName[] =
 };
 static const char	*SexName[] = { "Male", "Female" };
 static const char	*RankName[] = { "RNone", "RAssoc", "RDM", "RMaster" };
+static const char	*EventName[] = { "WMade", "WUpdated", "WAdopted" };
+static const char	*WorldKindName[] =
+	{ "WRoom", "WDescription", "WMonster", "WObject", "WEncounter", "WTreasure" };
 static const char	*RoleName[] =
 {
 	"none", "bar", "newsstand", "pawnshop", "store", "smith"
@@ -569,6 +574,52 @@ static void DumpRanks(void)
 	}
 }
 
+/*
+ * The world (#138), its history and the world data changed since it was
+ * last made or updated.  Times change from one run to the next, so they
+ * are left out.
+ */
+static void DumpWorld(void)
+{
+	WorldType		W;
+	WorldEventType	E;
+	WorldEditType	Ed;
+	long			After = 0, Since;
+	int				Found, K = -1, N = 0;
+
+	if (!GetWorld(&W, &Found))
+		Abort(" dumpgame: cannot read the world.");
+	if (Found)
+	{
+		printf("world");
+		Text("Id", W.Id);
+		Text("Name", W.Name);
+		Text("Revision", W.Revision);
+		printf("\n");
+	}
+	for (;;)
+	{
+		if (!NextWorldEvent(&After, &E, &Found))
+			Abort(" dumpgame: cannot read the world history.");
+		if (!Found)
+			break;
+		printf("world event Event=%s", EnumName(EventName, E.Event));
+		Text("Revision", E.Revision);
+		printf(" Schema=%d\n", E.Schema);
+	}
+	if (!LastWorldTime(&Since))
+		Abort(" dumpgame: cannot read the world history.");
+	for (;;)
+	{
+		if (!NextWorldEdit(Since, &K, &N, &Ed, &Found))
+			Abort(" dumpgame: cannot read the world data.");
+		if (!Found)
+			break;
+		printf("world edit Kind=%s Number=%d\n", EnumName(WorldKindName, Ed.Kind),
+			   Ed.Number);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 2 || chdir(argv[1]))
@@ -593,6 +644,7 @@ int main(int argc, char **argv)
 	DumpPlayers();
 	DumpLogins();
 	DumpRanks();
+	DumpWorld();
 
 	DBClose();
 	return ferror(stdout) || fflush(stdout) ? 1 : 0;
