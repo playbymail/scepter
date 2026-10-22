@@ -962,137 +962,137 @@ olist 197 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=
 olist 198 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
 olist 199 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
 olist 200 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
-room 1 Adjoin=0,0,2,0,0,0 Out=0 DescRec=1 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 2 Adjoin=3,10,16,1,0,0 Out=0 DescRec=1 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 3 Adjoin=6,2,5,4,0,0 Out=0 DescRec=1 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 4 Adjoin=7,0,3,0,0,0 Out=0 DescRec=1 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 5 Adjoin=0,0,0,3,0,0 Out=0 DescRec=1 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 6 Adjoin=0,3,9,79,0,0 Out=0 DescRec=1 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 7 Adjoin=8,4,0,43,0,0 Out=0 DescRec=1 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 8 Adjoin=40,7,0,0,0,0 Out=0 DescRec=1 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 9 Adjoin=0,0,0,6,0,0 Out=0 DescRec=1 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 10 Adjoin=2,13,11,12,0,0 Out=0 DescRec=1 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 11 Adjoin=0,0,0,10,0,0 Out=0 DescRec=2 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 12 Adjoin=0,0,10,0,0,0 Out=0 DescRec=2 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 13 Adjoin=10,0,14,15,0,0 Out=0 DescRec=2 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 14 Adjoin=0,0,0,13,0,0 Out=0 DescRec=2 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 15 Adjoin=0,58,13,0,0,0 Out=0 DescRec=2 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 16 Adjoin=17,0,41,2,0,0 Out=0 DescRec=2 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 17 Adjoin=18,16,0,0,0,0 Out=0 DescRec=2 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 1 Adjoin=0,0,2,0,0,0 Out=0 DescRec=1 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Havenford Refuge"
+room 2 Adjoin=3,10,16,1,0,0 Out=0 DescRec=1 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Havenford Square"
+room 3 Adjoin=6,2,5,4,0,0 Out=0 DescRec=1 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Guild Street"
+room 4 Adjoin=7,0,3,0,0,0 Out=0 DescRec=1 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Hall of Blades"
+room 5 Adjoin=0,0,0,3,0,0 Out=0 DescRec=1 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Scout Lodge"
+room 6 Adjoin=0,3,9,79,0,0 Out=0 DescRec=1 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Academy of Sparks"
+room 7 Adjoin=8,4,0,43,0,0 Out=0 DescRec=1 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Lantern Chapel"
+room 8 Adjoin=40,7,0,0,0,0 Out=0 DescRec=1 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Shadow School"
+room 9 Adjoin=0,0,0,6,0,0 Out=0 DescRec=1 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Hall of Stewards"
+room 10 Adjoin=2,13,11,12,0,0 Out=0 DescRec=1 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Market Lane"
+room 11 Adjoin=0,0,0,10,0,0 Out=0 DescRec=2 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Provisioner"
+room 12 Adjoin=0,0,10,0,0,0 Out=0 DescRec=2 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Smithy"
+room 13 Adjoin=10,0,14,15,0,0 Out=0 DescRec=2 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="River Inn"
+room 14 Adjoin=0,0,0,13,0,0 Out=0 DescRec=2 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Notice Kiosk"
+room 15 Adjoin=0,58,13,0,0,0 Out=0 DescRec=2 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Exchange"
+room 16 Adjoin=17,0,41,2,0,0 Out=0 DescRec=2 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Public garden"
+room 17 Adjoin=18,16,0,0,0,0 Out=0 DescRec=2 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="North Gate"
 room 17 obj 1 Name="sign,direction *" Article=A Weight=100 Price=0 DescCode=3 DescRec=7 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 18 Adjoin=19,17,0,0,0,0 Out=0 DescRec=2 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 19 Adjoin=21,18,20,38,0,0 Out=0 DescRec=2 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 20 Adjoin=0,0,0,19,0,0 Out=0 DescRec=2 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 21 Adjoin=22,19,0,0,0,0 Out=0 DescRec=3 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 22 Adjoin=23,21,0,0,0,0 Out=0 DescRec=3 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 18 Adjoin=19,17,0,0,0,0 Out=0 DescRec=2 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Road past the walls"
+room 19 Adjoin=21,18,20,38,0,0 Out=0 DescRec=2 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Orchard crossroads"
+room 20 Adjoin=0,0,0,19,0,0 Out=0 DescRec=2 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Quiet orchard"
+room 21 Adjoin=22,19,0,0,0,0 Out=0 DescRec=3 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Sunlit farm track"
+room 22 Adjoin=23,21,0,0,0,0 Out=0 DescRec=3 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Frontier Warning Post"
 room 22 obj 1 Name="sign,warning *" Article=A Weight=100 Price=0 DescCode=1 DescRec=6 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 23 Adjoin=24,22,0,0,0,0 Out=0 DescRec=3 DescCode=3 WhichEncounter=1 EncounterTime=100 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 24 Adjoin=25,23,0,0,0,0 Out=0 DescRec=3 DescCode=4 WhichEncounter=1 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 25 Adjoin=26,24,0,0,0,0 Out=0 DescRec=3 DescCode=5 WhichEncounter=1 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 26 Adjoin=27,25,0,0,0,0 Out=0 DescRec=3 DescCode=6 WhichEncounter=1 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 27 Adjoin=28,26,0,0,0,0 Out=0 DescRec=3 DescCode=7 WhichEncounter=1 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 28 Adjoin=29,27,0,32,0,0 Out=0 DescRec=3 DescCode=8 WhichEncounter=2 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 29 Adjoin=30,28,0,0,0,0 Out=0 DescRec=3 DescCode=9 WhichEncounter=2 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 30 Adjoin=31,29,0,0,0,0 Out=0 DescRec=3 DescCode=10 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 31 Adjoin=33,30,0,0,0,0 Out=0 DescRec=4 DescCode=1 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 32 Adjoin=0,0,28,37,0,0 Out=0 DescRec=4 DescCode=2 WhichEncounter=2 EncounterTime=50 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 33 Adjoin=34,31,0,0,0,0 Out=0 DescRec=4 DescCode=3 WhichEncounter=3 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 34 Adjoin=35,33,0,0,0,0 Out=0 DescRec=4 DescCode=4 WhichEncounter=3 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 35 Adjoin=0,34,0,0,36,0 Out=0 DescRec=4 DescCode=5 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 36 Adjoin=0,0,0,0,0,35 Out=0 DescRec=4 DescCode=6 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 37 Adjoin=0,0,32,0,0,0 Out=0 DescRec=4 DescCode=7 WhichEncounter=2 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 38 Adjoin=0,0,19,39,0,0 Out=0 DescRec=4 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 39 Adjoin=0,0,38,0,0,0 Out=0 DescRec=4 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 40 Adjoin=0,8,0,0,0,0 Out=0 DescRec=4 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 41 Adjoin=42,0,0,16,0,0 Out=0 DescRec=5 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 42 Adjoin=0,41,0,0,0,0 Out=0 DescRec=5 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 43 Adjoin=0,0,7,44,0,0 Out=0 DescRec=8 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 44 Adjoin=0,0,43,45,0,0 Out=0 DescRec=8 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 45 Adjoin=0,0,44,46,0,0 Out=0 DescRec=8 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 46 Adjoin=0,0,45,47,0,0 Out=0 DescRec=8 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 47 Adjoin=0,0,46,48,0,0 Out=0 DescRec=8 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 23 Adjoin=24,22,0,0,0,0 Out=0 DescRec=3 DescCode=3 WhichEncounter=1 EncounterTime=100 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Meadow margin"
+room 24 Adjoin=25,23,0,0,0,0 Out=0 DescRec=3 DescCode=4 WhichEncounter=1 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Willow meadow"
+room 25 Adjoin=26,24,0,0,0,0 Out=0 DescRec=3 DescCode=5 WhichEncounter=1 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Ferny trail"
+room 26 Adjoin=27,25,0,0,0,0 Out=0 DescRec=3 DescCode=6 WhichEncounter=1 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Shallow ford"
+room 27 Adjoin=28,26,0,0,0,0 Out=0 DescRec=3 DescCode=7 WhichEncounter=1 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Old charcoal kiln"
+room 28 Adjoin=29,27,0,32,0,0 Out=0 DescRec=3 DescCode=8 WhichEncounter=2 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Low pine hills"
+room 29 Adjoin=30,28,0,0,0,0 Out=0 DescRec=3 DescCode=9 WhichEncounter=2 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Abandoned campsite"
+room 30 Adjoin=31,29,0,0,0,0 Out=0 DescRec=3 DescCode=10 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Ruined mill"
+room 31 Adjoin=33,30,0,0,0,0 Out=0 DescRec=4 DescCode=1 WhichEncounter=2 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Ridge path"
+room 32 Adjoin=0,0,28,37,0,0 Out=0 DescRec=4 DescCode=2 WhichEncounter=2 EncounterTime=50 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Bracken ravine"
+room 33 Adjoin=34,31,0,0,0,0 Out=0 DescRec=4 DescCode=3 WhichEncounter=3 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Tower approach"
+room 34 Adjoin=35,33,0,0,0,0 Out=0 DescRec=4 DescCode=4 WhichEncounter=3 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Outer tower yard"
+room 35 Adjoin=0,34,0,0,36,0 Out=0 DescRec=4 DescCode=5 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Inside the watchtower"
+room 36 Adjoin=0,0,0,0,0,35 Out=0 DescRec=4 DescCode=6 WhichEncounter=3 EncounterTime=40 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Watchtower loft"
+room 37 Adjoin=0,0,32,0,0,0 Out=0 DescRec=4 DescCode=7 WhichEncounter=2 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Hill shrine"
+room 38 Adjoin=0,0,19,39,0,0 Out=0 DescRec=4 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Western sheep path"
+room 39 Adjoin=0,0,38,0,0,0 Out=0 DescRec=4 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Sheep pasture"
+room 40 Adjoin=0,8,0,0,0,0 Out=0 DescRec=4 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Guild library"
+room 41 Adjoin=42,0,0,16,0,0 Out=0 DescRec=5 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Eastern promenade"
+room 42 Adjoin=0,41,0,0,0,0 Out=0 DescRec=5 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Training yard"
+room 43 Adjoin=0,0,7,44,0,0 Out=0 DescRec=8 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Chapel Cloister"
+room 44 Adjoin=0,0,43,45,0,0 Out=0 DescRec=8 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="West pilgrim road"
+room 45 Adjoin=0,0,44,46,0,0 Out=0 DescRec=8 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Memorial garden"
+room 46 Adjoin=0,0,45,47,0,0 Out=0 DescRec=8 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Graveward Watch Post"
+room 47 Adjoin=0,0,46,48,0,0 Out=0 DescRec=8 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Graveward Warning Gate"
 room 47 obj 1 Name="sign,graveward *" Article=A Weight=100 Price=0 DescCode=6 DescRec=9 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 48 Adjoin=0,0,47,49,0,0 Out=0 DescRec=8 DescCode=6 WhichEncounter=4 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 49 Adjoin=56,0,48,50,0,0 Out=0 DescRec=8 DescCode=7 WhichEncounter=4 EncounterTime=95 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 50 Adjoin=0,0,49,51,0,0 Out=0 DescRec=8 DescCode=8 WhichEncounter=4 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 51 Adjoin=0,0,50,0,0,52 Out=0 DescRec=8 DescCode=9 WhichEncounter=5 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 52 Adjoin=0,0,0,53,51,0 Out=0 DescRec=8 DescCode=10 WhichEncounter=5 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 53 Adjoin=0,55,52,54,0,0 Out=0 DescRec=9 DescCode=1 WhichEncounter=5 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 54 Adjoin=0,0,53,57,0,0 Out=0 DescRec=9 DescCode=2 WhichEncounter=6 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 55 Adjoin=53,0,0,0,0,0 Out=0 DescRec=9 DescCode=4 WhichEncounter=5 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 56 Adjoin=0,49,0,0,0,0 Out=0 DescRec=9 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 57 Adjoin=0,0,54,0,0,0 Out=0 DescRec=9 DescCode=3 WhichEncounter=6 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 58 Adjoin=15,0,0,59,0,0 Out=0 DescRec=11 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 59 Adjoin=0,0,58,60,0,0 Out=0 DescRec=11 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 60 Adjoin=0,0,59,61,0,0 Out=0 DescRec=11 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 48 Adjoin=0,0,47,49,0,0 Out=0 DescRec=8 DescCode=6 WhichEncounter=4 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Neglected graves"
+room 49 Adjoin=56,0,48,50,0,0 Out=0 DescRec=8 DescCode=7 WhichEncounter=4 EncounterTime=95 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Cemetery path"
+room 50 Adjoin=0,0,49,51,0,0 Out=0 DescRec=8 DescCode=8 WhichEncounter=4 EncounterTime=85 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Open grave"
+room 51 Adjoin=0,0,50,0,0,52 Out=0 DescRec=8 DescCode=9 WhichEncounter=5 EncounterTime=75 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Old mausoleum"
+room 52 Adjoin=0,0,0,53,51,0 Out=0 DescRec=8 DescCode=10 WhichEncounter=5 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Mausoleum hall"
+room 53 Adjoin=0,55,52,54,0,0 Out=0 DescRec=9 DescCode=1 WhichEncounter=5 EncounterTime=60 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Ossuary passage"
+room 54 Adjoin=0,0,53,57,0,0 Out=0 DescRec=9 DescCode=2 WhichEncounter=6 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Bone guard chamber"
+room 55 Adjoin=53,0,0,0,0,0 Out=0 DescRec=9 DescCode=4 WhichEncounter=5 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Sealed side chapel"
+room 56 Adjoin=0,49,0,0,0,0 Out=0 DescRec=9 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Graveyard overlook"
+room 57 Adjoin=0,0,54,0,0,0 Out=0 DescRec=9 DescCode=3 WhichEncounter=6 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Deepest crypt"
+room 58 Adjoin=15,0,0,59,0,0 Out=0 DescRec=11 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="South-west lane"
+room 59 Adjoin=0,0,58,60,0,0 Out=0 DescRec=11 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Old causeway"
+room 60 Adjoin=0,0,59,61,0,0 Out=0 DescRec=11 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Keep warning board"
 room 60 obj 1 Name="sign,lockspire *" Article=A Weight=100 Price=0 DescCode=2 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 61 Adjoin=0,0,60,62,0,0 Out=0 DescRec=11 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 62 Adjoin=0,0,61,63,0,0 Out=0 DescRec=11 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 63 Adjoin=0,0,62,65,0,0 Out=0 DescRec=11 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 61 Adjoin=0,0,60,62,0,0 Out=0 DescRec=11 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Lockspire courtyard"
+room 62 Adjoin=0,0,61,63,0,0 Out=0 DescRec=11 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Ground-floor entry"
+room 63 Adjoin=0,0,62,65,0,0 Out=0 DescRec=11 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Novice lock hall"
 room 63 obj 1 Name="door,brass *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=64 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=101
 room 63 obj 2 Name="door,needle *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=76 DClosed=1 DSpring=0 DToll=0 DTrap=2 DLocked=102
-room 64 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 64 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Brass-lock chamber"
 room 64 obj 1 Name="door,brass *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=63 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=101
 room 64 obj 2 Name="chest,practice *" Article=A Weight=100 Price=0 DescCode=4 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=1 Locked=102 NumInside=1
 room 64 obj 2.1 Name="token,copper *" Article=A Weight=1 Price=20 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 65 Adjoin=0,0,63,0,66,0 Out=0 DescRec=11 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 66 Adjoin=0,0,0,67,0,65 Out=0 DescRec=11 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 67 Adjoin=0,0,66,69,0,0 Out=0 DescRec=12 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 65 Adjoin=0,0,63,0,66,0 Out=0 DescRec=11 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="First stairwell"
+room 66 Adjoin=0,0,0,67,0,65 Out=0 DescRec=11 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Second landing"
+room 67 Adjoin=0,0,66,69,0,0 Out=0 DescRec=12 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Warded corridor"
 room 67 obj 1 Name="door,records *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=68 DClosed=1 DSpring=0 DToll=0 DTrap=5 DLocked=204
 room 67 obj 2 Name="door,armory *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=77 DClosed=1 DSpring=0 DToll=0 DTrap=8 DLocked=205
-room 68 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 68 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Old records room"
 room 68 obj 1 Name="door,records *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=67 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=204
 room 68 obj 2 Name="chest,records *" Article=A Weight=100 Price=0 DescCode=5 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=8 Locked=205 NumInside=1
 room 68 obj 2.1 Name="clasp,silver *" Article=A Weight=1 Price=75 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 69 Adjoin=0,0,67,0,70,0 Out=0 DescRec=12 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 70 Adjoin=0,0,0,71,0,69 Out=0 DescRec=12 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 71 Adjoin=0,0,70,73,0,0 Out=0 DescRec=12 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 69 Adjoin=0,0,67,0,70,0 Out=0 DescRec=12 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Second stairwell"
+room 70 Adjoin=0,0,0,71,0,69 Out=0 DescRec=12 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Third landing"
+room 71 Adjoin=0,0,70,73,0,0 Out=0 DescRec=12 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Master lock hall"
 room 71 obj 1 Name="door,jewel *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=72 DClosed=1 DSpring=0 DToll=0 DTrap=11 DLocked=307
 room 71 obj 2 Name="door,artificer *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=78 DClosed=1 DSpring=0 DToll=0 DTrap=12 DLocked=308
-room 72 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 72 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Jewel chamber"
 room 72 obj 1 Name="door,jewel *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=71 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=307
 room 72 obj 2 Name="chest,jewel *" Article=A Weight=100 Price=0 DescCode=8 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=16 Locked=308 NumInside=1
 room 72 obj 2.1 Name="brooch,gold *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 73 Adjoin=0,0,71,0,74,0 Out=0 DescRec=12 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 74 Adjoin=0,0,0,0,0,73 Out=0 DescRec=12 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 73 Adjoin=0,0,71,0,74,0 Out=0 DescRec=12 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Roof stair"
+room 74 Adjoin=0,0,0,0,0,73 Out=0 DescRec=12 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Battlement"
 room 74 obj 1 Name="door,crowning *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=75 DClosed=1 DSpring=0 DToll=0 DTrap=18 DLocked=409
-room 75 Adjoin=0,0,0,0,0,0 Out=0 DescRec=13 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 75 Adjoin=0,0,0,0,0,0 Out=0 DescRec=13 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Crowning vault"
 room 75 obj 1 Name="door,crowning *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=74 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=409
 room 75 obj 2 Name="chest,crown *" Article=A Weight=100 Price=0 DescCode=10 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=19 Locked=409 NumInside=1
 room 75 obj 2.1 Name="diadem,ancient *" Article=An Weight=2 Price=650 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 76 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 76 Adjoin=0,0,0,0,0,0 Out=0 DescRec=11 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Needle-lock chamber"
 room 76 obj 1 Name="door,needle *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=63 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=102
 room 76 obj 2 Name="chest,needle *" Article=A Weight=100 Price=0 DescCode=5 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=3 Locked=103 NumInside=1
 room 76 obj 2.1 Name="token,copper *" Article=A Weight=1 Price=30 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 77 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 77 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Armory vault"
 room 77 obj 1 Name="door,armory *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=67 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=205
 room 77 obj 2 Name="chest,armory *" Article=A Weight=100 Price=0 DescCode=6 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=12 Locked=206 NumInside=1
 room 77 obj 2.1 Name="brooch,gold *" Article=A Weight=1 Price=180 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 78 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 78 Adjoin=0,0,0,0,0,0 Out=0 DescRec=12 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Artificer's treasury"
 room 78 obj 1 Name="door,artificer *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=71 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=308
 room 78 obj 2 Name="chest,clockwork *" Article=A Weight=100 Price=0 DescCode=9 DescRec=13 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=17 Locked=309 NumInside=1
 room 78 obj 2.1 Name="crystal,prismatic *" Article=A Weight=1 Price=360 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Treasure
-room 79 Adjoin=0,0,6,80,0,0 Out=0 DescRec=14 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 80 Adjoin=81,93,79,0,0,0 Out=0 DescRec=14 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 81 Adjoin=0,80,91,82,0,0 Out=0 DescRec=14 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 82 Adjoin=0,92,81,83,0,0 Out=0 DescRec=14 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
-room 83 Adjoin=84,0,82,0,0,0 Out=0 DescRec=14 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 79 Adjoin=0,0,6,80,0,0 Out=0 DescRec=14 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Scholar's Walk"
+room 80 Adjoin=81,93,79,0,0,0 Out=0 DescRec=14 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Arcane garden"
+room 81 Adjoin=0,80,91,82,0,0 Out=0 DescRec=14 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Novice colonnade"
+room 82 Adjoin=0,92,81,83,0,0 Out=0 DescRec=14 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Crystal causeway"
+room 83 Adjoin=84,0,82,0,0,0 Out=0 DescRec=14 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Aether Warning Gate"
 room 83 obj 1 Name="sign,aether *" Article=A Weight=100 Price=0 DescCode=3 DescRec=16 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 84 Adjoin=85,83,0,0,0,0 Out=0 DescRec=14 DescCode=6 WhichEncounter=7 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 85 Adjoin=0,84,0,86,0,0 Out=0 DescRec=14 DescCode=7 WhichEncounter=7 EncounterTime=90 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 86 Adjoin=87,0,85,0,0,0 Out=0 DescRec=14 DescCode=8 WhichEncounter=8 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 87 Adjoin=0,86,0,0,88,0 Out=0 DescRec=14 DescCode=9 WhichEncounter=8 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 88 Adjoin=0,0,0,0,89,87 Out=0 DescRec=14 DescCode=10 WhichEncounter=8 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 89 Adjoin=0,0,0,0,90,88 Out=0 DescRec=15 DescCode=1 WhichEncounter=9 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 90 Adjoin=0,0,0,0,0,89 Out=0 DescRec=15 DescCode=2 WhichEncounter=9 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 91 Adjoin=0,94,0,81,0,0 Out=0 DescRec=15 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 84 Adjoin=85,83,0,0,0,0 Out=0 DescRec=14 DescCode=6 WhichEncounter=7 EncounterTime=110 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Spark meadow"
+room 85 Adjoin=0,84,0,86,0,0 Out=0 DescRec=14 DescCode=7 WhichEncounter=7 EncounterTime=90 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Mirror thicket"
+room 86 Adjoin=87,0,85,0,0,0 Out=0 DescRec=14 DescCode=8 WhichEncounter=8 EncounterTime=80 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Shattered arch"
+room 87 Adjoin=0,86,0,0,88,0 Out=0 DescRec=14 DescCode=9 WhichEncounter=8 EncounterTime=70 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Broken observatory"
+room 88 Adjoin=0,0,0,0,89,87 Out=0 DescRec=14 DescCode=10 WhichEncounter=8 EncounterTime=65 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Stargazer's loft"
+room 89 Adjoin=0,0,0,0,90,88 Out=0 DescRec=15 DescCode=1 WhichEncounter=9 EncounterTime=55 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Upper prism hall"
+room 90 Adjoin=0,0,0,0,0,89 Out=0 DescRec=15 DescCode=2 WhichEncounter=9 EncounterTime=45 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="High aether chamber"
+room 91 Adjoin=0,94,0,81,0,0 Out=0 DescRec=15 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Spell library"
 room 91 obj 1 Name="sign,lessons *" Article=A Weight=100 Price=0 DescCode=4 DescRec=16 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
-room 92 Adjoin=82,0,0,0,0,0 Out=0 DescRec=15 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=1 Dark=0
-room 93 Adjoin=80,0,0,0,0,0 Out=0 DescRec=15 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 92 Adjoin=82,0,0,0,0,0 Out=0 DescRec=15 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=1 Dark=0 Name="Null-magic room"
+room 93 Adjoin=80,0,0,0,0,0 Out=0 DescRec=15 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Apprentice workshop"
 room 93 obj 1 Name="scroll,apprentice *" Article=A Weight=1 Price=45 DescCode=5 DescRec=16 Carry=1 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=Scroll Spell=2
-room 94 Adjoin=91,0,0,0,0,0 Out=0 DescRec=15 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=1
+room 94 Adjoin=91,0,0,0,0,0 Out=0 DescRec=15 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=1 Name="Darkened study"
 room 94 obj 1 Name="lantern,brass *" Article=A Weight=3 Price=0 DescCode=9 DescRec=16 Carry=0 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=23 NumCharges=127 MLevel=0
 rooms 2000 shown 94
 players 0
-world Id="e90e51a4-3d12-408d-9c25-d8f9af6fef5c" Name="Havenford" Revision="f8286c1dba26e78bd13c86dce808f15bb4574b4b6ea0df0f73ab7365985f534e"
-world event Event=WMade Revision="f8286c1dba26e78bd13c86dce808f15bb4574b4b6ea0df0f73ab7365985f534e" Schema=5
+world Id="e90e51a4-3d12-408d-9c25-d8f9af6fef5c" Name="Havenford" Revision="097c32b20d582904e1ff4694a9b2535e3f541f5db56c8bfc10fa9b34927aec3d"
+world event Event=WMade Revision="097c32b20d582904e1ff4694a9b2535e3f541f5db56c8bfc10fa9b34927aec3d" Schema=5

@@ -243,6 +243,7 @@
   "rooms": [
     {
       "id": 1,
+      "name": "Havenford Refuge",
       "exits": [0, 0, 2, 0, 0, 0],
       "area": 1,
       "x": 0,
@@ -252,6 +253,7 @@
     },
     {
       "id": 2,
+      "name": "Havenford Square",
       "exits": [3, 10, 16, 1, 0, 0],
       "area": 1,
       "x": 1,
@@ -261,6 +263,7 @@
     },
     {
       "id": 3,
+      "name": "Guild Street",
       "exits": [6, 2, 5, 4, 0, 0],
       "area": 1,
       "x": 1,
@@ -270,6 +273,7 @@
     },
     {
       "id": 4,
+      "name": "Hall of Blades",
       "exits": [7, 0, 3, 0, 0, 0],
       "area": 1,
       "x": -1,
@@ -280,6 +284,7 @@
     },
     {
       "id": 5,
+      "name": "Scout Lodge",
       "exits": [0, 0, 0, 3, 0, 0],
       "area": 1,
       "x": 2,
@@ -290,6 +295,7 @@
     },
     {
       "id": 6,
+      "name": "Academy of Sparks",
       "exits": [0, 3, 9, 79, 0, 0],
       "area": 1,
       "x": 1,
@@ -300,6 +306,7 @@
     },
     {
       "id": 7,
+      "name": "Lantern Chapel",
       "exits": [8, 4, 0, 43, 0, 0],
       "area": 1,
       "x": -1,
@@ -310,6 +317,7 @@
     },
     {
       "id": 8,
+      "name": "Shadow School",
       "exits": [40, 7, 0, 0, 0, 0],
       "area": 1,
       "x": -1,
@@ -320,6 +328,7 @@
     },
     {
       "id": 9,
+      "name": "Hall of Stewards",
       "exits": [0, 0, 0, 6, 0, 0],
       "area": 1,
       "x": 2,
@@ -330,6 +339,7 @@
     },
     {
       "id": 10,
+      "name": "Market Lane",
       "exits": [2, 13, 11, 12, 0, 0],
       "area": 1,
       "x": 1,
@@ -339,6 +349,7 @@
     },
     {
       "id": 11,
+      "name": "Provisioner",
       "exits": [0, 0, 0, 10, 0, 0],
       "area": 1,
       "x": 2,
@@ -350,6 +361,7 @@
     },
     {
       "id": 12,
+      "name": "Smithy",
       "exits": [0, 0, 10, 0, 0, 0],
       "area": 1,
       "x": 0,
@@ -361,6 +373,7 @@
     },
     {
       "id": 13,
+      "name": "River Inn",
       "exits": [10, 0, 14, 15, 0, 0],
       "area": 1,
       "x": 1,
@@ -373,6 +386,7 @@
     },
     {
       "id": 14,
+      "name": "Notice Kiosk",
       "exits": [0, 0, 0, 13, 0, 0],
       "area": 1,
       "x": 2,
@@ -384,6 +398,7 @@
     },
     {
       "id": 15,
+      "name": "Exchange",
       "exits": [0, 58, 13, 0, 0, 0],
       "area": 1,
       "x": 0,
@@ -395,6 +410,7 @@
     },
     {
       "id": 16,
+      "name": "Public garden",
       "exits": [17, 0, 41, 2, 0, 0],
       "area": 1,
       "x": 3,
@@ -404,6 +420,7 @@
     },
     {
       "id": 17,
+      "name": "North Gate",
       "exits": [18, 16, 0, 0, 0, 0],
       "area": 1,
       "x": 3,
@@ -423,6 +440,7 @@
     },
     {
       "id": 18,
+      "name": "Road past the walls",
       "exits": [19, 17, 0, 0, 0, 0],
       "area": 1,
       "x": 3,
@@ -432,6 +450,7 @@
     },
     {
       "id": 19,
+      "name": "Orchard crossroads",
       "exits": [21, 18, 20, 38, 0, 0],
       "area": 1,
       "x": 3,
@@ -441,6 +460,7 @@
     },
     {
       "id": 20,
+      "name": "Quiet orchard",
       "exits": [0, 0, 0, 19, 0, 0],
       "area": 1,
       "x": 4,
@@ -450,6 +470,7 @@
     },
     {
       "id": 21,
+      "name": "Sunlit farm track",
       "exits": [22, 19, 0, 0, 0, 0],
       "area": 1,
       "x": 3,
@@ -459,6 +480,7 @@
     },
     {
       "id": 22,
+      "name": "Frontier Warning Post",
       "exits": [23, 21, 0, 0, 0, 0],
       "area": 1,
       "x": 3,
@@ -478,6 +500,7 @@
     },
     {
       "id": 23,
+      "name": "Meadow margin",
       "exits": [24, 22, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -488,6 +511,7 @@
     },
     {
       "id": 24,
+      "name": "Willow meadow",
       "exits": [25, 23, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -498,6 +522,7 @@
     },
     {
       "id": 25,
+      "name": "Ferny trail",
       "exits": [26, 24, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -508,6 +533,7 @@
     },
     {
       "id": 26,
+      "name": "Shallow ford",
       "exits": [27, 25, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -518,6 +544,7 @@
     },
     {
       "id": 27,
+      "name": "Old charcoal kiln",
       "exits": [28, 26, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -528,6 +555,7 @@
     },
     {
       "id": 28,
+      "name": "Low pine hills",
       "exits": [29, 27, 0, 32, 0, 0],
       "area": 2,
       "x": 3,
@@ -538,6 +566,7 @@
     },
     {
       "id": 29,
+      "name": "Abandoned campsite",
       "exits": [30, 28, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -548,6 +577,7 @@
     },
     {
       "id": 30,
+      "name": "Ruined mill",
       "exits": [31, 29, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -558,6 +588,7 @@
     },
     {
       "id": 31,
+      "name": "Ridge path",
       "exits": [33, 30, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -568,6 +599,7 @@
     },
     {
       "id": 32,
+      "name": "Bracken ravine",
       "exits": [0, 0, 28, 37, 0, 0],
       "area": 2,
       "x": 2,
@@ -578,6 +610,7 @@
     },
     {
       "id": 33,
+      "name": "Tower approach",
       "exits": [34, 31, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -588,6 +621,7 @@
     },
     {
       "id": 34,
+      "name": "Outer tower yard",
       "exits": [35, 33, 0, 0, 0, 0],
       "area": 2,
       "x": 3,
@@ -598,6 +632,7 @@
     },
     {
       "id": 35,
+      "name": "Inside the watchtower",
       "exits": [0, 34, 0, 0, 36, 0],
       "area": 2,
       "x": 3,
@@ -608,6 +643,7 @@
     },
     {
       "id": 36,
+      "name": "Watchtower loft",
       "exits": [0, 0, 0, 0, 0, 35],
       "area": 2,
       "x": 3,
@@ -619,6 +655,7 @@
     },
     {
       "id": 37,
+      "name": "Hill shrine",
       "exits": [0, 0, 32, 0, 0, 0],
       "area": 2,
       "x": 1,
@@ -629,6 +666,7 @@
     },
     {
       "id": 38,
+      "name": "Western sheep path",
       "exits": [0, 0, 19, 39, 0, 0],
       "area": 1,
       "x": 2,
@@ -638,6 +676,7 @@
     },
     {
       "id": 39,
+      "name": "Sheep pasture",
       "exits": [0, 0, 38, 0, 0, 0],
       "area": 1,
       "x": 1,
@@ -647,6 +686,7 @@
     },
     {
       "id": 40,
+      "name": "Guild library",
       "exits": [0, 8, 0, 0, 0, 0],
       "area": 1,
       "x": -1,
@@ -656,6 +696,7 @@
     },
     {
       "id": 41,
+      "name": "Eastern promenade",
       "exits": [42, 0, 0, 16, 0, 0],
       "area": 1,
       "x": 4,
@@ -665,6 +706,7 @@
     },
     {
       "id": 42,
+      "name": "Training yard",
       "exits": [0, 41, 0, 0, 0, 0],
       "area": 1,
       "x": 4,
@@ -674,6 +716,7 @@
     },
     {
       "id": 43,
+      "name": "Chapel Cloister",
       "exits": [0, 0, 7, 44, 0, 0],
       "area": 3,
       "x": -2,
@@ -683,6 +726,7 @@
     },
     {
       "id": 44,
+      "name": "West pilgrim road",
       "exits": [0, 0, 43, 45, 0, 0],
       "area": 3,
       "x": -3,
@@ -692,6 +736,7 @@
     },
     {
       "id": 45,
+      "name": "Memorial garden",
       "exits": [0, 0, 44, 46, 0, 0],
       "area": 3,
       "x": -4,
@@ -701,6 +746,7 @@
     },
     {
       "id": 46,
+      "name": "Graveward Watch Post",
       "exits": [0, 0, 45, 47, 0, 0],
       "area": 3,
       "x": -5,
@@ -710,6 +756,7 @@
     },
     {
       "id": 47,
+      "name": "Graveward Warning Gate",
       "exits": [0, 0, 46, 48, 0, 0],
       "area": 3,
       "x": -6,
@@ -729,6 +776,7 @@
     },
     {
       "id": 48,
+      "name": "Neglected graves",
       "exits": [0, 0, 47, 49, 0, 0],
       "area": 3,
       "x": -7,
@@ -739,6 +787,7 @@
     },
     {
       "id": 49,
+      "name": "Cemetery path",
       "exits": [56, 0, 48, 50, 0, 0],
       "area": 3,
       "x": -8,
@@ -749,6 +798,7 @@
     },
     {
       "id": 50,
+      "name": "Open grave",
       "exits": [0, 0, 49, 51, 0, 0],
       "area": 3,
       "x": -9,
@@ -759,6 +809,7 @@
     },
     {
       "id": 51,
+      "name": "Old mausoleum",
       "exits": [0, 0, 50, 0, 0, 52],
       "area": 3,
       "x": -10,
@@ -769,6 +820,7 @@
     },
     {
       "id": 52,
+      "name": "Mausoleum hall",
       "exits": [0, 0, 0, 53, 51, 0],
       "area": 3,
       "x": -10,
@@ -780,6 +832,7 @@
     },
     {
       "id": 53,
+      "name": "Ossuary passage",
       "exits": [0, 55, 52, 54, 0, 0],
       "area": 3,
       "x": -11,
@@ -791,6 +844,7 @@
     },
     {
       "id": 54,
+      "name": "Bone guard chamber",
       "exits": [0, 0, 53, 57, 0, 0],
       "area": 3,
       "x": -12,
@@ -802,6 +856,7 @@
     },
     {
       "id": 55,
+      "name": "Sealed side chapel",
       "exits": [53, 0, 0, 0, 0, 0],
       "area": 3,
       "x": -11,
@@ -813,6 +868,7 @@
     },
     {
       "id": 56,
+      "name": "Graveyard overlook",
       "exits": [0, 49, 0, 0, 0, 0],
       "area": 3,
       "x": -8,
@@ -822,6 +878,7 @@
     },
     {
       "id": 57,
+      "name": "Deepest crypt",
       "exits": [0, 0, 54, 0, 0, 0],
       "area": 3,
       "x": -13,
@@ -833,6 +890,7 @@
     },
     {
       "id": 58,
+      "name": "South-west lane",
       "exits": [15, 0, 0, 59, 0, 0],
       "area": 4,
       "x": 0,
@@ -842,6 +900,7 @@
     },
     {
       "id": 59,
+      "name": "Old causeway",
       "exits": [0, 0, 58, 60, 0, 0],
       "area": 4,
       "x": -1,
@@ -851,6 +910,7 @@
     },
     {
       "id": 60,
+      "name": "Keep warning board",
       "exits": [0, 0, 59, 61, 0, 0],
       "area": 4,
       "x": -2,
@@ -870,6 +930,7 @@
     },
     {
       "id": 61,
+      "name": "Lockspire courtyard",
       "exits": [0, 0, 60, 62, 0, 0],
       "area": 4,
       "x": -3,
@@ -879,6 +940,7 @@
     },
     {
       "id": 62,
+      "name": "Ground-floor entry",
       "exits": [0, 0, 61, 63, 0, 0],
       "area": 4,
       "x": -4,
@@ -889,6 +951,7 @@
     },
     {
       "id": 63,
+      "name": "Novice lock hall",
       "exits": [0, 0, 62, 65, 0, 0],
       "area": 4,
       "x": -5,
@@ -914,6 +977,7 @@
     },
     {
       "id": 64,
+      "name": "Brass-lock chamber",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -5,
@@ -955,6 +1019,7 @@
     },
     {
       "id": 65,
+      "name": "First stairwell",
       "exits": [0, 0, 63, 0, 66, 0],
       "area": 4,
       "x": -6,
@@ -964,6 +1029,7 @@
     },
     {
       "id": 66,
+      "name": "Second landing",
       "exits": [0, 0, 0, 67, 0, 65],
       "area": 4,
       "x": -6,
@@ -974,6 +1040,7 @@
     },
     {
       "id": 67,
+      "name": "Warded corridor",
       "exits": [0, 0, 66, 69, 0, 0],
       "area": 4,
       "x": -7,
@@ -1000,6 +1067,7 @@
     },
     {
       "id": 68,
+      "name": "Old records room",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -7,
@@ -1042,6 +1110,7 @@
     },
     {
       "id": 69,
+      "name": "Second stairwell",
       "exits": [0, 0, 67, 0, 70, 0],
       "area": 4,
       "x": -8,
@@ -1052,6 +1121,7 @@
     },
     {
       "id": 70,
+      "name": "Third landing",
       "exits": [0, 0, 0, 71, 0, 69],
       "area": 4,
       "x": -8,
@@ -1062,6 +1132,7 @@
     },
     {
       "id": 71,
+      "name": "Master lock hall",
       "exits": [0, 0, 70, 73, 0, 0],
       "area": 4,
       "x": -9,
@@ -1088,6 +1159,7 @@
     },
     {
       "id": 72,
+      "name": "Jewel chamber",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -9,
@@ -1130,6 +1202,7 @@
     },
     {
       "id": 73,
+      "name": "Roof stair",
       "exits": [0, 0, 71, 0, 74, 0],
       "area": 4,
       "x": -10,
@@ -1140,6 +1213,7 @@
     },
     {
       "id": 74,
+      "name": "Battlement",
       "exits": [0, 0, 0, 0, 0, 73],
       "area": 4,
       "x": -10,
@@ -1159,6 +1233,7 @@
     },
     {
       "id": 75,
+      "name": "Crowning vault",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -11,
@@ -1201,6 +1276,7 @@
     },
     {
       "id": 76,
+      "name": "Needle-lock chamber",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -5,
@@ -1242,6 +1318,7 @@
     },
     {
       "id": 77,
+      "name": "Armory vault",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -7,
@@ -1284,6 +1361,7 @@
     },
     {
       "id": 78,
+      "name": "Artificer's treasury",
       "exits": [0, 0, 0, 0, 0, 0],
       "area": 4,
       "x": -9,
@@ -1326,6 +1404,7 @@
     },
     {
       "id": 79,
+      "name": "Scholar's Walk",
       "exits": [0, 0, 6, 80, 0, 0],
       "area": 5,
       "x": 0,
@@ -1335,6 +1414,7 @@
     },
     {
       "id": 80,
+      "name": "Arcane garden",
       "exits": [81, 93, 79, 0, 0, 0],
       "area": 5,
       "x": -1,
@@ -1344,6 +1424,7 @@
     },
     {
       "id": 81,
+      "name": "Novice colonnade",
       "exits": [0, 80, 91, 82, 0, 0],
       "area": 5,
       "x": -1,
@@ -1353,6 +1434,7 @@
     },
     {
       "id": 82,
+      "name": "Crystal causeway",
       "exits": [0, 92, 81, 83, 0, 0],
       "area": 5,
       "x": -2,
@@ -1362,6 +1444,7 @@
     },
     {
       "id": 83,
+      "name": "Aether Warning Gate",
       "exits": [84, 0, 82, 0, 0, 0],
       "area": 5,
       "x": -3,
@@ -1381,6 +1464,7 @@
     },
     {
       "id": 84,
+      "name": "Spark meadow",
       "exits": [85, 83, 0, 0, 0, 0],
       "area": 5,
       "x": -3,
@@ -1391,6 +1475,7 @@
     },
     {
       "id": 85,
+      "name": "Mirror thicket",
       "exits": [0, 84, 0, 86, 0, 0],
       "area": 5,
       "x": -3,
@@ -1401,6 +1486,7 @@
     },
     {
       "id": 86,
+      "name": "Shattered arch",
       "exits": [87, 0, 85, 0, 0, 0],
       "area": 5,
       "x": -4,
@@ -1411,6 +1497,7 @@
     },
     {
       "id": 87,
+      "name": "Broken observatory",
       "exits": [0, 86, 0, 0, 88, 0],
       "area": 5,
       "x": -4,
@@ -1421,6 +1508,7 @@
     },
     {
       "id": 88,
+      "name": "Stargazer's loft",
       "exits": [0, 0, 0, 0, 89, 87],
       "area": 5,
       "x": -4,
@@ -1432,6 +1520,7 @@
     },
     {
       "id": 89,
+      "name": "Upper prism hall",
       "exits": [0, 0, 0, 0, 90, 88],
       "area": 5,
       "x": -4,
@@ -1443,6 +1532,7 @@
     },
     {
       "id": 90,
+      "name": "High aether chamber",
       "exits": [0, 0, 0, 0, 0, 89],
       "area": 5,
       "x": -4,
@@ -1454,6 +1544,7 @@
     },
     {
       "id": 91,
+      "name": "Spell library",
       "exits": [0, 94, 0, 81, 0, 0],
       "area": 5,
       "x": 0,
@@ -1473,6 +1564,7 @@
     },
     {
       "id": 92,
+      "name": "Null-magic room",
       "exits": [82, 0, 0, 0, 0, 0],
       "area": 5,
       "x": -2,
@@ -1483,6 +1575,7 @@
     },
     {
       "id": 93,
+      "name": "Apprentice workshop",
       "exits": [80, 0, 0, 0, 0, 0],
       "area": 5,
       "x": -1,
@@ -1506,6 +1599,7 @@
     },
     {
       "id": 94,
+      "name": "Darkened study",
       "exits": [91, 0, 0, 0, 0, 0],
       "area": 5,
       "x": 1,
