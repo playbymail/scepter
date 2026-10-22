@@ -157,6 +157,9 @@ manages them from outside the game (#139):
   FILE` with `ZZ=` or `AS=`, `DELETE FILE`), or the account that ran
   `dmadmin` (`$SUDO_USER` under sudo, otherwise the login name).
 
+To change a character's level, stats or equipment in the game, see
+[how-to/update-an-online-character.md](how-to/update-an-online-character.md).
+
 A DM made this way also logs in through the console harness, for testing
 the DM commands:
 
