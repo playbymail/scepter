@@ -19,7 +19,7 @@ import tempfile
 import time
 
 IAC, DONT, DO, WONT, WILL, SB, GA, SE = 255, 254, 253, 252, 251, 250, 249, 240
-ECHO, SGA, TTYPE, NAWS = 1, 3, 24, 31
+ECHO, SGA, TTYPE, NAWS, GMCP = 1, 3, 24, 31, 201
 PROMPT_END = bytes([IAC, GA])
 
 PORT = None
@@ -151,6 +151,67 @@ def test_telnet():
     check(c.quiet(rb"."), "empty lines at a prompt are ignored")
     c.send(b"Sto" + bytes([IAC, IAC]) + b"p\r\n")
     check(c.eof() is not None, "'stop' at the name prompt disconnects")
+    c.close()
+
+
+def gmcp(package, data):
+    return bytes([IAC, SB, GMCP]) + package.encode() + b" " + data + bytes([IAC, SE])
+
+
+GOODBYE = re.escape(gmcp("Core.Goodbye", b'"Goodbye."'))
+
+
+def test_gmcp():
+    """#189: GMCP is offered, used once accepted, and never sent otherwise."""
+    c = Client()
+    got = c.expect(prompt("Enter your name? "))
+    check(got is not None and got.startswith(bytes([IAC, WILL, GMCP])),
+          "a new connection is offered IAC WILL GMCP")
+    if not got:
+        return
+    c.send(bytes([IAC, DO, GMCP]))
+    check(c.quiet(rb"\xff"), "IAC DO GMCP gets no reply")
+    c.send(gmcp("Core.Hello", b'{"client": "nettest", "version": "1"}'))
+    c.send(gmcp("Core.Supports.Set", b'[ "Room 1", "Char 1" ]'))
+    check(c.quiet(rb"."), "Core.Hello and Core.Supports.Set get no reply")
+    c.send(bytes([IAC, WILL, GMCP, IAC, DO, ECHO]))
+    check(c.expect(re.escape(bytes([IAC, DONT, GMCP, IAC, WONT, ECHO])))
+          is not None, "IAC WILL GMCP and other options are still refused")
+    c.line("stop")
+    got = c.eof()
+    check(got is not None and re.search(GOODBYE, got) is not None,
+          "a client that accepted GMCP gets Core.Goodbye")
+    c.close()
+
+    c = Client()
+    c.expect(prompt("Enter your name? "))
+    c.line("stop")
+    got = c.eof()
+    check(got is not None and bytes([IAC, SB]) not in got,
+          "a client that never answered gets no GMCP")
+    c.close()
+
+    c = Client()
+    c.expect(prompt("Enter your name? "))
+    c.send(bytes([IAC, DONT, GMCP]))
+    check(c.quiet(rb"\xff"), "IAC DONT GMCP gets no reply")
+    c.line("stop")
+    got = c.eof()
+    check(got is not None and bytes([IAC, SB]) not in got,
+          "a client that refused GMCP gets none")
+    c.close()
+
+    c = Client()
+    c.expect(prompt("Enter your name? "))
+    c.send(bytes([IAC, DO, GMCP, IAC, DONT, GMCP]))
+    check(c.quiet(rb"\xff"), "IAC DO then DONT GMCP get no reply")
+    c.send(bytes([IAC, DO, GMCP]))
+    check(c.expect(re.escape(bytes([IAC, WILL, GMCP]))) is not None,
+          "IAC DO GMCP after a DONT is agreed to with IAC WILL GMCP")
+    c.line("stop")
+    got = c.eof()
+    check(got is not None and re.search(GOODBYE, got) is not None,
+          "and GMCP is sent again")
     c.close()
 
 
@@ -299,6 +360,7 @@ def main():
                     time.sleep(0.1)
             try:
                 test_telnet()
+                test_gmcp()
                 a, b = test_two_players()
                 if a:
                     test_hangup(a, b)

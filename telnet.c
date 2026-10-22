@@ -14,9 +14,15 @@
  *				hand the game an empty line, as an idle client did
  *   2<text>	text, then close the connection
  *   3			"End - aborted", then close
+ *   5<pkg> <json>	a GMCP message, for a client that accepted GMCP; it is
+ *				held at a prompt, like text, and dropped for any other client
  *
- * Every telnet option is refused (DO -> WONT, WILL -> DONT), so clients
- * stay in line mode and echo locally.  Control characters are stripped from
+ * GMCP (telnet option 201, #189) is offered with IAC WILL GMCP when a
+ * connection opens, and used once the client answers IAC DO GMCP.  IAC DONT
+ * GMCP turns it off without a reply.  What the client sends by GMCP (its
+ * Core.Hello and Core.Supports.Set) is read and ignored.  Every other option
+ * is refused (DO -> WONT, WILL -> DONT), so clients stay in line mode and
+ * echo locally.  Control characters are stripped from
  * input, empty lines are ignored, and lines are capped at LineMax (mud.c
  * allowed 255, one more than its 256-byte message buffer held).
  *
@@ -59,6 +65,8 @@
 #define	TnDONT		254
 #define	TnIAC		255
 
+#define	OptGMCP		201
+
 enum { CFree, CNew, CBusy, CPrompt, CPoll, CClose, CHup };	/* Conn.State */
 enum { TText, TIac, TOpt, TSub, TSubIac };					/* Conn.Tn */
 
@@ -68,6 +76,8 @@ typedef struct
 	int		Fd;
 	int		Tn;				/* telnet input state */
 	int		Verb;			/* WILL/WONT/DO/DONT awaiting its option */
+	int		Gmcp;			/* the client accepted GMCP */
+	int		GmcpOffer;		/* our IAC WILL GMCP awaits its answer */
 	long	PollAt;			/* CPoll: when to send the game an empty line */
 	time_t	LastIn;			/* for Who() */
 	char	Host[64];
@@ -196,7 +206,16 @@ static void Telnet(ConnType *C, int c)
 			break;
 
 		case TOpt:
-			if (C->Verb == TnDO)
+			if (c == OptGMCP && C->Verb == TnDO)
+			{
+				if (!C->Gmcp && !C->GmcpOffer)
+					Reply(C, TnWILL, c);	/* asked again after a DONT */
+				C->Gmcp = TRUE;
+				C->GmcpOffer = FALSE;
+			}
+			else if (c == OptGMCP && C->Verb == TnDONT)
+				C->Gmcp = C->GmcpOffer = FALSE;
+			else if (C->Verb == TnDO)
 				Reply(C, TnWONT, c);
 			else if (C->Verb == TnWILL)
 				Reply(C, TnDONT, c);
@@ -390,6 +409,9 @@ static void Answer(void)
 	C->Tn = TText;
 	C->InLen = C->LineLen = 0;
 	C->OutLen = C->Ready = 0;
+	C->Gmcp = FALSE;
+	C->GmcpOffer = TRUE;
+	Reply(C, TnWILL, OptGMCP);
 	C->LastIn = time(NULL);
 	if (getnameinfo((struct sockaddr *)&sa, len, C->Host, sizeof C->Host,
 					NULL, 0, NI_NUMERICHOST))
@@ -570,6 +592,25 @@ void NetOut(int Chn, char *Str)
 			C->Ready = C->OutLen;
 			if (C->State != CFree && C->State != CHup)
 				C->State = CClose;
+			break;
+
+		case '5':
+			if (C->Gmcp)
+			{
+				static const char	sb[] = { (char)TnIAC, (char)TnSB, (char)OptGMCP },
+									se[] = { (char)TnIAC, (char)TnSE };
+				char	*p, *q;
+
+				Put(C, sb, 3, FALSE);
+				/* IAC in the data is doubled (UTF-8 JSON never has one) */
+				for (p = Str + 1; (q = strchr(p, (char)TnIAC)); p = q + 1)
+				{
+					Put(C, p, (int)(q - p + 1), FALSE);
+					Put(C, q, 1, FALSE);
+				}
+				Put(C, p, (int)strlen(p), FALSE);
+				Put(C, se, 2, C->State != CPrompt);
+			}
 			break;
 	}
 }

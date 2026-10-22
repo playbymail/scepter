@@ -11,7 +11,12 @@
  *   client -> server: 0 login, 1<text> input, 4 hang up
  *   server -> client: 0<text> print line, 1<prompt> read input
  *                     (empty prompt: poll, reply with empty input if idle),
- *                     2<text> print and disconnect, 3 aborted
+ *                     2<text> print and disconnect, 3 aborted,
+ *                     5<package> <json> a GMCP message (#189)
+ *
+ * Only telnet sends GMCP, to clients that accepted it; the console ignores
+ * it.  QGmcp() makes the message.  Before a "2" or "3" a telnet client is
+ * sent Core.Goodbye, with the text it is about to see ("Goodbye." if none).
  *
  * QRea() returns "9" when stdin reaches end of file (telnet: on SIGINT or
  * SIGTERM); main() then shuts down.  With telnet it also returns "7R" on
@@ -193,13 +198,21 @@ void QRea(char *Str, int *Chn)
 
 void QOut(int Chn, char *Str)
 {
-	if (*Str < '0' || *Str > '4')
+	if (*Str < '0' || *Str > '5')
 	{
 		printf("Error in QOut(): %s\n", Str);
 		return;
 	}
 	if (Net)
 	{
+		if (*Str == '2' || *Str == '3')
+		{
+			char	Reason[512];
+
+			JsonString(Reason, sizeof Reason, *Str == '3' ? "End - aborted"
+											: Str[1] ? Str + 1 : "Goodbye.");
+			QGmcp(Chn, "Core.Goodbye", Reason);
+		}
 		NetOut(Chn, Str);
 		return;
 	}
@@ -227,6 +240,46 @@ void QOut(int Chn, char *Str)
 			HavePrompt = FALSE;
 			break;
 	}
+}
+
+/* Send Chn the GMCP message "Package Json"; one too long to send is dropped. */
+void QGmcp(int Chn, const char *Package, const char *Json)
+{
+	char	Msg[8192];
+	int		n = snprintf(Msg, sizeof Msg, "5%s %s", Package, Json);
+
+	if (n > 0 && n < (int)sizeof Msg)
+		QOut(Chn, Msg);
+}
+
+/* Write Str into Out as a JSON string, quotes and all, cut short if need be. */
+void JsonString(char *Out, int Max, const char *Str)
+{
+	int		n = 0;
+
+	if (Max < 3)
+	{
+		if (Max > 0)
+			*Out = '\0';
+		return;
+	}
+	Out[n++] = '"';
+	for (; *Str && n < Max - 8; Str++)
+	{
+		unsigned char	c = (unsigned char)*Str;
+
+		if (c == '"' || c == '\\')
+		{
+			Out[n++] = '\\';
+			Out[n++] = (char)c;
+		}
+		else if (c < ' ')
+			n += snprintf(Out + n, Max - n, "\\u%04x", c);
+		else
+			Out[n++] = (char)c;
+	}
+	Out[n++] = '"';
+	Out[n] = '\0';
 }
 
 void GetNextMsg(void)
