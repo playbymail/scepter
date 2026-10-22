@@ -560,6 +560,63 @@ A game directory from before the database, with `ram/`, `dat/` or struct
 files and no `game.db`, can't be converted (#71): `scepterd` refuses it and
 says to make a new game with `mkgame`.
 
+## Updating a game to a new revision of its world
+
+`mkgame -u WORLD GAMEDIR` (#137) brings an existing game up to a new
+revision of the world it was made from, keeping its characters.  It is
+meant for building a world: edit the world file, update a test game, play
+it.  It isn't a way to restore a game to an earlier state.  Stop the server
+first.
+
+```sh
+mkgame -u -n WORLD GAMEDIR                # report what would change; write nothing
+mkgame -u WORLD GAMEDIR
+mkgame -u --adopt WORLD GAMEDIR           # a game made before schema version 4
+mkgame -u --discard-edits WORLD GAMEDIR   # overwrite what DMs changed
+```
+
+Before anything is written:
+
+1. The world must pass every check `mkgame` makes on a new game.
+2. **The same world only.**  The game's recorded world id must be the
+   world file's (#138).  A game that doesn't record its world, one made
+   before schema version 4, is refused unless `--adopt` is given, which
+   records the world; the history then says `adopted`.
+3. **DM edits refuse the update.**  If DMs have changed any room,
+   description, template or table row since the world was last made or
+   updated (`updated_at`, above), the update lists each one and stops.
+   Copy any edits worth keeping into the world file, then update with
+   `--discard-edits`, which overwrites them.
+4. A game already at this revision, with no edits, is left alone.
+
+Then `mkgame` backs `game.db` up to `game.db.backup-YYYYMMDD-HHMMSS` (with
+`-2`, `-3`... if that is taken) and makes the whole update in one
+transaction:
+
+- **Replaced** from the new world: rooms, descriptions, monster and object
+  templates, the encounter and treasure tables, the special rooms, the
+  start, revive and jail rooms, and **every room's contents**: its objects
+  (and what its chests hold) and its monsters.
+- **Kept:** characters and what they carry, DMs, the notice, news,
+  obituaries, the run counter, the monster speed, the login limits and the
+  history of DM ranks.
+- **Characters in rooms the new world doesn't have** are moved to its start
+  room, and named.
+- **Recorded:** the new revision, and an `updated` (or `adopted`) row in
+  `world_history`.  Every row of world data gets the update's time as its
+  `updated_at`, so `*WORLD` shows no DM edits after it.
+
+It reports what changed, by number: rooms added, removed and changed (a
+room is added or removed when it starts or stops leading anywhere or having
+a description or encounter), descriptions, templates, table rows, special
+rooms, and rooms whose contents changed.  Room numbers are what saved
+characters, doors, portals and maps depend on, so check this list for
+rooms you didn't mean to renumber.  With `-n` the same report comes from an
+update that is then rolled back.  If anything fails, the game is left as it
+was, beside its backup.
+
+`make check-update` (`tools/updatetest.py`) tests all of this.
+
 ## Locked characters
 
 A character whose `pw_hash` is `*` or empty is locked: no password opens

@@ -144,6 +144,11 @@ check-data: scepterd mkgame upgradegame fightsim dmtest dumpgame dbtest dbtest2 
 check-dmadmin: scepterd mkgame dmadmin dmtest dumpgame
 	python3 -I tools/dmadmintest.py . var/alpha/alpha.world
 
+# mkgame -u, updating a game to a new revision of its world (#137;
+# tools/updatetest.py).
+check-update: scepterd mkgame upgradegame dmadmin dmtest dumpgame
+	python3 -I tools/updatetest.py . var/alpha/alpha.world
+
 # Player-reachable security bugs (tools/securitytest.py).  Run it on a build
 # that makes memory errors visible:
 #   make CFLAGS='-g -O1 -fno-common -fsanitize=address,undefined -ftrivial-auto-var-init=pattern'
@@ -166,4 +171,4 @@ site: site/index.html site/avatar.webp var/havenford/world-map.html
 	magick site/avatar.webp -resize 192x192 -strip -colors 128 out/site/icon.png
 
 .PHONY: all clean check-worlds site check-net check-tintin check-data check-security \
-	check-dump check-dmadmin
+	check-dump check-dmadmin check-update
