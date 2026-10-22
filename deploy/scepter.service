@@ -12,6 +12,8 @@ User=scepter
 Group=scepter
 # Telnet on every address, port 4000. The game directory is made once
 # with mkgame (docs/deploy.md); the server only reads and writes it.
+# Add -o to send Mudlet's mapper opaque room ids instead of room numbers
+# (docs/running.md); the first such start writes the game's roomkey.
 ExecStart=/usr/local/bin/scepterd -l :4000 /var/lib/scepter/havenford
 Restart=on-failure
 RestartSec=5s

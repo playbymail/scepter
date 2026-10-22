@@ -460,6 +460,7 @@ void PlacePlayer(UserPoint Plyr, RmCodeType Rm)
 	Plyr->Next = Room[NewRm].RmPlayerTail;
 	Room[NewRm].RmPlayerTail = Plyr;
 	Plyr->RmCode = NewRm;
+	RoomInfo(Plyr);		/* for Mudlet's mapper (#190) */
 }
 
 void DeletePlayer(UserPoint Pt, RmCodeType Rm)
