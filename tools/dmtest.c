@@ -925,7 +925,8 @@ static void Test33(void)
 /*
  * #180: the smith's repair never lowers durability.  An item already at or
  * above the cap is turned away without charge; one below it is mended to
- * the cap, and no further.
+ * the cap, and no further.  #182: a weapon keeps its bonus, whether it was
+ * never magic or loses its magic in the repair.
  */
 static void Test180(void)
 {
@@ -975,6 +976,30 @@ static void Test180(void)
 	Say("repair shield");
 	Say("yes");
 	Check(Shld->Object.Shield.ShHits == 45, "a worn shield doubles, plus 25");
+
+	Sword->Object.Weap.WeaPlus = 1;
+	Sword->Object.Weap.Strikes = 80;
+	Say("repair sword");
+	Say("yes");
+	Check(Sword->Object.Weap.WeaPlus == 1 && !Sword->Magic,
+		  "a +1 sword that was never magic keeps its bonus");
+
+	{
+		int		I, Lost = FALSE, Kept = TRUE;
+
+		Sword->Object.Weap.WeaPlus = 2;
+		for (I = 0; I < 40 && !Lost; I++)
+		{
+			Sword->Magic = TRUE;
+			Sword->Object.Weap.Strikes = 80;
+			User->Money = 1000;
+			Say("repair sword");
+			Say("yes");
+			Lost = !Sword->Magic;
+			Kept = Kept && Sword->Object.Weap.WeaPlus == 2;
+		}
+		Check(Lost && Kept, "a +2 magic sword that loses its magic keeps its bonus");
+	}
 }
 
 /* #38: summoned monsters start at 90-100% of their hits, not always 100% */

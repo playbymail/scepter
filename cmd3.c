@@ -1161,12 +1161,8 @@ void YesNo(void)
 							p->MinHp = 1;
 							p->MaxHp = p->MaxHp / 2 + 1;
 						}
-						else
-						{
-							if (!Obj->Magic)
-								p->WeaPlus = Min(0, p->WeaPlus);
+						else	/* keeping its bonus, magic or not (#182) */
 							Mend(Obj);
-						}
 						break;
 					}
 					case Shield:
