@@ -252,7 +252,10 @@ void ExecuteCommand(void)
 		case 31:
 		case 64:
 			if (!*Word)
+			{
+				RoomInfo(User);
 				RoomDisplay(User->RmCode, FALSE);
+			}
 			else
 			if (Num = Look(Word, Num))
 				Spell(Num);

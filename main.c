@@ -41,23 +41,25 @@ int main(int argc, char **argv)
 	unsigned	minute;
 	int Aborted = FALSE;
 	int Console = FALSE;
+	int Opaque = FALSE;
 	char *Addr = "127.0.0.1:4000";
 	int Opt;
 
-	while ((Opt = getopt(argc, argv, "cl:")) != -1)
+	while ((Opt = getopt(argc, argv, "cl:o")) != -1)
 		switch (Opt)
 		{
 			case 'c':	Console = TRUE;	break;
 			case 'l':	Addr = optarg;	break;
+			case 'o':	Opaque = TRUE;	break;	/* opaque room ids for GMCP */
 			default:
-				fprintf(stderr, "usage: %s [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
+				fprintf(stderr, "usage: %s [-o] [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
 				exit(2);
 		}
 
 	/* The data paths are relative to the game directory (see mkgame). */
 	if (argc - optind > 1)
 	{
-		fprintf(stderr, "usage: %s [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
+		fprintf(stderr, "usage: %s [-o] [-c | -l [HOST:]PORT] [GAMEDIR]\n", argv[0]);
 		exit(2);
 	}
 	if (argc - optind == 1 && chdir(argv[optind]))
@@ -70,6 +72,7 @@ int main(int argc, char **argv)
 		exit(1);
 	DBReport = DBLog;
 	LogWorld();
+	GmcpInit(Opaque);
 
 	/* The QNX server forked into the background here.  It now runs in the
 	 * foreground, serving telnet connections (telnet.c), or with -c the

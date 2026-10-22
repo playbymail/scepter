@@ -150,6 +150,10 @@ void	PutETIndex(int table, int row, int col, int val);
 void	Who(void);
 void	CheckHup(void);
 
+/* gmcp.c */
+void	GmcpInit(int UseOpaque);
+void	RoomInfo(UserPoint Plyr);
+
 /* telnet.c */
 void	NetListen(char *Addr);
 void	NetRea(char *Str, int *Chn);

@@ -32,7 +32,8 @@ LIBS     = $(CRYPTLIB) $(SQLITELIB)
 
 OBJS = scepter.o cmd1.o cmd2.o cmd3.o cmd4.o db.o execute.o \
 	dbstore.o edit1.o edit2.o gamedb.o io.o ipc.o log.o main.o matt.o \
-	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o
+	mon.o obj.o room.o special.o spells.o telnet.o user.o rand.o \
+	gmcp.o sha256.o
 
 all: scepterd mkgame upgradegame dmadmin
 
@@ -58,7 +59,7 @@ user.o: user.c
 
 $(OBJS) mkgame.o: common.h scepter.h proto.h gamedb.h
 
-mkgame.o sha256.o: sha256.h
+mkgame.o sha256.o gmcp.o: sha256.h
 
 # Runs one function of the database module, for tools/datatest.py.
 dbtest: tools/dbtest.o gamedb.o
@@ -127,8 +128,8 @@ check-worlds: mkgame
 	python3 -I tools/worldtest.py ./mkgame var/alpha/alpha.world
 
 # Telnet front end tests over raw sockets (tools/nettest.py).
-check-net: scepterd mkgame
-	python3 -I tools/nettest.py ./scepterd ./mkgame var/alpha/alpha.world
+check-net: scepterd mkgame dmadmin
+	python3 -I tools/nettest.py ./scepterd ./mkgame var/alpha/alpha.world ./dmadmin
 
 # The same server played by TinTin++ (skipped if tt++ is not installed).
 check-tintin: scepterd mkgame

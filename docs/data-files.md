@@ -11,6 +11,7 @@ replaced the raw struct files of the QNX version (#5).
 |---|---|
 | `game.db` | the game database (see below): the whole game |
 | `errlog` | the server's error log (text), made when something is first logged |
+| `roomkey` | the key for GMCP's opaque room ids: 64 hex digits; made by the first `scepterd -o` (docs/running.md) |
 
 While the server runs, SQLite keeps `game.db-wal` and `game.db-shm` beside
 the database; a clean stop removes them.

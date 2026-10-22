@@ -47,6 +47,9 @@ Telnet is not encrypted: passwords cross the network in plain text.  Before
 listening on a public address, put the server behind something that encrypts
 the connection.
 
+`-o` sends Mudlet's mapper opaque room ids instead of room numbers (see
+[GMCP](#gmcp)).
+
 The server stays in the foreground and logs connections to standard error.
 To stop it, press Ctrl-C or send `SIGTERM`.  It saves every player, tells
 each one `End - aborted`, and exits.
@@ -129,9 +132,44 @@ Negotiation:
   the server doesn't reply to them, or to any other GMCP the client sends.
 
 Each GMCP message is `IAC SB GMCP <package> <json> IAC SE`.  Like text, it is
-held while the player answers a question.  So far the server sends only
-`Core.Goodbye`, just before it closes a connection.  Its data is a JSON
-string: the closing text, or `"Goodbye."` if there is none.
+held while the player answers a question.  The server sends:
+
+- `Core.Goodbye`, just before it closes a connection.  Its data is a JSON
+  string: the closing text, or `"Goodbye."` if there is none.
+- `Room.Info`, for Mudlet's mapper, whenever a player's room changes and on
+  `LOOK` (below).
+
+### Room.Info
+
+`Room.Info` follows the IRE convention that Mudlet mapping scripts read
+from `gmcp.Room.Info`:
+
+```
+Room.Info {"num": 2, "name": "North road", "area": "alpha",
+  "environment": "plain", "exits": {"n": 6, "s": 1}}
+```
+
+| Field | Holds |
+|---|---|
+| `num` | the room's number in the world file; with `scepterd -o`, an opaque id |
+| `name` | the room's `name`, or for a room without one, the first sentence of its brief description, without the full stop |
+| `area` | the world's name (areas aren't in the game yet) |
+| `environment` | the room's role (`bar`, `newsstand`, `pawnshop`, `store`, `smith`), else `safe`, `anti-magic`, `dark` (only DMs are sent dark rooms) or `plain` |
+| `exits` | `n` `s` `e` `w` `u` `d` and `out`: the obvious exits the room's text lists.  Then each door or portal the player can see, as the command that takes it (`"go gate": 26`), closed or locked doors included |
+
+It is sent whenever a player's room changes: on login, every move
+(including `go`), following a leader, staggering from the bar, teleports,
+death and revival, and DM moves.  A player who can't see in a dark room
+is sent nothing there, just as the text tells them nothing, so a mapper
+can't place them.  DMs see dark rooms, so they are sent `Room.Info` there.
+
+With `scepterd -o`, `num` and the exits are opaque ids from 1 to 2^30: a
+keyed permutation of the room number (a four-round Feistel network on
+SHA-256), so no two rooms share an id.  A room has the same id for every
+player and across restarts, but the ids give away neither room numbers nor
+their order.  The key is `roomkey` in the game directory, made by the first
+`scepterd -o` (docs/data-files.md).  Keep it with the game: a new key gives
+every room a new id, and players' maps stop matching.
 
 Inside the server, GMCP is another kind of message in the protocol between
 the game and the player I/O layer (`ipc.c`): `5<package> <json>`, which the
