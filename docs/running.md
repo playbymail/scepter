@@ -68,6 +68,26 @@ TinTin++:
 Mudlet or MUSHclient: make a new profile or world with host `127.0.0.1` and
 port `4000`.
 
+### Mudlet's mapper
+
+Mudlet's map can be drawn from GMCP `Room.Info` (see [GMCP](#gmcp)) by
+`tools/mudlet-mapper.lua`:
+
+1. Tick Settings → General → Enable GMCP.
+2. Uninstall `generic_mapper` in Toolbox → Package Manager.  It maps from
+   the room text, can't find a prompt here, and prints its help at every
+   `look`.
+3. Under Scripts, Add Item, paste in `tools/mudlet-mapper.lua`, and save.
+4. Open the map and walk around.
+
+Each room is added under its `num`, so revisiting a room finds it again.  A
+room's north, south, east, west, up and down exits add their rooms one step
+away as placeholders, which fill in as you visit them.  `out` and
+`go <thing>` exits are linked once both of their rooms have been visited.
+Rooms are coloured by `environment`.  A room reached by `out`, `go` or a
+teleport has no direction to be placed by, so it goes two squares north-east
+of the last room; drag it where it belongs.
+
 `telnet` (not installed by default on recent macOS; `brew install telnet`):
 
 ```sh
