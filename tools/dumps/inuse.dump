@@ -881,53 +881,53 @@ olist 197 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=
 olist 198 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
 olist 199 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
 olist 200 Name="" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Misc
-room 1 Adjoin=2,4,3,5,0,0 Out=0 DescRec=1 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 1 Adjoin=2,4,3,5,0,0 Out=0 DescRec=1 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Village square"
 room 1 obj 1 Name="sign,wooden *" Article=A Weight=50 Price=0 DescCode=7 DescRec=3 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Misc
 room 1 obj 2 Name="sword,short *" Article=A Weight=5 Price=25 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Weap MinHp=2 MaxHp=7 Strikes=100 WeaPlus=0 WeapType=0
-room 2 Adjoin=6,1,0,0,0,0 Out=0 DescRec=1 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 2 Adjoin=6,1,0,0,0,0 Out=0 DescRec=1 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="North road"
 room 2 mon 1 Name="peddler,*" Article=A DescRec=5 DescCode=1 AtkSpeed=4 AC=8 Hits=10 MaxHits=10 Lvl=2 Num=1 MReact=0 MParley=1 WhichObj=3 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
-room 3 Adjoin=24,0,0,1,7,0 Out=0 DescRec=1 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 4 Adjoin=1,13,23,22,0,0 Out=0 DescRec=1 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 5 Adjoin=21,0,1,20,0,0 Out=0 DescRec=1 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0
+room 3 Adjoin=24,0,0,1,7,0 Out=0 DescRec=1 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="The Gilded Goose"
+room 4 Adjoin=1,13,23,22,0,0 Out=0 DescRec=1 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Market"
+room 5 Adjoin=21,0,1,20,0,0 Out=0 DescRec=1 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=1 AntiMagic=0 Dark=0 Name="Temple"
 room 5 obj 1 Name="key,brass *" Article=A Weight=1 Price=5 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Keys UnLock=21 NumUses=0
-room 6 Adjoin=8,2,9,0,0,0 Out=0 DescRec=1 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 6 Adjoin=8,2,9,0,0,0 Out=0 DescRec=1 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Forest edge"
 room 6 obj 1 Name="gate,toll *" Article=A Weight=0 Price=2 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=26 DClosed=0 DSpring=1 DToll=1 DTrap=0 DLocked=0
-room 7 Adjoin=0,0,0,0,0,3 Out=0 DescRec=1 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 7 Adjoin=0,0,0,0,0,3 Out=0 DescRec=1 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Inn loft"
 room 7 obj 1 Name="chest,iron-bound *" Article=An Weight=100 Price=0 DescCode=6 DescRec=3 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=9 Locked=21 NumInside=3
 room 7 obj 1.1 Name="gold,* coins" Article=Some Weight=1 Price=50 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Coins Multiplier=1
 room 7 obj 1.2 Name="scroll,*" Article=A Weight=1 Price=40 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=0 Invisible=0 Cursed=0 ObClass=Scroll Spell=2
 room 7 obj 1.3 Name="card,tarot *" Article=A Weight=1 Price=5 DescCode=8 DescRec=6 Carry=1 Magic=0 Permanent=0 Invisible=0 Cursed=0 ObClass=Card
 room 8 Adjoin=0,6,0,0,0,0 Out=0 DescRec=1 DescCode=9 WhichEncounter=1 EncounterTime=20 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 9 Adjoin=0,0,0,6,10,0 Out=0 DescRec=1 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 9 Adjoin=0,0,0,6,10,0 Out=0 DescRec=1 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Foot of the ruined tower"
 room 9 obj 1 Name="door,iron *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=11 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=31
-room 10 Adjoin=0,0,0,0,0,9 Out=0 DescRec=2 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 10 Adjoin=0,0,0,0,0,9 Out=0 DescRec=2 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Top of the ruined tower"
 room 10 obj 1 Name="portal,shimmering *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=1 Cursed=0 ObClass=Portal ToWhere=12
 room 10 mon 1 Name="goblin,*" Article=A DescRec=3 DescCode=2 AtkSpeed=4 AC=5 Hits=7 MaxHits=7 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=1 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=1 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
 room 10 mon 1 obj 1 Name="key,iron *" Article=An Weight=1 Price=5 DescCode=0 DescRec=0 Carry=1 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Keys UnLock=31 NumUses=0
 room 10 mon 2 Name="king,goblin *" Article=A DescRec=6 DescCode=5 AtkSpeed=4 AC=3 Hits=25 MaxHits=25 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=4 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=1 Top=1 Permanent=1 Magic=1 SummonHelp=0 ImmoralReact=0 Unique=1 Watch=0 Nice=0
-room 11 Adjoin=0,0,0,0,0,0 Out=0 DescRec=2 DescCode=2 WhichEncounter=2 EncounterTime=30 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=1
+room 11 Adjoin=0,0,0,0,0,0 Out=0 DescRec=2 DescCode=2 WhichEncounter=2 EncounterTime=30 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=1 Name="Damp cellar"
 room 11 obj 1 Name="door,iron *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=9 DClosed=1 DSpring=0 DToll=0 DTrap=0 DLocked=31
 room 11 mon 1 Name="skeleton,*" Article=A DescRec=3 DescCode=4 AtkSpeed=4 AC=7 Hits=13 MaxHits=13 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=2 Time=0 Filler=0 Defend=1 Block=1 Follow=0 Guard=0 AtkLastAggr=1 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=1 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
-room 12 Adjoin=0,0,0,0,0,0 Out=6 DescRec=2 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=1 Safe=0 AntiMagic=1 Dark=0
+room 12 Adjoin=0,0,0,0,0,0 Out=6 DescRec=2 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=1 Safe=0 AntiMagic=1 Dark=0 Name="Quiet glade"
 room 12 obj 1 Name="ring,silver *" Article=A Weight=1 Price=100 DescCode=0 DescRec=0 Carry=1 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=Ring RSpell=14 RLevel=1
 room 12 obj 2 Name="stones,white *" Article=Some Weight=0 Price=0 DescCode=7 DescRec=6 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Teleport TToWhere=1 TActiveRm=12
-room 13 Adjoin=4,15,14,16,0,0 Out=0 DescRec=2 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 13 Adjoin=4,15,14,16,0,0 Out=0 DescRec=2 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Guild Street"
 room 13 mon 1 Name="watchman,*" Article=A DescRec=6 DescCode=3 AtkSpeed=4 AC=4 Hits=20 MaxHits=20 Lvl=4 Num=1 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=1 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=1 Flee=0 Assistance=1 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=1 Nice=1
-room 14 Adjoin=0,18,17,13,0,19 Out=0 DescRec=2 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 15 Adjoin=13,0,0,0,0,0 Out=0 DescRec=2 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 16 Adjoin=0,0,13,0,0,0 Out=0 DescRec=2 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 17 Adjoin=0,0,0,14,0,0 Out=0 DescRec=2 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 18 Adjoin=14,0,27,0,0,0 Out=0 DescRec=2 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 19 Adjoin=0,0,0,0,14,0 Out=0 DescRec=2 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 20 Adjoin=0,0,5,0,0,0 Out=0 DescRec=4 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 21 Adjoin=0,5,0,0,0,0 Out=0 DescRec=4 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 22 Adjoin=0,0,4,0,0,0 Out=0 DescRec=4 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 23 Adjoin=0,0,0,4,0,0 Out=0 DescRec=4 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 24 Adjoin=0,3,0,0,0,0 Out=0 DescRec=4 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 25 Adjoin=0,0,0,0,0,0 Out=13 DescRec=4 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
-room 26 Adjoin=0,0,0,0,0,0 Out=0 DescRec=4 DescCode=7 WhichEncounter=3 EncounterTime=25 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 14 Adjoin=0,18,17,13,0,19 Out=0 DescRec=2 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="East end of Guild Street"
+room 15 Adjoin=13,0,0,0,0,0 Out=0 DescRec=2 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Fighters' hall"
+room 16 Adjoin=0,0,13,0,0,0 Out=0 DescRec=2 DescCode=7 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Barbarians' longhouse"
+room 17 Adjoin=0,0,0,14,0,0 Out=0 DescRec=2 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Rangers' lodge"
+room 18 Adjoin=14,0,27,0,0,0 Out=0 DescRec=2 DescCode=9 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Mages' college"
+room 19 Adjoin=0,0,0,0,14,0 Out=0 DescRec=2 DescCode=10 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Thieves' den"
+room 20 Adjoin=0,0,5,0,0,0 Out=0 DescRec=4 DescCode=1 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Cloister"
+room 21 Adjoin=0,5,0,0,0,0 Out=0 DescRec=4 DescCode=2 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Paladins' chapter house"
+room 22 Adjoin=0,0,4,0,0,0 Out=0 DescRec=4 DescCode=3 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Pawnshop"
+room 23 Adjoin=0,0,0,4,0,0 Out=0 DescRec=4 DescCode=4 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Smithy"
+room 24 Adjoin=0,3,0,0,0,0 Out=0 DescRec=4 DescCode=5 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Newsstand"
+room 25 Adjoin=0,0,0,0,0,0 Out=13 DescRec=4 DescCode=6 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Village lockup"
+room 26 Adjoin=0,0,0,0,0,0 Out=0 DescRec=4 DescCode=7 WhichEncounter=3 EncounterTime=25 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Forest bridge"
 room 26 obj 1 Name="gate,toll *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Door DToWhere=6 DClosed=0 DSpring=1 DToll=0 DTrap=5 DLocked=0
-room 27 Adjoin=0,0,0,18,0,0 Out=0 DescRec=4 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0
+room 27 Adjoin=0,0,0,18,0,0 Out=0 DescRec=4 DescCode=8 WhichEncounter=0 EncounterTime=0 LastDir=0 NotifyDM=0 Safe=0 AntiMagic=0 Dark=0 Name="Wizards' workshop"
 room 27 obj 1 Name="orb,amber *" Article=An Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=19 NumCharges=5 MLevel=10
 room 27 obj 2 Name="prism,violet *" Article=A Weight=0 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=1 Permanent=1 Invisible=0 Cursed=0 ObClass=MagDevice MSpell=18 NumCharges=5 MLevel=5
 room 27 obj 3 Name="chest,black *" Article=A Weight=100 Price=0 DescCode=0 DescRec=0 Carry=0 Magic=0 Permanent=1 Invisible=0 Cursed=0 ObClass=Chest Closed=1 Trap=50 Locked=0 NumInside=0
@@ -1008,8 +1008,8 @@ login host 2001:db8:1:2::/64 Fails=1 Blocks=0 Start=1792540800 Until=0
 login name BOB Fails=1 Last=1792540800
 rank Time=1792540800 Player="ALICE" Old=RNone New=RMaster By="DUNGEON" Tool=0
 rank Time=1792540800 Player="BOB" Old=RNone New=RAssoc By="DUNGEON" Tool=0
-world Id="adf289bd-8119-431f-a01a-15b36ae561a3" Name="alpha" Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf"
-world event Event=WMade Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf" Schema=4
+world Id="adf289bd-8119-431f-a01a-15b36ae561a3" Name="alpha" Revision="e0481117b5b75609ce7af28350c4f309d9b88b7d3d3b4991f5b81cf0a5ecc383"
+world event Event=WMade Revision="e0481117b5b75609ce7af28350c4f309d9b88b7d3d3b4991f5b81cf0a5ecc383" Schema=5
 world edit Kind=WRoom Number=902
 world edit Kind=WDescription Number=2
 world edit Kind=WDescription Number=7

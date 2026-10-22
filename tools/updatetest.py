@@ -29,12 +29,14 @@ with open(WORLD) as f:
 WORLD_ID = re.search(r"^id = (\S+)$", TEXT, re.M).group(1)
 
 # A new revision: room 2 leads up to a new room 60, which holds a lantern;
-# object template 3 is heavier; encounter table 2 changes.
-REVISION_2 = (TEXT.replace("[room 2]\nnorth = 6\nsouth = 1\n",
-                           "[room 2]\nnorth = 6\nsouth = 1\nup = 60\n", 1)
+# room 4 is renamed (#81); object template 3 is heavier; encounter table 2
+# changes.
+REVISION_2 = (TEXT.replace("[room 2]\nname = North road\nnorth = 6\nsouth = 1\n",
+                           "[room 2]\nname = North road\nnorth = 6\nsouth = 1\nup = 60\n", 1)
+              .replace("[room 4]\nname = Market\n", "[room 4]\nname = Market square\n", 1)
               + "\n[room 60]\ndown = 2\ndesc = 1:3\n\n[room 60 / object 1]\n"
                 "name = lantern,brass *\nkind = misc\npermanent = yes\nweight = 2\n")
-assert REVISION_2.count("up = 60") == 1
+assert REVISION_2.count("up = 60") == 1 and "Market square" in REVISION_2
 
 
 def check(cond, what):
@@ -132,8 +134,8 @@ def test_update():
     check(rc == 0 and dump(g) == before and files(g) == names,
           "-n writes nothing")
     check("would be updated" in out and "rooms added: 60 (1)" in out
-          and "rooms changed: 2 (1)" in out and "room contents: 60 (1)" in out,
-          "-n reports the room added, the room changed and the contents")
+          and "rooms changed: 2 4 (2)" in out and "room contents: 60 (1)" in out,
+          "-n reports the room added, the rooms changed (one renamed) and the contents")
 
     rc, out, _ = update(g, new)
     backups = [f for f in files(g) if f.startswith("game.db.backup-")]
@@ -233,7 +235,8 @@ def test_adopt_migrated():
     run("dmtest", g, "player", "Wanda", "wanda password")
     db = sqlite3.connect(os.path.join(g, "game.db"))
     db.executescript(
-        "DROP TABLE world; DROP TABLE world_history; DROP TABLE encounter_times;"
+        "ALTER TABLE rooms DROP COLUMN name;"
+        " DROP TABLE world; DROP TABLE world_history; DROP TABLE encounter_times;"
         " DROP TABLE treasure_times;"
         + "".join("ALTER TABLE %s DROP COLUMN created_at; ALTER TABLE %s DROP COLUMN"
                   " updated_at; " % (t, t) for t in ("rooms", "descriptions",

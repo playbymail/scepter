@@ -180,7 +180,8 @@ def to_world(w):
     out.append("# ---- rooms ----\n")
     for r in w['rooms']:
         rid = r['id']
-        rl = [f"{d} = {to}" for d, to in zip(DIRS, r['exits']) if to]
+        rl = [f"name = {r['name']}"] if 'name' in r else []
+        rl += [f"{d} = {to}" for d, to in zip(DIRS, r['exits']) if to]
         put_keys(rl, r, ROOM_KEYS)
         for role in ROLES:
             if r.get(role) or (role == 'store' and 'stock' in r):
@@ -277,8 +278,10 @@ def to_json(text, fname='world'):
             (encs if kind == 'encounter' else tres).append(
                 {'id': ident, 'entries': entries})
         elif kind == 'room' and len(toks) == 2:
-            exits = [int(kv.pop(d, 0)) for d in DIRS]
-            r = {'id': ident, 'exits': exits}
+            r = {'id': ident}
+            if 'name' in kv:
+                r['name'] = kv.pop('name')
+            r['exits'] = [int(kv.pop(d, 0)) for d in DIRS]
             r.update(take_keys(kv, ROOM_KEYS, where))
             role = kv.pop('role', None)
             if role:

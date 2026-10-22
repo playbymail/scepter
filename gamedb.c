@@ -434,21 +434,29 @@ static const char	Migration4[] =
 	Mig4Times
 	") STRICT;\n";
 
+/*
+ * Migration 5: a room's optional name (#81), up to 60 printable ASCII
+ * characters; '' is a room without one.
+ */
+static const char	Migration5[] =
+	"ALTER TABLE rooms ADD COLUMN name TEXT NOT NULL DEFAULT ''\n"
+	"	CHECK (length(name) <= 60 AND name NOT GLOB '*[^ -~]*');\n";
+
 #ifdef TestMigration
 /*
  * tools/datatest.py only: dbtest2 is dbtest built with this extra
  * migration, to migrate a whole game as a real schema change would.
  */
 #undef	DBVersion
-#define	DBVersion	5
-static const char	Migration5[] =
+#define	DBVersion	6
+static const char	Migration6[] =
 	"CREATE TABLE test_migration (x INTEGER) STRICT;\n"
-	"INSERT INTO test_migration VALUES (5);\n";
+	"INSERT INTO test_migration VALUES (6);\n";
 static const char	*Migration[DBVersion + 1] =
-	{ NULL, Migration1, Migration2, Migration3, Migration4, Migration5 };
+	{ NULL, Migration1, Migration2, Migration3, Migration4, Migration5, Migration6 };
 #else
 static const char	*Migration[DBVersion + 1] =
-	{ NULL, Migration1, Migration2, Migration3, Migration4 };
+	{ NULL, Migration1, Migration2, Migration3, Migration4, Migration5 };
 #endif
 
 /* ---------- reporting ---------- */

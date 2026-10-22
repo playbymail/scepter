@@ -259,6 +259,12 @@ int S(int Rm)
 	return (ILoop * 10 + Rm - SegNum * 10);
 }
 
+/* The name of loaded room Rm (as User->RmCode), or NULL if it has none (#81) */
+const char *RoomName(int Rm)
+{
+	return Room[Rm].Name[0] ? Room[Rm].Name : NULL;
+}
+
 void AddSeg(void)
 {
 	if (NumSegs > MaxSegs)

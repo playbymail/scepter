@@ -365,7 +365,8 @@ static int EmptyRoom(RoomType *R)
 	return !memcmp(R->Adjoin, Blank.Adjoin, sizeof(R->Adjoin)) && !R->Out
 		&& !R->DescRec && !R->DescCode && !R->WhichEncounter
 		&& !R->EncounterTime && !R->LastDir && !R->NotifyDM && !R->Safe
-		&& !R->AntiMagic && !R->Dark && !R->RmObjectTail && !R->RmMonsterTail;
+		&& !R->AntiMagic && !R->Dark && !*R->Name && !R->RmObjectTail
+		&& !R->RmMonsterTail;
 }
 
 static void DumpRoom(int Rm, RoomType *R)
@@ -387,6 +388,8 @@ static void DumpRoom(int Rm, RoomType *R)
 	Num("Safe", R->Safe);
 	Num("AntiMagic", R->AntiMagic);
 	Num("Dark", R->Dark);
+	if (*R->Name)		/* only named rooms, so older dumps still match (#81) */
+		Str("Name", R->Name, sizeof(R->Name));
 	putchar('\n');
 
 	snprintf(Head, sizeof(Head), "room %d", Rm);

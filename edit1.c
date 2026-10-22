@@ -778,6 +778,11 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 				QOut(Term, "0Room is haven against attack.");
 			if (RmPt->AntiMagic)
 				QOut(Term, "0Room nullifies all forms of magic.");
+			if (RoomName(Rm))
+			{
+				snprintf(B1, sizeof(B1), "0Room name: %s.", RoomName(Rm));
+				QOut(Term, B1);
+			}
 			break;
 		}
 

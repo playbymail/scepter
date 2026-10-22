@@ -107,6 +107,7 @@
   "rooms": [
     {
       "id": 1,
+      "name": "Village square",
       "exits": [2, 4, 3, 5, 0, 0],
       "area": 1,
       "x": 0,
@@ -135,6 +136,7 @@
     },
     {
       "id": 2,
+      "name": "North road",
       "exits": [6, 1, 0, 0, 0, 0],
       "area": 1,
       "x": 0,
@@ -159,6 +161,7 @@
     },
     {
       "id": 3,
+      "name": "The Gilded Goose",
       "exits": [24, 0, 0, 1, 7, 0],
       "area": 1,
       "x": 1,
@@ -170,6 +173,7 @@
     },
     {
       "id": 4,
+      "name": "Market",
       "exits": [1, 13, 23, 22, 0, 0],
       "area": 1,
       "x": 0,
@@ -180,6 +184,7 @@
     },
     {
       "id": 5,
+      "name": "Temple",
       "exits": [21, 0, 1, 20, 0, 0],
       "area": 1,
       "x": -1,
@@ -201,6 +206,7 @@
     },
     {
       "id": 6,
+      "name": "Forest edge",
       "exits": [8, 2, 9, 0, 0, 0],
       "area": 1,
       "x": 0,
@@ -219,6 +225,7 @@
     },
     {
       "id": 7,
+      "name": "Inn loft",
       "exits": [0, 0, 0, 0, 0, 3],
       "area": 1,
       "x": 1,
@@ -280,6 +287,7 @@
     },
     {
       "id": 9,
+      "name": "Foot of the ruined tower",
       "exits": [0, 0, 0, 6, 10, 0],
       "desc": {"record": 1, "line": 10},
       "objects": [
@@ -294,6 +302,7 @@
     },
     {
       "id": 10,
+      "name": "Top of the ruined tower",
       "exits": [0, 0, 0, 0, 0, 9],
       "desc": {"record": 2, "line": 1},
       "objects": [
@@ -355,6 +364,7 @@
     },
     {
       "id": 11,
+      "name": "Damp cellar",
       "exits": [0, 0, 0, 0, 0, 0],
       "desc": {"record": 2, "line": 2},
       "encounterTable": 2,
@@ -390,6 +400,7 @@
     },
     {
       "id": 12,
+      "name": "Quiet glade",
       "exits": [0, 0, 0, 0, 0, 0],
       "out": 6,
       "desc": {"record": 2, "line": 3},
@@ -419,6 +430,7 @@
     },
     {
       "id": 13,
+      "name": "Guild Street",
       "exits": [4, 15, 14, 16, 0, 0],
       "desc": {"record": 2, "line": 4},
       "monsters": [
@@ -442,53 +454,62 @@
     },
     {
       "id": 14,
+      "name": "East end of Guild Street",
       "exits": [0, 18, 17, 13, 0, 19],
       "desc": {"record": 2, "line": 5}
     },
     {
       "id": 15,
+      "name": "Fighters' hall",
       "exits": [13, 0, 0, 0, 0, 0],
       "desc": {"record": 2, "line": 6},
       "trains": ["fighter", "dm"]
     },
     {
       "id": 16,
+      "name": "Barbarians' longhouse",
       "exits": [0, 0, 13, 0, 0, 0],
       "desc": {"record": 2, "line": 7},
       "trains": ["barbarian"]
     },
     {
       "id": 17,
+      "name": "Rangers' lodge",
       "exits": [0, 0, 0, 14, 0, 0],
       "desc": {"record": 2, "line": 8},
       "trains": ["ranger"]
     },
     {
       "id": 18,
+      "name": "Mages' college",
       "exits": [14, 0, 27, 0, 0, 0],
       "desc": {"record": 2, "line": 9},
       "trains": ["magic-user"]
     },
     {
       "id": 19,
+      "name": "Thieves' den",
       "exits": [0, 0, 0, 0, 14, 0],
       "desc": {"record": 2, "line": 10},
       "trains": ["thief"]
     },
     {
       "id": 20,
+      "name": "Cloister",
       "exits": [0, 0, 5, 0, 0, 0],
       "desc": {"record": 4, "line": 1},
       "trains": ["cleric"]
     },
     {
       "id": 21,
+      "name": "Paladins' chapter house",
       "exits": [0, 5, 0, 0, 0, 0],
       "desc": {"record": 4, "line": 2},
       "trains": ["paladin"]
     },
     {
       "id": 22,
+      "name": "Pawnshop",
       "exits": [0, 0, 4, 0, 0, 0],
       "desc": {"record": 4, "line": 3},
       "greeting": "Appraisor asks, \"What would you like to sell?\"",
@@ -496,6 +517,7 @@
     },
     {
       "id": 23,
+      "name": "Smithy",
       "exits": [0, 0, 0, 4, 0, 0],
       "desc": {"record": 4, "line": 4},
       "greeting": "\"Hee hee.  So matey, your gear don't look too good.  Need fixin?\"",
@@ -503,6 +525,7 @@
     },
     {
       "id": 24,
+      "name": "Newsstand",
       "exits": [0, 3, 0, 0, 0, 0],
       "desc": {"record": 4, "line": 5},
       "greeting": "Paperboy says, \"Extra! Extra! Read all about it!\"",
@@ -510,12 +533,14 @@
     },
     {
       "id": 25,
+      "name": "Village lockup",
       "exits": [0, 0, 0, 0, 0, 0],
       "out": 13,
       "desc": {"record": 4, "line": 6}
     },
     {
       "id": 26,
+      "name": "Forest bridge",
       "exits": [0, 0, 0, 0, 0, 0],
       "desc": {"record": 4, "line": 7},
       "encounterTable": 3,
@@ -532,6 +557,7 @@
     },
     {
       "id": 27,
+      "name": "Wizards' workshop",
       "exits": [0, 0, 0, 18, 0, 0],
       "desc": {"record": 4, "line": 8},
       "objects": [

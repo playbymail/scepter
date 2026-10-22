@@ -378,6 +378,19 @@ static void RoomKey(char *k, char *v)
 	}
 	else if (!strcmp(k, "desc"))
 		ParseDesc(v, &CurRoom->DescRec, &CurRoom->DescCode);
+	else if (!strcmp(k, "name"))
+	{
+		const char	*p;
+
+		for (p = v; *p && isprint((unsigned char)*p); p++)
+			;
+		if (*p)
+			Err("room name must be printable ASCII");
+		else if (strlen(v) > RoomNameLen)
+			Err("room name is longer than %d characters", RoomNameLen);
+		else
+			strcpy(CurRoom->Name, v);
+	}
 	else if (!strcmp(k, "encounter-table"))
 	{
 		if (ParseInt(v, 0, LEncounter, &n))
@@ -1422,7 +1435,7 @@ static void WriteTables(void)
  * but the times, and a room's last_dir, which play changes.
  */
 #define	RoomCols	"room, north, south, east, west, up, down, out, desc_rec," \
-	" desc_code, which_encounter, encounter_time, notify_dm, safe, anti_magic, dark"
+	" desc_code, which_encounter, encounter_time, notify_dm, safe, anti_magic, dark, name"
 
 static const struct
 {

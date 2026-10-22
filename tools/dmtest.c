@@ -9,7 +9,7 @@
  * TEST is an issue number: 20, 23, 22, 24, 26, 82, 50 or 88; for the command
  * parser 45, 47 or 48; 17 for the hourly update; for play 27, 28, 29, 30, 32,
  * 33, 38 or 180, which may use a second character on terminal 2; for the DM
- * editor 21, 34, 35, 36, 37, 40 or 103; 46 for the Assoc DM line; 16 for a
+ * editor 21, 34, 35, 36, 37, 40, 81 or 103; 46 for the Assoc DM line; 16 for a
  * missing object template; or for saving rooms 42,
  * 43, 44, 56 or 64, which save room objects and monsters and
  * read them back as a segment swap would; they use rooms 900-940 and 1949.  The game directory (made
@@ -1071,6 +1071,35 @@ static void Test36(void)
 		  "room 8 keeps its wolf and its rock");
 }
 
+/*
+ * #81: a room's name comes from the world file, is saved with the room,
+ * and is copied and shown by the DM editor.  Room 8 has no name.
+ */
+static void Test81(void)
+{
+	RoomType	Back;
+	int			Found;
+
+	Check(RoomName(S(1)) && !strcmp(RoomName(S(1)), "Village square"),
+		  "room 1 is the Village square");
+	Check(!RoomName(S(8)), "room 8 has no name");
+
+	strcpy(Room[S(8)].Name, "Pine forest");
+	WriteSeg(S(8) / 10, 0, FALSE);
+	Check(GetRoom(8, &Back, &Found) && Found && !strcmp(Back.Name, "Pine forest"),
+		  "a name is saved with its room");
+
+	EditLine("copy room 5 8");
+	Check(RoomName(S(8)) && !strcmp(RoomName(S(8)), "Temple"),
+		  "EDIT COPY ROOM copies the name");
+	Capture();
+	EditLine("display room 8");
+	Check(strstr(Captured(), "Room name: Temple.") != NULL,
+		  "EDIT DISPLAY ROOM shows it");
+	EditLine("delete room 8");
+	Check(!RoomName(S(8)), "EDIT DELETE ROOM clears it");
+}
+
 /* #40: EDIT MODIFY FILE doesn't create a missing player */
 static void Test40(void)
 {
@@ -1726,7 +1755,7 @@ int main(int argc, char **argv)
 		{"50", Test50}, {"121", Test121}, {"146", Test146},
 		{"136", Test136}, {"148", Test148},
 		{"149", Test149}, {"150", Test150}, {"151", Test151},
-		{"152", Test152}, {"93", Test93}, {"180", Test180},
+		{"152", Test152}, {"93", Test93}, {"180", Test180}, {"81", Test81},
 	};
 	int		I;
 
