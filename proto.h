@@ -140,6 +140,8 @@ void	QListen(char *Addr);
 void	QDea(int Chn);
 void	QRea(char *Str, int *Chn);
 void	QOut(int Chn, char *Str);
+void	QGmcp(int Chn, const char *Package, const char *Json);
+void	JsonString(char *Out, int Max, const char *Str);
 int	GetETIndex(int table, int row, int col);
 void	GetNextMsg(void);
 int   IsGuest(int term);

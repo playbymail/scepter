@@ -104,11 +104,40 @@ Every wrong password is logged to the game's `errlog`, with the address.
 - At the command level there is no prompt; type a command and press Enter.
 - Commands are capped at 254 characters.  Control characters and empty lines
   are ignored.
-- The server refuses every telnet option, so the client echoes what you type
-  and sends whole lines.
+- The server refuses every telnet option except GMCP (below), so the client
+  echoes what you type and sends whole lines.
 - While you are answering a question, messages from other players wait until
   you have answered.
 - A player whose connection drops is logged off, and the others are told so.
+
+## GMCP
+
+GMCP (Generic MUD Communication Protocol, telnet option 201) carries data
+for the client rather than for the player, such as what a mapper needs.
+Mudlet and MUSHclient use it; plain `telnet` and TinTin++ don't, and see no
+difference.
+
+Negotiation:
+
+- When a connection opens, the server sends `IAC WILL GMCP`.
+- The server sends GMCP only after the client answers `IAC DO GMCP`.
+- `IAC DONT GMCP` turns GMCP off and gets no reply.  A later `IAC DO GMCP`
+  turns it back on, and the server agrees with `IAC WILL GMCP`.
+- `IAC WILL GMCP` from the client is refused with `IAC DONT GMCP`, as for
+  every other option.
+- The client's `Core.Hello` and `Core.Supports.Set` are read and ignored;
+  the server doesn't reply to them, or to any other GMCP the client sends.
+
+Each GMCP message is `IAC SB GMCP <package> <json> IAC SE`.  Like text, it is
+held while the player answers a question.  So far the server sends only
+`Core.Goodbye`, just before it closes a connection.  Its data is a JSON
+string: the closing text, or `"Goodbye."` if there is none.
+
+Inside the server, GMCP is another kind of message in the protocol between
+the game and the player I/O layer (`ipc.c`): `5<package> <json>`, which the
+game makes with `QGmcp(term, package, json)`.  The telnet front end
+(`telnet.c`) sends it only to connections that accepted GMCP.  The console
+harness and `fightsim` ignore it.
 
 ## Console mode
 
