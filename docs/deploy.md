@@ -175,6 +175,31 @@ server, copy the previous binaries back from `/usr/local/share/scepter/prev/`,
 move the new `havenford` aside and the `havenford.structs-*` directory back
 to `havenford`, and start the server.
 
+## Updating the world
+
+To bring the live game up to a new revision of `havenford.world`, keeping
+every character, use `mkgame -u` (docs/data-files.md).  The first update
+needs `--adopt`, because the game was made before it recorded its world.
+Check with `-n` first; it refuses if DMs have changed rooms, descriptions,
+templates or tables in the game:
+
+```sh
+scp var/havenford/havenford.world sceptish:/tmp/
+ssh sceptish
+runuser -u scepter -- mkgame -u -n --adopt /tmp/havenford.world /var/lib/scepter/havenford
+systemctl kill --kill-whom=main --signal=SIGUSR1 scepter    # restart warning
+sleep 120
+systemctl stop scepter
+install -m 0644 /tmp/havenford.world /usr/local/share/scepter/
+runuser -u scepter -- mkgame -u --adopt /usr/local/share/scepter/havenford.world \
+	/var/lib/scepter/havenford
+systemctl start scepter
+rm /tmp/havenford.world
+```
+
+Leave out `--adopt` after the first time.  The backup is
+`/var/lib/scepter/havenford/game.db.backup-*`.
+
 ## Changing the world
 
 The server ran the alpha reference world until 2026-10-21, when it

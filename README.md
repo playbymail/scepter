@@ -29,7 +29,8 @@ behaviour, bugs and other shortcomings.**
 - The top level is Sceptish, ported from them: `scepterd` (the server, with
   its own telnet front end), `mkgame` (builds a game from a world file),
   `upgradegame` (brings a game's database up to a newer schema) and
-  `dmadmin` (makes and manages a game's DMs).
+  `dmadmin` (makes and manages a game's DMs).  `mkgame -u` updates a game
+  to a new revision of its world.
 
 ## Build
 

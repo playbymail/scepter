@@ -19,6 +19,10 @@ mkdir -p games/alpha
 game directory, which must already exist and be empty: `mkgame` never
 creates a directory, and refuses one that holds anything, hidden files
 included.  The server reads and writes the files in that directory.
+To try changes to a world file on an existing game, keeping its
+characters, update it with `./mkgame -u var/alpha/alpha.world games/alpha`
+while the server is stopped (`-n` first, to see what would change; see
+[data-files.md](data-files.md)).
 A newer `scepterd` may need the game's database upgraded first with
 `./upgradegame games/alpha`; it says so when it refuses to start (see
 [data-files.md](data-files.md)).
@@ -170,6 +174,7 @@ printf 'Boss\nboss password\n*edit\ndisplay player boss\nquit\n' |
 | `make check-tintin` | a TinTin++ session (skipped if `tt++` is not installed)|
 | `make check-worlds` | that each world file matches its JSON copy, and mkgame's checks on areas and coordinates |
 | `make check-data`   | `mkgame`'s game directory, the game database and `upgradegame` (docs/data-files.md)|
+| `make check-update` | `mkgame -u`, updating a game to a new revision of its world (`tools/updatetest.py`) |
 | `make check-dmadmin` | `dmadmin`, and a DM it makes playing the editor in the console harness (`tools/dmadmintest.py`) |
 | `make check-dump`   | that whole games dump exactly as the golden dumps in `tools/dumps/` (docs/data-files.md) |
 | `make check-security` | that players can't crash, hang or corrupt the server, and that bad DM edits or data can't either (issues labelled `security`; `tools/securitytest.py`, `tools/dmtest.c`) |
