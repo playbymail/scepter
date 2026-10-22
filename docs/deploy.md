@@ -126,6 +126,7 @@ Upgrade history:
 | 2026-10-21 | `9e957fc` | schema 2 → 3: the history of DM ranks (#139); `dmadmin` installed, and the first master DM, `MOTHELLO`, made with it; characters kept | `/var/lib/scepter/havenford/game.db.backup-20261021-224954` |
 | 2026-10-22 | `3fb144b` | schema 4: the game records its world (#138), `mkgame -u` (#137), the smith's repairs (#180); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning); master DM `MOTHELLO` made again with `dmadmin` | `/var/lib/scepter/havenford.reset-20261022-005659` (the old game, untouched) |
 | 2026-10-22 | `cbccc77` | schema 5: room names (#81), named in Havenford, and the smith keeps a weapon's bonus (#182); a new Havenford game, deleting every character (reset, after the `SIGUSR2` warning); master DM `MOTHELLO` made again with `dmadmin` | `/var/lib/scepter/havenford.reset-20261022-013828` (the old game, untouched) |
+| 2026-10-22 | `0495df3` | schema 5, unchanged: GMCP (#189), `Room.Info` for Mudlet's mapper (#190, room numbers; `-o` not yet on) and `tools/mudlet-mapper.lua`; characters kept | none |
 
 ## DMs
 
