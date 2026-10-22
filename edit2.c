@@ -21,6 +21,16 @@ static PLType	ObjParms[] =
 /* 37 */	"CU", DFlag,	"TL", DFlag
 };
 
+/*
+ * Note that the DM changed world data Kind (a WorldKind) number Number, so
+ * an update of the world (#137) won't overwrite it unasked (#138).
+ */
+void WorldEdited(int Kind, int Number)
+{
+	if (!TouchWorld(Kind, Number))
+		Abort(" Cannot note a change to the world.");
+}
+
 static void ModObject(ObjectPoint Object)
 {
 	int		NP, WhichParm, Number, Flag;
@@ -718,6 +728,7 @@ void EditOList(EdFunc EditCmd, int OIndex)
 				ModObject(&Obj);
 				if (!PutObjTemplate(OIndex, &Obj))
 					Abort(" Cannot save an object template.");
+				WorldEdited(WObject, OIndex);
 				QOut(Term, "0File modified.");
 				QOut(Term, "0OList updated.");
 				break;
@@ -808,6 +819,7 @@ void EditDscrpt(EdFunc EditCmd, int Rec)
 						*DescBuf[ILoop] = '\0';
 					if (!PutDesc(Rec, DescBuf))
 						Abort(" Cannot save a description.");
+					WorldEdited(WDescription, Rec);
 					QOut(Term, "0File modified.");
 					QOut(Term, "0EDesc record created.");
 				}
@@ -850,6 +862,7 @@ void EnterDesc(void)
 		strcpy(DescBuf[Line - 1], B1);
 		if (!PutDesc(Rec, DescBuf))
 			Abort(" Cannot save a description.");
+		WorldEdited(WDescription, Rec);
 		QOut(Term, "0File modified.");
 		CurrentRec = 0;
 
@@ -880,6 +893,7 @@ void EditETList(EdFunc EditCmd, int WhatCode, int Index)
 					PutEncIndex(Index, ILoop, e);
 				}
 				SaveTableRow(0, Index);
+				WorldEdited(WEncounter, Index);
 				QOut(Term, "0EList modified.");
 			}
 			else
@@ -910,6 +924,7 @@ void EditETList(EdFunc EditCmd, int WhatCode, int Index)
 					PutObjIndex(Index, ILoop, o);
 				}
 				SaveTableRow(1, Index);
+				WorldEdited(WTreasure, Index);
 				QOut(Term, "0TList modified.");
 			}
 			else

@@ -443,6 +443,72 @@ void UpdateF(void)
 }
 
 /*
+ * *WORLD (#138): the world the game was made from, its history, and the
+ * world data DMs have changed since it was last made or updated (#137).
+ */
+void ShowWorld(void)
+{
+	static const char	*Event[] = { "made", "updated", "adopted" };
+	static const char	*Kind[] =
+		{ "room", "description", "monster", "object", "encounter", "treasure" };
+	WorldType			Wd;
+	WorldEventType		E;
+	WorldEditType		Ed;
+	long				After = 0, Since;
+	int					Found, K = -1, N = 0, Count = 0;
+	char				When[32];
+	time_t				T;
+
+	if (!GetWorld(&Wd, &Found))
+		Abort(" Cannot read the world.");
+	if (!Found)
+		QOut(Term, "0This game doesn't record its world: it was made before"
+			 " schema version 4.");
+	else
+	{
+		snprintf(B1, sizeof(B1), "0World %s, id %s,", *Wd.Name ? Wd.Name : "(no name)",
+				 Wd.Id);
+		QOut(Term, B1);
+		snprintf(B1, sizeof(B1), "0revision %s.", Wd.Revision);
+		QOut(Term, B1);
+	}
+	for (;;)
+	{
+		if (!NextWorldEvent(&After, &E, &Found))
+			Abort(" Cannot read the world.");
+		if (!Found)
+			break;
+		T = (time_t)E.Time;
+		strftime(When, sizeof(When), "%Y-%m-%d %H:%M:%S", localtime(&T));
+		snprintf(B1, sizeof(B1), "0  %s  %-7s  revision %.12s  (schema %d)", When,
+				 Event[E.Event], E.Revision, E.Schema);
+		QOut(Term, B1);
+	}
+
+	if (!LastWorldTime(&Since))
+		Abort(" Cannot read the world.");
+	strcpy(B1, "0Changed by DMs since then:");
+	for (;;)
+	{
+		if (!NextWorldEdit(Since, &K, &N, &Ed, &Found))
+			Abort(" Cannot read the world.");
+		if (!Found)
+			break;
+		if (Count++)
+			strcat(B1, ",");
+		if (strlen(B1) > 60)
+		{
+			QOut(Term, B1);
+			strcpy(B1, "0 ");
+		}
+		snprintf(B2, sizeof(B2), " %s %d", Kind[Ed.Kind], Ed.Number);
+		strcat(B1, B2);
+	}
+	strcat(B1, Count ? "." : " nothing.");
+	QOut(Term, B1);
+}
+
+/*
  * Obj's durability (a weapon's strikes, a shield's or armor's hits), and
  * in *After what the smith's repair makes it: doubled and a little more,
  * up to the smith's cap.  A repair never lowers it (#180): an item at or

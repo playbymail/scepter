@@ -695,7 +695,10 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 				}
 
 			if (NP)
+			{
+				WorldEdited(WRoom, Rm);
 				QOut(Term, "0Room modified.");
+			}
 			break;
 		}
 
@@ -709,6 +712,7 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 			else
 			{
 				*RmPt = ProtoRoom;
+				WorldEdited(WRoom, Rm);
 				QOut(Term, "0Room initialized.");
 			}
 			break;
@@ -733,6 +737,7 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 				Tmp.RmPlayerTail  = To->RmPlayerTail;
 				Tmp.RmObjectTail  = To->RmObjectTail;
 				*To = Tmp;
+				WorldEdited(WRoom, Rm2);
 				QOut(Term, "0Room copied.");
 			}
 			break;
@@ -780,7 +785,13 @@ static void EditRoom(EdFunc EditCmd, int Rm)
 			if (!User->Master)
 				QOut(Term, "0Only master DMs may create additional roomsegs.");
 			else
+			{
+				int		Before = NumSegs, R;
+
 				AddSeg();
+				for (R = Before * 10; R < NumSegs * 10; R++)	/* the new rooms */
+					WorldEdited(WRoom, R);
+			}
 			break;
 	}
 }
@@ -1046,6 +1057,7 @@ static void EditMonster(EdFunc EditCmd, char *Which, int MNum, int WhatCode)
 	{
 		if (!PutMonTemplate(Rm, Monster))
 			Abort(" Cannot save a monster template.");
+		WorldEdited(WMonster, Rm);
 		QOut(Term, "0File modified.");
 	}
 	if (WhatCode == 15)

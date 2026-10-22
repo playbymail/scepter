@@ -935,3 +935,5 @@ room 27 obj 5 Name="wand,bone *" Article=A Weight=1 Price=100 DescCode=0 DescRec
 room 27 mon 1 Name="wisp,marsh *" Article=A DescRec=0 DescCode=0 AtkSpeed=0 AC=9 Hits=0 MaxHits=0 Lvl=1 Num=1 MReact=0 MParley=0 WhichObj=0 Time=0 Filler=0 Defend=0 Block=0 Follow=0 Guard=0 AtkLastAggr=0 SlowReact=0 FastReact=0 Invisible=0 Regenerate=0 Drain=0 Poison=0 AntiMagic=0 Undead=0 MoralReact=0 Flee=0 Assistance=0 MonSpells=0 Top=1 Permanent=1 Magic=0 SummonHelp=0 ImmoralReact=0 Unique=0 Watch=0 Nice=0
 rooms 2000 shown 27
 players 0
+world Id="adf289bd-8119-431f-a01a-15b36ae561a3" Name="alpha" Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf"
+world event Event=WMade Revision="9266b19e245cac6b3d2448f6e1eff622e51c32f68c2622ae363959bcb1ea7baf" Schema=4

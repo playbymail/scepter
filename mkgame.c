@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "scepter.h"
+#include "sha256.h"
 
 #define	NumSegsInit	200					/* main.c: NumSegs */
 #define	MaxRoom		(NumSegsInit * 10 - 1)
@@ -69,6 +70,9 @@ static const char	*ClassNames[] =
 	 "barbarian", NULL};
 
 static char		WorldName[64];
+static char		WorldId[37];			/* in small letters */
+static int		WorldLine = 1;			/* the [world] header, for errors */
+static char		Revision[SHA256Hex];	/* SHA-256 of the world file's bytes */
 static int		MonSpeed = 10;
 static int		StartRm = 1, ReviveRm, JailRm, StartLine, ReviveLine, JailLine;
 static char		WNotice[256];
@@ -250,6 +254,29 @@ static int SpellNumber(const char *v)
 	return 0;
 }
 
+/*
+ * The world's id (#138): a UUID, 8-4-4-4-12 hex digits, kept in small
+ * letters.  It names the world across every revision of its file.
+ */
+static void ParseId(const char *v)
+{
+	int		i;
+
+	for (i = 0; v[i] && i < 36; i++)
+		if (i == 8 || i == 13 || i == 18 || i == 23 ? v[i] != '-'
+			: !isxdigit((unsigned char)v[i]))
+			break;
+	if (i != 36 || v[36])
+	{
+		Err("id must be a UUID, such as 3f1c9a52-6b8e-4d7e-9a41-2c5b0e7f8d13"
+			" (make one with uuidgen)");
+		return;
+	}
+	for (i = 0; i < 36; i++)
+		WorldId[i] = (char)tolower((unsigned char)v[i]);
+	WorldId[36] = '\0';
+}
+
 /* ---------- block keys ---------- */
 
 static void WorldKey(char *k, char *v)
@@ -258,6 +285,8 @@ static void WorldKey(char *k, char *v)
 
 	if (!strcmp(k, "name"))
 		snprintf(WorldName, sizeof(WorldName), "%s", v);
+	else if (!strcmp(k, "id"))
+		ParseId(v);
 	else if (!strcmp(k, "monster-speed"))
 		ParseInt(v, 1, 3600, &MonSpeed);
 	else if (!strcmp(k, "notice"))
@@ -716,6 +745,7 @@ static void Header(char *h)
 	if (NTok == 1 && !strcmp(Tok[0], "world"))
 	{
 		Block = BWorld;
+		WorldLine = LineNo;
 		return;
 	}
 	if (NTok != 2 && NTok != 4 && NTok != 6)
@@ -1142,6 +1172,13 @@ static void Validate(void)
 			Warn(R->StaggerLine, "room %d has staggers but is not a bar", i);
 	}
 
+	if (!*WorldId)
+	{
+		LineNo = WorldLine;
+		Err("the world has no id; add one to [world], such as"
+			" 'id = 3f1c9a52-6b8e-4d7e-9a41-2c5b0e7f8d13' (make one with uuidgen)");
+	}
+
 	if (!ReviveRm)
 		ReviveRm = StartRm;
 	if (!JailRm)
@@ -1256,6 +1293,8 @@ static void BuildDB(void)
 static void WriteTables(void)
 {
 	SettingsType	Set;
+	WorldType		W;
+	long			Made = (long)time(NULL);
 	int				i, Ok, Row[8];
 
 	if (!DBOpen(GameDir) || !DBBegin())
@@ -1313,6 +1352,13 @@ static void WriteTables(void)
 			Ok = PutSpecial(i, (RoleType)R->Role, R->Greeting, R->NStock,
 							R->Stock, R->NStagger, R->Stagger, R->Trains);
 	}
+
+	/* the world it was made from, and when (#138) */
+	snprintf(W.Id, sizeof(W.Id), "%s", WorldId);
+	snprintf(W.Name, sizeof(W.Name), "%s", WorldName);
+	snprintf(W.Revision, sizeof(W.Revision), "%s", Revision);
+	Ok = Ok && PutWorld(&W) && AddWorldEvent(Made, WMade, Revision)
+		 && StampWorld(Made, TRUE);
 	if (!Ok || !DBCommit())
 	{
 		DBRollback();
@@ -1320,6 +1366,27 @@ static void WriteTables(void)
 		exit(1);
 	}
 	DBClose();
+}
+
+/* The SHA-256 of file Path's bytes, as shasum -a 256 prints it (#138) */
+static int HashFile(const char *Path, char Hex[SHA256Hex])
+{
+	SHA256Type	S;
+	char		Buf[8192];
+	size_t		n;
+	FILE		*fp;
+	int			Ok;
+
+	if (!(fp = fopen(Path, "rb")))
+		return FALSE;
+	SHA256Init(&S);
+	while ((n = fread(Buf, 1, sizeof(Buf), fp)) > 0)
+		SHA256Add(&S, Buf, n);
+	Ok = !ferror(fp);
+	fclose(fp);
+	if (Ok)
+		SHA256Hex64(&S, Hex);
+	return Ok;
 }
 
 static void DBError(const char *Msg)
@@ -1387,7 +1454,7 @@ int main(int argc, char **argv)
 		return 1;
 
 	FileName = argv[1];
-	if (!(fp = fopen(FileName, "r")))
+	if (!HashFile(FileName, Revision) || !(fp = fopen(FileName, "r")))
 	{
 		fprintf(stderr, "mkgame: %s: %s\n", FileName, strerror(errno));
 		return 1;
@@ -1428,5 +1495,6 @@ int main(int argc, char **argv)
 		   " %d object templates, %d warning(s)\n",
 		   *WorldName ? WorldName : FileName, GameDir, NR, MaxDescRec,
 		   NM, NO, Warnings);
+	printf("mkgame: world %s, revision %s\n", WorldId, Revision);
 	return 0;
 }

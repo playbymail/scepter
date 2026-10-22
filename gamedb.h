@@ -7,7 +7,7 @@
 #include <sqlite3.h>
 
 #define	DBName		"game.db"
-#define	DBVersion	3			/* PRAGMA user_version this build reads */
+#define	DBVersion	4			/* PRAGMA user_version this build reads */
 
 /* The object and monster columns of the schema, in dbstore.c's order */
 #define	ObjCols	"name, article, weight, price, desc_code, desc_rec, carry, magic," \

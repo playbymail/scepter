@@ -434,6 +434,38 @@ static int Done(sqlite3_stmt *St, const char *Where, const char *Doing)
 	return sqlite3_step(St) == SQLITE_DONE || Failed(Where, Doing);
 }
 
+/* ---------- world data: rows with created_at and updated_at (#138) ---------- */
+
+#define	Now		"CAST(strftime('%s', 'now') AS INTEGER)"
+
+/*
+ * In Sql (made once), a statement that stores a row of world data: Cols
+ * (with Key, its key columns, first) from Vals.  A new row is created now;
+ * an existing one keeps its created_at and updated_at, which only the DM
+ * editor (TouchWorld) and the tools that make or update a world
+ * (StampWorld) change.
+ */
+static const char *Upsert(char *Sql, size_t Size, const char *Table,
+						  const char *Key, const char *Cols, const char *Vals)
+{
+	const char	*c = Cols, *e;
+	size_t		Len;
+
+	if (*Sql)
+		return Sql;
+	Len = (size_t)snprintf(Sql, Size, "INSERT INTO %s (%s, %s, created_at, updated_at)"
+						   " VALUES (%s, %s, %s) ON CONFLICT (%s) DO UPDATE SET ",
+						   Table, Key, Cols, Vals, Now, Now, Key);
+	for (; *c; c = *e ? e + 2 : e)
+	{
+		if (!(e = strstr(c, ", ")))
+			e = c + strlen(c);
+		Len += (size_t)snprintf(Sql + Len, Size - Len, "%s%.*s = excluded.%.*s",
+								c == Cols ? "" : ", ", (int)(e - c), c, (int)(e - c), c);
+	}
+	return Sql;
+}
+
 /* ---------- templates ---------- */
 
 /* Monster template N into M; *Found is FALSE, and M zero, if there is none */
@@ -461,14 +493,15 @@ int GetMonTemplate(int N, MonsterPoint M, int *Found)
 int PutMonTemplate(int N, MonsterPoint M)
 {
 	static sqlite3_stmt	*St;
+	static char			Sql[4096];
 	char				Where[48];
 	int					Own;
 
 	snprintf(Where, sizeof(Where), "monster template %d", N);
 	if (!DBStart(&Own))
 		return FALSE;
-	return DBFinish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO monster_templates"
-								 " (number, " MonCols ") VALUES (?, " MonVals ")")
+	return DBFinish(Own, DBPrepare(&St, Upsert(Sql, sizeof(Sql), "monster_templates",
+								   "number", MonCols, "?, " MonVals))
 				  && BindInt(St, 1, N) && BindMon(St, 2, M, Where)
 				  && Done(St, Where, "save"));
 }
@@ -498,14 +531,15 @@ int GetObjTemplate(int N, ObjectPoint O, int *Found)
 int PutObjTemplate(int N, ObjectPoint O)
 {
 	static sqlite3_stmt	*St;
+	static char			Sql[4096];
 	char				Where[48];
 	int					Own;
 
 	snprintf(Where, sizeof(Where), "object template %d", N);
 	if (!DBStart(&Own))
 		return FALSE;
-	return DBFinish(Own, DBPrepare(&St, "INSERT OR REPLACE INTO object_templates"
-								 " (number, " ObjCols ") VALUES (?, " ObjVals ")")
+	return DBFinish(Own, DBPrepare(&St, Upsert(Sql, sizeof(Sql), "object_templates",
+								   "number", ObjCols, "?, " ObjVals))
 				  && BindInt(St, 1, N) && BindObj(St, 2, O, Where)
 				  && Done(St, Where, "save"));
 }
@@ -550,6 +584,7 @@ int GetDesc(int Rec, char Lines[StrPerSeg][80], int *Found)
 int PutDesc(int Rec, char Lines[StrPerSeg][80])
 {
 	static sqlite3_stmt	*St;
+	static char			Sql[512];
 	char				Where[48];
 	int					Own, Line, Ok = TRUE;
 
@@ -557,8 +592,8 @@ int PutDesc(int Rec, char Lines[StrPerSeg][80])
 	if (!DBStart(&Own))
 		return FALSE;
 	for (Line = 0; Ok && Line < StrPerSeg; Line++)
-		Ok = DBPrepare(&St, "INSERT OR REPLACE INTO descriptions (record, line, text)"
-					   " VALUES (?, ?, ?)")
+		Ok = DBPrepare(&St, Upsert(Sql, sizeof(Sql), "descriptions", "record, line",
+								   "text", "?, ?, ?"))
 		  && BindInt(St, 1, Rec) && BindInt(St, 2, Line + 1)
 		  && BindText(St, 3, Lines[Line], 80)
 		  && Done(St, Where, "save");
@@ -611,16 +646,18 @@ int GetRoom(int Rm, RoomType *R, int *Found)
 int PutRoom(int Rm, RoomType *R)
 {
 	static sqlite3_stmt	*St;
+	static char			Sql[1024];
 	char				Where[32];
 	int					Own, I, Ok;
 
 	snprintf(Where, sizeof(Where), "room %d", Rm);
 	if (!DBStart(&Own))
 		return FALSE;
-	Ok = DBPrepare(&St, "INSERT OR REPLACE INTO rooms (room, north, south, east,"
-				   " west, up, down, out, desc_rec, desc_code, which_encounter,"
-				   " encounter_time, last_dir, notify_dm, safe, anti_magic, dark)"
-				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	Ok = DBPrepare(&St, Upsert(Sql, sizeof(Sql), "rooms", "room", "north, south,"
+							   " east, west, up, down, out, desc_rec, desc_code,"
+							   " which_encounter, encounter_time, last_dir, notify_dm,"
+							   " safe, anti_magic, dark", "?, ?, ?, ?, ?, ?, ?, ?, ?,"
+							   " ?, ?, ?, ?, ?, ?, ?, ?"))
 	  && BindInt(St, 1, Rm);
 	for (I = 0; Ok && I < 6; I++)
 		Ok = BindInt(St, 2 + I, R->Adjoin[I]);
@@ -1733,6 +1770,217 @@ int NextRankChange(long *After, RankChangeType *R, int *Found)
 			&& ColRank(St, 3, &R->Old, Where) && ColRank(St, 4, &R->New, Where)
 			&& ColText(St, 5, R->By, sizeof(R->By), TRUE, Where);
 		R->Tool = Via && !strcmp(Via, "dmadmin");
+	}
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "list");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+/* ---------- the world (#138) ---------- */
+
+static const char	*EventName[] = { "made", "updated", "adopted", NULL };
+
+/* The game's world into *W; *Found is FALSE if it isn't known */
+int GetWorld(WorldType *W, int *Found)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "world";
+	int					Rc;
+
+	*Found = FALSE;
+	memset(W, 0, sizeof(*W));
+	if (!DBPrepare(&St, "SELECT world_id, name, revision FROM world WHERE id = 1"))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		*Found = Rc = ColText(St, 0, W->Id, sizeof(W->Id), TRUE, Where)
+			&& ColText(St, 1, W->Name, sizeof(W->Name), TRUE, Where)
+			&& ColText(St, 2, W->Revision, sizeof(W->Revision), TRUE, Where);
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "read");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+int PutWorld(WorldType *W)
+{
+	static sqlite3_stmt	*St;
+
+	return DBPrepare(&St, "INSERT OR REPLACE INTO world (id, world_id, name, revision)"
+					 " VALUES (1, ?, ?, ?)")
+		&& BindText(St, 1, W->Id, sizeof(W->Id))
+		&& BindText(St, 2, W->Name, sizeof(W->Name))
+		&& BindText(St, 3, W->Revision, sizeof(W->Revision))
+		&& Done(St, "world", "save");
+}
+
+/* Add Event (a WorldEventKind) at Time, of world revision Revision */
+int AddWorldEvent(long Time, int Event, const char *Revision)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "world history";
+
+	return DBPrepare(&St, "INSERT INTO world_history (time, event, revision,"
+					 " schema_version) VALUES (?, ?, ?, ?)")
+		&& BindInt(St, 1, Time) && BindEnum(St, 2, Event, EventName, Where, "event")
+		&& BindText(St, 3, Revision, 65) && BindInt(St, 4, DBVersion)
+		&& Done(St, Where, "save");
+}
+
+/*
+ * The world event after the one with id *After (0: the first) into *E and
+ * *After; *Found is FALSE after the last.
+ */
+int NextWorldEvent(long *After, WorldEventType *E, int *Found)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "world history";
+	long				V;
+	int					At = 0, Rc;
+
+	*Found = FALSE;
+	if (!DBPrepare(&St, "SELECT id, time, event, revision, schema_version"
+				   " FROM world_history WHERE id > ? ORDER BY id LIMIT 1")
+	||	!BindInt(St, 1, *After))
+		return Failed(Where, "list");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		*Found = Rc = GET(0, *After, 1, LONG_MAX)
+			&& GET(1, E->Time, LONG_MIN, LONG_MAX)
+			&& ColEnum(St, 2, EventName, &E->Event, Where)
+			&& ColText(St, 3, E->Revision, sizeof(E->Revision), TRUE, Where)
+			&& GET(4, E->Schema, 0, INT_MAX);
+	else
+	if (!(Rc = Rc == SQLITE_DONE))
+		Failed(Where, "list");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+/* When the world was last made, updated or adopted; 0 if never */
+int LastWorldTime(long *Time)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "world history";
+	long				V;
+	int					At = 0, Rc;
+
+	*Time = 0;
+	if (!DBPrepare(&St, "SELECT coalesce(max(time), 0) FROM world_history"))
+		return Failed(Where, "read");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+		Rc = GET(0, *Time, 0, LONG_MAX);
+	else
+		Failed(Where, "read");
+	sqlite3_reset(St);
+	return Rc;
+}
+
+/*
+ * Mark all the world data as written at Time by mkgame (Made) or by an
+ * update: updated_at becomes Time, and so does created_at for a game being
+ * made and for rows made since Time.  Every encounter and treasure table
+ * row gets its times.  Call it last, in the transaction that wrote them.
+ */
+int StampWorld(long Time, int Made)
+{
+	static const char	*Tables[] =
+		{ "rooms", "descriptions", "monster_templates", "object_templates", NULL };
+	static sqlite3_stmt	*St[4], *Ins[2];
+	const char			*Where = "world data";
+	char				Sql[256];
+	int					I, Row, Ok = TRUE;
+
+	for (I = 0; Ok && Tables[I]; I++)
+	{
+		snprintf(Sql, sizeof(Sql), "UPDATE %s SET updated_at = ?1, created_at ="
+				 " CASE WHEN ?2 OR created_at >= ?1 THEN ?1 ELSE created_at END",
+				 Tables[I]);
+		Ok = DBPrepare(&St[I], Sql)
+		  && BindInt(St[I], 1, Time) && BindInt(St[I], 2, Made)
+		  && Done(St[I], Where, "save");
+	}
+	for (I = 0; Ok && I < 2; I++)
+		for (Row = 1; Ok && Row <= (I ? ObjListLen : LEncounter); Row++)
+			Ok = DBPrepare(&Ins[I], I
+						   ? "INSERT INTO treasure_times (treasure, created_at, updated_at)"
+							 " VALUES (?1, ?2, ?2) ON CONFLICT (treasure) DO UPDATE SET"
+							 " updated_at = ?2, created_at = CASE WHEN ?3 THEN ?2"
+							 " ELSE created_at END"
+						   : "INSERT INTO encounter_times (encounter, created_at, updated_at)"
+							 " VALUES (?1, ?2, ?2) ON CONFLICT (encounter) DO UPDATE SET"
+							 " updated_at = ?2, created_at = CASE WHEN ?3 THEN ?2"
+							 " ELSE created_at END")
+			  && BindInt(Ins[I], 1, Row) && BindInt(Ins[I], 2, Time)
+			  && BindInt(Ins[I], 3, Made) && Done(Ins[I], Where, "save");
+	return Ok;
+}
+
+/*
+ * Note that a DM changed world data Kind (a WorldKind) number Number now.
+ * updated_at always moves forward, even within the second the world was
+ * made or updated in, so the change is never mistaken for part of it.
+ */
+#define	Later	"max(" Now ", updated_at + 1)"
+
+int TouchWorld(int Kind, int Number)
+{
+	static const char	*Sql[] =
+	{
+		"UPDATE rooms SET updated_at = " Later " WHERE room = ?",
+		"UPDATE descriptions SET updated_at = " Later " WHERE record = ?",
+		"UPDATE monster_templates SET updated_at = " Later " WHERE number = ?",
+		"UPDATE object_templates SET updated_at = " Later " WHERE number = ?",
+		"INSERT INTO encounter_times (encounter, updated_at) VALUES (?, " Now ")"
+		" ON CONFLICT (encounter) DO UPDATE SET updated_at = " Later,
+		"INSERT INTO treasure_times (treasure, updated_at) VALUES (?, " Now ")"
+		" ON CONFLICT (treasure) DO UPDATE SET updated_at = " Later,
+	};
+	static sqlite3_stmt	*St[6];
+
+	if (Kind < 0 || Kind > WTreasure)
+	{
+		Bad("world data", "kind", "no such value", Kind);
+		return FALSE;
+	}
+	return DBPrepare(&St[Kind], Sql[Kind]) && BindInt(St[Kind], 1, Number)
+		&& Done(St[Kind], "world data", "save");
+}
+
+/*
+ * The world data changed after Since, in kind and number order: the one
+ * after *Kind and *Number (*Kind -1 for the first) into *E, *Kind and
+ * *Number; *Found is FALSE after the last.  A description record counts
+ * once, however many of its lines changed.
+ */
+int NextWorldEdit(long Since, int *Kind, int *Number, WorldEditType *E,
+				  int *Found)
+{
+	static sqlite3_stmt	*St;
+	const char			*Where = "world data";
+	long				V;
+	int					At = 0, Rc;
+
+	*Found = FALSE;
+	if (!DBPrepare(&St, "SELECT kind, number, updated FROM ("
+				   " SELECT 0 AS kind, room AS number, updated_at AS updated FROM rooms"
+				   " UNION ALL SELECT 1, record, max(updated_at) FROM descriptions"
+				   " GROUP BY record"
+				   " UNION ALL SELECT 2, number, updated_at FROM monster_templates"
+				   " UNION ALL SELECT 3, number, updated_at FROM object_templates"
+				   " UNION ALL SELECT 4, encounter, updated_at FROM encounter_times"
+				   " UNION ALL SELECT 5, treasure, updated_at FROM treasure_times)"
+				   " WHERE updated > ?1 AND (kind > ?2 OR kind = ?2 AND number > ?3)"
+				   " ORDER BY kind, number LIMIT 1")
+	||	!BindInt(St, 1, Since) || !BindInt(St, 2, *Kind) || !BindInt(St, 3, *Number))
+		return Failed(Where, "list");
+	if ((Rc = sqlite3_step(St)) == SQLITE_ROW)
+	{
+		*Found = Rc = GET(0, E->Kind, 0, WTreasure) && GET(1, E->Number, 0, INT_MAX)
+			&& GET(2, E->Updated, LONG_MIN, LONG_MAX);
+		*Kind = E->Kind;
+		*Number = E->Number;
 	}
 	else
 	if (!(Rc = Rc == SQLITE_DONE))

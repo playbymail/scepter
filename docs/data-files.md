@@ -19,7 +19,7 @@ the database; a clean stop removes them.
 
 `game.db` is a SQLite database in WAL mode (`gamedb.c`).  Its schema
 version is `PRAGMA user_version`; this build reads version `DBVersion`
-(`gamedb.h`), currently 3.
+(`gamedb.h`), currently 4.
 
 - **`mkgame`** creates it with the whole schema and fills it from the
   world: templates, descriptions, rooms and their contents, settings,
@@ -40,6 +40,20 @@ version is `PRAGMA user_version`; this build reads version `DBVersion`
   once it can no longer matter: an address a day after its last refusal
   (and 10 minutes after its last failure), a character an hour after its
   last failure.
+- **The world:** `world` holds the id, name and revision of the world the
+  game was made from, and `world_history` a row for each time it was made,
+  updated or adopted (#138; updating is #137).  A game made before
+  migration 4 has no `world` row: `scepterd` logs "world unknown" at
+  start-up, and `*WORLD` says so.
+- **DM edits:** the world data an update replaces (rooms, descriptions,
+  monster and object templates, encounter and treasure table rows) has
+  `created_at` and `updated_at`.  `mkgame` sets both to the time in its
+  `made` row.  The game's own saves leave them alone; the DM editor moves
+  `updated_at` forward whenever it changes a row, always past the last make
+  or update.  So the rows whose `updated_at` is later than the last
+  `world_history` time are exactly what DMs have changed since; `*WORLD`
+  lists them.  Room contents, the notice, news and other settings aren't
+  marked.  Rows from before migration 4 have 0 for both: unknown.
 - **DM ranks:** `rank_changes` records every change of a character's DM
   rank (#139): when, by whom, and whether in the game's editor or with
   `dmadmin` (docs/running.md).  A row names the character, so it outlives
@@ -465,6 +479,42 @@ CREATE TABLE rank_changes (
 ) STRICT;
 ```
 
+Migration 4, the world (#138).  Times are seconds since 1970.
+
+```sql
+CREATE TABLE world (
+	id				INTEGER PRIMARY KEY CHECK (id = 1),	-- one row, once the world is known
+	world_id		TEXT NOT NULL CHECK (length(world_id) = 36 AND world_id = lower(world_id)),	-- [world] id
+	name			TEXT NOT NULL,		-- [world] name
+	revision		TEXT NOT NULL CHECK (length(revision) = 64 AND revision = lower(revision))	-- SHA-256 of the world file
+) STRICT;
+
+CREATE TABLE world_history (
+	id				INTEGER PRIMARY KEY,	-- in the order it happened
+	time			INTEGER NOT NULL,
+	event			TEXT NOT NULL CHECK (event IN ('made', 'updated', 'adopted')),
+	revision		TEXT NOT NULL CHECK (length(revision) = 64),	-- the world's revision then
+	schema_version	INTEGER NOT NULL CHECK (schema_version >= 4)	-- the DBVersion that wrote it
+) STRICT;
+
+-- rooms, descriptions, monster_templates and object_templates each gain:
+ALTER TABLE rooms ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;	-- 0: from before migration 4
+ALTER TABLE rooms ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0;	-- moved on by DM edits only
+
+-- a table row is stored only as its non-zero entries, so its times are kept apart
+CREATE TABLE encounter_times (
+	encounter		INTEGER PRIMARY KEY CHECK (encounter >= 1),
+	created_at		INTEGER NOT NULL DEFAULT 0,
+	updated_at		INTEGER NOT NULL DEFAULT 0
+) STRICT;
+
+CREATE TABLE treasure_times (
+	treasure		INTEGER PRIMARY KEY CHECK (treasure >= 1),
+	created_at		INTEGER NOT NULL DEFAULT 0,
+	updated_at		INTEGER NOT NULL DEFAULT 0
+) STRICT;
+```
+
 ## Schema versions and upgrading
 
 `DBVersion` in `gamedb.h` is the schema version this build reads, kept in
@@ -482,6 +532,7 @@ has already applied.
 | 1 | The whole game (#147 to #152). |
 | 2 | The login limits, `login_hosts` and `login_names` (#93). |
 | 3 | The history of DM ranks, `rank_changes` (#139). |
+| 4 | The world a game was made from, its history, and `created_at`/`updated_at` on world data (#138). |
 
 Stop the server, then run `upgradegame` as the user that owns the game:
 
@@ -525,8 +576,9 @@ master DM locked out of their own (docs/running.md).
 `dumpgame GAMEDIR` (`make dumpgame`) prints everything a game has saved as
 text, one record per line with each field named as in `scepter.h`:
 settings, the encounter and treasure tables, special rooms, descriptions,
-templates, rooms and what is in them, characters, the login limits and
-the changes of DM rank.  It reads the game
+templates, rooms and what is in them, characters, the login limits, the
+changes of DM rank, and the world with its history and DM edits (without
+their times, which change every run).  It reads the game
 through the engine's own functions, as `scepterd` would, and changes
 nothing.  Fields that matter only during play are left out, and a
 password hash is shown only as `present`, `locked` or `empty`.

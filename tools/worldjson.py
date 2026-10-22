@@ -17,7 +17,7 @@ ROLES = ['bar', 'newsstand', 'pawnshop', 'smith', 'store']
 
 # (json key, world key, type); type is int, bool, str, desc or a list type
 WORLD_KEYS = [
-    ('name', 'name', str), ('startRoom', 'start-room', int),
+    ('name', 'name', str), ('id', 'id', str), ('startRoom', 'start-room', int),
     ('reviveRoom', 'revive-room', int), ('jailRoom', 'jail-room', int),
     ('monsterSpeed', 'monster-speed', int), ('notice', 'notice', str),
 ]

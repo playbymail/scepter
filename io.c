@@ -15,7 +15,7 @@ void InitCmds(void)
 		"*NEWS",		52,	"*NONEXISTA",	83,	"*NOTICE",		47,
 		"*OFF",			82,	"*OPEN",		19,	"*PURGEDEAT",	50,
 		"*SAY",			36,	"*SEND",		38,	"*TEST",		51,
-		"*UPDATE",		23,	"*YELL",		37,
+		"*UPDATE",		23,	"*WORLD",		90,	"*YELL",		37,
 
 		"ACCEPT",		61,
 		"ACT",			89,	"APPEAL",		45,	"ATTACK",		11,
