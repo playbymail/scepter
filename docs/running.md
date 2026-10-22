@@ -269,7 +269,7 @@ printf 'Boss\nboss password\n*edit\ndisplay player boss\nquit\n' |
 | `make check-dump`   | that whole games dump exactly as the golden dumps in `tools/dumps/` (docs/data-files.md) |
 | `make check-security` | that players can't crash, hang or corrupt the server, and that bad DM edits or data can't either (issues labelled `security`; `tools/securitytest.py`, `tools/dmtest.c`) |
 
-See [deploy.md](deploy.md) for the production server.
+See [deploy.md](deploy.md) for the beta server.
 
 `check-net` reports sanitizer errors in the server's output, so it is also
 useful with a sanitizer build:
